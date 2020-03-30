@@ -182,6 +182,7 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_SSUSEREVENT = "SSUSEREVENT";
 	public final static String LOG_OPERATION_POONHOLD = "POONHOLD";
 	public final static String LOG_OPERATION_APINVOICEONHOLD = "APINVOICEONHOLD";
+	public final static String LOG_OPERATION_APBATCHENTRYONHOLD = "APBATCHENTRYONHOLD";
 	
 	private Connection conn;
 	private ServletContext context;
@@ -804,6 +805,9 @@ public class SMLogEntry {
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APINVOICEONHOLD);
     	m_arrOperationLabelDescriptions.add("Records whenever a user puts an AP invoice on hold or takes one OFF hold");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_APBATCHENTRYONHOLD);
+    	m_arrOperationLabelDescriptions.add("Records whenever a user puts an AP invoice batch entry on hold or takes one OFF hold");
     	
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){

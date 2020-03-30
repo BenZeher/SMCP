@@ -13,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMBatchStatuses;
+import SMClasses.SMLogEntry;
 import SMClasses.SMOption;
 import SMDataDefinition.SMTableapaccountsets;
 import SMDataDefinition.SMTableapbatchentries;
@@ -24,11 +25,11 @@ import SMDataDefinition.SMTableicpoinvoiceheaders;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTabletax;
 import SMDataDefinition.SMTableusers;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 import smbk.BKBank;
@@ -525,8 +526,43 @@ public class APBatchEntry {
 		}
 		
 		//System.out.println("[1543341850] - elapsed time 10 = " + (System.currentTimeMillis() - lStarttime) + " ms");
-		
 		String SQL = "";
+		
+		//Record whether we're putting this on hold or taking it off:
+		boolean bEntryWasAlreadyOnHold = false;
+		boolean bEntryWasAlreadyOffHold = false;
+		//System.out.println("[202003301241] - getslid() = '" + getslid() + "'.");
+		if (getslid().compareToIgnoreCase("-1") != 0){ //If this entry had already been saved
+			//Get the previous on hold value:
+			try {
+				SQL = "SELECT"
+					+ " " + SMTableapbatchentries.ionhold
+					+ " FROM " + SMTableapbatchentries.TableName
+					+ " WHERE ("
+						+ "(" + SMTableapbatchentries.lid + " = " + getslid() + ")"
+					+ ")"
+				;
+				ResultSet rsCurrentEntry = clsDatabaseFunctions.openResultSet(SQL, conn);
+				if (rsCurrentEntry.next()) {
+					//System.out.println("[202003301421] - entry found");
+					if (rsCurrentEntry.getInt(SMTableapbatchentries.ionhold) == 1) {
+						//System.out.println("[202003301438] - entry was on hold");
+						bEntryWasAlreadyOnHold = true;
+					}else {
+						//System.out.println("[202003301450] - entry was not on hold");
+						bEntryWasAlreadyOffHold = true;
+					}
+				}else {
+					//System.out.println("[202003301617] - no record with SQL: '" + SQL + "'.");
+				}
+				rsCurrentEntry.close();
+			} catch (Exception e) {
+				throw new Exception("Error [202003300726] - reading current entry on hold status with SQL '" + SQL + "' - " + e.getMessage());
+			}
+		}else {
+			bEntryWasAlreadyOffHold = true;
+		}
+		
 		SQL = "INSERT into " + SMTableapbatchentries.TableName
 			+ " (" 
 			+ SMTableapbatchentries.bdentryamount
@@ -805,6 +841,33 @@ public class APBatchEntry {
 			saveLines(conn, sUserID, bBatchIsBeingPosted);
 		} catch (Exception e) {
 			throw new Exception("Error [1488988522] saving entry lines - " + e.getMessage() + ".");
+		}
+		
+		//System.out.println("[202003301000] - bEntryWasAlreadyOnHold = " + bEntryWasAlreadyOnHold);
+		//System.out.println("[202003301034] - bEntryWasAlreadyOffHold = " + bEntryWasAlreadyOffHold);
+		//System.out.println("[202003301051] - getsionhold() = '" + getsionhold() + "'.");
+		
+		//Log any on or off hold changes:
+		if ((bEntryWasAlreadyOnHold) && (getsionhold().compareToIgnoreCase("0") == 0)){
+			SMLogEntry log = new SMLogEntry(conn);
+			log.writeEntry(
+				sUserID, 
+				SMLogEntry.LOG_OPERATION_APBATCHENTRYONHOLD, 
+				"AP Batch Entry with ID " + getslid() + ", batch number " + getsbatchnumber() + ", entry number " + getsentrynumber(), 
+				"TAKEN OFF HOLD", 
+				"[1585605770]"
+			);
+		}
+		
+		if ((bEntryWasAlreadyOffHold) && (getsionhold().compareToIgnoreCase("1") == 0)){
+			SMLogEntry log = new SMLogEntry(conn);
+			log.writeEntry(
+				sUserID, 
+				SMLogEntry.LOG_OPERATION_APBATCHENTRYONHOLD, 
+				"AP Batch Entry with ID " + getslid() + ", batch number " + getsbatchnumber() + ", entry number " + getsentrynumber(), 
+				"PUT ON HOLD", 
+				"[1585605771]"
+			);
 		}
 		
 		//System.out.println("[1543341855] - elapsed time 15 = " + (System.currentTimeMillis() - lStarttime) + " ms");
@@ -1304,6 +1367,10 @@ public class APBatchEntry {
         		setsonholdreason("");
         		sResult += "  " + "If the payment is on hold, it must have a reason noted.";
         	}
+        }
+        
+        if (getsonholdpoheaderid().compareToIgnoreCase("") == 0) {
+        	setsonholdpoheaderid("0");
         }
         
         //System.out.println("[2020731513183] " + "getsionhold() = " + getsionhold());

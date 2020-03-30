@@ -864,7 +864,8 @@ public class APBatchEntry {
 			log.writeEntry(
 				sUserID, 
 				SMLogEntry.LOG_OPERATION_APBATCHENTRYONHOLD, 
-				"AP Batch Entry with ID " + getslid() + ", batch number " + getsbatchnumber() + ", entry number " + getsentrynumber(), 
+				"AP Batch Entry with ID " + getslid() + ", batch number " + getsbatchnumber() + ", entry number " + getsentrynumber()
+				+ " REASON: '" + this.getsonholdreason() + "'", 
 				"PUT ON HOLD", 
 				"[1585605771]"
 			);

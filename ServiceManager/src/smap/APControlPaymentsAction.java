@@ -298,7 +298,8 @@ public class APControlPaymentsAction extends HttpServlet{
     		log.writeEntry(
     			sm.getUserID(), 
     			SMLogEntry.LOG_OPERATION_APINVOICEONHOLD, 
-    			"Vendor '" + sVendor + "', document number '" + sDocNumber + "' put on hold", 
+    			"Vendor '" + sVendor + "', document number '" + sDocNumber + " REASON: '"
+    			+ sOnHoldReason + "'", 
     			"PUT ON HOLD", 
     			"[1585596604]");
     	}

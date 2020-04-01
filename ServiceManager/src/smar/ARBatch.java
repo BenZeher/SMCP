@@ -2018,6 +2018,14 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 		//Make sure that the entry date is within the posting period:
 		SMOption opt = new SMOption();
 		try {
+			if(!opt.load(conn)) {
+				throw new Exception("Error [202004013805] - could not load System Options to check posting date range - " + opt.getErrorMessage());
+			}
+		} catch (Exception e1) {
+			throw new Exception("Error [202004013715] - could not load Sysem Options to check posting date range - " + e1.getMessage());
+		}
+		
+		try {
 			opt.checkDateForPosting(entry.sStdDocDate(),
 				"Entry date for entry number " + Integer.toString(entry.iEntryNumber()), 
 				conn,

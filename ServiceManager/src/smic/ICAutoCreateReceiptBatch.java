@@ -58,8 +58,6 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 	
 	public void setBatchDate(String smmddyyyDate) throws Exception{
 		
-		
-		
 	}
 	public boolean checkToCreateNewReceiptBatch(
 		Connection conn, 

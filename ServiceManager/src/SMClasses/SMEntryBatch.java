@@ -307,23 +307,7 @@ public class SMEntryBatch {
     	}
     	return;
     }
-    public void save_with_data_transaction (ServletContext context, String sDBID, String sUserID, String sUserFullName) throws Exception{
-    	
-    	Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", "SMClasses.SMEntryBatch");
-    	
-    	if(!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067697]");
-    		throw new Exception("Error starting data transaction [1385584931].");
-    	}
-    	try {
-			save_without_data_transaction(conn, sUserID, sUserFullName);
-			clsDatabaseFunctions.commit_data_transaction(conn);
-		} catch (Exception e) {
-			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception("Error saving [1385584930] " + e.getMessage());
-		}
-    	return;
-    }
+
     public void flag_as_deleted(
     		String sBatchNumber,
     		ServletContext context, 

@@ -684,7 +684,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 
 			sSQL += " ORDER BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
 		;
-		
+		System.out.println("[202003312033] - 1st GL Transaction Listing SQL: '" + sSQL + "'.");
 		//This gives us a recordset of all the accounts we need to show in the listing
 		try {
 			ResultSet rsAccounts = clsDatabaseFunctions.openResultSet(sSQL, conn);

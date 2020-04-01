@@ -17,9 +17,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServlet;
 
+import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import smap.APVendor;
 import smcontrolpanel.SMUtilities;
+import smgl.GLTransactionBatch;
 import smic.ICPOHeader;
 
 public class TESTBatchExport extends HttpServlet{
@@ -287,10 +289,10 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println("DONE");
 		*/
 		
-		/*
+		
 		//Test GL Transaction Batch posting:
 		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
-		GLTransactionBatch glbatch = new GLTransactionBatch("1");
+		GLTransactionBatch glbatch = new GLTransactionBatch("469");
 		try {
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {
@@ -300,7 +302,7 @@ public class TESTBatchExport extends HttpServlet{
 		//clsDatabaseFunctions.commit_data_transaction(conn);
 		ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
 		System.out.println("DONE");
-		*/
+		
 		
 		/*
 		//Test GL conversion function:
@@ -313,7 +315,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println(s);
-		*/
+		
 		
 		/*
 		//Test purging GL data:

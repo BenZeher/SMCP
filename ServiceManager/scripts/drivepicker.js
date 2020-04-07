@@ -71,6 +71,9 @@ function onAuthApiLoad() {
 function handleAuthResult(authResult) {
 	if (authResult) {
 		console.log(authResult);
+		if(authResult != '[object Object]'){
+			alert(authResult);
+		}
 		 if (authResult.error){
 				 window.gapi.auth.authorize({
 					 'client_id' : clientId,
@@ -207,7 +210,7 @@ function buildPicker() {
 
 function pickerCallback(data) {
 	
-	//If a user uploaded a file and there is domain account to tranfer to then transfer ownership of all those files
+	//If a user uploaded a file and there is domain account then transfer ownership of all those files
 	if((data.action == google.picker.Action.PICKED) && (domainaccount)){
 		var files = data.docs;
 		for (var i = 0; i < files.length; i++) {

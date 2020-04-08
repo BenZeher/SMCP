@@ -137,10 +137,11 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + ") <= " + iEndingFiscalPeriodProduct
 			+ ")"
 
-			+ " AND ("
-			+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance + " + "  
-			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate + ") != 0.00"
-			+ ")"
+			// TJR - 4/8/2020 - Removed this because it was limiting the range, and was not needed:
+//			+ " AND ("
+//			+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance + " + "  
+//			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate + ") != 0.00"
+//			+ ")"
 			
 			//Account range:
 			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " >= '" + sStartingAccount + "')" + "\n"
@@ -684,7 +685,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 
 			sSQL += " ORDER BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
 		;
-		System.out.println("[202003312033] - 1st GL Transaction Listing SQL: '" + sSQL + "'.");
+		//System.out.println("[202003312033] - 1st GL Transaction Listing SQL: '" + sSQL + "'.");
 		//This gives us a recordset of all the accounts we need to show in the listing
 		try {
 			ResultSet rsAccounts = clsDatabaseFunctions.openResultSet(sSQL, conn);

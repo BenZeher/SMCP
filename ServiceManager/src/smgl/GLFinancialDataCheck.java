@@ -844,6 +844,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		int iBufferSize = 0;
 		final int MAX_BUFFER = 50;
 		
+		//This function makes SURE that there are glfinancialstatementdata records for any accounts and periods that we need.
+		//If they aren't there, then it inserts them.
+		
 		try {
 			SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;
 			ResultSet rsCount = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -982,7 +985,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//First, get the closing balance from the previous fiscal year:
 			BigDecimal bdPreviousYearClosingBalance = getClosingBalanceForFiscalYear(sAccount, iFiscalYear - 1, conn);
 			
-			//The fiscal set record, for ThiS fiscal year, gets created or updated here:
+			//The fiscal set record, for this fiscal year, gets created or updated here:
 			String SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
 				+ sNetChangeField
 				+ ", " + SMTableglfiscalsets.bdopeningbalance
@@ -1119,6 +1122,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		String sMessages = "";
 
 		//Get all the financial statement data that could be affected by this fiscal set:
+		//This would include all the financial statement data starting with this fiscal year, and going forward
+		//for this account
 		String SQL = "";
 		SQL = "SELECT * FROM " + SMTableglfinancialstatementdata.TableName
 			+ " WHERE ("

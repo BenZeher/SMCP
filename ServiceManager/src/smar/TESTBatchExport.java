@@ -161,6 +161,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		/*
 		String sOnHoldDate = "";
 		try {
 			ServletUtilities.clsDBServerTime dbtime;
@@ -182,9 +183,9 @@ public class TESTBatchExport extends HttpServlet{
 		} catch (Exception e3) {
 			System.out.println("[202003273417] - ");
 		}
+		*/
 		
-		
-		
+		/*
 		APVendor ven = new APVendor();
 		ven.setsvendoracct("OHD03");
 		ven.load(conn);
@@ -213,8 +214,9 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println("DONE");
+		*/
 		
-		
+		/*
 		//Test PO on hold function:
 		ICPOHeader pohead = new ICPOHeader();
 		pohead.setsID("49694");
@@ -234,6 +236,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("[202072151164] " + " error - " + e.getMessage());
 		}
 		System.out.println("[202072151310] " + "Done");
+		*/
 		
 		/*
 		SMSalesOrderTaxCalculator sotc = null;

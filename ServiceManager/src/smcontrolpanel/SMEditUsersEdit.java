@@ -553,7 +553,9 @@ public class SMEditUsersEdit extends HttpServlet {
         sOutPut += "<BR>";
 		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='" + UPDATE_USER_BUTTON_NAME + "' VALUE='" + UPDATE_USER_BUTTON_VALUE + "' STYLE='height: 0.24in'>&nbsp;&nbsp;";
 		sOutPut += "<INPUT TYPE=SUBMIT NAME='" + DELETE_USER_BUTTON_NAME + "' VALUE='" + DELETE_USER_BUTTON_VALUE 
-				+ "' ONCLICK=\"return confirm('Are you sure you want to delete this user record?');\" STYLE='height: 0.24in'></P>";
+				+ "' ONCLICK=\"return confirm('WARNING: This is a permanent action. "
+				+ "This users first and last name will be stored on historical records, but the user record can not be restored. "
+				+ "Are you sure you want to delete this user record?');\" STYLE='height: 0.24in'></P>";
 		sOutPut += "</FORM>";
 		out.println(sOutPut);
 		

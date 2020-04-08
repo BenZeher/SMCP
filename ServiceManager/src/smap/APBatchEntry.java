@@ -1171,10 +1171,14 @@ public class APBatchEntry {
 		
 		//If this is a payment batch:
 		if (iBatchType == SMTableapbatches.AP_BATCH_TYPE_PAYMENT){
-			try {
-				sResult += validate_payment_entry(conn, sUserID, sVendorAPControlAccount);
-			} catch (Exception e1) {
-				sResult += "  " + e1.getMessage() + ".";
+			if (ven.getionpaymenthold().compareToIgnoreCase("1") == 0) {
+				sResult += "  Vendor '" + getsvendoracct() + "' - " + getsvendorname() + " is on payment hold.";
+			}else {
+				try {
+					sResult += validate_payment_entry(conn, sUserID, sVendorAPControlAccount);
+				} catch (Exception e1) {
+					sResult += "  " + e1.getMessage() + ".";
+				}
 			}
 		}
 

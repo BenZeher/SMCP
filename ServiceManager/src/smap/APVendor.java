@@ -71,6 +71,7 @@ public class APVendor extends clsMasterEntry{
 	public static final String Paramigenerateseparatepaymentsforeachinvoice = "igenerateseparatepaymentsforeachinvoice";
 	public static final String Paramivendorgroupid = "ivendorgroupid";
 	public static final String Parammbackchargememo = "mbackchargememo";
+	public static final String Paramionpaymenthold = "ionpaymenthold";
 	
 	////////////////////
 	
@@ -109,6 +110,7 @@ public class APVendor extends clsMasterEntry{
 	private String m_igenerateseparatepaymentsforeachinvoice;
 	private String m_ivendorgroupid;
 	private String m_mbackchargememo;
+	private String m_ionpaymenthold;
 	
 	public APVendor() {
 		super();
@@ -188,6 +190,17 @@ public class APVendor extends clsMasterEntry{
 		}	
 		m_ivendorgroupid = clsManageRequestParameters.get_Request_Parameter(Paramivendorgroupid, req).trim();
 		m_mbackchargememo = clsManageRequestParameters.get_Request_Parameter(Parammbackchargememo, req).trim();
+		
+		if(req.getParameter(Paramionpaymenthold) == null){
+			m_ionpaymenthold = "0";
+		}else{
+			if(req.getParameter(Paramionpaymenthold).compareToIgnoreCase("0") ==0){
+				m_ionpaymenthold = "0";
+			}else{
+				m_ionpaymenthold = "1";
+			}
+		}
+		
 	}
     public boolean load (ServletContext context, String sDBID, String sUserID , String sUserFullname){
     	Connection conn = clsDatabaseFunctions.getConnection(
@@ -271,6 +284,7 @@ public class APVendor extends clsMasterEntry{
 				m_igenerateseparatepaymentsforeachinvoice = Integer.toString(rs.getInt(SMTableicvendors.igenerateseparatepaymentsforeachinvoice));
 				m_ivendorgroupid = Integer.toString(rs.getInt(SMTableicvendors.ivendorgroupid));
 				m_mbackchargememo = rs.getString(SMTableicvendors.mbackchargememo);
+				m_ionpaymenthold = Integer.toString(rs.getInt(SMTableicvendors.ionpaymenthold));
 				rs.close();
 			} else {
 				super.addErrorMessage("No " + ParamObjectName + " found for : '" + sVendorAcct
@@ -385,6 +399,7 @@ public class APVendor extends clsMasterEntry{
 			+ ", " + SMTableicvendors.itaxidnumbertype
 			+ ", " + SMTableicvendors.ivendorgroupid
 			+ ", " + SMTableicvendors.mbackchargememo
+			+ ", " + SMTableicvendors.ionpaymenthold
 			
 			+ ") VALUES ("
 			+ "'" + clsDatabaseFunctions.FormatSQLStatement(m_saddressline1.trim()) + "'"
@@ -423,6 +438,7 @@ public class APVendor extends clsMasterEntry{
 			+ ", " + m_itaxidnumbertype
 			+ ", " + m_ivendorgroupid
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mbackchargememo.trim()) + "'"
+			+ ", " + m_ionpaymenthold
 			+ ")"
 			+ " ON DUPLICATE KEY UPDATE "
 			+ SMTableicvendors.saddressline1
@@ -494,9 +510,11 @@ public class APVendor extends clsMasterEntry{
 			+ ", " + SMTableicvendors.ivendorgroupid
 				+ " = " + m_ivendorgroupid
 			+ ", " +  SMTableicvendors.mbackchargememo
-			+ " = '" + m_mbackchargememo + "'"
+				+ " = '" + m_mbackchargememo + "'"
+			+ ", " + SMTableicvendors.ionpaymenthold
+				+ " = " + m_ionpaymenthold
 			;
-		System.out.println("[1393267108] SQL = " + SQL);
+		//System.out.println("[1393267108] SQL = " + SQL);
 
     	try{
 	    	if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
@@ -1119,6 +1137,7 @@ public class APVendor extends clsMasterEntry{
     	sResult += "\nActive: " + getsactive();
     	sResult += "\nConfirmation Required: " + getspoconfirmationrequired();
     	sResult += "\nBackcharge memo: " + getmbackchargememo();
+    	sResult += "\nOn Payment Hold: " + getionpaymenthold();
     	
     	return sResult;
     }
@@ -1198,7 +1217,10 @@ public class APVendor extends clsMasterEntry{
 		sQueryString += "&" + Paramivendorgroupid + "=" 
 				+ clsServletUtilities.URLEncode(getsvendorgroupid());
 		sQueryString += "&" + Parammbackchargememo + "=" 
-				+ clsServletUtilities.URLEncode(getmbackchargememo());		
+				+ clsServletUtilities.URLEncode(getmbackchargememo());
+		sQueryString += "&" + Paramionpaymenthold + "=" 
+				+ clsServletUtilities.URLEncode(getionpaymenthold());
+		
 		return sQueryString;
 	}
 
@@ -1403,7 +1425,12 @@ public class APVendor extends clsMasterEntry{
 	public void setmbackchargememo(String mbackchargememo) {
 		m_mbackchargememo = mbackchargememo;
 	}
-	
+	public String getionpaymenthold() {
+		return m_ionpaymenthold;
+	}
+	public void setionpaymenthold(String ionpaymenthold) {
+		m_ionpaymenthold = ionpaymenthold;
+	}
 	
 	public static String getFindVendorLink(
 		String sSearchingClassName, 
@@ -1491,6 +1518,7 @@ public class APVendor extends clsMasterEntry{
     	m_igenerateseparatepaymentsforeachinvoice = "0";
     	m_ivendorgroupid = "0";
     	m_mbackchargememo = "";
+    	m_ionpaymenthold = "0";
 		super.initVariables();
 		super.setObjectName(ParamObjectName);
     }

@@ -253,7 +253,6 @@ public class APEditVendorsEdit  extends HttpServlet {
 			+ " ORDER BY LPAD(" + SMTableicvendorterms.sTermsCode + ", " 
 				+ Integer.toString(SMTableicvendorterms.sTermsCodeLength) + ", ' ')"
 		;
-		//System.out.println("*** SQL = " + SQL);
 		//First, add a blank item so we can be sure the user chose one:
 		arrTerms.add("");
 		arrTermsDescriptions.add("*** Select terms ***");
@@ -289,6 +288,15 @@ public class APEditVendorsEdit  extends HttpServlet {
 			"flagDirty();"
 		);
 
+		//On payment hold?
+		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
+			APVendor.Paramionpaymenthold, 
+			Integer.parseInt(entry.getionpaymenthold()), 
+			"On payment hold?", 
+			"Check this to prevent payments to this vendor",
+			"flagDirty();"
+			);
+		
 		//Active?
 		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 			APVendor.Paramiactive, 

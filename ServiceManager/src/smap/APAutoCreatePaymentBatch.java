@@ -361,6 +361,11 @@ public class APAutoCreatePaymentBatch {
 				+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.ionhold + " = 0)" + "\n"
 				+ "\n"
 				
+				//No vendors on payment hold:
+				+ "\n" + "/* DO NOT Include vendors on payment hold: */" + "\n"
+				+ " AND(" + SMTableicvendors.TableName + "." + SMTableicvendors.ionpaymenthold + " = 0)" + "\n"
+				+ "\n"
+				
 				//Vendor group names:
 				+ "\n" + "/* Include ONLY vendors with group IDs starting with '" + sStartingVendorGroupName + "' and ending with '" + sEndingVendorGroupName + "': */" + "\n"
 				+ " AND(" + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid + " >= '" + sStartingVendorGroupName + "')" + "\n"

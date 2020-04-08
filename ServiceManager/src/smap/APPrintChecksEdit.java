@@ -168,6 +168,26 @@ public class APPrintChecksEdit extends HttpServlet {
 			return;
 		}
 	    
+	    //Validate all the entries one last time before we go to print checks:
+	    try {
+			batch.validate_fields(sUserID, getServletContext(), sDBID, false);
+		} catch (Exception e2) {
+			CurrentSession.removeAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+			CurrentSession.setAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT, e2.getMessage());
+			sRedirectString = 
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesEdit"
+					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+		    		+ "&" + SMTableapbatches.lbatchnumber + "=" + clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.lbatchnumber, request) 
+		    		+ "&" + "CallingClass=" + this.toString()
+				;
+			redirectProcess(
+					sRedirectString
+					+ ""
+					, 
+					response);
+				return;
+		}
+	    
 	    //If the checks have all been finalized for this batch, then we go back to the batch edit screen:
 	    if (batch.bAllChecksHaveBeenFinalized()){
 			redirectProcess(

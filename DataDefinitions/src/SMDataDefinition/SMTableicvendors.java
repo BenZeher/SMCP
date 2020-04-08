@@ -40,6 +40,7 @@ public class SMTableicvendors {
 	public static final String ivendorgroupid = "ivendorgroupid";
 	public static final String svendoremail = "svendoremail";
 	public static final String mbackchargememo = "mbackchargememo";
+	public static final String ionpaymenthold = "ionpaymenthold";
 	
 	
 	//Used ONLY to convert the ACCPAC AP data - when that's all done, this field can be removed:

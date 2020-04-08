@@ -47,8 +47,8 @@ import smgl.SMGLExport;
 public class APBatch {
 
 	public final static String OBJECT_NAME = "AP Batch";
-	public final static String INVALID_ENTRY_ERROR_STARTING_TAG = "STARTINVALIDENTRYERROR";
-	public final static String INVALID_ENTRY_ERROR_ENDING_TAG = "ENDINVALIDENTRYERROR";
+	public final static String INVALID_ENTRY_ERROR_STARTING_TAG = "STARTAPINVALIDENTRYERROR";
+	public final static String INVALID_ENTRY_ERROR_ENDING_TAG = "ENDAPINVALIDENTRYERROR";
 	
 	private String m_sbatchnumber;
 	private String m_sbatchdate;
@@ -272,6 +272,24 @@ public class APBatch {
 		clsDatabaseFunctions.commit_data_transaction(conn);
 		clsDatabaseFunctions.freeConnection(context, conn, "[1546998950]");
 		return;
+	}
+	public void validate_fields(String sUserID, ServletContext context, String sDBID, boolean bBatchIsBeingPosted) throws Exception{
+		
+		Connection conn = null;
+		try {
+			conn = clsDatabaseFunctions.getConnectionWithException(context, sDBID, "MySQL", "APBatch.validate_fields - user ID: '" + sUserID + "'");
+		} catch (Exception e) {
+			throw new Exception("Error [202004085112] - could not get connection to validate batch - " + e.getMessage());
+		}
+		
+		try {
+			validate_fields(conn, sUserID, bBatchIsBeingPosted);
+		} catch (Exception e) {
+			throw new Exception("Error [202004085300] - validating batch - " + e.getMessage());
+		}
+		
+		clsDatabaseFunctions.freeConnection(context, conn, "[1586379140]");
+		
 	}
 	private void validate_fields(Connection conn, String sUserID, boolean bBatchIsBeingPosted) throws Exception{
 		

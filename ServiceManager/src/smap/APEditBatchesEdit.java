@@ -116,9 +116,13 @@ public class APEditBatchesEdit extends HttpServlet {
 		out.println(sCommandScript());
 		
 	    //Display any warnings:
-	    String sWarning = (String)CurrentSession.getAttribute(AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		String sWarning = "";
+		if ((String)CurrentSession.getAttribute(AP_BATCH_POSTING_SESSION_WARNING_OBJECT) != null) {
+			sWarning = (String)CurrentSession.getAttribute(AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		}
 	    CurrentSession.removeAttribute(AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
-		if (sWarning != null){
+	    sWarning = APBatch.stripOutInvalidEntryErrors(sWarning);
+		if (sWarning.compareToIgnoreCase("") != 0){
 			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
 		}
 

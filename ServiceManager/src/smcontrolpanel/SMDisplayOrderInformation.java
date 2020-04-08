@@ -685,7 +685,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					pwOut.println("<TD><FONT SIZE=2><B>Fax: </B>" + rsOrder.getString(SMTableorderheaders.sShipToFax) + "</FONT></TD>");
 					pwOut.println("</TR>");
 					pwOut.println("<TR>");
-					pwOut.println("<TD><FONT SIZE=2><B>Email: </B>" + rsOrder.getString(SMTableorderheaders.sEmailAddress) + "</FONT></TD>");
+					String sEmail = rsOrder.getString(SMTableorderheaders.sEmailAddress) ;
+					pwOut.println("<TD><FONT SIZE=2><B>Email: </B><A HREF=\"mailto:" +sEmail + "\">" + sEmail + "</A></FONT></TD>");
 					String sMapAddress = rsOrder.getString(SMTableorderheaders.sShipToAddress1).trim();
 					sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToAddress2).trim();
 					sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToAddress3).trim();
@@ -694,7 +695,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToState).trim();
 					sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToCountry).trim();
 					sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToZip).trim();
-					pwOut.println("<TD><FONT SIZE=2><B>Ship to email: </B>" + rsOrder.getString(SMTableorderheaders.sshiptoemail) + "</FONT></TD>");
+					String sShipToEmail = rsOrder.getString(SMTableorderheaders.sshiptoemail) ;
+					pwOut.println("<TD><FONT SIZE=2><B>Ship to email: </B><A HREF=\"mailto:" +sShipToEmail + "\">" + sShipToEmail + "</A></FONT></TD>");
 					pwOut.println("</TR>");
 					pwOut.println("<TD><FONT SIZE=2><B>Invoicing contact: </B>"+ rsOrder.getString(SMTableorderheaders.sinvoicingcontact)+"</FONT></TD>");
 					pwOut.println("<TD><FONT SIZE=2><B>Map: </B><A HREF=\"" 
@@ -704,7 +706,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 							+ "</A>" 
 							+ "</FONT></TD>");
 					pwOut.println("<TR>");
-					pwOut.println("<TD><FONT SIZE=2><B>Invoicing email: </B>"+ rsOrder.getString(SMTableorderheaders.sinvoicingemail)+"</FONT></TD>");
+					String sInvoiceEmail= rsOrder.getString(SMTableorderheaders.sinvoicingemail) ;
+					pwOut.println("<TD><FONT SIZE=2><B>Invoicing email: </B><A HREF=\"mailto:" +sInvoiceEmail + "\">" + sInvoiceEmail + "</A></FONT></TD>");
 					String sGeocode = rsOrder.getString(SMTableorderheaders.sgeocode);
 					if((sGeocode.compareToIgnoreCase("") == 0) || (sGeocode.compareToIgnoreCase("NaN,NaN") == 0)) {
 						sGeocode = "Invalid";

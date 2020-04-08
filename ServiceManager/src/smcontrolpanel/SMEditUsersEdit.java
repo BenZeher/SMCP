@@ -21,6 +21,7 @@ import SMDataDefinition.SMTableappointmentusergroups;
 import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablecustomlinks;
 import SMDataDefinition.SMTablemechanics;
+import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTablesecuritygroups;
 import SMDataDefinition.SMTablesecurityusergroups;
 import SMDataDefinition.SMTablessalarmsequences;
@@ -269,22 +270,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += "<TD ALIGN=LEFT>Default user initials</TD>";
 		sOutPut += "</TR>";    
 		
-		//Salesperson code
-		sOutPut += "<TR>";	
-		sOutPut += "<TD ALIGN=RIGHT><B>Default salesperson code: </B></TD>";
-		
-		sOutPut += "<TD ALIGN=LEFT>";
-		sOutPut += "<INPUT TYPE=TEXT NAME=\"" + SMUser.ParamsDefaultSalespersonCode + "\"";
-		sOutPut += " VALUE=\"" + clsStringFunctions.filter(userentry.getsDefaultSalespersonCode()) + "\"";
-		sOutPut += "SIZE=28";
-		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserDefaultSalespersonCodeLength);
-		sOutPut += " STYLE=\"width: 2.41in; height: 0.25in\"";
-		sOutPut += ">&nbsp;"
-				+ "<input type=\"button\" onclick=\"location.href=\'" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSalesperson " + "\';\" value=\"Edit Salespersons\" />";
-		
-		sOutPut += "<TD ALIGN=LEFT>Salesperson that appears when starting an order</TD>";
-		sOutPut += "</TR>";	
-		
+
 		//Email address:
 		sOutPut += "<TR>";
 		sOutPut += "<TD ALIGN=RIGHT><B>Email address: </B></TD>";
@@ -300,10 +286,51 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += "<TD ALIGN=LEFT>Address for sending system notices</TD>";
 		sOutPut += "</TR>";
 		
-		
-		//Mechanic's initials: UPDATED 10-28-14 SCO
+		//Salesperson code
 		sOutPut += "<TR>";
-		sOutPut += "<TD ALIGN=RIGHT><B>Mechanic's initials: </B></TD>";
+		sOutPut += "<TD ALIGN=RIGHT><B>Default salesperson code: </B></TD>";
+		sOutPut += "<TD ALIGN=LEFT>";	        
+		try{
+		    sSQL = "SELECT"
+		    	+ " " + SMTablesalesperson.sSalespersonCode
+		    	+ ", " + SMTablesalesperson.sSalespersonFirstName
+		    	+ ", " +	SMTablesalesperson.sSalespersonLastName 
+		    	+ " FROM " + SMTablesalesperson.TableName
+		    	+ " ORDER BY " + SMTablesalesperson.sSalespersonCode 
+		    ;
+		    ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
+		    sOutPut += "<SELECT NAME=\"" + SMUser.ParamsDefaultSalespersonCode + "\">"; 
+			sOutPut += "<OPTION VALUE=\"" + "" + "\">** NONE SELECTED **</OPTION>"; 
+			while (rsSalespersons.next()){
+				sOutPut += "<OPTION VALUE=\"" + rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) + "\"";
+				if (userentry.getsDefaultSalespersonCode().compareToIgnoreCase(rsSalespersons.getString(SMTablesalesperson.sSalespersonCode)) == 0){
+					sOutPut += " SELECTED";
+				}
+				sOutPut += ">";
+				sOutPut += rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) 
+					+ " - " + rsSalespersons.getString(SMTablesalesperson.sSalespersonFirstName) 
+					+ " " + rsSalespersons.getString(SMTablesalesperson.sSalespersonLastName);
+			}
+			rsSalespersons.close();
+		    //End the drop down list:
+		    sOutPut += "</SELECT>&nbsp;&nbsp;";
+		    sOutPut += "<input type=\"button\" target=\"_blank\" "
+		    		+ "onclick=\"window.open(\'" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSalesperson " + "', '_blank')\" "
+		    		+ "value=\"Edit Salespersons\" />";
+		    sOutPut += "</TD><TD ALIGN=LEFT>Salesperson that appears when starting an order.</TD>";
+		    sOutPut += "</TR>";
+
+		}catch (SQLException ex){
+			System.out.println("[1586348039] Error in SMEditUsers class - reading salespersons");
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("SQL: " + ex.getErrorCode());
+			//return false;
+		}
+
+		//Technician's initials: UPDATED 10-28-14 SCO
+		sOutPut += "<TR>";
+		sOutPut += "<TD ALIGN=RIGHT><B>Technician's initials: </B></TD>";
 		sOutPut += "<TD ALIGN=LEFT>";	        
 		try{
 		    sSQL = "SELECT"
@@ -313,22 +340,25 @@ public class SMEditUsersEdit extends HttpServlet {
 		    	+ " FROM " + SMTablemechanics.TableName
 		    	+ " ORDER BY " + SMTablemechanics.sMechInitial 
 		    ;
-		    ResultSet rsMechanics = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
+		    ResultSet rsTechnicians = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    sOutPut += "<SELECT NAME=\"" + SMTableusers.smechanicinitials + "\">"; 
 			sOutPut += "<OPTION VALUE=\"" + "" + "\">** NONE SELECTED **</OPTION>"; 
-			while (rsMechanics.next()){
-				sOutPut += "<OPTION VALUE=\"" + rsMechanics.getString(SMTablemechanics.sMechInitial) + "\"";
-				if (userentry.getsmechanicinitials().compareToIgnoreCase(rsMechanics.getString(SMTablemechanics.sMechInitial)) == 0){
+			while (rsTechnicians.next()){
+				sOutPut += "<OPTION VALUE=\"" + rsTechnicians.getString(SMTablemechanics.sMechInitial) + "\"";
+				if (userentry.getsmechanicinitials().compareToIgnoreCase(rsTechnicians.getString(SMTablemechanics.sMechInitial)) == 0){
 					sOutPut += " SELECTED";
 				}
 				sOutPut += ">";
-				sOutPut += rsMechanics.getString(SMTablemechanics.sMechInitial) + " - " 
-					+ rsMechanics.getString(SMTablemechanics.sMechFullName);
+				sOutPut += rsTechnicians.getString(SMTablemechanics.sMechInitial) + " - " 
+					+ rsTechnicians.getString(SMTablemechanics.sMechFullName);
 			}
-			rsMechanics.close();
+			rsTechnicians.close();
 		    //End the drop down list:
-		    sOutPut += "</SELECT></TD>";
-		    sOutPut += "<TD ALIGN=LEFT>Choose the technician associated with this user.</TD>";
+		    sOutPut += "</SELECT>&nbsp;&nbsp;";
+		    sOutPut += "<input type=\"button\""
+		    		+ "onclick=\"window.open('" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditMechanics " + "', '_blank')\" "
+		    		+ "value=\"Edit Technicians\" />";
+		    sOutPut += "</TD><TD ALIGN=LEFT>Choose the technician associated with this user.</TD>";
 		    sOutPut += "</TR>";
 
 		}catch (SQLException ex){
@@ -338,7 +368,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		    System.out.println("SQL: " + ex.getErrorCode());
 			//return false;
 		}
-
+		
 		//Active?
 		int iTrueOrFalse = 0;
 		if (userentry.getiactive().compareTo("1") == 0){

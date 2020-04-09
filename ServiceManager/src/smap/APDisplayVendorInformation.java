@@ -33,6 +33,7 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import SMDataDefinition.SMTableapvendorremittolocations;
 
 public class APDisplayVendorInformation extends HttpServlet {
@@ -151,7 +152,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 				pwOut.print("<FONT SIZE=5><BR> " 
 					+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct).trim()
 					+ " - "
-					+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sname).trim() 
+					+ clsStringFunctions.filter(rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sname).trim()) 
 					+ "&nbsp;</FONT>"
 					+ "<BR>");
 				
@@ -702,7 +703,11 @@ public class APDisplayVendorInformation extends HttpServlet {
 						if (rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofinvoicespaid) > 0){
 							BigDecimal bdNumberOfDaysToPay = new BigDecimal(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdaystopay));
 							BigDecimal bdNumberOfInvoicesPaid = new BigDecimal(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofinvoicespaid));
-							bdAvgDaysToPay = bdNumberOfDaysToPay.divide(bdNumberOfInvoicesPaid);
+							try {
+								bdAvgDaysToPay = bdNumberOfDaysToPay.divide(bdNumberOfInvoicesPaid, 2, BigDecimal.ROUND_HALF_UP);
+							} catch (Exception e) {
+								throw new Exception("Error [202004091302] - Error dividing bdNumberOfDaysToPay (" + bdNumberOfDaysToPay + ") by bdNumberOfInvoicesPaid (" + bdNumberOfInvoicesPaid + ").");
+							}
 							sAvgDaysToPay = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgDaysToPay);
 						}
 						
@@ -753,7 +758,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 					if (lTotalNoInvoicesPaid > 0){
 						BigDecimal bdNumberOfDaysToPayForVendor = new BigDecimal(lTotalNoDaysToPay);
 						BigDecimal bdNumberOfInvoicesPaidForVendor = new BigDecimal(lTotalNoInvoicesPaid);
-						bdAvgDaysToPayForVendor = bdNumberOfDaysToPayForVendor.divide(bdNumberOfInvoicesPaidForVendor);
+						bdAvgDaysToPayForVendor = bdNumberOfDaysToPayForVendor.divide(bdNumberOfInvoicesPaidForVendor, 2, BigDecimal.ROUND_HALF_UP);
 						sAvgDaysToPayForVendor = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgDaysToPayForVendor);
 					}
 					

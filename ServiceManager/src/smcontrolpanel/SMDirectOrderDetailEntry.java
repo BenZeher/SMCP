@@ -395,13 +395,13 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     		System.out.println("[1579268728] In " + this.toString() + ".calculateValues - up to 01");
     	}
     	
-        //Get the TOTAL MATERIAL COST by adding the extended material cost for each line.
-        BigDecimal m_dTotalMaterialCost = new BigDecimal(0);
+        //Get the TOTAL EXTENDED MATERIAL COST by adding the extended material cost for each line.
+        BigDecimal m_dTotalExtendedMaterialCost = new BigDecimal(0);
 
         for (int i = 0; i < m_arrLines.size(); i++){
-            m_dTotalMaterialCost = m_dTotalMaterialCost.add(m_arrLines.get(i).getbdEstimatedExtendedMaterialCost());
+            m_dTotalExtendedMaterialCost = m_dTotalExtendedMaterialCost.add(m_arrLines.get(i).getbdEstimatedExtendedMaterialCost());
         }
-        //System.out.println("[1380920548] m_dTotalMaterialCost = " + m_dTotalMaterialCost);
+        //System.out.println("[1380920548] m_dTotalExtendedMaterialCost = " + m_dTotalExtendedMaterialCost);
         //For each line in the breakdown, set the estimated extended labor cost by multiplying the labor unit cost times the labor unit qty:
         for (int i = 0; i < m_arrLines.size(); i++){
             if (m_arrLines.get(i).getbdQuantity().compareTo(BigDecimal.ZERO) > 0){
@@ -488,11 +488,12 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	if (bDebugMode){
     		System.out.println("[1579268742] In " + this.toString() + ".calculateValues - up to 04");
     	}
-    	//Next it subtracts the total labor billing value from the total contract amount to get the total material billing value:
+    	//Next subtract the total labor billing value from the total contract amount to get the total material billing value:
         //First, determine how much billing value there is left in the contract for the material,
         //after the labor billing values have been subtracted:
         bdTotalBillingValueWithoutLabor = this.getbdTotalBillingAmount().subtract(bdLaborPriceSubtotal);
-        //System.out.println("[1380920549] bdTotalBillingValueWithoutLabor = " + bdTotalBillingValueWithoutLabor);
+        //System.out.println("[202004105455] - bdLaborPriceSubtotal = " + bdLaborPriceSubtotal);
+        //System.out.println("[202004105424] - bdTotalBillingValueWithoutLabor = " + bdTotalBillingValueWithoutLabor);
 
         //Assign the material billing values
         bdMaterialPriceSubtotal = BigDecimal.ZERO;
@@ -510,12 +511,13 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	if (bDebugMode){
     		System.out.println("[1579268750] In " + this.toString() + ".calculateValues - up to 05");
     	}
-        bdMaterialCostProportion = m_dTotalMaterialCost.divide(bdTotalBillingValueWithoutLabor, 2, RoundingMode.HALF_UP);
+        bdMaterialCostProportion = m_dTotalExtendedMaterialCost.divide(bdTotalBillingValueWithoutLabor, 8, RoundingMode.HALF_UP);
+        //System.out.println("[202004105329] - bdMaterialCostProportion = " + bdMaterialCostProportion);
         //System.out.println("[1380920550] bdMaterialCostProportion = " + bdMaterialCostProportion);
         
         //Don't even bother if there is no material
         //'If m_dTotalMaterialCost > 0 Then
-        if (m_dTotalMaterialCost.compareTo(BigDecimal.ZERO) > 0){
+        if (m_dTotalExtendedMaterialCost.compareTo(BigDecimal.ZERO) > 0){
         //First assign all of the rows but the last material row with rounded
         //proportionate values
             //'For i = 0 To iLastMaterialRow - 1
@@ -536,7 +538,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
         				//Round this to an even dollar:
         				
         				m_arrLines.get(i).setbdExtendedMaterialBillingValue(bdExtendedMaterialBillingPerLine.setScale(0, RoundingMode.HALF_UP));
-        		        //System.out.println("[1380920551] m_arrLines.get(i).getbdEstimatedMaterialBillingValue() = " + m_arrLines.get(i).getbdEstimatedMaterialBillingValue());
+        		       // System.out.println("[1380920551] m_arrLines.get(i).getbdEstimatedMaterialBillingValue() = " + m_arrLines.get(i).getbdEstimatedMaterialBillingValue());
                         bdMaterialPriceSubtotal = bdMaterialPriceSubtotal.add(m_arrLines.get(i).getbdEstimatedMaterialBillingValue());
         		        //System.out.println("[1380920552] bdMaterialPriceSubtotal = " + bdMaterialPriceSubtotal);
         			}
@@ -550,6 +552,9 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
             //dMaterialPriceSubtotal from the total contract amount
             bdContractAmountRemaining = getbdTotalBillingAmount().subtract(
             	bdLaborPriceSubtotal.add(bdMaterialPriceSubtotal));
+            
+            //System.out.println("[202004104859] - bdContractAmountRemaining = " + bdContractAmountRemaining + ".");
+            
             //Next, divide that remaining amount by the quantity on the
             //'LastMaterialRow' to get the 'LastMaterialRow' billing value
             m_arrLines.get(iLastMaterialRow).setbdExtendedMaterialBillingValue(bdContractAmountRemaining);

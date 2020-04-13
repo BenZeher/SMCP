@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1460;
+	private static final int m_CurrentDatabaseVersion = 1463;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "4/11/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15334,6 +15334,45 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE	
+			
+			//BEGIN CASE:
+			case 1460:
+				//Added by TJR 4/13/2020
+				SQL = "ALTER TABLE `callsheets`"
+					+ " ADD sCollectorFullName VARCHAR(128) NOT NULL DEFAULT ''"
+					+ ", ADD sResponsibilityFullName VARCHAR(128) NOT NULL DEFAULT ''"
+					+ ", ADD sAlertFullName VARCHAR(128) NOT NULL DEFAULT ''"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE	
+			
+			//BEGIN CASE:
+			case 1461:
+				//Added by TJR 4/13/2020
+				SQL = "UPDATE `callsheets`"
+					+ " LEFT JOIN salesperson ON callsheets.sCollector=salesperson.sSalespersonCode"
+					+ " SET callsheets.sCollectorFullName = CONCAT(salesperson.sSalespersonFirstName, ' ', salesperson.sSalespersonLastName)"
+					+ " WHERE (salesperson.sSalespersonFirstName IS NOT NULL)"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1462:
+				//Added by TJR 4/13/2020
+				SQL = "UPDATE `callsheets`"
+					+ " LEFT JOIN salesperson ON callsheets.sResponsibility=salesperson.sSalespersonCode"
+					+ " SET callsheets.sResponsibilityFullName = CONCAT(salesperson.sSalespersonFirstName, ' ', salesperson.sSalespersonLastName)"
+					+ " WHERE (salesperson.sSalespersonFirstName IS NOT NULL)"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
 			
 			
 			//End switch:

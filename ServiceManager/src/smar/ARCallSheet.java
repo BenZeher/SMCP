@@ -10,16 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import SMDataDefinition.SMTablecallsheets;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableusers;
-import ServletUtilities.clsMasterEntry;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsMasterEntry;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class ARCallSheet extends clsMasterEntry{
 
+	public static final String NAME_NOT_FOUND_MARKER = "(NOT FOUND)";
+	
 	public static final String ParamObjectName = "Call Sheet";
 
 	public static final String ParamsID = "id";
@@ -36,8 +39,11 @@ public class ARCallSheet extends clsMasterEntry{
 	public static final String ParamsOrderNumber = "sOrderNumber";
 	public static final String ParamsCustomerName = "sCustomerName";
 	public static final String ParamsAlertInits = "sAlertInits";
-	public static final String ParambAlertInits = "bAlertInits";
-
+	public static final String ParambAlertInits = "sAlertInits";
+	public static final String ParamsCollectorFullName = SMTablecallsheets.sCollectorFullName;
+	public static final String ParamsResponsibilityFullName = SMTablecallsheets.sResponsibilityFullName;
+	public static final String ParamsAlertsFulllName = SMTablecallsheets.sAlertFullName;
+	
 	private String m_sid;
 	private String m_sacct;
 	private String m_scallsheetname;
@@ -52,6 +58,9 @@ public class ARCallSheet extends clsMasterEntry{
 	private String m_sordernumber;
 	private String m_scustomername;
 	private String m_salertinits;
+	private String m_scollectorfullname;
+	private String m_sresponsibilityfullname;
+	private String m_salertsfullname;
 	private boolean m_balertinits;
 
 	public ARCallSheet() {
@@ -86,7 +95,6 @@ public class ARCallSheet extends clsMasterEntry{
 		m_sordernumber = clsManageRequestParameters.get_Request_Parameter(ParamsOrderNumber, req).trim();
 		m_scustomername = clsManageRequestParameters.get_Request_Parameter(ParamsCustomerName, req).trim();
 		m_balertinits = (req.getParameter(ParamsAlertInits) != null);
-
 	}
 
 	public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
@@ -178,6 +186,11 @@ public class ARCallSheet extends clsMasterEntry{
 				}else{
 					m_balertinits = true;
 				}
+				
+				m_scollectorfullname = rs.getString(SMTablecallsheets.sCollectorFullName);
+				m_sresponsibilityfullname = rs.getString(SMTablecallsheets.sResponsibilityFullName);
+				m_salertsfullname = rs.getString(SMTablecallsheets.sAlertFullName);
+				
 				rs.close();
 			} else {
 				super.addErrorMessage("No " + ParamObjectName + " found for : '" + sID
@@ -215,12 +228,12 @@ public class ARCallSheet extends clsMasterEntry{
 			return false;
 		}
 
-		boolean bResult = save_without_data_transaction (conn, sUserID, sUserFullName, sCompany);
+		boolean bResult = save_without_data_transaction (conn, sUserID, sCompany);
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067502]");
 		return bResult;	
 
 	}
-	public boolean save_without_data_transaction (Connection conn, String sUserID, String sUserFullName, String sCompany){
+	public boolean save_without_data_transaction (Connection conn, String sUserID, String sCompany){
 
 		if (!validate_entry_fields(conn)){
 			return false;
@@ -232,11 +245,14 @@ public class ARCallSheet extends clsMasterEntry{
 			//IF this call sheet does NOT currently have the 'alert' set, then it's being set now,
 			//and we need to store the user's initials as the 'ALERT INITIALS':
 			String sAlertInitials = "";
+			String sAlertFullName = "";
 			String sUserInitials = "";
+			String sUserFullName = "";
 			//Only worry about this if it's an existing call sheet:
 			if (getM_siID().compareToIgnoreCase("-1") != 0){
 				SQL = "SELECT "
 					+ SMTablecallsheets.sAlertInits
+					+ ", " + SMTablecallsheets.sAlertFullName
 					+ " FROM " + SMTablecallsheets.TableName
 					+ " WHERE ("
 						+ "(" + SMTablecallsheets.sID + " = " + getM_siID() + ")"
@@ -247,6 +263,7 @@ public class ARCallSheet extends clsMasterEntry{
 					if (rsAlerts.next()){
 						//This means this alert was already set
 						sAlertInitials = rsAlerts.getString(SMTablecallsheets.sAlertInits);
+						sAlertFullName = rsAlerts.getString(SMTablecallsheets.sAlertFullName);
 					}
 					rsAlerts.close();
 				} catch (SQLException e) {
@@ -256,7 +273,11 @@ public class ARCallSheet extends clsMasterEntry{
 			}
 			
 			//Now get the user's initials:
-			SQL = "SELECT " + SMTableusers.sIdentifierInitials + " FROM " + SMTableusers.TableName
+			SQL = "SELECT " 
+					+ SMTableusers.sIdentifierInitials 
+					+ ", " + SMTableusers.sUserFirstName
+					+ ", " + SMTableusers.sUserLastName
+					+ " FROM " + SMTableusers.TableName
 				+ " WHERE ("
 					+ "(" + SMTableusers.lid + " = " + sUserID + ")"
 				+ ")"
@@ -265,6 +286,7 @@ public class ARCallSheet extends clsMasterEntry{
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				if (rs.next()){
 					sUserInitials = rs.getString(SMTableusers.sIdentifierInitials);
+					sUserFullName = rs.getString(SMTableusers.sUserFirstName) + " " + rs.getString(SMTableusers.sUserLastName);
 					rs.close();
 				}else{
 					super.addErrorMessage("No user initials available for '" + sUserFullName + "'");
@@ -279,12 +301,15 @@ public class ARCallSheet extends clsMasterEntry{
 			//So if the alert was NOT set on the current record, now set it to the current user's initials:
 			if (sAlertInitials.compareToIgnoreCase("") == 0){
 				m_salertinits = sUserInitials;
+				m_salertsfullname = sUserFullName;
 			//But if it WAS already set, then just KEEP that previous alert initial in the record:
 			}else{
 				m_salertinits = sAlertInitials;
+				m_salertsfullname = sAlertFullName;
 			}
 		}else{
 			m_salertinits = "";
+			m_salertsfullname = "";
 		}
 		
 		if (this.m_sid.compareToIgnoreCase("-1") == 0){
@@ -302,6 +327,9 @@ public class ARCallSheet extends clsMasterEntry{
 			+ ", " + SMTablecallsheets.sOrderNumber
 			+ ", " + SMTablecallsheets.sPhone
 			+ ", " + SMTablecallsheets.sResponsibility
+			+ ", " + SMTablecallsheets.sCollectorFullName
+			+ ", " + SMTablecallsheets.sResponsibilityFullName
+			+ ", " + SMTablecallsheets.sAlertFullName
 			+ ") VALUES ("
 			+ "'" + clsDateAndTimeConversions.stdDateStringToSQLDateString(m_datlastcontact) + "'"
 			+ ", '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(m_datnextcontact) + "'"
@@ -316,6 +344,9 @@ public class ARCallSheet extends clsMasterEntry{
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sordernumber.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sphone.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sresponsibility.trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_scollectorfullname.trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sresponsibilityfullname.trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_salertsfullname.trim()) + "'"
 			+ ")"
 			;
 		}else{
@@ -337,7 +368,9 @@ public class ARCallSheet extends clsMasterEntry{
 			+ ", " + SMTablecallsheets.sOrderNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sordernumber.trim()) + "'"
 			+ ", " + SMTablecallsheets.sPhone + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sphone.trim()) + "'"
 			+ ", " + SMTablecallsheets.sResponsibility + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sresponsibility.trim()) + "'"
-
+			+ ", " + SMTablecallsheets.sCollectorFullName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_scollectorfullname.trim()) + "'"
+			+ ", " + SMTablecallsheets.sResponsibilityFullName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sresponsibilityfullname.trim()) + "'"
+			+ ", " + SMTablecallsheets.sAlertFullName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_salertsfullname.trim()) + "'"
 			+ " WHERE ("
 			+ SMTablecallsheets.sID + " = " + m_sid 
 			+ ")"
@@ -511,6 +544,58 @@ public class ARCallSheet extends clsMasterEntry{
 			bEntriesAreValid = false;
 		}
 
+		//Read the actual names of the collector, if available:
+		if (m_scollector.compareToIgnoreCase("") != 0) {
+			String SQL = "SELECT"
+				+ " " + SMTablesalesperson.sSalespersonFirstName
+				+ ", " + SMTablesalesperson.sSalespersonFirstName
+				+ " FROM " + SMTablesalesperson.TableName
+				+ " WHERE ("
+					+ "(" + SMTablesalesperson.sSalespersonCode + " = '" + m_scollector + "')"
+				+ ")"
+			;
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+				if (rs.next()) {
+					m_scollectorfullname = rs.getString(SMTablesalesperson.sSalespersonFirstName) + " " + rs.getString(SMTablesalesperson.sSalespersonLastName);
+				}else {
+					//We'll just leave the collector full name as it is here, in case it's an old name of someone who's been removed:
+					//m_scollectorfullname = NAME_NOT_FOUND_MARKER;
+				}
+				rs.close();
+			} catch (SQLException e) {
+				super.addErrorMessage("Error [1586813050] reading collector full name with SQL '" + SQL + "' - " + e.getMessage() + ".");
+			}
+		}else {
+			m_scollectorfullname = "";
+		}
+		
+		//Read the actual names of the responsibility, if available:
+		if (m_scollector.compareToIgnoreCase("") != 0) {
+			String SQL = "SELECT"
+				+ " " + SMTablesalesperson.sSalespersonFirstName
+				+ ", " + SMTablesalesperson.sSalespersonFirstName
+				+ " FROM " + SMTablesalesperson.TableName
+				+ " WHERE ("
+					+ "(" + SMTablesalesperson.sSalespersonCode + " = '" + m_sresponsibility + "')"
+				+ ")"
+			;
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+				if (rs.next()) {
+					m_sresponsibilityfullname = rs.getString(SMTablesalesperson.sSalespersonFirstName) + " " + rs.getString(SMTablesalesperson.sSalespersonLastName);
+				}else {
+					//We'll just leave the responsibility full name as it is here, in case it's an old name of someone who's been removed:
+					//m_sresponsibilityfullname = NAME_NOT_FOUND_MARKER;
+				}
+				rs.close();
+			} catch (SQLException e) {
+				super.addErrorMessage("Error [1586813051] reading responsibility full name with SQL '" + SQL + "' - " + e.getMessage() + ".");
+			}
+		}else {
+			m_sresponsibilityfullname = "";
+		}
+		
 		return bEntriesAreValid;
 	}
 	private boolean isDateValid(String sDateLabel, String sTestDate){
@@ -591,6 +676,9 @@ public class ARCallSheet extends clsMasterEntry{
 		sResult += "\nOrder number: " + m_sordernumber;
 		sResult += "\nCustomer name: " + m_scustomername;
 		sResult += "\nAlert initials: " + m_salertinits;
+		sResult += "\nCollector full name: " + m_scollectorfullname;
+		sResult += "\nAlert full name: " + m_salertsfullname;
+		sResult += "\nResponsibility full name: " + m_sresponsibilityfullname;
 		return sResult;
 	}
 
@@ -617,6 +705,9 @@ public class ARCallSheet extends clsMasterEntry{
 		sQueryString += "&" + ParamsOrderNumber + "=" + clsServletUtilities.URLEncode(m_sordernumber);
 		sQueryString += "&" + ParamsPhone + "=" + clsServletUtilities.URLEncode(m_sphone);
 		sQueryString += "&" + ParamsResponsibility + "=" + clsServletUtilities.URLEncode(m_sresponsibility);
+		sQueryString += "&" + ParamsCollectorFullName + "=" + clsServletUtilities.URLEncode(m_scollectorfullname);
+		sQueryString += "&" + ParamsResponsibilityFullName + "=" + clsServletUtilities.URLEncode(m_sresponsibilityfullname);
+		sQueryString += "&" + ParamsAlertsFulllName + "=" + clsServletUtilities.URLEncode(m_salertsfullname);
 		return sQueryString;
 	}
 
@@ -728,6 +819,30 @@ public class ARCallSheet extends clsMasterEntry{
 	public void setM_sAccountTerms(String sAccountTerms) {
 		m_saccountterms = sAccountTerms;
 	}
+	
+	public String getM_scollectorfullname() {
+		return m_scollectorfullname;
+	}
+
+	public void setM_scollectorfullname(String sCollectorFullName) {
+		m_scollectorfullname = sCollectorFullName;
+	}
+	
+	public String getM_sresponsibilityfullname() {
+		return m_sresponsibilityfullname;
+	}
+
+	public void setM_sresponsibilityfullname(String sResponsibilityFullName) {
+		m_sresponsibilityfullname = sResponsibilityFullName;
+	}
+
+	public String getM_salertsfullname() {
+		return m_salertsfullname;
+	}
+
+	public void setM_salertsfullname(String sAlertsFullName) {
+		m_salertsfullname = sAlertsFullName;
+	}
 
 	private void initCallSheetVariables(){
 		m_sid = "-1";
@@ -745,6 +860,9 @@ public class ARCallSheet extends clsMasterEntry{
 		m_scustomername = "";
 		m_balertinits = false;
 		m_salertinits = "";
+		m_scollectorfullname = "";
+		m_sresponsibilityfullname = "";
+		m_salertsfullname = "";
 		super.initVariables();
 		super.setObjectName(ParamObjectName);
 	}

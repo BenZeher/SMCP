@@ -20,6 +20,9 @@ public class SMTablecallsheets {
 	public static final String sOrderNumber = "sOrderNumber";
 	public static final String sCustomerName = "sCustomerName";
 	public static final String sAlertInits = "sAlertInits";
+	public static final String sCollectorFullName = "sCollectorFullName";
+	public static final String sResponsibilityFullName = "sResponsibilityFullName";
+	public static final String sAlertFullName = "sAlertFullName";
 	
 	//Field Lengths:
 	public static final int sAcctLength = 12;
@@ -32,5 +35,7 @@ public class SMTablecallsheets {
 	public static final int sOrderNumberLength = 22;
 	public static final int sCustomerNameLength = 60;
 	public static final int sAlertInitsLength = 5;
-
+	public static final int scollectorfullnameLength = 128;
+	public static final int sresponsibilityfullnameLength = 128;
+	public static final int salertsfullnameLength = 128;
 }

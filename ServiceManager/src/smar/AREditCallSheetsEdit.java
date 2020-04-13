@@ -216,6 +216,10 @@ public class AREditCallSheetsEdit  extends HttpServlet {
 			+ " VALUE=\"" + entry.getsCollector() + "\""
 			+ " SIZE=" + "10"
 			+ " MAXLENGTH=" + Integer.toString(SMTablecallsheets.sCollectorLength)
+			+ " <INPUT=HIDDEN"
+				+ " NAME = '" + ARCallSheet.ParamsCollectorFullName 
+				+ " VALUE = '" + entry.getM_scollectorfullname() + "'"
+			+ ">"
 			+ "</TD></TR>"
 		;
 		
@@ -267,7 +271,13 @@ public class AREditCallSheetsEdit  extends HttpServlet {
 			}
 			s += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString();
 		}
-		s += "</SELECT></TD>";
+		s += "</SELECT>\n";
+				
+		s += " <INPUT=HIDDEN"
+			+ " NAME = '" + ARCallSheet.ParamsResponsibilityFullName 
+			+ " VALUE = '" + entry.getM_sresponsibilityfullname() + "'"
+			+ ">"
+			+ "</TD>";
 		s += "</TABLE>";
 		
 		s += "<TABLE BORDER=0 style = \" font-size:small;\" >";

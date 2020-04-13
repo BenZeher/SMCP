@@ -270,8 +270,14 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 		arrCollectors.add("");
 		arrCollectorDescs.add("** Select ALL Collectors **");
 		if (sCollector.compareToIgnoreCase("") == 0){
-			sSQL = "SELECT DISTINCT " + SMTablecallsheets.sCollector 
-			+ " FROM " + SMTablecallsheets.TableName + " ORDER BY " 
+			sSQL = "SELECT DISTINCT " 
+				+ SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector
+			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
+			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+			+ " FROM " + SMTablecallsheets.TableName 
+			+ " LEFT JOIN " + SMTablesalesperson.TableName
+			+ " ON " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector + " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+			+ " ORDER BY " 
 			+ SMTablecallsheets.sCollector + " ASC";
 			try {
 				rs = clsDatabaseFunctions.openResultSet(
@@ -285,12 +291,21 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 						);
 
 				while (rs.next()){
-					arrCollectors.add(rs.getString(SMTablecallsheets.sCollector));
-					arrCollectorDescs.add(rs.getString(SMTablecallsheets.sCollector));
+					arrCollectors.add(rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector));
+					String sFullName = "(NOT FOUND)";
+					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) != null) {
+						sFullName = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName);
+					}
+					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName) != null) {
+						sFullName += " " + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName);
+					}
+					arrCollectorDescs.add(
+						rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector) + " - " + sFullName
+					);
 				}
 				rs.close();
 			} catch (SQLException e) {
-				out.println("ERROR reading collector with SQL: " + sSQL + " - " + e.getMessage());
+				out.println("ERROR [1586806066] reading collector with SQL: '" + sSQL + "' - " + e.getMessage());
 			}
 		}
 
@@ -301,24 +316,21 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 			+ "</TD>"
 		);
 
-		//Collectors:
+		//Responsible:
 		ArrayList<String> arrResponsibility = new ArrayList<String>(0);
 		ArrayList<String> arrResponsibilityDescs = new ArrayList<String>(0);
 		arrResponsibility.add("");
 		arrResponsibilityDescs.add("** Select ALL Responsible Persons **");
-		if (sResponsibility.compareToIgnoreCase("") == 0){
-			sSQL = "SELECT DISTINCT " + SMTablecallsheets.sResponsibility
-					+ ",  CONCAT(" + SMTablesalesperson.sSalespersonFirstName
-					+ ",  \' \', " + SMTablesalesperson.sSalespersonLastName
-					+ ") AS " + SALESPERSON_FULLNAME
-					+ "  FROM " + SMTablecallsheets.TableName 
-					+ " LEFT JOIN " + SMTablesalesperson.TableName
-					+ " ON " +  SMTablecallsheets.sResponsibility + " =  " +    SMTablesalesperson.sSalespersonCode
-					+ " WHERE ("
-					+ "(" + SMTablecallsheets.sResponsibility + " != '')"
-					+ ")"
-					+ " ORDER BY " 
-					+ SMTablecallsheets.sResponsibility + " ASC";
+		if (sCollector.compareToIgnoreCase("") == 0){
+			sSQL = "SELECT DISTINCT " 
+				+ SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility
+			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
+			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+			+ " FROM " + SMTablecallsheets.TableName 
+			+ " LEFT JOIN " + SMTablesalesperson.TableName
+			+ " ON " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility + " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+			+ " ORDER BY " 
+			+ SMTablecallsheets.sResponsibility + " ASC";
 			try {
 				rs = clsDatabaseFunctions.openResultSet(
 						sSQL, 
@@ -331,12 +343,21 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 						);
 
 				while (rs.next()){
-					arrResponsibility.add(rs.getString(SMTablecallsheets.sResponsibility) );
-					arrResponsibilityDescs.add(rs.getString(SALESPERSON_FULLNAME));
+					arrResponsibility.add(rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility));
+					String sFullName = "(NOT FOUND)";
+					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) != null) {
+						sFullName = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName);
+					}
+					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName) != null) {
+						sFullName += " " + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName);
+					}
+					arrResponsibilityDescs.add(
+						rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility) + " - " + sFullName
+					);
 				}
 				rs.close();
 			} catch (SQLException e) {
-				out.println("ERROR reading collector with SQL: " + sSQL + " - " + e.getMessage());
+				out.println("ERROR [1586806067] reading responsibility with SQL: '" + sSQL + "' - " + e.getMessage());
 			}
 		}
 

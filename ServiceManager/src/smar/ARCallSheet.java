@@ -244,7 +244,7 @@ public class ARCallSheet extends clsMasterEntry{
 		if (m_balertinits){
 			//IF this call sheet does NOT currently have the 'alert' set, then it's being set now,
 			//and we need to store the user's initials as the 'ALERT INITIALS':
-			String sAlertInitials = "";
+			String sAlertCode = "";
 			String sAlertFullName = "";
 			String sUserInitials = "";
 			String sUserFullName = "";
@@ -262,7 +262,7 @@ public class ARCallSheet extends clsMasterEntry{
 					ResultSet rsAlerts = clsDatabaseFunctions.openResultSet(SQL, conn);
 					if (rsAlerts.next()){
 						//This means this alert was already set
-						sAlertInitials = rsAlerts.getString(SMTablecallsheets.sAlertInits);
+						sAlertCode = rsAlerts.getString(SMTablecallsheets.sAlertInits);
 						sAlertFullName = rsAlerts.getString(SMTablecallsheets.sAlertFullName);
 					}
 					rsAlerts.close();
@@ -274,7 +274,7 @@ public class ARCallSheet extends clsMasterEntry{
 			
 			//Now get the user's initials:
 			SQL = "SELECT " 
-					+ SMTableusers.sIdentifierInitials 
+					+ SMTableusers.sDefaultSalespersonCode 
 					+ ", " + SMTableusers.sUserFirstName
 					+ ", " + SMTableusers.sUserLastName
 					+ " FROM " + SMTableusers.TableName
@@ -285,26 +285,26 @@ public class ARCallSheet extends clsMasterEntry{
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				if (rs.next()){
-					sUserInitials = rs.getString(SMTableusers.sIdentifierInitials);
+					sUserInitials = rs.getString(SMTableusers.sDefaultSalespersonCode);
 					sUserFullName = rs.getString(SMTableusers.sUserFirstName) + " " + rs.getString(SMTableusers.sUserLastName);
 					rs.close();
 				}else{
-					super.addErrorMessage("No user initials available for '" + sUserFullName + "'");
+					super.addErrorMessage("No user salesperson code available for '" + sUserFullName + "'");
 					rs.close();
 					return false;
 				}
 			} catch (SQLException e1) {
-				super.addErrorMessage("Error getting user initials for '" + sUserFullName + "' - " + e1.getMessage());
+				super.addErrorMessage("Error getting user salesperson code for '" + sUserFullName + "' - " + e1.getMessage());
 				return false;
 			}
 			
 			//So if the alert was NOT set on the current record, now set it to the current user's initials:
-			if (sAlertInitials.compareToIgnoreCase("") == 0){
+			if (sAlertCode.compareToIgnoreCase("") == 0){
 				m_salertinits = sUserInitials;
 				m_salertsfullname = sUserFullName;
 			//But if it WAS already set, then just KEEP that previous alert initial in the record:
 			}else{
-				m_salertinits = sAlertInitials;
+				m_salertinits = sAlertCode;
 				m_salertsfullname = sAlertFullName;
 			}
 		}else{

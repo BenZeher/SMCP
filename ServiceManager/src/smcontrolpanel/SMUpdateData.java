@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1463;
+	private static final int m_CurrentDatabaseVersion = 1464;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "4/11/2020";
+	private static final String m_sLastRevisionDate = "4/14/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15368,6 +15368,19 @@ public class SMUpdateData extends java.lang.Object{
 					+ " LEFT JOIN salesperson ON callsheets.sResponsibility=salesperson.sSalespersonCode"
 					+ " SET callsheets.sResponsibilityFullName = CONCAT(salesperson.sSalespersonFirstName, ' ', salesperson.sSalespersonLastName)"
 					+ " WHERE (salesperson.sSalespersonFirstName IS NOT NULL)"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1463:
+				//Added by TJR 4/14/2020
+				SQL = "UPDATE `callsheets`"
+					+ " LEFT JOIN users ON callsheets.sAlertInits=users.sIdentifierInitials"
+					+ " SET callsheets.sAlertFullName = CONCAT(users.sUserFirstName, ' ', users.sUserLastName)"
+					+ " WHERE (users.sUserFirstName IS NOT NULL)"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

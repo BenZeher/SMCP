@@ -328,10 +328,10 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 			throw new Exception("Could not open connection to create call sheets.");
 		}
 		
-		//Get the current user's initials:
-		String sUserInitials = "";
+		//Get the current user's salesperson code:
+		String sUserSalespersonCode = "";
 		String SQL = "SELECT"
-			+ " " + SMTableusers.sIdentifierInitials
+			+ " " + SMTableusers.sDefaultSalespersonCode
 			+ " FROM " + SMTableusers.TableName
 			+ " WHERE ("
 				+ "(" + SMTableusers.lid + " = " + sUserID + ")"
@@ -340,16 +340,16 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
-				sUserInitials = rs.getString(SMTableusers.sIdentifierInitials);
+				sUserSalespersonCode = rs.getString(SMTableusers.sDefaultSalespersonCode);
 				rs.close();
 			}else{
 				rs.close();
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067483]");
-				throw new Exception("Could not get user's initials.");
+				throw new Exception("Could not get user's salesperson code.");
 			}
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067484]");
-			throw new Exception("Could not get user's initials - " + e1.getMessage());
+			throw new Exception("Could not get user's salesperson code - " + e1.getMessage());
 		}
 		
 		//Start a data connection
@@ -360,7 +360,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		
 		for (int i = 0; i < arrInvoices.size(); i ++){
 			try {
-				createIndividualCallSheet(arrInvoices.get(i), sUserInitials, conn);
+				createIndividualCallSheet(arrInvoices.get(i), sUserSalespersonCode, conn);
 			} catch (Exception e1) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067486]");

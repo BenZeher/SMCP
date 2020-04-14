@@ -272,11 +272,8 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 		if (sCollector.compareToIgnoreCase("") == 0){
 			sSQL = "SELECT DISTINCT " 
 				+ SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector
-			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
-			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollectorFullName
 			+ " FROM " + SMTablecallsheets.TableName 
-			+ " LEFT JOIN " + SMTablesalesperson.TableName
-			+ " ON " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector + " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
 			+ " ORDER BY " 
 			+ SMTablecallsheets.sCollector + " ASC";
 			try {
@@ -293,11 +290,10 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 				while (rs.next()){
 					arrCollectors.add(rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector));
 					String sFullName = "(NOT FOUND)";
-					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) != null) {
-						sFullName = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName);
-					}
-					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName) != null) {
-						sFullName += " " + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName);
+					if (rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollectorFullName) != null) {
+						if (rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollectorFullName).compareToIgnoreCase("") != 0) {
+							sFullName = rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollectorFullName);
+						}
 					}
 					arrCollectorDescs.add(
 						rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sCollector) + " - " + sFullName
@@ -324,11 +320,8 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 		if (sCollector.compareToIgnoreCase("") == 0){
 			sSQL = "SELECT DISTINCT " 
 				+ SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility
-			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
-			+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibilityFullName
 			+ " FROM " + SMTablecallsheets.TableName 
-			+ " LEFT JOIN " + SMTablesalesperson.TableName
-			+ " ON " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility + " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
 			+ " ORDER BY " 
 			+ SMTablecallsheets.sResponsibility + " ASC";
 			try {
@@ -345,11 +338,10 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 				while (rs.next()){
 					arrResponsibility.add(rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility));
 					String sFullName = "(NOT FOUND)";
-					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) != null) {
-						sFullName = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName);
-					}
-					if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName) != null) {
-						sFullName += " " + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName);
+					if (rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibilityFullName) != null) {
+						if (rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibilityFullName).compareToIgnoreCase("") != 0) {
+							sFullName = rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibilityFullName);
+						}
 					}
 					arrResponsibilityDescs.add(
 						rs.getString(SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility) + " - " + sFullName

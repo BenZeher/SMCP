@@ -47,11 +47,7 @@ public class SMBidEntry extends clsMasterEntry{
 	public static final String Paramscontactname = "scontactname";
 	public static final String Paramsphonenumber = "sphonenumber";
 	public static final String Paramemailaddress = "emailaddress";
-	public static final String ParamHasLastContactDate = "HasLastContactDate";
-	public static final String Paramdatlastcontactdate = "datlastcontactdate";
-	public static final String ParamHasNextContactDate = "HasNextContactDate";
-	public static final String Paramdatnextcontactdate = "datnextcontactdate";
-	public static final String Parammfollowupnotes = "mfollowupnotes";
+
 	public static final String Paramsstatus = "sstatus";
 	public static final String Paramdapproximateamount = "dapproximateamount";
 	public static final String Paramiprojecttype = "iprojecttype";
@@ -83,7 +79,6 @@ public class SMBidEntry extends clsMasterEntry{
 	public static final String Paramlastsaveddattakeoffcomplete = "lastsaveddattimetakeoffcomplete";
 	public static final String Paramlastsaveddatpricecomplete = "lastsaveddattimepricecomplete";
 	public static final String Paramlastsaveddattimeactualbiddate = "lastsaveddattimeactualbiddate";
-	public static final String Paramlastsaveddatnextcontactdate = "lastsaveddatnextcontactdate";
 	
 	private String m_sid;
 	private String m_ssalespersoncode;
@@ -99,9 +94,6 @@ public class SMBidEntry extends clsMasterEntry{
 	private String m_scontactname;
 	private String m_sphonenumber;
 	private String m_emailaddress;
-	private String m_datlastcontactdate;
-	private String m_datnextcontactdate;
-	private String m_mfollowupnotes;
 	private String m_sstatus;
 	private String m_dapproximateamount;
 	private String m_iprojecttype;
@@ -132,7 +124,6 @@ public class SMBidEntry extends clsMasterEntry{
 	private String m_slastsaveddattakeoffcomplete;
 	private String m_slastsaveddatpricecomplete;
 	private String m_slastsaveddattimeactualbiddate;
-	private String m_slastsaveddatnextcontactdate;
 	
 	private ArrayList <String> m_arrBidProductTypeAmounts;
 	private boolean bDebugMode = false;
@@ -235,22 +226,6 @@ public class SMBidEntry extends clsMasterEntry{
 		m_sphonenumber = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Paramsphonenumber, req);
 		m_emailaddress = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Paramemailaddress, req).trim();
 
-		if (clsManageRequestParameters.get_Request_Parameter(
-				SMBidEntry.ParamHasLastContactDate, req).trim().compareToIgnoreCase("1") == 0){
-			m_datlastcontactdate = clsManageRequestParameters.get_Request_Parameter(
-					SMBidEntry.Paramdatlastcontactdate, req).trim();
-		}else{
-			m_datlastcontactdate = EMPTY_DATE_STRING;
-		}
-
-		if (clsManageRequestParameters.get_Request_Parameter(
-				SMBidEntry.ParamHasNextContactDate, req).trim().compareToIgnoreCase("1") == 0){
-			m_datnextcontactdate = clsManageRequestParameters.get_Request_Parameter(
-					SMBidEntry.Paramdatnextcontactdate, req).trim();
-		}else{
-			m_datnextcontactdate = EMPTY_DATE_STRING;
-		}
-		m_mfollowupnotes = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Parammfollowupnotes, req).trim();
 		m_sstatus = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Paramsstatus, req).trim();
 		if (m_sstatus.compareToIgnoreCase("") == 0){
 			m_sstatus = SMTablebids.STATUS_PENDING;
@@ -291,7 +266,6 @@ public class SMBidEntry extends clsMasterEntry{
 		m_slastsaveddattakeoffcomplete = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Paramlastsaveddattakeoffcomplete, req).trim();
 		m_slastsaveddatpricecomplete = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Paramlastsaveddatpricecomplete, req).trim();
 		m_slastsaveddattimeactualbiddate = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Paramlastsaveddattimeactualbiddate, req).trim();
-		m_slastsaveddatnextcontactdate = clsManageRequestParameters.get_Request_Parameter(SMBidEntry.Paramlastsaveddatnextcontactdate, req).trim();
 		
 		//Load the product types from the request here:
 		Enumeration<?> eParams = req.getParameterNames();
@@ -382,11 +356,6 @@ public class SMBidEntry extends clsMasterEntry{
 				m_scontactname = rs.getString(SMTablebids.scontactname);
 				m_sphonenumber = rs.getString(SMTablebids.sphonenumber);
 				m_emailaddress = rs.getString(SMTablebids.emailaddress);
-				m_datlastcontactdate = clsDateAndTimeConversions.resultsetDateStringToString(
-						rs.getString(SMTablebids.datlastcontactdate));
-				m_datnextcontactdate = clsDateAndTimeConversions.resultsetDateStringToString(
-						rs.getString(SMTablebids.datnextcontactdate));
-				m_mfollowupnotes = rs.getString(SMTablebids.mfollowupnotes);
 				m_sstatus = rs.getString(SMTablebids.sstatus);
 				m_dapproximateamount = clsManageBigDecimals.BigDecimalToFormattedString(
 						"#,###,###,##0.00", rs.getBigDecimal(SMTablebids.dapproximateamount));
@@ -422,7 +391,6 @@ public class SMBidEntry extends clsMasterEntry{
 				m_slastsaveddattakeoffcomplete = stripDateFromDateTimeString(m_dattakeoffcomplete);
 				m_slastsaveddatpricecomplete = stripDateFromDateTimeString(m_datpricecomplete);
 				m_slastsaveddattimeactualbiddate = stripDateFromDateTimeString(m_dattimeactualbiddate);
-				m_slastsaveddatnextcontactdate = stripDateFromDateTimeString(m_datnextcontactdate);
 				
 				rs.close();
 			} else {
@@ -557,8 +525,6 @@ public class SMBidEntry extends clsMasterEntry{
 			m_lcreatedbyuserid = sUserID;
 			SQL = "INSERT INTO " + SMTablebids.TableName + "("
 			+ SMTablebids.dapproximateamount
-			+ ", " + SMTablebids.datlastcontactdate
-			+ ", " + SMTablebids.datnextcontactdate
 			+ ", " + SMTablebids.dattimeactualbiddate
 			+ ", " + SMTablebids.dattimebiddate
 			+ ", " + SMTablebids.dattimeoriginationdate
@@ -568,8 +534,6 @@ public class SMBidEntry extends clsMasterEntry{
 			+ ", " + SMTablebids.emailaddress
 			+ ", " + SMTablebids.iprojecttype
 			+ ", " + SMTablebids.mdescription
-			+ ", " + SMTablebids.mfollowupnotes
-//			+ ", " + SMTablebids.sbinnumber
 			+ ", " + SMTablebids.scontactname
 			+ ", " + SMTablebids.screatedbyfullname
 			+ ", " + SMTablebids.lcreatedbyuserid
@@ -598,8 +562,6 @@ public class SMBidEntry extends clsMasterEntry{
 			+ ", " + SMTablebids.lsalesgroupid
 			+ ") VALUES ("
 			+ m_dapproximateamount.replace(",", "")
-			+ ", '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(m_datlastcontactdate) + "'"
-			+ ", '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(m_datnextcontactdate) + "'"
 			+ ", '" + super.ampmDateTimeToSQLDateTime(m_dattimeactualbiddate) + "'"
 			+ ", '" + super.ampmDateTimeToSQLDateTime(m_dattimebiddate) + "'"
 			+ ", '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(m_datoriginationdate) + "'"
@@ -609,8 +571,7 @@ public class SMBidEntry extends clsMasterEntry{
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_emailaddress.trim()) + "'"
 			+ ", " + m_iprojecttype
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mdescription.trim()) + "'"
-			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mfollowupnotes.trim()) + "'"
-//			+ ", '" + SMUtilities.FormatSQLStatement(m_sbinnumber.trim()) + "'"
+
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_scontactname.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_screatedbyfullname.trim()) + "'"
 			+ ", " + m_lcreatedbyuserid
@@ -642,10 +603,6 @@ public class SMBidEntry extends clsMasterEntry{
 		}else{
 			SQL = "UPDATE " + SMTablebids.TableName + " SET "
 			+ SMTablebids.dapproximateamount + " = "  + m_dapproximateamount.replace(",", "")
-			+ ", " + SMTablebids.datlastcontactdate + " = '" 
-			+ clsDateAndTimeConversions.stdDateStringToSQLDateString(m_datlastcontactdate) + "'"
-			+ ", " + SMTablebids.datnextcontactdate + " = '" 
-			+ clsDateAndTimeConversions.stdDateStringToSQLDateString(m_datnextcontactdate) + "'"
 			+ ", " + SMTablebids.dattimeactualbiddate + " = '" 
 			+ super.ampmDateTimeToSQLDateTime(m_dattimeactualbiddate) + "'"
 			+ ", " + SMTablebids.dattimebiddate + " = '" 
@@ -663,8 +620,6 @@ public class SMBidEntry extends clsMasterEntry{
 			+ ", " + SMTablebids.iprojecttype + " = " + m_iprojecttype
 			+ ", " + SMTablebids.mdescription 
 			+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_mdescription.trim()) + "'"
-			+ ", " + SMTablebids.mfollowupnotes 
-			+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_mfollowupnotes.trim()) + "'"
 			+ ", " + SMTablebids.scontactname 
 			+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_scontactname.trim()) + "'"
 			+ ", " + SMTablebids.scustomername
@@ -742,7 +697,6 @@ public class SMBidEntry extends clsMasterEntry{
 			m_slastsaveddattakeoffcomplete = stripDateFromDateTimeString(m_dattakeoffcomplete);
 			m_slastsaveddatpricecomplete = stripDateFromDateTimeString(m_datpricecomplete);
 			m_slastsaveddattimeactualbiddate = stripDateFromDateTimeString(m_dattimeactualbiddate);
-			m_slastsaveddatnextcontactdate = stripDateFromDateTimeString(m_datnextcontactdate);
 
 		}
 		
@@ -954,25 +908,6 @@ public class SMBidEntry extends clsMasterEntry{
 			return bEntriesAreValid;
 		}
 
-		// m_datlastcontactdate 
-		if (m_datlastcontactdate.compareTo(EMPTY_DATE_STRING) != 0){
-			if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", m_datlastcontactdate)){
-				super.addErrorMessage("Last contact date '" + m_datlastcontactdate + "' is invalid.  ");
-				bEntriesAreValid = false;
-			}
-		}
-
-		// m_datnextcontactdate
-		if (m_datnextcontactdate.compareTo(EMPTY_DATE_STRING) != 0){
-			if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", m_datnextcontactdate)){
-				super.addErrorMessage("Next contact date '" + m_datnextcontactdate + "' is invalid.  ");
-				bEntriesAreValid = false;
-			}
-		}
-
-		// m_mfollowupnotes 
-		m_mfollowupnotes = m_mfollowupnotes.trim();
-
 		// m_sstatus 
 		m_sstatus = m_sstatus.trim();
 		if (m_sstatus.compareToIgnoreCase("") == 0){
@@ -1168,9 +1103,6 @@ public class SMBidEntry extends clsMasterEntry{
 		sResult += "\nContact name: " + this.getscontactname();
 		sResult += "\nPhone number: " + this.getsphonenumber();
 		sResult += "\nEmail: " + this.getemailaddress();
-		sResult += "\nLast contact date: " + this.getdatlastcontactdate();
-		sResult += "\nNext contact date: " + this.getdatnextcontactdate();
-		sResult += "\nFollow up notes: " + this.getmfollowupnotes();
 		sResult += "\nStatus: " + this.getsstatus();
 		sResult += "\nApproximate amt: " + this.getdapproximateamount();
 		sResult += "\nProject type: " + this.getiprojecttype();
@@ -1315,30 +1247,6 @@ public class SMBidEntry extends clsMasterEntry{
 
 	public void setemailaddress(String m_emailaddress) {
 		this.m_emailaddress = m_emailaddress;
-	}
-
-	public String getdatlastcontactdate() {
-		return m_datlastcontactdate;
-	}
-
-	public void setdatlastcontactdate(String m_datlastcontactdate) {
-		this.m_datlastcontactdate = m_datlastcontactdate;
-	}
-
-	public String getdatnextcontactdate() {
-		return m_datnextcontactdate;
-	}
-
-	public void setdatnextcontactdate(String m_datnextcontactdate) {
-		this.m_datnextcontactdate = m_datnextcontactdate;
-	}
-
-	public String getmfollowupnotes() {
-		return m_mfollowupnotes;
-	}
-
-	public void setmfollowupnotes(String m_mfollowupnotes) {
-		this.m_mfollowupnotes = m_mfollowupnotes;
 	}
 
 	public String getsstatus() {
@@ -1533,9 +1441,6 @@ public class SMBidEntry extends clsMasterEntry{
 	public String getslastsaveddattimeactualbiddate(){
 		return m_slastsaveddattimeactualbiddate;
 	}
-	public String getslastsaveddatnextcontactdate(){
-		return m_slastsaveddatnextcontactdate;
-	}
 	
 	public int getsProductTypeAmountsSize(){
 		return m_arrBidProductTypeAmounts.size();
@@ -1579,9 +1484,6 @@ public class SMBidEntry extends clsMasterEntry{
 		m_scontactname = "";
 		m_sphonenumber = "";
 		m_emailaddress = "";
-		m_datlastcontactdate = clsDateAndTimeConversions.now("M/d/yyyy");
-		m_datnextcontactdate = clsDateAndTimeConversions.now("M/d/yyyy");
-		m_mfollowupnotes = "";
 		m_sstatus = SMTablebids.STATUS_PENDING;
 		m_dapproximateamount = "0.00";
 		m_iprojecttype = "";
@@ -1611,7 +1513,6 @@ public class SMBidEntry extends clsMasterEntry{
 		m_slastsaveddattakeoffcomplete = m_dattakeoffcomplete;
 		m_slastsaveddatpricecomplete = m_datpricecomplete;
 		m_slastsaveddattimeactualbiddate = m_dattimeactualbiddate;
-		m_slastsaveddatnextcontactdate = m_datnextcontactdate;
 		
 		m_arrBidProductTypeAmounts = new ArrayList<String>(0);
 

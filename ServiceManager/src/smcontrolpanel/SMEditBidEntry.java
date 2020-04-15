@@ -348,10 +348,6 @@ public class SMEditBidEntry  extends HttpServlet {
 		+ " id=\"" + SMBidEntry.Paramlastsaveddattimeactualbiddate + "\""
 		+ "\">";
 		
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMBidEntry.Paramlastsaveddatnextcontactdate + "\" VALUE=\"" + entry.getslastsaveddatnextcontactdate() + "\""
-		+ " id=\"" + SMBidEntry.Paramlastsaveddatnextcontactdate + "\""
-		+ "\">";
-		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMBidEntry.Paramscreatedfromordernumber + "\" VALUE=\"" + entry.getscreatedfromordernumber() + "\""
 		+ " id=\"" + SMBidEntry.Paramscreatedfromordernumber + "\""
 		+ "\">";

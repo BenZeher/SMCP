@@ -27,9 +27,6 @@ public class SMTablebids {
 	//TJR - 6/4/2014 - removed this field:
 	//public static final String sextension = "sextension";
 	public static final String emailaddress = "emailaddress";
-	public static final String datlastcontactdate = "datlastcontactdate";
-	public static final String datnextcontactdate = "datnextcontactdate";
-	public static final String mfollowupnotes = "mfollwupnotes";
 	public static final String sstatus = "sstatus";
 	public static final String dapproximateamount = "dapproximateamount";
 	public static final String iprojecttype = "iprojecttype";

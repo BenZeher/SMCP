@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1464;
+	private static final int m_CurrentDatabaseVersion = 1465;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "4/14/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15387,6 +15387,17 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 			
+			//BEGIN CASE:
+			case 1464:
+				//Added by BJZ 4/15/2020
+				SQL = "ALTER TABLE `bids`"
+						+ "  DROP COLUMN `datlastcontactdate`"
+						+ ", DROP COLUMN `datnextcontactdate`"
+						+ ", DROP COLUMN `mfollwupnotes`";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
 			
 			//End switch:
 		}

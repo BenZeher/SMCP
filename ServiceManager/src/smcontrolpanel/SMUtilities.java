@@ -811,8 +811,8 @@ public class SMUtilities extends clsServletUtilities {
 	public static void checkSMCPPassword(String sPW) throws Exception {
 		sPW = sPW.trim();
 		//Length must be at least 7 characters:
-		if (sPW.length() < 7){
-			throw new Exception ("Password must be at least 7 characters");
+		if (sPW.length() < 8){
+			throw new Exception ("Password must be at least 8 characters");
 		}
 		boolean bContainsDigits = false;
 		boolean bContainsLowerCase = false;

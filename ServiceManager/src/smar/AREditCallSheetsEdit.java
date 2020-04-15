@@ -10,13 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.MySQLs;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMTablecallsheets;
-import SMDataDefinition.SMTablesalesperson;
+import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
@@ -211,17 +210,100 @@ public class AREditCallSheetsEdit  extends HttpServlet {
 		;
 
 		//Collector
-		s += "<TD ALIGN=RIGHT><B>Collector:</B></TD>"
-			+ "<TD><INPUT TYPE=TEXT NAME=\"" + ARCallSheet.ParamsCollector + "\""
-			+ " VALUE=\"" + entry.getsCollector() + "\""
-			+ " SIZE=" + "10"
-			+ " MAXLENGTH=" + Integer.toString(SMTablecallsheets.sCollectorLength)
-			+ " <INPUT=HIDDEN"
-				+ " NAME = '" + ARCallSheet.ParamsCollectorFullName 
-				+ " VALUE = '" + entry.getM_scollectorfullname() + "'"
-			+ ">"
-			+ "</TD></TR>"
+	    ArrayList<String> sValues = new ArrayList<String>();
+	    ArrayList<String> sFullNames = new ArrayList<String>();
+	    ArrayList<String> sDescriptions = new ArrayList<String>();
+    	//Select list:
+        //First, add a blank to make sure the user selects one:
+        sValues.add("");
+        sFullNames.add("");
+        sDescriptions.add("-- Set Collector --");
+        
+        String SQL = "SELECT"
+        	+ " " + SMTableusers.sDefaultSalespersonCode
+        	+ ", " + SMTableusers.sUserFirstName
+        	+ ", " + SMTableusers.sUserLastName
+        	+ " FROM " + SMTableusers.TableName
+        	+ " WHERE ("
+        		+ "(" + SMTableusers.sDefaultSalespersonCode + " != '')"
+        	+ ")"
+        	+ " ORDER BY " + SMTableusers.sDefaultSalespersonCode
+        ;
+        
+	    try{
+	        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(
+	        		SQL,
+	        		getServletContext(),
+	        		sm.getsDBID(),
+	        		"MySQL",
+	        		this.toString() + " reading users table - user: " + sm.getUserID()
+	        		+ " - "
+	        		+ sm.getFullUserName()
+	        		);
+	        while (rsUsers.next()){
+	        	sValues.add((String) rsUsers.getString(SMTableusers.sDefaultSalespersonCode).trim());
+	        	sFullNames.add(rsUsers.getString(SMTableusers.sUserFirstName).trim()
+	        		+ " " + rsUsers.getString(SMTableusers.sUserLastName).trim()
+	        	);
+	        	sDescriptions.add(
+	        			(String) (rsUsers.getString(SMTableusers.sDefaultSalespersonCode).trim() 
+	        			+ " - " + rsUsers.getString(SMTableusers.sUserFirstName).trim()
+	        			+ " " + rsUsers.getString(SMTableusers.sUserLastName).trim())
+	        	);
+	        }
+	        rsUsers.close();
+	    }catch(SQLException e){
+	    	throw e;
+	    }
+	    
+		s += "<TD ALIGN=LEFT><B>" + "Collector:" + "</B></TD>\n"
+			+ "<TD ALIGN=LEFT> <SELECT NAME = \"" + ARCallSheet.ParamsCollector + "\">\n"
 		;
+		
+		//If the saved collector is not among the users read from the table, then we have to add it
+		//to the list , so the record can be saved with it again, if necessary:
+		boolean bSavedValueIsInMasterTable = false;
+		String sCollectorFullName = "";
+		
+		for (int i = 0; i < sValues.size(); i++){
+			if (sValues.get(i).compareToIgnoreCase(entry.getsCollector()) == 0) {
+				bSavedValueIsInMasterTable = true;
+				break;
+			}
+		}
+		
+		//If the saved collector is no longer in the users table,
+		//then we have to keep the current one recorded on the call sheet:
+		if (!bSavedValueIsInMasterTable) {
+			s += "<OPTION";
+			s += " selected=yes";
+			s += " VALUE=\"" + entry.getsCollector() + "\">" 
+				+ entry.getsCollector()
+				+ " - "
+				+ entry.getM_scollectorfullname()
+				+ "\n"
+			;
+			sCollectorFullName = entry.getM_scollectorfullname();
+		}
+		
+		for (int i = 0; i < sValues.size(); i++){
+			s += "<OPTION";
+			if (sValues.get(i).toString().compareToIgnoreCase(entry.getsCollector()) == 0){
+				s += " selected=yes";
+				sCollectorFullName = sFullNames.get(i);
+			}
+			s += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString();
+			s += "\n";
+		}
+		s += "</SELECT>\n";
+				
+		s += " <INPUT TYPE=HIDDEN"
+			+ " NAME = \"" + ARCallSheet.ParamsCollectorFullName  + "\""
+			+ " VALUE = \"" + sCollectorFullName + "\""
+			+ ">"
+			+ "</TD>\n";
+		
+		s += "  </TR>\n";
 		
 		//Call sheet name
 		s += "<TR><TD ALIGN=LEFT><B>Call sheet name:</B></TD>"
@@ -232,55 +314,58 @@ public class AREditCallSheetsEdit  extends HttpServlet {
 			+ "</TD>"
 		;
 		
-	    ArrayList<String> sValues = new ArrayList<String>();
-	    ArrayList<String> sDescriptions = new ArrayList<String>();
-    	//Select list:
-        //First, add a blank to make sure the user selects one:
-        sValues.add("");
-        sDescriptions.add("-- Set Responsibility --");
-	    try{
-	        ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
-	        		MySQLs.Get_Salesperson_List_SQL(),
-	        		getServletContext(),
-	        		sm.getsDBID(),
-	        		"MySQL",
-	        		this.toString() + " reading salespersons - user: " + sm.getUserID()
-	        		+ " - "
-	        		+ sm.getFullUserName()
-	        		);
-	        while (rsSalespersons.next()){
-	        	sValues.add((String) rsSalespersons.getString(SMTablesalesperson.sSalespersonCode).trim());
-	        	sDescriptions.add(
-	        			(String) (rsSalespersons.getString(SMTablesalesperson.sSalespersonCode).trim() 
-	        			+ " - " + rsSalespersons.getString(SMTablesalesperson.sSalespersonFirstName).trim()
-	        			+ " " + rsSalespersons.getString(SMTablesalesperson.sSalespersonLastName).trim())
-	        	);
-	        }
-	        rsSalespersons.close();
-	    }catch(SQLException e){
-	    	throw e;
-	    }
+		//Responsibility
+		sDescriptions.set(0, "-- Set Responsibility --");
 	    
-		s += "<TD ALIGN=LEFT><B>" + "Responsibility:" + "</B></TD>"
-			+ "<TD ALIGN=LEFT> <SELECT NAME = \"" + ARCallSheet.ParamsResponsibility + "\">"
+		s += "<TD ALIGN=LEFT><B>" + "Responsibility:" + "</B></TD>\n"
+			+ "<TD ALIGN=LEFT> <SELECT NAME = \"" + ARCallSheet.ParamsResponsibility + "\">\n"
 		;
+		
+		//If the saved responsibility is not among the salespeople read from the table, then we have to add it
+		//to the list , so the record can be saved with it again, if necessary:
+		bSavedValueIsInMasterTable = false;
+		String sResponsibilityFullName = "";
+		
+		for (int i = 0; i < sValues.size(); i++){
+			if (sValues.get(i).compareToIgnoreCase(entry.getM_sResponsibility()) == 0) {
+				bSavedValueIsInMasterTable = true;
+				break;
+			}
+		}
+		
+		//If the saved responsibility is no longer in the salesperson table,
+		//then we have to keep the current one recorded on the call sheet:
+		if (!bSavedValueIsInMasterTable) {
+			s += "<OPTION";
+			s += " selected=yes";
+			s += " VALUE=\"" + entry.getM_sResponsibility() + "\">" 
+				+ entry.getM_sResponsibility()
+				+ " - "
+				+ entry.getM_sresponsibilityfullname()
+				+ "\n"
+			;
+			sResponsibilityFullName = entry.getM_sresponsibilityfullname();
+		}
+		
 		for (int i = 0; i < sValues.size(); i++){
 			s += "<OPTION";
 			if (sValues.get(i).toString().compareToIgnoreCase(entry.getM_sResponsibility()) == 0){
 				s += " selected=yes";
+				sResponsibilityFullName = sFullNames.get(i);
 			}
 			s += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString();
+			s += "\n";
 		}
 		s += "</SELECT>\n";
 				
-		s += " <INPUT=HIDDEN"
-			+ " NAME = '" + ARCallSheet.ParamsResponsibilityFullName 
-			+ " VALUE = '" + entry.getM_sresponsibilityfullname() + "'"
+		s += " <INPUT TYPE=HIDDEN"
+			+ " NAME = \"" + ARCallSheet.ParamsResponsibilityFullName  + "\""
+			+ " VALUE = \"" + sResponsibilityFullName + "\""
 			+ ">"
-			+ "</TD>";
-		s += "</TABLE>";
+			+ "</TD>\n";
+		s += "</TABLE>\n";
 		
-		s += "<TABLE BORDER=0 style = \" font-size:small;\" >";
+		s += "<TABLE BORDER=0 style = \" font-size:small;\" >\n";
 
 		//Phone
 		if(entry.getsPhone().compareToIgnoreCase("")==0) {

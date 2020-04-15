@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import SMDataDefinition.SMTablecallsheets;
 import SMDataDefinition.SMTableorderheaders;
-import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -70,6 +69,7 @@ public class ARCallSheet extends clsMasterEntry{
 
 	ARCallSheet (HttpServletRequest req){
 		super(req);
+		
 		initCallSheetVariables();
 
 		m_sid = clsManageRequestParameters.get_Request_Parameter(ParamsID, req).trim();
@@ -95,6 +95,10 @@ public class ARCallSheet extends clsMasterEntry{
 		m_sordernumber = clsManageRequestParameters.get_Request_Parameter(ParamsOrderNumber, req).trim();
 		m_scustomername = clsManageRequestParameters.get_Request_Parameter(ParamsCustomerName, req).trim();
 		m_balertinits = (req.getParameter(ParamsAlertInits) != null);
+		m_scollectorfullname = clsManageRequestParameters.get_Request_Parameter(ParamsCollectorFullName, req).trim();
+		m_sresponsibilityfullname = clsManageRequestParameters.get_Request_Parameter(ParamsResponsibilityFullName, req).trim();
+		m_salertsfullname = clsManageRequestParameters.get_Request_Parameter(ParamsAlertsFulllName, req).trim();
+		
 	}
 
 	public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
@@ -241,8 +245,10 @@ public class ARCallSheet extends clsMasterEntry{
 
 		//Get the correct 'alert' initials to save with:
 		String SQL = "";
+		
+		//If the 'alert' IS set on this entry:
 		if (m_balertinits){
-			//IF this call sheet does NOT currently have the 'alert' set, then it's being set now,
+			//IF the saved copy of the call sheet does NOT have the 'alert' set, then it's being set now,
 			//and we need to store the user's initials as the 'ALERT INITIALS':
 			String sAlertCode = "";
 			String sAlertFullName = "";
@@ -543,47 +549,46 @@ public class ARCallSheet extends clsMasterEntry{
 			super.addErrorMessage("Customer name is too long.");
 			bEntriesAreValid = false;
 		}
-
+		
 		//Read the actual names of the collector, if available:
 		if (m_scollector.compareToIgnoreCase("") != 0) {
 			String SQL = "SELECT"
-				+ " " + SMTablesalesperson.sSalespersonFirstName
-				+ ", " + SMTablesalesperson.sSalespersonFirstName
-				+ " FROM " + SMTablesalesperson.TableName
+				+ " " + SMTableusers.sUserFirstName
+				+ ", " + SMTableusers.sUserLastName
+				+ " FROM " + SMTableusers.TableName
 				+ " WHERE ("
-					+ "(" + SMTablesalesperson.sSalespersonCode + " = '" + m_scollector + "')"
+					+ "(" + SMTableusers.sDefaultSalespersonCode + " = '" + m_scollector + "')"
 				+ ")"
 			;
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				if (rs.next()) {
-					m_scollectorfullname = rs.getString(SMTablesalesperson.sSalespersonFirstName) + " " + rs.getString(SMTablesalesperson.sSalespersonLastName);
+					m_scollectorfullname = rs.getString(SMTableusers.sUserFirstName) + " " + rs.getString(SMTableusers.sUserLastName);
 				}else {
 					//We'll just leave the collector full name as it is here, in case it's an old name of someone who's been removed:
-					//m_scollectorfullname = NAME_NOT_FOUND_MARKER;
 				}
 				rs.close();
 			} catch (SQLException e) {
-				super.addErrorMessage("Error [1586813050] reading collector full name with SQL '" + SQL + "' - " + e.getMessage() + ".");
+				super.addErrorMessage("Error [1586813071] reading collector full name with SQL '" + SQL + "' - " + e.getMessage() + ".");
 			}
 		}else {
 			m_scollectorfullname = "";
 		}
 		
 		//Read the actual names of the responsibility, if available:
-		if (m_scollector.compareToIgnoreCase("") != 0) {
+		if (m_sresponsibility.compareToIgnoreCase("") != 0) {
 			String SQL = "SELECT"
-				+ " " + SMTablesalesperson.sSalespersonFirstName
-				+ ", " + SMTablesalesperson.sSalespersonFirstName
-				+ " FROM " + SMTablesalesperson.TableName
+				+ " " + SMTableusers.sUserFirstName
+				+ ", " + SMTableusers.sUserLastName
+				+ " FROM " + SMTableusers.TableName
 				+ " WHERE ("
-					+ "(" + SMTablesalesperson.sSalespersonCode + " = '" + m_sresponsibility + "')"
+					+ "(" + SMTableusers.sDefaultSalespersonCode + " = '" + m_sresponsibility + "')"
 				+ ")"
 			;
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				if (rs.next()) {
-					m_sresponsibilityfullname = rs.getString(SMTablesalesperson.sSalespersonFirstName) + " " + rs.getString(SMTablesalesperson.sSalespersonLastName);
+					m_sresponsibilityfullname = rs.getString(SMTableusers.sUserFirstName) + " " + rs.getString(SMTableusers.sUserLastName);
 				}else {
 					//We'll just leave the responsibility full name as it is here, in case it's an old name of someone who's been removed:
 					//m_sresponsibilityfullname = NAME_NOT_FOUND_MARKER;
@@ -594,6 +599,24 @@ public class ARCallSheet extends clsMasterEntry{
 			}
 		}else {
 			m_sresponsibilityfullname = "";
+		}
+		
+		m_scollectorfullname = m_scollectorfullname.trim();
+		if (m_scollectorfullname.length() > SMTablecallsheets.scollectorfullnameLength){
+			super.addErrorMessage("Collector's full name is too long.");
+			bEntriesAreValid = false;
+		}
+		
+		m_sresponsibilityfullname = m_sresponsibilityfullname.trim();
+		if (m_sresponsibilityfullname.length() > SMTablecallsheets.sresponsibilityfullnameLength){
+			super.addErrorMessage("Responsible person's full name is too long.");
+			bEntriesAreValid = false;
+		}
+		
+		m_salertsfullname = m_salertsfullname.trim();
+		if (m_salertsfullname.length() > SMTablecallsheets.salertsfullnameLength){
+			super.addErrorMessage("Alert person's full name is too long.");
+			bEntriesAreValid = false;
 		}
 		
 		return bEntriesAreValid;

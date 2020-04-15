@@ -20,6 +20,7 @@ public class AREditCallSheetsAction extends HttpServlet{
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.AREditCallSheets)){return;}
 		//Read the entry fields from the request object:
 		ARCallSheet entry = new ARCallSheet(request);
+		
 		smaction.getCurrentSession().setAttribute(AREditCallSheetsEdit.CALL_SHEET_OBJECT, entry);
 
 		//Special cases - if this class was called by a finder for the 'starting customer' field:

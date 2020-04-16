@@ -122,7 +122,6 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long ARAccountsReceivable = 1024L;
 	public static long SMCustomerCallLogEntryForm = 1025L;
 	public static long SMCustomerCallList = 1026L;
-	public static long SMSalesContactReport = 1027L;
 	public static long AREditAccountSets = 1028L;
 	public static long AREditPriceListCodes = 1029L;
 	public static long AREditTerms = 1030L;
@@ -146,7 +145,6 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMViewProjectInformation = 1048L;
 	public static long ARReceiveNewCustomerNotification = 1049L;	
 	public static long SMEditProjectTypes = 1050L;
-	public static long SMBidFollowUpReport = 1051L;
 	public static long SMPendingBidsReport = 1052L;
 	public static long SMEditBids = 1053L;
 	public static long SMGlobalConnectionPoolStatus = 1054L;
@@ -630,13 +628,7 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionLinks.add("smcontrolpanel.CustomerCallLogListCriteriaSelection"); 
 		arrFunctionDescriptions.add("Required to run the Customer Call Log report, listing customer calls.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_SALESMANAGEMENT);
-/*
-		arrFunctions.add("SM Sales Contact Report"); 
-		arrFunctionIDs.add(SMSalesContactReport); 
-		arrFunctionLinks.add("smcontrolpanel.SMSalesContactListCriteriaSelection"); 
-		arrFunctionDescriptions.add("Required to run the Sales Contact report.");
-		arrFunctionModuleLevel.add(SMModuleListing.MODULE_SALESMANAGEMENT);
-*/
+
 		arrFunctions.add("AR Edit Account Sets"); 
 		arrFunctionIDs.add(AREditAccountSets); 
 		arrFunctionLinks.add("smar.AREditAccountSets"); 
@@ -771,12 +763,6 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionLinks.add("smcontrolpanel.SMEditProjectTypes"); 
 		arrFunctionDescriptions.add("Required to edit and maintain the list of various 'Project Types'");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
-
-		arrFunctions.add("SM " + SMBidEntry.ParamObjectName + " Follow-Up Report"); 
-		arrFunctionIDs.add(SMBidFollowUpReport); 
-		arrFunctionLinks.add("smcontrolpanel.SMBidFollowUpCriteriaSelection"); 
-		arrFunctionDescriptions.add("Required to run the " + SMBidEntry.ParamObjectName + " Follow Up report.");
-		arrFunctionModuleLevel.add(SMModuleListing.MODULE_SALESMANAGEMENT);
 
 		arrFunctions.add("SM Pending " + SMBidEntry.ParamObjectName + "s Report"); 
 		arrFunctionIDs.add(SMPendingBidsReport); 

@@ -619,9 +619,6 @@ public class SMUserLogin extends HttpServlet {
 		//Create/Edit Sales Contact
 		arMenu.add(SMSystemFunctions.SMEditSalesContacts);
 
-		//Sales Contact Report
-		arMenu.add(SMSystemFunctions.SMSalesContactReport);
-
 		//Create/Edit Sales Lead
 		arMenu.add(SMSystemFunctions.SMEditBids);
 
@@ -630,9 +627,6 @@ public class SMUserLogin extends HttpServlet {
 
 		//Sales Lead To-Do List
 		arMenu.add(SMSystemFunctions.SMPendingBidsReport);
-
-		//Sales lead Follow-Up List
-		arMenu.add(SMSystemFunctions.SMBidFollowUpReport);
 
 		if (bMobileView){
 			SMUtilities.buildMobileMenuTable(

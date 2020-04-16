@@ -35,7 +35,6 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_ARSETINACTIVECUSTOMER = "ARSETINACTIVECUSTOMER";
 	public final static String LOG_OPERATION_ARVIEWCHRONLOG = "ARVIEWCHRONLOG";
 	public final static String LOG_OPERATION_SMAVERAGEMUREPORT= "SMAVERAGEMUREPORT";
-	public final static String LOG_OPERATION_SMBIDFOLLOWUPREPORT = "SMBIDFOLLOWUPREPORT";
 	public final static String LOG_OPERATION_SMBIDREPORT = "SMBIDREPORT";
 	public final static String LOG_OPERATION_SMPENDINGBIDSREPORT = "SMPENDINGBIDSREPORT";
 	public final static String LOG_OPERATION_SMCANCELEDJOBSREPORT = "SMCANCELEDJOBSREPORT";
@@ -62,7 +61,6 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_SMPRINTPREINVOICE = "SMPRINTPREINVOICE";
 	public final static String LOG_OPERATION_SMPRODUCTIVITYREPORT = "SMPRODUCTIVITYREPORT";
 	public final static String LOG_OPERATION_SMRECALIBRATECOUNTERS = "SMRECALIBRATECOUNTERS";
-	public final static String LOG_OPERATION_SMSALESCONTACTREPORT = "SMSALESCONTACTREPORT";
 	public final static String LOG_OPERATION_SMPRINTUNBILLEDCONTRACTREPORT = "SMPRINTUNBILLEDCONTRACTREPORT";
 	public final static String LOG_OPERATION_SMEMAILUNBILLEDCONTRACTREPORT = "SMEMAILUNBILLEDCONTRACTREPORT";
 	public final static String LOG_OPERATION_SMVIEWTRUCKSCHEDULE = "SMVIEWTRUCKSCHEDULE";
@@ -365,9 +363,6 @@ public class SMLogEntry {
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMAVERAGEMUREPORT);
     	m_arrOperationLabelDescriptions.add("Records running of the Average Mark Up report");
     	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_SMBIDFOLLOWUPREPORT);
-    	m_arrOperationLabelDescriptions.add("Records running of the Sales Lead Follow Up report");
-    	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMBIDREPORT);
     	m_arrOperationLabelDescriptions.add("Records running of the Sales Lead report");
     	
@@ -445,9 +440,6 @@ public class SMLogEntry {
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMRECALIBRATECOUNTERS);
     	m_arrOperationLabelDescriptions.add("Records invoice/order number recalibration");
-    	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_SMSALESCONTACTREPORT);
-    	m_arrOperationLabelDescriptions.add("Records running of the Sales Contact report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTUNBILLEDCONTRACTREPORT);
     	m_arrOperationLabelDescriptions.add("Records running of the Unbilled Contract report");

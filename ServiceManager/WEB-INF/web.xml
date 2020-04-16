@@ -1091,16 +1091,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>SMBidFollowUpCriteriaSelection</servlet-name>
-        <servlet-class>smcontrolpanel.SMBidFollowUpCriteriaSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMBidFollowUpGenerate</servlet-name>
-        <servlet-class>smcontrolpanel.SMBidFollowUpGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>SMBidReportCriteriaSelection</servlet-name>
         <servlet-class>smcontrolpanel.SMBidReportCriteriaSelection</servlet-class>
     </servlet>
@@ -2195,15 +2185,6 @@
         <servlet-class>smcontrolpanel.SMSalesContactEdit</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>SMSalesContactList</servlet-name>
-        <servlet-class>smcontrolpanel.SMSalesContactList</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMSalesContactListCriteriaSelection</servlet-name>
-        <servlet-class>smcontrolpanel.SMSalesContactListCriteriaSelection</servlet-class>
-    </servlet>
 
     <servlet>
         <servlet-name>SMSalesContactSelect</servlet-name>
@@ -4418,16 +4399,6 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>SMBidFollowUpCriteriaSelection</servlet-name>
-        <url-pattern>/smcontrolpanel.SMBidFollowUpCriteriaSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMBidFollowUpGenerate</servlet-name>
-        <url-pattern>/smcontrolpanel.SMBidFollowUpGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>SMBidReportCriteriaSelection</servlet-name>
         <url-pattern>/smcontrolpanel.SMBidReportCriteriaSelection</url-pattern>
     </servlet-mapping>
@@ -5520,16 +5491,6 @@
     <servlet-mapping>
         <servlet-name>SMSalesContactEdit</servlet-name>
         <url-pattern>/smcontrolpanel.SMSalesContactEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMSalesContactList</servlet-name>
-        <url-pattern>/smcontrolpanel.SMSalesContactList</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMSalesContactListCriteriaSelection</servlet-name>
-        <url-pattern>/smcontrolpanel.SMSalesContactListCriteriaSelection</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

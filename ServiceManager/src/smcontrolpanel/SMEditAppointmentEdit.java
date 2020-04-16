@@ -55,10 +55,10 @@ public class SMEditAppointmentEdit extends HttpServlet {
 				"smcontrolpanel.SMEditAppointmentAction",
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
-				SMSystemFunctions.SMViewAppointmentCalendar
+				SMSystemFunctions.SMEditAppointmentCalendar
 				);
 		
-		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMViewAppointmentCalendar)){
+		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMEditAppointmentCalendar)){
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
 		}
@@ -174,9 +174,7 @@ public class SMEditAppointmentEdit extends HttpServlet {
 	private String getEditHTML(SMMasterEditEntry sm, SMAppointment entry, ArrayList<String> arrUserNames) throws SQLException{
 
 		String s = "";
-		
 		s += sCommandScript() + "\n";
-
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\" VALUE=\"" 
 			+ clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
 			+ " id=\"" + RECORDWASCHANGED_FLAG + "\"" + ">";
@@ -223,9 +221,9 @@ public class SMEditAppointmentEdit extends HttpServlet {
 					+ " VALUE=\"" + arrUserNames.get(i) + "\""
 				 + ">";
 		}
-
+//TODO
 		s += "<TABLE BORDER=1>\n";
-		
+ 		
 		//ID
 		s += "  <TR>\n"
 			+ "    <TD ALIGN=RIGHT><B>ID</B>:</TD>\n"
@@ -244,7 +242,7 @@ public class SMEditAppointmentEdit extends HttpServlet {
 			+ "    <TD>&nbsp;</TD>\n"
 			+ "  </TR>\n"
 				;
-	    
+ 
 		//Created by
 		if(!entry.bIsNewRecord()){
 			
@@ -296,20 +294,23 @@ public class SMEditAppointmentEdit extends HttpServlet {
 									+ " - "
 									+ sm.getFullUserName()
 							);
+
 					while (rs.next()) {
-						String sUserID = rs.getString(SMTableusers.TableName + "." +SMTableusers.lid);
-			
+
+						String sUserID = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableusers.TableName + "." + SMTableusers.lid);
+						if(sUserID.compareToIgnoreCase("") != 0) {
 						s += "<OPTION";
 						if (sUserID.compareToIgnoreCase(entry.getluserid()) == 0) {
 							s += " SELECTED=yes";
 						}
 						s += " VALUE=\"" + sUserID + "\">" 
-							+ rs.getString(SMTableusers.TableName + "." + SMTableusers.sUserFirstName) + " "
-							+ rs.getString(SMTableusers.TableName + "." + SMTableusers.sUserLastName)
+							+ clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableusers.TableName + "." + SMTableusers.sUserFirstName) + " "
+							+ clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableusers.TableName + "." + SMTableusers.sUserLastName)
 							;
+						}
 					}
 					rs.close();
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					s += "</SELECT><BR><B>Error reading " + "Appointment Calendar users" + " - " + e.getMessage();
 				}
 				s+= "</SELECT>";
@@ -319,7 +320,7 @@ public class SMEditAppointmentEdit extends HttpServlet {
 			+ "    <TD> Schedule this appointment for a different user. </TD>\n"
 			+ "  </TR>\n"
 			;
-	
+//TODO
 		//Date and Time
 		String sDate = SMUtilities.EMPTY_DATE_VALUE;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -398,7 +399,6 @@ public class SMEditAppointmentEdit extends HttpServlet {
 			s += "    <TD> Select a time to receive an email reminder for this appointment. </TD>\n"
 			+ "  </TR>\n"
 			;
-
 		  //Comment
 		  s += "  <TR>\n"
 			+ "<TD ALIGN=RIGHT><B>Comment</B>:</TD>\n"

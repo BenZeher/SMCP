@@ -7,11 +7,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import smcontrolpanel.SMEditUsersSelection;
 import SMDataDefinition.SMTableappointments;
+import SMDataDefinition.SMTableappointmentusergroups;
 import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablereminders;
 import SMDataDefinition.SMTablereminderusers;
 import SMDataDefinition.SMTablesecurityusergroups;
 import SMDataDefinition.SMTableusers;
+import SMDataDefinition.SMTableuserscustomlinks;
 import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -419,9 +421,36 @@ public class SMUser extends clsMasterEntry{
     			stmt.execute(SQL);
     		} catch (SQLException e) {
     			clsDatabaseFunctions.rollback_data_transaction(conn);
-    			throw new Exception("Error deleting user from security groups - " + e.getMessage());
+    			throw new Exception("Error deleting user from security user groups - " + e.getMessage());
     		}
+    		
+        //Delete user from appointment user groups
+        SQL = "DELETE FROM " 
+        	+ SMTableappointmentusergroups.TableName
+        	+ " WHERE (" 
+        	+ "(" + SMTableappointmentusergroups.luserid + " = " + getlid() + ")" 
+        + ")";
+        	stmt = conn.createStatement();
+        	try {
+        		stmt.execute(SQL);
+        	} catch (SQLException e) {
+        		clsDatabaseFunctions.rollback_data_transaction(conn);
+        		throw new Exception("Error deleting user from appointment user groups - " + e.getMessage());
+        	}
     			
+        //Delete from user custom links
+        	SQL = "DELETE FROM " 
+                	+ SMTableuserscustomlinks.TableName
+                	+ " WHERE (" 
+                	+ "(" + SMTableuserscustomlinks.luserid + " = " + getlid() + ")" 
+                + ")";
+                	stmt = conn.createStatement();
+                	try {
+                		stmt.execute(SQL);
+                	} catch (SQLException e) {
+                		clsDatabaseFunctions.rollback_data_transaction(conn);
+                		throw new Exception("Error deleting user from user custom links - " + e.getMessage());
+                	}
     	//Delete user from users table
     	SQL = "DELETE FROM "
     			+ SMTableusers.TableName

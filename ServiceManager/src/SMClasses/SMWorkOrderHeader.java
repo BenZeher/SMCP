@@ -125,6 +125,9 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	//Params to display most recent items
 	public static final String Paramsnumberofdays = "snumberofdays";
 	public static final String Paramsnumberofitems = "snumberofitems";
+	public static final String ParamdPrePostingWODiscountPercentage = "dPrePostingWODiscountPercentage";
+	public static final String ParamdPrePostingWODiscountAmount = "dPrePostingWODiscountAmount";
+	public static final String ParamsPrePostingWODiscountDesc = "sPrePostingWODiscountDesc";
 	public static final String COMMONLY_USED_ITEMS_SEARCH_NO_OF_DAYS = "180";
 	public static final String COMMONLY_USED_ITEMS_SEARCH_NO_OF_ITEMS = "50";
 	
@@ -181,6 +184,11 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	private String m_sdbaworkorderlogo;
 	
 	private String m_slastreadrecordtimestamp;
+	
+	//These are to save the Work Order Discount values to be saved
+	private String m_dPrePostingWODiscountPercentage;
+	private String m_dPrePostingWODiscountAmount;
+	private String m_sPrePostingWODiscountDesc;
 	
 	//variables to display most recent items
 	private String m_snumberofdays;
@@ -285,6 +293,11 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
 		
 		setsschedulechangedbyfullname(clsManageRequestParameters.get_Request_Parameter(Paramssschedulechangedbyfullname, req).trim().replace("&quot;", "\""));
+		
+		setdPrePostingWODiscountPercentage(clsManageRequestParameters.get_Request_Parameter(ParamdPrePostingWODiscountPercentage, req).trim());
+		setdPrePostingWODiscountAmount(clsManageRequestParameters.get_Request_Parameter(ParamdPrePostingWODiscountAmount, req).trim());
+		setsPrePostingWODiscountDesc (clsManageRequestParameters.get_Request_Parameter(ParamsPrePostingWODiscountDesc, req).trim().replace("&quot;", "\""));
+
 		
 		//Read the job times:
 		if (clsManageRequestParameters.get_Request_Parameter(
@@ -3277,8 +3290,24 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	public String getsgdoclink (){
 		return m_sgdoclink;
 	}
-	
-
+	public void setdPrePostingWODiscountPercentage (String dDiscountPercentage){
+		m_dPrePostingWODiscountPercentage = dDiscountPercentage;
+	}
+	public String getdPrePostingWODiscountPercentage(){
+		return m_dPrePostingWODiscountPercentage;
+	}
+	public void setdPrePostingWODiscountAmount (String dDiscountAmount){
+		m_dPrePostingWODiscountAmount = dDiscountAmount;
+	}
+	public String getdPrePostingWODiscountAmount (){
+		return m_dPrePostingWODiscountAmount;
+	}
+	public void setsPrePostingWODiscountDesc(String sDiscountDesc){
+		m_sPrePostingWODiscountDesc = sDiscountDesc;
+	}
+	public String getsPrePostingWODiscountDesc (){
+		return m_sPrePostingWODiscountDesc;
+	}
 	public void setmdbaaddress (String mdbaaddress){
 		m_mdbaaddress = mdbaaddress;
 	}
@@ -3379,6 +3408,10 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		m_mdbaaddress = "";
 		m_mdbaremittoaddress = "";
 		m_sdbaworkorderlogo = "";
+		m_dPrePostingWODiscountPercentage = "0.00";
+		m_dPrePostingWODiscountAmount = "0.00";
+		m_sPrePostingWODiscountDesc = "";
+
 		
 		//This value indicates that this mech
 		LineArray = new ArrayList<SMWorkOrderDetail>(0);

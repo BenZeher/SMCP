@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1465;
+	private static final int m_CurrentDatabaseVersion = 1466;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "4/15/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15380,7 +15380,7 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "UPDATE `callsheets`"
 					+ " LEFT JOIN users ON callsheets.sAlertInits=users.sIdentifierInitials"
 					+ " SET callsheets.sAlertFullName = CONCAT(users.sUserFirstName, ' ', users.sUserLastName)"
-					+ " WHERE (users.sUserFirstName IS NOT NULL)"
+					+ " WHERE (users.sUserFirstName fIS NOT NULL)"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
@@ -15394,6 +15394,19 @@ public class SMUpdateData extends java.lang.Object{
 						+ "  DROP COLUMN `datlastcontactdate`"
 						+ ", DROP COLUMN `datnextcontactdate`"
 						+ ", DROP COLUMN `mfollwupnotes`";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			 
+			//BEGIN CASE:
+			case 1465:
+				//Added by BJA 4/17/2020
+				SQL = "ALTER TABLE `workorders` "
+						+ "ADD dPrePostingWODiscountPercentage double NOT NULL DEFAULT '0'" 
+						+ ", ADD  dPrePostingWODiscountAmount double NOT NULL DEFAULT '0'"
+						+ ", ADD sPrePostingWODiscountDesc varchar(255) NOT NULL DEFAULT ''"
+						;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	

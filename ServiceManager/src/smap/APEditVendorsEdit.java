@@ -537,8 +537,6 @@ public class APEditVendorsEdit  extends HttpServlet {
 		//First, add a bank account so we can be sure the user chose one:
 		 arrBankIDs.add("");
 		 arrBankDescriptions.add("*** Select bank account ***");
-		 arrBankIDs.add("0");
-		 arrBankDescriptions.add("None");
 				
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
@@ -555,7 +553,14 @@ public class APEditVendorsEdit  extends HttpServlet {
 			rs.close();
 		} catch (SQLException e) {
 			s += "<BR><B>Error [1451600173] reading bank account codes - " + e.getMessage() + ".</B><BR>";
-		}			
+		}
+		
+		//In the event that there WERE no banks set up, add the option to choose 'NONE':
+		if(arrBankIDs.size() == 1) {
+		 arrBankIDs.add("0");
+		 arrBankDescriptions.add("None");
+		}
+		
 		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 				APVendor.Paramibankcode, 
 				arrBankIDs, 

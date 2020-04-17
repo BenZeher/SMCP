@@ -18,6 +18,7 @@ import SMDataDefinition.SMTableapchecks;
 import SMDataDefinition.SMTablebkbanks;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import smbk.BKBank;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMMasterEditAction;
@@ -68,6 +69,7 @@ public class APPrintChecksAction extends HttpServlet {
 			sRedirectString += 
 				"&" + "Warning" + "=" + "Error [1504206295] getting data connection - " + e1.getMessage()
 			;
+			sRedirectString = clsServletUtilities.URLEncode(sRedirectString);
 			redirectProcess(sRedirectString, response);
 			return;
 		}
@@ -83,6 +85,7 @@ public class APPrintChecksAction extends HttpServlet {
 					"&" + "Warning" + "=" + "Error [1504206296] displaying printed checks - " + e.getMessage()
 				;
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059463]");
+				sRedirectString = clsServletUtilities.URLEncode(sRedirectString);
 				redirectProcess(sRedirectString, response);
 				return;
 			}
@@ -99,6 +102,7 @@ public class APPrintChecksAction extends HttpServlet {
 					"&" + "Warning" + "=" + "Error [1504206296] displaying printed checks - " + e.getMessage()
 				;
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059465]");
+				sRedirectString = clsServletUtilities.URLEncode(sRedirectString);
 				redirectProcess(sRedirectString, response);
 				return;
 			}
@@ -115,6 +119,7 @@ public class APPrintChecksAction extends HttpServlet {
 					"&" + "Warning" + "=" + "Error [1504206396] reprinting selected checks - " + e.getMessage()
 				;
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059467]");
+				sRedirectString = clsServletUtilities.URLEncode(sRedirectString);
 				redirectProcess(sRedirectString, response);
 				return;
 			}
@@ -163,6 +168,7 @@ public class APPrintChecksAction extends HttpServlet {
 					"&" + "Warning" + "=" + "Error [1504206497] setting the next check number - " + e.getMessage()
 				;
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059472]");
+				sRedirectString = clsServletUtilities.URLEncode(sRedirectString);
 				redirectProcess(sRedirectString, response);
 				return;
 			}

@@ -215,11 +215,14 @@ public class ICPOHeader extends clsMasterEntry{
 		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsgdoclink, req).trim();
 		m_screatedbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramscreatedbyfullname, req).trim();
 
-		//System.out.println("[202003241030-1] - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
-		//	+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'.");
-		
+		if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
+			System.out.println("[202003241030-1] - ONHOLDCHECK - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
+				+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'.");
+		}
 		if (req.getParameter(ICPOHeader.Paramipaymentonhold) == null) {
-			//System.out.println("[202003271548-1] - req.getParameter(ICPOHeader.Paramipaymentonhold) == null");
+			if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
+				System.out.println("[202003271548-1] - ONHOLDCHECK - req.getParameter(ICPOHeader.Paramipaymentonhold) == null");
+			}
 			m_ipaymentonhold = "0";
 		}else {
 			if (clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req).compareToIgnoreCase("") == 0){

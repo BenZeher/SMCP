@@ -1,22 +1,24 @@
 package smic;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import smap.APVendor;
-import smcontrolpanel.SMMasterEditAction;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMOption;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTableicpoheaders;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
+import smap.APVendor;
+import smcontrolpanel.SMMasterEditAction;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ICEditPOAction extends HttpServlet{
 	
@@ -28,7 +30,16 @@ public class ICEditPOAction extends HttpServlet{
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.ICEditPurchaseOrders)){return;}
 	    //Read the entry fields from the request object:
+		
+		//Debugging code:
+		//***************************************************************************************
+
 		ICPOHeader entry = new ICPOHeader(request);
+		if ((entry.getsID().compareToIgnoreCase("") == 0) || (entry.getsID().compareToIgnoreCase("-1") == 0)) {
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+			   LocalDateTime now = LocalDateTime.now();  
+			System.out.println("[202004175958] - New PO created by " + smaction.getFullUserName() + " for vendor '" + entry.getsvendor() + " on " + dtf.format(now) + "." );
+		}
 		//smaction.getCurrentSession().setAttribute(ICPOHeader.ParamObjectName, entry);
 		String sRedirectString = "";
 

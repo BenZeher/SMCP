@@ -235,7 +235,6 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMManageDeliveryTickets = 1139L;
 	public static long FAEditLocation = 1140L;
 	public static long SMExecuteSQL = 1141L;
-	public static long SMImportData = 1142L;
 	public static long ICFindItemsSortedByMostUsed = 1143L;
 	public static long ICViewPODocuments = 1144L;
 	public static long SMCreateItemsFromOrderDetails = 1145L;
@@ -1413,13 +1412,6 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("Required to access the 'Execute SQL Command' function, which allows updates and inserts to the inderlying database.  This should be highly restricted"
 					+ " to prevent accidental changes to the database.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
-			
-			arrFunctions.add("SM Import Data"); 
-			arrFunctionIDs.add(SMImportData); 
-			arrFunctionLinks.add("smcontrolpanel.SMImportDataSelect"); 
-			arrFunctionDescriptions.add("Required to access the 'Import Data Command' function, which uploads the csv file onto the database.  This should be highly restricted"
-					+ " to prevent accidental changes to the database.");
-			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 
 			arrFunctions.add("IC Find Items Sorted By Most Used");
 			arrFunctionIDs.add(ICFindItemsSortedByMostUsed);
@@ -2571,12 +2563,6 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smgl.GLEditFiscalPeriodsSelect"); 
 			arrFunctionDescriptions.add("Used to add new fiscal years and periods befoe beginning a new year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
-						
-			arrFunctions.add("SM Import Data");
-			arrFunctionIDs.add(SMImportData);
-			arrFunctionLinks.add("smcontrolpanel.SMImportDataSelect"); 
-			arrFunctionDescriptions.add("Required to access the Upload SQL CSV Command function, which uploads the csv file onto the database.  This should be highly restricted");
-			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 			
 			arrFunctions.add("SM Edit Server Settings");
 			arrFunctionIDs.add(SMEditServerSettingsFile);

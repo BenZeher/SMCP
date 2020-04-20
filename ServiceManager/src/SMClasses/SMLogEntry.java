@@ -153,7 +153,6 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_SMWORKORDERCONCURRENCYERROR = "SMWORKORDERCONCURRENCYERROR";
 	public final static String LOG_OPERATION_SMVIEWAPPOINTMENTCALENDAR = "SMAPPOINTMENTCALENDAR";
 	public final static String LOG_OPERATION_ICRECEIVINGPO = "ICRECEIVINGPO";
-	public final static String LOG_OPERATION_SMIMPORTDATA = "SMIMPORTDATA";
 	public final static String LOG_OPERATION_SMPRINTINTERACTIVEDELIVERYTICKET = "SMPRINTINTERACTIVEDELIVERYTICKET";
 	public final static String LOG_OPERATION_ARCLEARPOSTEDBATCHES = "ARCLEARPOSTEDBATCHES";
 	public final static String LOG_OPERATION_ICCLEARPOSTEDBATCHES = "ICCLEARPOSTEDBATCHES";
@@ -716,9 +715,6 @@ public class SMLogEntry {
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICRECEIVINGPO);
     	m_arrOperationLabelDescriptions.add("Records IC PO receipt");
-    	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_SMIMPORTDATA);
-    	m_arrOperationLabelDescriptions.add("Records use of the SM Import Data function");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTINTERACTIVEDELIVERYTICKET);
     	m_arrOperationLabelDescriptions.add("Records printing of the 'interactive' Delivery Ticket");

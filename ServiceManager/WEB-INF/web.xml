@@ -1796,16 +1796,6 @@
     </servlet>
    
     <servlet>
-        <servlet-name>SMImportDataAction</servlet-name>
-        <servlet-class>smcontrolpanel.SMImportDataAction</servlet-class>
-    </servlet>
-   
-    <servlet>
-        <servlet-name>SMImportDataSelect</servlet-name>
-        <servlet-class>smcontrolpanel.SMImportDataSelect</servlet-class>
-    </servlet>
-   
-    <servlet>
         <servlet-name>SMImportWorkOrdersAction</servlet-name>
         <servlet-class>smcontrolpanel.SMImportWorkOrdersAction</servlet-class>
     </servlet>
@@ -5101,16 +5091,6 @@
     <servlet-mapping>
         <servlet-name>SMExecuteSQLSelect</servlet-name>
         <url-pattern>/smcontrolpanel.SMExecuteSQLSelect</url-pattern>
-    </servlet-mapping>
-   
-    <servlet-mapping>
-        <servlet-name>SMImportDataAction</servlet-name>
-        <url-pattern>/smcontrolpanel.SMImportDataAction</url-pattern>
-    </servlet-mapping>
-   
-    <servlet-mapping>
-        <servlet-name>SMImportDataSelect</servlet-name>
-        <url-pattern>/smcontrolpanel.SMImportDataSelect</url-pattern>
     </servlet-mapping>
    
     <servlet-mapping>

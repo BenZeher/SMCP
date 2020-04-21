@@ -88,6 +88,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	public static final String FULLY_DISPLAYED_WARNING_FIELD = "FULLYDISPLAYEDWARNINGTRIGGERED";
 	public static final String FULLY_DISPLAYED_WARNING_VALUE_YES = "YES";
 	public static final String FULLY_DISPLAYED_WARNING_VALUE_NO = "NO";
+	public static final String PRE_POSTING_WO_PERCENT = "PREPOSTINGWOPERCENT";
+	public static final String PRE_POSTING_WO_DISCOUNT = "PREPOSTINGWODISCOUNT";
+	public static final String PRE_POSTING_WO_DESC = "PREPOSTINGWODESC";
 	
 
 	//This controls if the signature box should be displayed or not.
@@ -870,30 +873,26 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "</TR>"
 			;
 			
+			//
 			//Add a row for the total discounted amount and percentage:
 			BigDecimal bdDiscountedAmount = new BigDecimal(dummyorder.getM_dPrePostingInvoiceDiscountAmount().replace(",",""));
-			if (bdDiscountedAmount.compareTo(BigDecimal.ZERO) != 0){
+			//if (bdDiscountedAmount.compareTo(BigDecimal.ZERO) != 0){
+			s += "<TR>"
+					+ "<TD align=left colspan=2><FONT SIZE=2><B>" 
+					+ dummyorder.getM_sPrePostingInvoiceDiscountDesc() + " Discount Percentage on Order:&nbsp;(" 
+					+ dummyorder.getM_dPrePostingInvoiceDiscountPercentage() + "%)" 
+					+ "<B>&nbsp;&nbsp; Discount Total on Order: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDiscountedAmount)
+					;
+
+			/*Add a row for the sub total after discount:
 				s += "<TR>"
-					+ "<TD align=right><FONT SIZE=2><B>" 
-						+ dummyorder.getM_sPrePostingInvoiceDiscountDesc() + " (" 
-						+ dummyorder.getM_dPrePostingInvoiceDiscountPercentage() + "%)" + "</B></FONT></TD>"
-					+ "<TD align=right>"
-					+ "<FONT SIZE=2>" 
-					+ "<B>-" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDiscountedAmount) + "</B></FONT>"
+					+ "<TD align=left colspan=2 ><FONT SIZE=2><B>Subtotal after order discount: "
+					+ "<FONT SIZE=2>"*/ 
+			s+= "<B>&nbsp;&nbsp;Subtotal after order discount: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount)) + "</B></FONT>"
 					+ "</TD>"
 					+ "</TR>"
-				;
-			
-				//Add a row for the sub total after discount:
-				s += "<TR>"
-					+ "<TD align=right ><FONT SIZE=2><B>Subtotal after discount:</B></FONT></TD>"
-					+ "<TD align=right>"
-					+ "<FONT SIZE=2>" 
-					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount)) + "</B></FONT>"
-					+ "</TD>"
-					+ "</TR>"
-				;
-			}
+					;
+			//}
 
 			//Add a row for the tax:
 			String sTaxAmount;
@@ -911,6 +910,60 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "</TD>"
 				+ "</TR>"
 			;
+			
+			//TODO
+			/*
+			String sDiscountAmount;
+			String sTotalWithTaxWithoutDiscount;
+			try {
+				sDiscountAmount = dummyorder.getM_dPrePostingInvoiceDiscountAmount();
+				sTotalWithTaxWithoutDiscount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.add(new BigDecimal(sTaxAmount.replace(",", ""))));
+
+			} catch (Exception e) {
+				sDiscountAmount = e.getMessage();
+				sTotalWithTaxWithoutDiscount = e.getMessage();
+			}
+			s += "<TR>"
+					+ "<TD align=left colspan=2><FONT SIZE=2><B> " 
+					+ "Discount Amount on Order: "
+					+  sDiscountAmount 
+					+ " Total Without Discount: "
+					+ sTotalWithTaxWithoutDiscount
+					+ "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+				;
+			*/
+			
+			//TODO Add Text Boxes for Discounts
+
+/*			String sWODiscountAmount = workorder.getdPrePostingWODiscountAmount();
+			String sWODiscountPercentage = workorder.getdPrePostingWODiscountPercentage();
+			String sWODDiscountDescription = workorder.getsPrePostingWODiscountDesc();
+			String sWODiscountTotal ;
+
+			s += "<TR>"
+					+ "<TD align=left colspan=2><FONT SIZE=2><B> " 
+					+ "Work Order Discount Amount: "
+					+  sWODiscountAmount 
+
+					+ sWODiscountPercentage
+					+ " Work Order Discount Description: "
+					+ sWODDiscountDescription
+					+ " Work Order Discount Percentage: ";
+
+			s+= "<INPUT TYPE=TEXT"
+					+ " NAME=\"" + PRE_POSTING_WO_PERCENT + "\""
+					+ " id = \"" + PRE_POSTING_WO_PERCENT + "\""
+					+ " VALUE=\"" + sWODiscountPercentage + "\""
+					+ " SIZE=" + "60"
+					+ ">"
+					+ "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+			*/
+			
 			
 			//Add a row for total INCLUDING tax:
 			String sTotalWithTax = "";

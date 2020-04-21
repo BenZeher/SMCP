@@ -57,6 +57,12 @@ public class SMTableworkorders {
     public static final String llasteditedbyuserid = "llasteditedbyuserid";
     public static final String sscheduledbyfullname = "sscheduledbyfullname";
     public static final String lscheduledbyuserid = "lscheduledbyuserid";
+    
+    //Discount Fields	
+    public static final String dPrePostingWODiscountPercentage = "dPrePostingWODiscountPercentage";
+    public static final String dPrePostingWODiscountAmount = "dPrePostingWODiscountAmount";
+    public static final String sPrePostingWODiscountDesc = "sPrePostingWODiscountDesc";
+    
 	
 	public static final int smechanicinitialsLength = 4;
 	public static final int smechanicnameLength = 50;
@@ -74,6 +80,7 @@ public class SMTableworkorders {
 	public static final int sgdoclinkLength = 254;
 	public static final int lsignatureboxwidthlength = 11;
 	public static final int sdbaworkorderlogolength = 128;
+	public static final int sPrePostingWODiscountDescLength = 255;
 	
 	//Constants for using signatures in work orders:
 	public static final String SIGNATURE_DISPLAY_WIDTH = "200";  //Originally "200"; 

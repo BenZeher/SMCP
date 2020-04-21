@@ -295,7 +295,14 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		setsschedulechangedbyfullname(clsManageRequestParameters.get_Request_Parameter(Paramssschedulechangedbyfullname, req).trim().replace("&quot;", "\""));
 		
 		setdPrePostingWODiscountPercentage(clsManageRequestParameters.get_Request_Parameter(ParamdPrePostingWODiscountPercentage, req).trim());
+		if (getdPrePostingWODiscountPercentage().compareToIgnoreCase("") == 0){
+			setdPrePostingWODiscountPercentage("0.0");
+		}
 		setdPrePostingWODiscountAmount(clsManageRequestParameters.get_Request_Parameter(ParamdPrePostingWODiscountAmount, req).trim());
+		if (getdPrePostingWODiscountAmount().compareToIgnoreCase("") == 0){
+			setdPrePostingWODiscountAmount("0.0");
+		}
+		
 		setsPrePostingWODiscountDesc (clsManageRequestParameters.get_Request_Parameter(ParamsPrePostingWODiscountDesc, req).trim().replace("&quot;", "\""));
 
 		
@@ -1082,6 +1089,9 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	    	+ ", " + SMTableworkorders.dattimedone + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdattimedone()) + "'"
 			+ ", " + SMTableworkorders.madditionalworkcomments + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmadditionalworkcomments()) + "'"
 			+ ", " + SMTableworkorders.mcomments + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmcomments()) + "'"
+			+ ", " + SMTableworkorders.dPrePostingWODiscountAmount + " = '" + clsDatabaseFunctions.FormatSQLStatement(getdPrePostingWODiscountAmount()) + "'"
+			+ ", " + SMTableworkorders.dPrePostingWODiscountPercentage + " = '" + clsDatabaseFunctions.FormatSQLStatement(getdPrePostingWODiscountPercentage()) + "'"
+			+ ", " + SMTableworkorders.sPrePostingWODiscountDesc + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsPrePostingWODiscountDesc()) + "'"
 			+ " WHERE (" 
 				+ SMTableworkorders.lid + " = " + getlid() 
 			+ ")";

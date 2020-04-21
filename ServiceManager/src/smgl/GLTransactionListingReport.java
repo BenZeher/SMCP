@@ -858,19 +858,23 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					(rsTransactions.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod) != iPreviousFiscalPeriod)
 					&& (iPreviousFiscalPeriod != 0)
 				){
-					sStringBuffer += printFiscalPeriodSubtotals(
-						sAccount,
-						sAccountDescription,
-						iPreviousFiscalYear,
-						iPreviousFiscalPeriod,
-						bdNetChangeForFiscalPeriod,
-						getEndingAccountBalance(
-							conn,
+					//And DON'T print the period subtotal line if the user only chose one single period:
+					//System.out.println("[202004211848] - iStartingFiscalPeriodProduct = " + iStartingFiscalPeriodProduct + ", iEndingFiscalPeriodProduct = " + iEndingFiscalPeriodProduct);
+					if (iStartingFiscalPeriodProduct != iEndingFiscalPeriodProduct) {
+						sStringBuffer += printFiscalPeriodSubtotals(
 							sAccount,
+							sAccountDescription,
 							iPreviousFiscalYear,
-							iPreviousFiscalPeriod
-						)
-					);
+							iPreviousFiscalPeriod,
+							bdNetChangeForFiscalPeriod,
+							getEndingAccountBalance(
+								conn,
+								sAccount,
+								iPreviousFiscalYear,
+								iPreviousFiscalPeriod
+							)
+						);
+					}
 					bdNetChangeForFiscalPeriod = BigDecimal.ZERO;
 					bdEndingBalanceForPeriod = BigDecimal.ZERO;
 				}
@@ -971,14 +975,16 @@ public class GLTransactionListingReport  extends java.lang.Object{
 
 		//If there were any transactions, print the last set of fiscal period subtotals:
 		if (iLoopCounter != 0){
-			s += printFiscalPeriodSubtotals(
-				sAccount,
-				sAccountDescription,
-				iPreviousFiscalYear,
-				iPreviousFiscalPeriod,
-				bdNetChangeForFiscalPeriod,
-				bdEndingBalanceForPeriod
-			);
+			if (iStartingFiscalPeriodProduct != iEndingFiscalPeriodProduct) {
+				s += printFiscalPeriodSubtotals(
+					sAccount,
+					sAccountDescription,
+					iPreviousFiscalYear,
+					iPreviousFiscalPeriod,
+					bdNetChangeForFiscalPeriod,
+					bdEndingBalanceForPeriod
+				);
+			}
 		}
 
 		//Finally, print the totals line for the account:

@@ -38,7 +38,7 @@ public class ICEditPOAction extends HttpServlet{
 		if ((entry.getsID().compareToIgnoreCase("") == 0) || (entry.getsID().compareToIgnoreCase("-1") == 0)) {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 			   LocalDateTime now = LocalDateTime.now();  
-			System.out.println("[202004175958] - New PO created by " + smaction.getFullUserName() + " for vendor '" + entry.getsvendor() + " on " + dtf.format(now) + "." );
+			System.out.println("[202004175958] - ONHOLDCHECK - New PO created by " + smaction.getFullUserName() + " for vendor '" + entry.getsvendor() + " on " + dtf.format(now) + "." );
 		}
 		//smaction.getCurrentSession().setAttribute(ICPOHeader.ParamObjectName, entry);
 		String sRedirectString = "";

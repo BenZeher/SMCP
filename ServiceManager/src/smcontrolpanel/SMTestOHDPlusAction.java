@@ -76,63 +76,7 @@ public class SMTestOHDPlusAction extends HttpServlet{
 		
 		return s;
 	}
-	
-	private String parseJSONString(String sJASONString) throws Exception{
-		String s = "";
-		
-		String jsonString = "{" 
-				+ " \"MyResponse\": {" 
-				+ " \"count\": 3," 
-				+ " \"listTsm\": [{" 
-				+ " \"id\": \"b90c6218-73c8-30bd-b532-5ccf435da766\"," 
-				+ " \"simpleid\": 1," 
-				+ " \"name\": \"vignesh1\"" 
-				+ " }," 
-				+ " {" 
-				+ " \"id\": \"b90c6218-73c8-30bd-b532-5ccf435da766\"," 
-				+ " \"simpleid\": 2," 
-				+ " \"name\": \"vignesh2\"" 
-				+ " }," 
-				+ " {" 
-				+ " \"id\": \"b90c6218-73c8-30bd-b532-5ccf435da766\"," 
-				+ " \"simpleid\": 3," 
-				+ " \"name\": \"vignesh3\"" + " }]" 
-				+ " }" + "}";
-		
-		JSONParser parser = new JSONParser();
-		String sTestString = "[0,{\"1\":{\"2\":{\"3\":{\"4\":[5,{\"6\":7}]}}}}]";
 
-		try{
-			Object obj = parser.parse(sTestString);
-			JSONArray array = (JSONArray)obj;
-		
-			System.out.println("[1579275117] The 2nd element of array");
-			System.out.println(array.get(1));
-			System.out.println();
-
-			JSONObject obj2 = (JSONObject)array.get(1);
-			System.out.println("Field \"1\"");
-			System.out.println(obj2.get("1"));    
-
-			s = "{}";
-			obj = parser.parse(s);
-			System.out.println(obj);
-
-			s = "[5,]";
-			obj = parser.parse(s);
-			System.out.println(obj);
-
-			s = "[5,,2]";
-			obj = parser.parse(s);
-			System.out.println(obj);
-		}catch(ParseException pe) {
-	
-			System.out.println("position: " + pe.getPosition());
-			System.out.println(pe);
-		}
-
-		return "";
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

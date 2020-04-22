@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="/usr/share/java/commons-codec-1.11.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/javax.mail.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/activation.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/json-simple-1.1.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/json-20190722.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

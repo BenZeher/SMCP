@@ -19,7 +19,6 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablecallsheets;
-import SMDataDefinition.SMTablesalesperson;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;

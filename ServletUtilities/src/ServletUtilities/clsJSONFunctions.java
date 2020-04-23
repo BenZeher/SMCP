@@ -107,63 +107,10 @@ public class clsJSONFunctions {
 			System.out.println(name.get("C_Name"));
 			
 			for (int i = 0; i < jarray.size(); i++) {
-				JSONObject keyvaluepair = (JSONObject)jarray.get(i);
+				//JSONObject keyvaluepair = (JSONObject)jarray.get(i);
 				//System.out.println(keyvaluepair.);
 			}
 			
-	        //JSONObject obj = new JSONObject(jsonString);
-	        //String pageName = obj.getJSONObject("items").getString("C_Name");
-
-	        //System.out.println(pageName);
-
-	        //JSONArray arr 
-	        //for (int i = 0; i < arr.length(); i++) {
-	        //    String post_id = arr.getJSONObject(i).getString("C_Status");
-	        //    System.out.println(post_id);
-	        //}
-	        
-	        /*
-	         * This works, if we use the org.json.JSONObject library, etc.:
-	         import org.json.JSONArray;
-			import org.json.JSONObject;
-			
-			public class ParseJSON {
-			    static String json = "...";
-			    public static void main(String[] args) {
-			        JSONObject obj = new JSONObject(json);
-			        String pageName = obj.getJSONObject("pageInfo").getString("pageName");
-			
-			        System.out.println(pageName);
-			
-			        JSONArray arr = obj.getJSONArray("posts");
-			        for (int i = 0; i < arr.length(); i++) {
-			            String post_id = arr.getJSONObject(i).getString("post_id");
-			            System.out.println(post_id);
-			        }
-			    }
-}
-	         * 
-	         */
-	        
-			/*
-			
-			JSONArray array = (JSONArray)obj;
-			
-			System.out.println("The 2nd element of array");
-	         System.out.println(array.get(1));
-	         System.out.println();
-			
-			JSONObject jo = (JSONObject) obj;
-		
-			long firstName = (Long) jo.get("itemsPerPage");
-			System.out.println(Long.toString(firstName));
-
-			JSONObject objItems = (JSONObject)jo.get("items");
-			
-			String sName = (String) objItems.get("C_Name");
-			System.out.println(sName);
-			*/
-
 		}catch(Exception e) {
 	
 			System.out.println(e.getMessage());

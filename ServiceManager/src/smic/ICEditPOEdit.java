@@ -844,10 +844,8 @@ public class ICEditPOEdit  extends HttpServlet {
 		
 		//On hold checkbox:
 		String sChecked = "";
-		String sCheckBoxValue = "";
 		if (entry.getspaymentonhold().compareToIgnoreCase("1") == 0){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
-			sCheckBoxValue = ON_HOLD_CHECKBOX_TRUE_VALUE;
 		}//else{
 			//sChecked = clsServletUtilities.CHECKBOX_UNCHECKED_STRING;
 		//}

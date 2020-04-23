@@ -2,20 +2,14 @@ package smcontrolpanel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import SMClasses.SMOHDirectSettings;
-import SMClasses.SMOption;
-import SMClasses.SMOptionInput;
 import SMDataDefinition.SMTableohdirectsettings;
-import SMDataDefinition.SMTablesmoptions;
-import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsOHDirectSettings;
 import ServletUtilities.clsManageRequestParameters;
 
 public class SMEditOHDirectSettingsEdit  extends HttpServlet {
@@ -61,11 +55,11 @@ public class SMEditOHDirectSettingsEdit  extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + m_sDBID 
 				+ "\">Return to Main Menu</A><BR>");
 	    
-		SMOHDirectSettings ohdobj = new SMOHDirectSettings();
+		clsOHDirectSettings ohdobj = new clsOHDirectSettings();
 		
-		if (CurrentSession.getAttribute(SMOHDirectSettings.ParamObjectName) != null) {
-			ohdobj = (SMOHDirectSettings)CurrentSession.getAttribute(SMOHDirectSettings.ParamObjectName);
-			CurrentSession.removeAttribute(SMOHDirectSettings.ParamObjectName);
+		if (CurrentSession.getAttribute(clsOHDirectSettings.ParamObjectName) != null) {
+			ohdobj = (clsOHDirectSettings)CurrentSession.getAttribute(clsOHDirectSettings.ParamObjectName);
+			CurrentSession.removeAttribute(clsOHDirectSettings.ParamObjectName);
 		}else {
 			try {
 				ohdobj.load(getServletContext(), m_sDBID, m_sUserID, m_sUserFullName);
@@ -85,7 +79,7 @@ public class SMEditOHDirectSettingsEdit  extends HttpServlet {
 		m_pwOut.println("</BODY></HTML>");
 	}
 
-	private void createEntryScreen(String sDBID, String sUserFullName, String sUserID, SMOHDirectSettings objOHDirectSettings) throws Exception{
+	private void createEntryScreen(String sDBID, String sUserFullName, String sUserID, clsOHDirectSettings objOHDirectSettings) throws Exception{
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditOHDirectSettingsAction' METHOD='POST'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + sDBID + "\">");

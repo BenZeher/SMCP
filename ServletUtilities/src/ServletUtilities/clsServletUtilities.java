@@ -15,7 +15,6 @@ import java.net.SocketTimeoutException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
-import java.security.Security;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;

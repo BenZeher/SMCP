@@ -1,6 +1,7 @@
 package smar;
 import java.io.IOException;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -17,7 +18,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServlet;
 
-import SMClasses.SMOHDirectSettings;
+import SMClasses.SMOHDirectQuoteList;
 import ServletUtilities.clsJSONFunctions;
 import ServletUtilities.clsOEAuthFunctions;
 import smgl.GLTransactionBatch;
@@ -161,51 +162,29 @@ public class TESTBatchExport extends HttpServlet{
 		*/
 		
 		//TEST OEAuth2 token processing:
-		String sClientID = "OHDIRECT_TRN~RsIYM0KCBFUFPett0vpIByzc0lTOoWf_XmTNIyPPX9w";//clientId
-		String sClientSecret = "HbKO2Gik6H6AY9ajZOCD3jr8Zs2Ya2B1yOcW8nbP4DnXcgUyZDXORg2X0qPA2NjV8uqSGObFGSiPXt5O_hll9A";//client secret
-		String tokenURL = "https://mingle-sso.inforcloudsuite.com:443/OHDIRECT_TRN/as/token.oauth2"; //"https://api.byu.edu/token";
-		String sTokenUserName = "OHDIRECT_TRN#OJN29nurKChctKa-uVCqIqigIHzSS6n1D5I4EJiRgQWnPZd_IQPA_oM7c2LV43tfMDt4DZajs5Ge0hwCSwf3EQ";
-		String sTokenPassword = "RdlTFYkWWDXjSst7SHq1Cw6SwmvHpQ1yyG6g2YTRV1mB1seOFTP8oTdmAXZ7FwPayzR54VysYutAhD6k0ek8Aw";
-		String sFullRequestString = "https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_QuoteNumberString%20eq%20'SQAL000008-1'";
+		//String sClientID = "OHDIRECT_TRN~RsIYM0KCBFUFPett0vpIByzc0lTOoWf_XmTNIyPPX9w";//clientId
+		//String sClientSecret = "HbKO2Gik6H6AY9ajZOCD3jr8Zs2Ya2B1yOcW8nbP4DnXcgUyZDXORg2X0qPA2NjV8uqSGObFGSiPXt5O_hll9A";//client secret
+		//String tokenURL = "https://mingle-sso.inforcloudsuite.com:443/OHDIRECT_TRN/as/token.oauth2"; //"https://api.byu.edu/token";
+		//String sTokenUserName = "OHDIRECT_TRN#OJN29nurKChctKa-uVCqIqigIHzSS6n1D5I4EJiRgQWnPZd_IQPA_oM7c2LV43tfMDt4DZajs5Ge0hwCSwf3EQ";
+		//String sTokenPassword = "RdlTFYkWWDXjSst7SHq1Cw6SwmvHpQ1yyG6g2YTRV1mB1seOFTP8oTdmAXZ7FwPayzR54VysYutAhD6k0ek8Aw";
+		//String sFullRequestString = "https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_QuoteNumberString%20eq%20'SQAL000008-1'";
 		
-		SMOHDirectSettings ohd = new SMOHDirectSettings();
+		String sRequest = "C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'";
+		ArrayList<String> arrQuoteNumbers = new ArrayList<String>(0);
+		ArrayList<String> arrNames = new ArrayList<String>(0);
+		SMOHDirectQuoteList ql = new SMOHDirectQuoteList();
 		try {
-			ohd.load(conn);
-		} catch (Exception e2) {
-			System.out.println("[202004231350] - " + e2.getMessage());
+			ql.getQuoteList(sRequest, conn);
+		} catch (Exception e4) {
+			System.out.println("[202004233047] - " + e4.getMessage());
 		}
-		
-		
-		String sToken = "";
-		try {
-			sToken = clsOEAuthFunctions.getResourceCredentials(
-				ohd.getstokenusername(), 
-				ohd.getstokenuserpassword(), 
-				ohd.getstokenurl(), 
-				ohd.getsclientid(), 
-				ohd.getsclientsecret()
-			);
-		} catch (Exception e1) {
-			System.out.println("Error [202004225735] - error getting token - " + e1.getMessage());
-		}
-		System.out.println("[202004220741] - sToken = '" + sToken + "'.");
-		
-		String sResult = "";
-		//sToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkluZm9yQWNjZXNzVG9rZW5TaWduaW5nQ2VydGlmaWNhdGUtMTU3NjkxMTAyMyJ9.eyJzY29wZSI6Im51bGwiLCJjbGllbnRfaWQiOiJPSERJUkVDVF9UUk5-UnNJWU0wS0NCRlVGUGV0dDB2cElCeXpjMGxUT29XZl9YbVROSXlQUFg5dyIsImp0aSI6IjNNbEJ4NTlVYVFuUFJBS0tFclRnbnBQUTlCS2hZRkk0M2ZOOSIsIlNlcnZpY2VBY2NvdW50IjoiT0hESVJFQ1RfVFJOI09KTjI5bnVyS0NoY3RLYS11VkNxSXFpZ0lIelNTNm4xRDVJNEVKaVJnUVduUFpkX0lRUEFfb003YzJMVjQzdGZNRHQ0RFphanM1R2UwaHdDU3dmM0VRIiwiSWRlbnRpdHkyIjoiZThlN2FkNWEtMzI3My00OWRiLThmYzgtMTk3YzE3M2E5M2VjIiwiVGVuYW50IjoiT0hESVJFQ1RfVFJOIiwiRW5mb3JjZVNjb3Blc0ZvckNsaWVudCI6IjAiLCJleHAiOjE1ODc1MDk4NzV9.Kf6ASwqab8kJBZL82x01YJtqSX1hbLhySt0-dy--_3hb9ZVXqMA57MiSRBE5VYbou_0ZD2FtbGmVMCAC7mwagUeRdpG0or8BGkb3QT5uL2IBGEGiakJFmEXgyXYxa4uhdLdcQFcuUtlXdIz8mE3pkr8hPY-FxANAobn_2vLxZZHEprIA9o7TOt8PQqxpQCY0qEUalbJlc9GpzFt7JLyzErxSQ-ov2zqMZ4jlCMwbixV5gC4BZdL8u_vmYZhmvPmQJSa62trXkc-ud_Yru7I42SVWU838UtjfSEQbRRFonxaMkAYM1tVyEv-7jF1LKX1j3LKo87-fhVO72P15tbUvyg";
-		try {
-			sResult = clsOEAuthFunctions.getOHDirectPlusRequest(sToken, sFullRequestString);
-		} catch (Exception e1) {
-			System.out.println("[202004220010] - " + e1.getMessage());
-		}
-		System.out.println("[202004220505] - sResult = " + sResult);
-		
-		try {
-			clsJSONFunctions.parseJSONString(sResult);
-		} catch (Exception e1) {
-			System.out.println(e1.getMessage());
+		arrQuoteNumbers = ql.getQuoteNumbers();
+		arrNames = ql.getQuoteNames();
+		for (int i = 0; i < arrNames.size(); i++) {
+			System.out.println("Number " + arrQuoteNumbers.get(i) + ", Name " + i + " = '" + arrNames.get(i) + "'.");
 		}
 		System.out.println("DONE");
-		
+
 		/*
 		String sOnHoldDate = "";
 		try {

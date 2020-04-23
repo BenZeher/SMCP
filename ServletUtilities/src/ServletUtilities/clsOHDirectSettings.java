@@ -1,4 +1,4 @@
-package SMClasses;
+package ServletUtilities;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -7,11 +7,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMDataDefinition.SMTableohdirectsettings;
-import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageRequestParameters;
-import ServletUtilities.clsMasterEntry;
 
-public class SMOHDirectSettings extends clsMasterEntry{
+public class clsOHDirectSettings extends clsMasterEntry{
 
 	public static final String ParamObjectName = "OHDirect Connection Settings";
 
@@ -25,12 +22,12 @@ public class SMOHDirectSettings extends clsMasterEntry{
 
 	private boolean bDebugMode = false;
 
-	public SMOHDirectSettings() {
+	public clsOHDirectSettings() {
 		super();
 		initEntryVariables();
 	}
 
-	public SMOHDirectSettings(HttpServletRequest req){
+	public clsOHDirectSettings(HttpServletRequest req){
 		super(req);
 		initEntryVariables();
 		m_sclientid = clsManageRequestParameters.get_Request_Parameter(

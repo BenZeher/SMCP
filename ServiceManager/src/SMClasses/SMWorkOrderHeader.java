@@ -1599,6 +1599,9 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		+ ", " + SMTableworkorders.mdbaaddress
 		+ ", " + SMTableworkorders.mdbaremittoaddress
 		+ ", " + SMTableworkorders.sdbaworkorderlogo
+		+ ", " + SMTableworkorders.dPrePostingWODiscountAmount 
+		+ ", " + SMTableworkorders.dPrePostingWODiscountPercentage 
+		+ ", " + SMTableworkorders.sPrePostingWODiscountDesc 
 		+ ") VALUES ("
 		+ " " + wo_header.getsbackchargehours().replace(",", "")
 		+ ", " + wo_header.getsqtyofhours().replace(",", "")
@@ -1630,6 +1633,9 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		+ ", '" + wo_header.getmdbaaddress() + "'"
 		+ ", '" + wo_header.getmdbaremittoaddress() + "'"
 		+ ", '" + wo_header.getSdbaworkorderlogo() + "'"
+		+ ", " + wo_header.getdPrePostingWODiscountAmount() 
+		+ ", " + wo_header.getdPrePostingWODiscountPercentage() 
+		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(wo_header.getsPrePostingWODiscountDesc()) + "'"
 		+ ")"
 		;
 		
@@ -2238,6 +2244,9 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				setmdbaaddress(rs.getString(SMTableworkorders.mdbaaddress));
 				setmdbaremittoaddress(rs.getString(SMTableworkorders.mdbaremittoaddress));
 				setsdbaworkorderlogo(rs.getString(SMTableworkorders.sdbaworkorderlogo));
+				setdPrePostingWODiscountPercentage (SMTableworkorders.dPrePostingWODiscountPercentage);
+				setdPrePostingWODiscountAmount (SMTableworkorders.dPrePostingWODiscountAmount);
+				setsPrePostingWODiscountDesc (SMTableworkorders.sPrePostingWODiscountDesc);
 				rs.close();
 			}catch (SQLException ex){
 				throw new Exception("Error [1391438248] loading " + SMTableworkorders.ObjectName + " with SQL: " + SQL + " - " + ex.getMessage());

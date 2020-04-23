@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.MySQLs;
+import SMClasses.SMUser;
 import SMDataDefinition.SMTabledefaultsalesgroupsalesperson;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableusers;
@@ -152,12 +153,45 @@ public class SMEditSalespersonEdit extends HttpServlet {
 	        		"Salesperson's title.");
 	        
 	        //User ID:
-	        sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-	        		SMTablesalesperson.lSalespersonUserID, 
+	        ArrayList<String> sUserListValues = new ArrayList<String>();
+	        sUserListValues.add("0");
+	        ArrayList<String> sUserListDescriptions = new ArrayList<String>();
+	        sUserListDescriptions.add("***Select User***");
+	        
+	    	try{
+				String sUserPrefix = "";
+		        sSQL = MySQLs.Get_User_List_SQL(true);
+		        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
+	        	
+	        	while (rsUsers.next()){
+	        		//flag that there are multiple entries.
+	        		if (rsUsers.getInt(SMTableusers.iactive) != 1){
+	        			sUserPrefix = "*";
+	        		}else{
+	        			sUserPrefix = "";
+	        		}
+	        		sUserListValues.add(rsUsers.getString(SMTableusers.lid));
+	        		sUserListDescriptions.add(sUserPrefix + rsUsers.getString(SMTableusers.sUserFirstName) + " " + rsUsers.getString(SMTableusers.sUserLastName)
+    				+ " - " + rsUsers.getString(SMTableusers.sUserName));
+	        	}
+	        	rsUsers.close();
+
+			}catch (SQLException ex){
+		    	System.out.println("[1579271805] Error in SMEditUsers class!!");
+		        System.out.println("SQLException: " + ex.getMessage());
+		        System.out.println("SQLState: " + ex.getSQLState());
+		        System.out.println("SQL: " + ex.getErrorCode());
+				//return false;
+			}
+	    	
+		    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
+		    		SMTablesalesperson.lSalespersonUserID, 
+	        		sUserListValues, 
 	        		clsStringFunctions.filterZeroStringToEmptyString(Integer.toString(rs.getInt(SMTablesalesperson.lSalespersonUserID))), 
-	        		SMTablesalesperson.lSalespersonUserIDLength, 
+	        		sUserListDescriptions, 
 	        		"User ID:", 
-	        		"The salesperson's system user ID, if he is set up as a user.");
+	        		"The salesperson's system user ID, if they are set up as a user."
+	        		);
 
 	        //First name:
 	        sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(

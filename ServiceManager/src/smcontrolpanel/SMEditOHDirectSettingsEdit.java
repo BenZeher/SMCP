@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMOHDirectSettings;
 import SMClasses.SMOption;
 import SMClasses.SMOptionInput;
+import SMDataDefinition.SMTableohdirectsettings;
 import SMDataDefinition.SMTablesmoptions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -95,33 +96,69 @@ public class SMEditOHDirectSettingsEdit  extends HttpServlet {
 		//Display the fields:
 		//Client ID:
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Client ID</B>:</TD>");
-		m_pwOut.println("<TD><B>" + objOHDirectSettings.getsclientid() + "</B></TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMTableohdirectsettings.sclientid + "\""
+				+ " VALUE=\"" + objOHDirectSettings.getsclientid() + "\""
+				+ "SIZE=120"
+				+ "; MAXLENGTH=" + Integer.toString(SMTableohdirectsettings.sclientidlength)
+				+ ">"
+				+ "</TD>");
 		m_pwOut.println("<TD>Client ID (this is the 'ci' value from the ionapi file provided by OHD Corp.)</TD></TR>");
 
 		//Client secret:
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Client secret</B>:</TD>");
-		m_pwOut.println("<TD><B>" + objOHDirectSettings.getsclientsecret() + "</B></TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMTableohdirectsettings.sclientsecret + "\""
+				+ " VALUE=\"" + objOHDirectSettings.getsclientsecret() + "\""
+				+ "SIZE=120"
+				+ "; MAXLENGTH=" + Integer.toString(SMTableohdirectsettings.sclientsecretlength)
+				+ ">"
+				+ "</TD>");
 		m_pwOut.println("<TD>Client secret (this is the 'cs' value from the ionapi file provided by OHD Corp.))</TD></TR>");
 		
 		//token user name
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Token user name</B>:</TD>");
-		m_pwOut.println("<TD><B>" + objOHDirectSettings.getstokenusername() + "</B></TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMTableohdirectsettings.stokenusername + "\""
+				+ " VALUE=\"" + objOHDirectSettings.getstokenusername() + "\""
+				+ "SIZE=120"
+				+ "; MAXLENGTH=" + Integer.toString(SMTableohdirectsettings.stokenusernamelength)
+				+ ">"
+				+ "</TD>");
 		m_pwOut.println("<TD>the user name used to generate the token (this is the 'saak' value from the ionapi file provided by OHD Corp.)</TD></TR>");
 		
 		//token user password
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Token user password</B>:</TD>");
-		m_pwOut.println("<TD><B>" + objOHDirectSettings.getstokenuserpassword() + "</B></TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMTableohdirectsettings.stokenuserpassword + "\""
+				+ " VALUE=\"" + objOHDirectSettings.getstokenuserpassword() + "\""
+				+ "SIZE=120"
+				+ "; MAXLENGTH=" + Integer.toString(SMTableohdirectsettings.stokenuserpasswordlength)
+				+ ">"
+				+ "</TD>");
 		m_pwOut.println("<TD>the user password used to generate the token (this is the 'sask' value from the ionapi file provided by OHD Corp.)</TD></TR>");
 		
 		//Token URL
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Token URL</B>:</TD>");
-		m_pwOut.println("<TD><B>" + objOHDirectSettings.getstokenurl() + "</B></TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMTableohdirectsettings.stokenurl + "\""
+				+ " VALUE=\"" + objOHDirectSettings.getstokenurl() + "\""
+				+ "SIZE=120"
+				+ "; MAXLENGTH=" + Integer.toString(SMTableohdirectsettings.stokenurllength)
+				+ ">"
+				+ "</TD>");
 		m_pwOut.println("<TD>URL contacted to get token (this is created by concatenating the 'pu' and 'ot' values from the ionapi file provided by OHD Corp.)</TD></TR>");
 		
 		//Request URL base:
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Request URL base</B>:</TD>");
-		m_pwOut.println("<TD><B>" + objOHDirectSettings.getsrequesturlbase() + "</B></TD>");
-		m_pwOut.println("<TD>The URL contacted to get quote and order information, not including the 'end point' (e.g. 'C_DealerQuote', etc.</TD></TR>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMTableohdirectsettings.srequesturlbase + "\""
+				+ " VALUE=\"" + objOHDirectSettings.getsrequesturlbase() + "\""
+				+ "SIZE=120"
+				+ "; MAXLENGTH=" + Integer.toString(SMTableohdirectsettings.srequesturlbaselength)
+				+ ">"
+				+ "</TD>");
+		m_pwOut.println("<TD>The URL contacted to get quote and order information, not including the 'end point' (e.g. 'C_DealerQuote', etc.)</TD></TR>");
 		
 		m_pwOut.println("</TABLE>");
 		

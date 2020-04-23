@@ -1,17 +1,9 @@
 package smar;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.StringWriter;
-import java.net.URL;
 import java.sql.DriverManager;
-import java.util.Base64;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -23,9 +15,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServlet;
 
+import SMClasses.SMOHDirectSettings;
 import ServletUtilities.clsJSONFunctions;
 import ServletUtilities.clsOEAuthFunctions;
 import smgl.GLTransactionBatch;
@@ -176,14 +168,22 @@ public class TESTBatchExport extends HttpServlet{
 		String sTokenPassword = "RdlTFYkWWDXjSst7SHq1Cw6SwmvHpQ1yyG6g2YTRV1mB1seOFTP8oTdmAXZ7FwPayzR54VysYutAhD6k0ek8Aw";
 		String sFullRequestString = "https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_QuoteNumberString%20eq%20'SQAL000008-1'";
 		
+		SMOHDirectSettings ohd = new SMOHDirectSettings();
+		try {
+			ohd.load(conn);
+		} catch (Exception e2) {
+			System.out.println("[202004231350] - " + e2.getMessage());
+		}
+		
+		
 		String sToken = "";
 		try {
 			sToken = clsOEAuthFunctions.getResourceCredentials(
-				sTokenUserName, 
-				sTokenPassword, 
-				tokenURL, 
-				sClientID, 
-				sClientSecret
+				ohd.getstokenusername(), 
+				ohd.getstokenuserpassword(), 
+				ohd.getstokenurl(), 
+				ohd.getsclientid(), 
+				ohd.getsclientsecret()
 			);
 		} catch (Exception e1) {
 			System.out.println("Error [202004225735] - error getting token - " + e1.getMessage());

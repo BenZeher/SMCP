@@ -69,7 +69,7 @@ public class SMOHDirectSettings extends clsMasterEntry{
 		clsDatabaseFunctions.freeConnection(context, conn, "[1587655648]");
 	}
 
-	private boolean load (Connection conn) throws Exception{
+	public boolean load (Connection conn) throws Exception{
 
 		String SQL = "SELECT * FROM " + SMTableohdirectsettings.TableName;
 		if (bDebugMode){

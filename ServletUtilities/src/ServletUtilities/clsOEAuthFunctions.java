@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +17,12 @@ public class clsOEAuthFunctions {
 
 	private static final Pattern pat = Pattern.compile(".*\"access_token\"\\s*:\\s*\"([^\"]+)\".*");
 	
-	public static String getResourceCredentials(
+	public static final String QUOTE_FIELD_NAME = "C_Name";
+	public static final String QUOTE_FIELD_QUOTENUMBER = "C_QuoteNumberString";
+	public static final String QUOTE_FIELD_CREATEDBY = "C_CreatedBy";
+	public static final String QUOTE_FIELD_CREATEDDATE = "C_CreatedDate";
+	
+	public static String getOHDirectToken (
 		String userName, 
 		String password,
 		String tokenURL,
@@ -72,28 +78,56 @@ public class clsOEAuthFunctions {
 	}
 	
 	public static String getOHDirectPlusRequest(
-		String sTokenString, 
-		String sFullRequestString) throws Exception{
+		ServletUtilities.clsOHDirectOEAuth2Token token, 
+		String sRequestEndPoint) throws Exception{
 	    BufferedReader reader = null;
 	    String sResult = "";
 	    try {
-	        URL url = new URL(sFullRequestString);
+	        URL url = new URL(token.getOHDirectRequestURLBase() + sRequestEndPoint);
 	        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-	        connection.setRequestProperty("Authorization", "Bearer " + sTokenString);
+	        connection.setRequestProperty("Authorization", "Bearer " + token.getToken());
 	        connection.setDoOutput(true);
 	        connection.setRequestMethod("GET");
 	        reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	        String line = null;
-	        //StringWriter out = new StringWriter(connection.getContentLength() > 0 ? connection.getContentLength() : 2048);
 	        while ((line = reader.readLine()) != null) {
-	            //out.append(line);
 	        	sResult += line;
 	        }
-	        //String response = out.toString();
-	        //System.out.println(response);
 	    } catch (Exception e) {
 	    	throw new Exception("Error [1587585250] reading request - " + e.getMessage());	    
 	    }
 	    return sResult;
 	}
+	
+	public static String requestOHDirectData(Connection conn, String sEndPointQuery) throws Exception{
+		String sResult = "";
+		
+		clsOHDirectSettings ohd = new clsOHDirectSettings();
+		try {
+			ohd.load(conn);
+		} catch (Exception e2) {
+			System.out.println("[202004231350] - " + e2.getMessage());
+		}
+		
+		clsOHDirectOEAuth2Token token = new clsOHDirectOEAuth2Token();
+		try {
+			sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery);
+		} catch (Exception e1) {
+			//IF it fails the first time, try to refresh the token:
+			try {
+				token.refreshToken(conn);
+			} catch (Exception e) {
+				throw new Exception("Error [202004235737] - " + e.getMessage());
+			}
+			
+			//Try to read OHDirect again:
+			try {
+				sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery);
+			} catch (Exception e) {
+				throw new Exception("Error [202004235806] - " + e.getMessage());
+			}
+		}
+		return sResult;
+	}
+	
 }

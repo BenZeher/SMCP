@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.SMOHDirectSettings;
+import ServletUtilities.clsOHDirectSettings;
 
 public class SMEditOHDirectSettingsAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -35,7 +35,7 @@ public class SMEditOHDirectSettingsAction extends HttpServlet {
 	    	+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    //Collect all the request parameters:
-	    SMOHDirectSettings objsettings = new SMOHDirectSettings(request);
+	    clsOHDirectSettings objsettings = new clsOHDirectSettings(request);
 
 		String subtitle = "";
 		String title = "";
@@ -45,7 +45,7 @@ public class SMEditOHDirectSettingsAction extends HttpServlet {
 		try {
 			objsettings.save_without_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName);;
 		} catch (Exception e) {
-	    	CurrentSession.setAttribute(SMOHDirectSettings.ParamObjectName, objsettings);
+	    	CurrentSession.setAttribute(clsOHDirectSettings.ParamObjectName, objsettings);
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel." + "SMEditOHDirectSettingsEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

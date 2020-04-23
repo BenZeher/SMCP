@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1466;
+	private static final int m_CurrentDatabaseVersion = 1467;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "4/21/2020";
+	private static final String m_sLastRevisionDate = "4/23/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15412,9 +15412,26 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 			
+			//BEGIN CASE:
+			case 1466:
+				//Added by TJR 4/23/2020
+				SQL = "CREATE TABLE `ohdirectsettings` ("
+					+ "`sclientid` varchar(128) NOT NULL default ''"
+					+ ", `sclientsecret` varchar(128) NOT NULL default ''"
+					+ ", `stokenurl` varchar(128) NOT NULL default ''"
+					+ ", `stokenusername` varchar(128) NOT NULL default ''"
+					+ ", `stokenuserpassword` varchar(128) NOT NULL default ''"
+					+ ", `srequesturlbase` varchar(128) NOT NULL default ''"
+					+ " ) ENGINE=InnoDB"
+				;
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;
+			//END CASE
+			
 			//End switch:
 		}
-
 		
 		//Now update the database version in the data:
 		SQL = "UPDATE " + SMTablecompanyprofile.TableName

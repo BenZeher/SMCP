@@ -341,6 +341,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMTestOHDPlusConnection = 1246;
 	public static long GLReverseExternalCompanyPulls = 1247;
 	public static long SMEditVendorReturns = 1248;
+	public static long SMEditOHDirectSettings = 1249;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2796,6 +2797,13 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("Required to edit and maintain 'Vendor Returns', which are records of material that was returned from jobs, awaiting disposition (e.g., to be"
 					+ "returned to the vendor, to be replaced, to be scrapped, etc').");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
+			
+			arrFunctions.add("SM Edit OHDirect Connection Settings"); 
+			arrFunctionIDs.add(SMEditOHDirectSettings); 
+			arrFunctionLinks.add("smcontrolpanel.SMEditOHDirectSettingsEdit"); 
+			arrFunctionDescriptions.add("Required to edit and maintain the client settings for connecting to the OHDirect Plus data of quotes and orders.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
+			
 			
 	}
 

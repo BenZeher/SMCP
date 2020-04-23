@@ -1526,6 +1526,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SMEditOHDirectSettingsAction</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditOHDirectSettingsAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditOHDirectSettingsEdit</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditOHDirectSettingsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SMEditOrderAction</servlet-name>
         <servlet-class>smcontrolpanel.SMEditOrderAction</servlet-class>
     </servlet>
@@ -4823,6 +4833,16 @@
         <url-pattern>/smcontrolpanel.SMEditMechanicsSave</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>SMEditOHDirectSettingsAction</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditOHDirectSettingsAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMEditOHDirectSettingsEdit</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditOHDirectSettingsEdit</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>SMEditOrderAction</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditOrderAction</url-pattern>

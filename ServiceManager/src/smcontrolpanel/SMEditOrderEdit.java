@@ -2626,7 +2626,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 							SMTableorderheaders.ORDERTYPE_QUOTE)) == 0){
 						s += " value=\"" + QUOTECREATE_BUTTON_LABEL + "\""
 						+ " name=\"" + QUOTECREATE_BUTTON_LABEL + "\""
-						+ " onClick=\"saveOrder(this);\">\n"
+						+ " onClick=\"saveOrder();\">\n"
 						+ QUOTECREATE_BUTTON_LABEL
 						+ "</button>\n";
 					}else{
@@ -2664,7 +2664,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 						+ "<button type=\"button\""
 						+ " value=\"" + ORDERUPDATE_BUTTON_LABEL + "\""
 						+ " name=\"" + ORDERUPDATE_BUTTON_LABEL + "\""
-						+ " onClick=\"saveOrder(this);\">\n"
+						+ " onClick=\"saveOrder();\">\n"
 						+ ORDERUPDATE_BUTTON_LABEL
 						+ "</button>\n"
 						;
@@ -2741,7 +2741,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 							s += "<button type=\"button\""
 							+ " value=\"" + ORDERINVOICE_BUTTON_LABEL + "\""
 							+ " name=\"" + ORDERINVOICE_BUTTON_LABEL + "\""
-							+ " onClick=\"createInvoice(this);\">\n"
+							+ " onClick=\"createInvoice();\">\n"
 							+ ORDERINVOICE_BUTTON_LABEL
 							+ "</button>\n"
 							;
@@ -3417,7 +3417,6 @@ public class SMEditOrderEdit  extends HttpServlet {
 		;
 
 		s += "function saveOrder(param){\n"
-			+ "	   param.disabled=true;\n"
 			+ "    if (!validateForm()){\n"
 			+ "        return;\n"
 			+ "    }\n"
@@ -3462,8 +3461,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				+ "}\n"
 			;
 		
-		s += "function createInvoice(param){\n"
-			+ "	   param.disabled=true;\n"
+		s += "function createInvoice(){\n"
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
 					 + CREATEINVOICECOMMAND_VALUE + "\";\n"
 			+ "    document.forms[\"MAINFORM\"].submit();\n"
@@ -3672,7 +3670,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "    });\n";
 
 		s += "    shortcut.add(\"Alt+o\",function() {\n";
-		s += "        saveOrder(this);\n";
+		s += "        saveOrder();\n";
 		s += "    },{\n";
 		s += "        'type':'keydown',\n";
 		s += "        'propagate':false,\n";
@@ -3704,7 +3702,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "    });\n";
 
 		s += "    shortcut.add(\"Alt+s\",function() {\n";
-		s += "        saveOrder(this);\n";
+		s += "        saveOrder();\n";
 		s += "    },{\n";
 		s += "        'type':'keydown',\n";
 		s += "        'propagate':false,\n";

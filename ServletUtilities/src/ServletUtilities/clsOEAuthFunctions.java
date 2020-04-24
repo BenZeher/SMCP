@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,11 +17,6 @@ import javax.net.ssl.HttpsURLConnection;
 public class clsOEAuthFunctions {
 
 	private static final Pattern pat = Pattern.compile(".*\"access_token\"\\s*:\\s*\"([^\"]+)\".*");
-	
-	public static final String QUOTE_FIELD_NAME = "C_Name";
-	public static final String QUOTE_FIELD_QUOTENUMBER = "C_QuoteNumberString";
-	public static final String QUOTE_FIELD_CREATEDBY = "C_CreatedBy";
-	public static final String QUOTE_FIELD_CREATEDDATE = "C_CreatedDate";
 	
 	public static String getOHDirectToken (
 		String userName, 
@@ -73,7 +69,11 @@ public class clsOEAuthFunctions {
 	        }
 	        connection.disconnect();
 	    }
-	    System.out.println("Time to get token: " + (System.currentTimeMillis() - lStartingTime) + "ms");
+		java.util.Date todaysDate = new java.util.Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String formattedDate = formatter.format(todaysDate);
+	    System.out.println("Retrieving token at " + formattedDate + ": " 
+	    + (System.currentTimeMillis() - lStartingTime) + " ms, token size: " + returnValue.length());
 	    return returnValue;
 	}
 	

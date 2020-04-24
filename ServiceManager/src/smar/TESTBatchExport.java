@@ -162,12 +162,31 @@ public class TESTBatchExport extends HttpServlet{
 		*/
 		
 		//TEST OEAuth2 token processing:
-		//String sClientID = "OHDIRECT_TRN~RsIYM0KCBFUFPett0vpIByzc0lTOoWf_XmTNIyPPX9w";//clientId
-		//String sClientSecret = "HbKO2Gik6H6AY9ajZOCD3jr8Zs2Ya2B1yOcW8nbP4DnXcgUyZDXORg2X0qPA2NjV8uqSGObFGSiPXt5O_hll9A";//client secret
-		//String tokenURL = "https://mingle-sso.inforcloudsuite.com:443/OHDIRECT_TRN/as/token.oauth2"; //"https://api.byu.edu/token";
-		//String sTokenUserName = "OHDIRECT_TRN#OJN29nurKChctKa-uVCqIqigIHzSS6n1D5I4EJiRgQWnPZd_IQPA_oM7c2LV43tfMDt4DZajs5Ge0hwCSwf3EQ";
-		//String sTokenPassword = "RdlTFYkWWDXjSst7SHq1Cw6SwmvHpQ1yyG6g2YTRV1mB1seOFTP8oTdmAXZ7FwPayzR54VysYutAhD6k0ek8Aw";
-		//String sFullRequestString = "https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_QuoteNumberString%20eq%20'SQAL000008-1'";
+		String sClientID = "OHDIRECT_TRN~RsIYM0KCBFUFPett0vpIByzc0lTOoWf_XmTNIyPPX9w";//clientId
+		String sClientSecret = "HbKO2Gik6H6AY9ajZOCD3jr8Zs2Ya2B1yOcW8nbP4DnXcgUyZDXORg2X0qPA2NjV8uqSGObFGSiPXt5O_hll9A";//client secret
+		String tokenURL = "https://mingle-sso.inforcloudsuite.com:443/OHDIRECT_TRN/as/token.oauth2"; //"https://api.byu.edu/token";
+		String sTokenUserName = "OHDIRECT_TRN#OJN29nurKChctKa-uVCqIqigIHzSS6n1D5I4EJiRgQWnPZd_IQPA_oM7c2LV43tfMDt4DZajs5Ge0hwCSwf3EQ";
+		String sTokenPassword = "RdlTFYkWWDXjSst7SHq1Cw6SwmvHpQ1yyG6g2YTRV1mB1seOFTP8oTdmAXZ7FwPayzR54VysYutAhD6k0ek8Aw";
+		String sFullRequestString = "https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_QuoteNumberString%20eq%20'SQAL000008-1'";
+		
+		for (int i = 0; i < 40; i++) {
+			try {
+				clsOEAuthFunctions.getOHDirectToken(
+					sTokenUserName, 
+					sTokenPassword, 
+					tokenURL, 
+					sClientID, 
+					sClientSecret);
+				
+				Thread.sleep(20000);
+			} catch (InterruptedException e) {
+				System.out.println("[202004242608] - " + e.getMessage());
+			} catch (Exception e) {
+				System.out.println("[202004242626] - " + e.getMessage());
+			}
+		}
+		
+		
 		
 		String sRequest = "C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'";
 		ArrayList<String> arrQuoteNumbers = new ArrayList<String>(0);

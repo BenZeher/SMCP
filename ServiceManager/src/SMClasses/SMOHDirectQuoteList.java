@@ -9,6 +9,15 @@ import org.json.simple.parser.JSONParser;
 
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 
+/*
+Sample full request URL to obtain a single Quote for Quote Number: 'SQAL000008-1'
+https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_QuoteNumberString%20eq%20'SQAL000008-1'
+
+Sample full request URL to obtain a list of quotes modified after a selected date:
+https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'
+
+*/
+
 public class SMOHDirectQuoteList {
 
 	ArrayList<String> arrNames;

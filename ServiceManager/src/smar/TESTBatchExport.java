@@ -1,5 +1,6 @@
 package smar;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Map;
@@ -18,8 +19,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServlet;
 
+import SMClasses.SMOHDirectQuoteLineList;
 import SMClasses.SMOHDirectQuoteList;
-import ServletUtilities.clsJSONFunctions;
 import ServletUtilities.clsOEAuthFunctions;
 import smgl.GLTransactionBatch;
 
@@ -161,6 +162,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		/*
 		//TEST OEAuth2 token processing:
 		String sClientID = "OHDIRECT_TRN~RsIYM0KCBFUFPett0vpIByzc0lTOoWf_XmTNIyPPX9w";//clientId
 		String sClientSecret = "HbKO2Gik6H6AY9ajZOCD3jr8Zs2Ya2B1yOcW8nbP4DnXcgUyZDXORg2X0qPA2NjV8uqSGObFGSiPXt5O_hll9A";//client secret
@@ -185,9 +187,43 @@ public class TESTBatchExport extends HttpServlet{
 				System.out.println("[202004242626] - " + e.getMessage());
 			}
 		}
+		System.out.println("DONE");
+		*/
 		
 		
+		String sRequest = "C_DealerQuoteLine?%24filter=C_Quote%20eq%20'00bac513-b658-ea11-82fa-d2da283a32ca'";
+		ArrayList<String> arrQuoteLineIDs;
+		ArrayList<String> arrQuoteNumbers;
+		ArrayList<BigDecimal> arrLineNumbers;
+		ArrayList<String> arrDescriptions;
+		ArrayList<String> arrLastConfigurationDescriptions;
+		ArrayList<BigDecimal> arrQuantities;
+		ArrayList<BigDecimal> arrUnitCosts;
+		ArrayList<BigDecimal> arrTotalCosts;
+		SMOHDirectQuoteLineList qll = new SMOHDirectQuoteLineList();
+		try {
+			qll.getQuoteLineList(sRequest, conn);
+		} catch (Exception e4) {
+			System.out.println("[202004233047] - " + e4.getMessage());
+		}
+		arrQuoteNumbers = qll.getQuoteNumbers();
+		arrQuoteLineIDs = qll.getQuoteLineIDs();
+		arrLineNumbers = qll.getLineNumbers();
+		arrDescriptions = qll.getDescriptions();
+		arrLastConfigurationDescriptions = qll.getLastConfigurationDescriptions();
+		arrQuantities = qll.getQuantities();
+		arrUnitCosts = qll.getUnitCosts();
+		arrTotalCosts = qll.getTotalCosts();
 		
+		
+		for (int i = 0; i < arrQuoteNumbers.size(); i++) {
+			System.out.println("Line " + arrLineNumbers.get(i) + ", ID: " + arrQuoteLineIDs.get(i) + ", Desc: '" + arrDescriptions.get(i) + "', "
+					+ " Last config: '" + arrLastConfigurationDescriptions.get(i) + "', Qty: " + arrQuantities.get(i) + ", Unit Cost: " + arrUnitCosts.get(i) + ", Total: " + arrTotalCosts.get(i));
+		}
+		System.out.println("DONE");
+		
+		
+		/*
 		String sRequest = "C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'";
 		ArrayList<String> arrQuoteNumbers = new ArrayList<String>(0);
 		ArrayList<String> arrNames = new ArrayList<String>(0);
@@ -203,6 +239,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Number " + arrQuoteNumbers.get(i) + ", Name " + i + " = '" + arrNames.get(i) + "'.");
 		}
 		System.out.println("DONE");
+		*/
 
 		/*
 		String sOnHoldDate = "";

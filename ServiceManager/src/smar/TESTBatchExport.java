@@ -19,9 +19,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServlet;
 
-import SMClasses.SMOHDirectQuoteLineList;
-import SMClasses.SMOHDirectQuoteList;
-import ServletUtilities.clsOEAuthFunctions;
+import SMClasses.SMOHDirectQuoteLineDetailList;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -190,7 +188,21 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println("DONE");
 		*/
 		
+		//String sRequest = "C_DealerQuoteLineDetail?%24filter=C_QuoteLine%20eq%20'ecbb8a6f-0a46-4036-b8b1-ab8700e4cb20'";
+		String sRequest = "C_DealerQuoteLineDetail?$filter=C_QuoteLine%20eq%20'ecbb8a6f-0a46-4036-b8b1-ab8700e4cb20'";
+		SMOHDirectQuoteLineDetailList qldl = new SMOHDirectQuoteLineDetailList();
+		try {
+			qldl.getQuoteLineList(sRequest, conn);
+		} catch (Exception e4) {
+			System.out.println("[202004233047] - " + e4.getMessage());
+		}
 		
+		for (int i = 0; i < qldl.getDescriptions().size(); i++) {
+			System.out.println("Line Detail " + qldl.getSortOrders().get(i) + ", Desc: " + qldl.getDescriptions().get(i) + ": '" + qldl.getValues().get(i) + "'.");
+		}
+		System.out.println("DONE");
+		
+		/*
 		String sRequest = "C_DealerQuoteLine?%24filter=C_Quote%20eq%20'00bac513-b658-ea11-82fa-d2da283a32ca'";
 		ArrayList<String> arrQuoteLineIDs;
 		ArrayList<String> arrQuoteNumbers;
@@ -215,13 +227,12 @@ public class TESTBatchExport extends HttpServlet{
 		arrUnitCosts = qll.getUnitCosts();
 		arrTotalCosts = qll.getTotalCosts();
 		
-		
 		for (int i = 0; i < arrQuoteNumbers.size(); i++) {
 			System.out.println("Line " + arrLineNumbers.get(i) + ", ID: " + arrQuoteLineIDs.get(i) + ", Desc: '" + arrDescriptions.get(i) + "', "
 					+ " Last config: '" + arrLastConfigurationDescriptions.get(i) + "', Qty: " + arrQuantities.get(i) + ", Unit Cost: " + arrUnitCosts.get(i) + ", Total: " + arrTotalCosts.get(i));
 		}
 		System.out.println("DONE");
-		
+		*/
 		
 		/*
 		String sRequest = "C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'";

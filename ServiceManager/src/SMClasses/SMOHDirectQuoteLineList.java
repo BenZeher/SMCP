@@ -12,7 +12,7 @@ import SMDataDefinition.SMOHDirectFieldDefinitions;
 
 /*
  Sample full request URL to obtain the Quote Lines on quote ID: '00bac513-b658-ea11-82fa-d2da283a32ca'
-https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuoteLine?%24filter=C_Quote%20eq%20'00bac513-b658-ea11-82fa-d2da283a32ca'
+https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuoteLine?$filter=C_Quote%20eq%20'00bac513-b658-ea11-82fa-d2da283a32ca'
  */
 
 public class SMOHDirectQuoteLineList {
@@ -51,7 +51,7 @@ public class SMOHDirectQuoteLineList {
 		try {
 			sJSONResult = ServletUtilities.clsOEAuthFunctions.requestOHDirectData(conn, sRequestString);
 		} catch (Exception e) {
-			throw new Exception("Error [202004231617] - " + e.getMessage());
+			throw new Exception("Error [202004232617] - " + e.getMessage());
 		}
 		
 		//Try to parse the list:
@@ -120,7 +120,7 @@ public class SMOHDirectQuoteLineList {
 				}
 			}
 		}catch(Exception e) {
-			throw new Exception("Error [202004232740] - " + e.getMessage());
+			throw new Exception("Error [202004233740] - " + e.getMessage());
 		}
 		
 		return;

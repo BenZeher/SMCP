@@ -12,14 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.SMLogEntry;
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
-import SMDataDefinition.SMTableohdirectsettings;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import ServletUtilities.clsServletUtilities;
 
 public class SMOHDirectQuoteListing extends HttpServlet {
 

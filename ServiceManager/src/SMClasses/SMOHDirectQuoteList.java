@@ -8,6 +8,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import SMDataDefinition.SMOHDirectFieldDefinitions;
+import ServletUtilities.clsOEAuthFunctions;
+import smcontrolpanel.SMUtilities;
 
 /*
 Sample full request URL to obtain a single Quote for Quote Number: 'SQAL000008-1'
@@ -38,7 +40,14 @@ public class SMOHDirectQuoteList {
 	public void getQuoteList(String sRequestString, Connection conn) throws Exception{
 		arrQuoteNumbers = new ArrayList<String>(0);
 		arrNames = new ArrayList<String>(0);
-		
+		arrCreatedBys = new ArrayList<String>(0);
+		arrCreatedDates = new ArrayList<String>(0);
+		arrLastModifiedBys = new ArrayList<String>(0);
+		arrLastModifiedDates = new ArrayList<String>(0);
+		arrSalespersons = new ArrayList<String>(0);
+		arrBillToNames = new ArrayList<String>(0);
+		arrShipToNames = new ArrayList<String>(0);
+		arrStatuses = new ArrayList<String>(0);
 		//Try to read the list:
 		String sJSONResult = "";
 		try {
@@ -46,6 +55,8 @@ public class SMOHDirectQuoteList {
 		} catch (Exception e) {
 			throw new Exception("Error [202004231617] - " + e.getMessage());
 		}
+		
+		System.out.println("[202004271412] - sJSONResult = '" + sJSONResult + "'.");
 		
 		//Try to parse the list:
 		JSONParser parser = new JSONParser();
@@ -74,7 +85,8 @@ public class SMOHDirectQuoteList {
 				if (quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE) == null) {
 					arrCreatedDates.add("");
 				}else {
-					arrCreatedDates.add((String)quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE));
+					arrCreatedDates.add(clsOEAuthFunctions.convertOHDirectDateTimeToStd(
+						(String)quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE)));
 				}
 				if (quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDBY) == null) {
 					arrLastModifiedBys.add("");
@@ -84,7 +96,8 @@ public class SMOHDirectQuoteList {
 				if (quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE) == null) {
 					arrLastModifiedDates.add("");
 				}else {
-					arrLastModifiedDates.add((String)quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE));
+					arrLastModifiedDates.add(clsOEAuthFunctions.convertOHDirectDateTimeToStd(
+						(String)quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE)));
 				}
 				if (quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_SALESPERSON) == null) {
 					arrSalespersons.add("");
@@ -126,6 +139,7 @@ public class SMOHDirectQuoteList {
 	public ArrayList<String> getCreatedDates(){
 		return arrCreatedDates;
 	}
+	
 	public ArrayList<String> getLastModifiedBys(){
 		return arrLastModifiedBys;
 	}

@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import smcontrolpanel.SMUtilities;
-
 public class clsOEAuthFunctions {
 
 	private static final Pattern pat = Pattern.compile(".*\"access_token\"\\s*:\\s*\"([^\"]+)\".*");
@@ -74,7 +72,9 @@ public class clsOEAuthFunctions {
 		java.util.Date todaysDate = new java.util.Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String formattedDate = formatter.format(todaysDate);
-	    System.out.println("Retrieving token at " + formattedDate + ": " 
+		
+		// TJR - 4/27/2020 - leaving this line in deliberately for now to see how token logic is working...
+	    System.out.println("[202004271205] Retrieving token at " + formattedDate + ": " 
 	    + (System.currentTimeMillis() - lStartingTime) + " ms, token size: " + returnValue.length());
 	    return returnValue;
 	}
@@ -108,7 +108,7 @@ public class clsOEAuthFunctions {
 		try {
 			ohd.load(conn);
 		} catch (Exception e2) {
-			System.out.println("[202004231350] - " + e2.getMessage());
+			throw new Exception("Error [202004271238] - could not load OHDirect connection settings - " + e2.getMessage());
 		}
 		
 		clsOHDirectOEAuth2Token token = new clsOHDirectOEAuth2Token();

@@ -56,7 +56,7 @@ public class SMOHDirectQuoteList {
 			throw new Exception("Error [202004231617] - " + e.getMessage());
 		}
 		
-		System.out.println("[202004271412] - sJSONResult = '" + sJSONResult + "'.");
+		//System.out.println("[202004271412] - sJSONResult = '" + sJSONResult + "'.");
 		
 		//Try to parse the list:
 		JSONParser parser = new JSONParser();

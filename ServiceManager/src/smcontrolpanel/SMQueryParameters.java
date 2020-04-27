@@ -800,7 +800,6 @@ public class SMQueryParameters  extends HttpServlet {
 				"MySQL", 
 				this.toString() + ".replaceSQLDropDownPhrases - user name: " + sUserName
 			);
-			
 			//We have to get this:
 			// [[*SQLDROPDOWNLIST*{Prompt}{SELECT lid, sUserName from users ORDER BY sUserName}]]
 			// To this:
@@ -812,9 +811,9 @@ public class SMQueryParameters  extends HttpServlet {
 				//Build the dropdown strings:
 				if (rs.getString(1) != null){
 					if (sValuesString.compareToIgnoreCase("{") == 0){
-						sValuesString += "'" + rs.getString(1) + "'";
+						sValuesString += "'" + rs.getString(1).replace("'", "''") + "'";
 					}else{
-						sValuesString += ",'" + rs.getString(1) + "'";
+						sValuesString += ",'" + rs.getString(1).replace("'", "''") + "'";
 					}
 				}else{
 					rs.close();
@@ -853,7 +852,6 @@ public class SMQueryParameters  extends HttpServlet {
 			;
 			//System.out.println("[2020661256273] " + "sRawQuery = '" + sRawQuery + "'.");
 		}
-		
 		return sRawQuery;
 	}
 	public void doGet(HttpServletRequest request,

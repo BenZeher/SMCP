@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import smcontrolpanel.SMUtilities;
+
 public class clsOEAuthFunctions {
 
 	private static final Pattern pat = Pattern.compile(".*\"access_token\"\\s*:\\s*\"([^\"]+)\".*");
@@ -129,5 +131,19 @@ public class clsOEAuthFunctions {
 		}
 		return sResult;
 	}
-	
+	public static String convertOHDirectDateTimeToStd(String sOHDirectDateTime) throws Exception{
+		String sFormattedDate = sOHDirectDateTime;
+		sFormattedDate = sFormattedDate.replace("T", " ");
+		sFormattedDate = sFormattedDate.substring(0, 19);
+		try {
+			sFormattedDate = ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+					sFormattedDate, 
+					clsServletUtilities.DATETIME_24HR_FORMAT_FOR_SQL, 
+					clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY,
+					clsServletUtilities.EMPTY_DATETIME_VALUE);
+		} catch (Exception e) {
+			throw new Exception("Error [202004275337] - could not convert date '" + sOHDirectDateTime + "'");
+		}
+		return sFormattedDate;
+	}
 }

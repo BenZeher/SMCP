@@ -512,6 +512,9 @@ public class SMUserLogin extends HttpServlet {
 		//Order history
 		arMenu.add(SMSystemFunctions.SMOrderHistory);
 		
+		//OHDirect Quote List
+		arMenu.add(SMSystemFunctions.SMOHDirectQuoteList);
+		
 		if (bMobileView){
 			SMUtilities.buildMobileMenuTable(
 					"<a name=\"SMREPORTSMENU\">SERVICE MANAGER REPORTS MENU</a>",

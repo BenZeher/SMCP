@@ -1526,6 +1526,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SMOHDirectQuoteListing</servlet-name>
+        <servlet-class>smcontrolpanel.SMOHDirectQuoteListing</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SMEditOHDirectSettingsAction</servlet-name>
         <servlet-class>smcontrolpanel.SMEditOHDirectSettingsAction</servlet-class>
     </servlet>
@@ -4823,6 +4828,11 @@
         <url-pattern>/smcontrolpanel.SMEditMechanicsSave</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>SMOHDirectQuoteListing</servlet-name>
+        <url-pattern>/smcontrolpanel.SMOHDirectQuoteListing</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>SMEditOHDirectSettingsAction</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditOHDirectSettingsAction</url-pattern>

@@ -338,7 +338,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLListPreviousExternalCompanyPulls = 1243;
 	public static long GLCloseFiscalYear = 1244;
 	public static long GLCheckFinancialData = 1245;
-	//public static long SMTestOHDPlusConnection = 1246;
+	public static long SMOHDirectQuoteList = 1246;
 	public static long GLReverseExternalCompanyPulls = 1247;
 	public static long SMEditVendorReturns = 1248;
 	public static long SMEditOHDirectSettings = 1249;
@@ -2798,6 +2798,11 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("Required to edit and maintain the client settings for connecting to the OHDirect Plus data of quotes and orders.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 			
+			arrFunctions.add("SM List OHDirect Quotes"); 
+			arrFunctionIDs.add(SMOHDirectQuoteList); 
+			arrFunctionLinks.add("smcontrolpanel.SMOHDirectQuoteListing"); 
+			arrFunctionDescriptions.add("List all OHDirect quotes in the system.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 			
 	}
 

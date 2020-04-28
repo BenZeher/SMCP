@@ -24,6 +24,7 @@ public class SMOHDirectQuoteList {
 
 	ArrayList<String> arrNames;
 	ArrayList<String> arrQuoteNumbers;
+	ArrayList<String> arrQuoteIDs;
 	ArrayList<String> arrCreatedBys;
 	ArrayList<String> arrCreatedDates;
 	ArrayList<String> arrLastModifiedBys;
@@ -39,6 +40,7 @@ public class SMOHDirectQuoteList {
 	
 	public void getQuoteList(String sRequestString, Connection conn) throws Exception{
 		arrQuoteNumbers = new ArrayList<String>(0);
+		arrQuoteIDs = new ArrayList<String>(0);
 		arrNames = new ArrayList<String>(0);
 		arrCreatedBys = new ArrayList<String>(0);
 		arrCreatedDates = new ArrayList<String>(0);
@@ -67,6 +69,12 @@ public class SMOHDirectQuoteList {
 			
 			for (int i = 0; i < jarray.size(); i++) {
 				JSONObject quoteitem = (JSONObject)jarray.get(i);
+				
+				if (quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_ID) == null) {
+					arrQuoteIDs.add("");
+				}else {
+					arrQuoteIDs.add((String)quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_ID));
+				}
 				if (quoteitem.get(SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER) == null) {
 					arrQuoteNumbers.add("");
 				}else {
@@ -126,6 +134,9 @@ public class SMOHDirectQuoteList {
 		}
 		
 		return;
+	}
+	public ArrayList<String> getQuoteIDs(){
+		return arrQuoteIDs;
 	}
 	public ArrayList<String> getQuoteNames(){
 		return arrNames;

@@ -34,7 +34,7 @@ public class SMOHDirectQuoteLineDetailList {
 		
 	}
 	
-	public void getQuoteLineList(String sRequestString, Connection conn) throws Exception{
+	public void getQuoteLineDetailList(String sRequestString, Connection conn) throws Exception{
 		arrQuoteLineIDs = new ArrayList<String>(0);
 		arrQuoteLineDetailIDs = new ArrayList<String>(0);
 		arrDescriptions = new ArrayList<String>(0);

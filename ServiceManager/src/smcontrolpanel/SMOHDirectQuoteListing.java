@@ -3,7 +3,6 @@ package smcontrolpanel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -17,7 +16,6 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import ServletUtilities.clsServletUtilities;
 
 public class SMOHDirectQuoteListing extends HttpServlet {
 
@@ -39,6 +37,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
@@ -46,28 +45,11 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 
 		/*******************************************************/
 
-		String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 		out.println(SMUtilities.getMasterStyleSheetLink());
 		//Customized title
 		String sReportTitle = "OHDirect Plus Quote List";
 		
-		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
-			+ "Transitional//EN\">\n" 
-			+ "<HTML>\n" 
-			+ "  <HEAD>\n"
-			+ "    <TITLE>" + sReportTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE>\n"
-			+ "  </HEAD>\n"
-			+ "<BR>" 
-			+ "  <BODY BGCOLOR=\"#FFFFFF\">\n" 
-			+ "    <TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">\n" 
-			+ "      <TR>\n"
-			+ "        <TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + "</FONT></TD>\n"
-			+ "        <TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME).toString() + "</B></FONT></TD>\n"
-			+ "      </TR>\n" 
-			+ "      <TR>\n"
-			+ "        <TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD>\n"
-			+ "      </TR>\n" 
-		);
+		out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		
 		out.println("  <TR>\n"
 			+ "    <TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -80,7 +62,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		out.println("<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">\n");
 		
 		//Print Headings:
-		out.println( printHeadings());
+		out.println(printHeadings());
 		long lStartingTime = System.currentTimeMillis();
 		try {
 			out.println(printQuoteRows(sDBID, sUserID, sLicenseModuleLevel));
@@ -187,8 +169,8 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		//	+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
 		//;
 		
-		String sRequest = "C_DealerQuote?"
-				+ "%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTE
+				+ "?%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
 			;
 		
 		try {
@@ -200,11 +182,11 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		
 		for(int i = 0; i < ql.getQuoteNumbers().size(); i++) {
 			//Print a row:
-			if ((i % 2) == 0) {
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\" >" + "\n";
-			}else {
+			//if ((i % 2) == 0) {
+			//	s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + "\" >" + "\n";
+			//}else {
 				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\" >" + "\n";
-			}
+			//}
 			
 			String sQuoteNumberLink = ql.getQuoteNumbers().get(i);
 			if (bAllowQuoteDisplay) {

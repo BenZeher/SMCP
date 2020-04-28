@@ -2,6 +2,7 @@ package smcontrolpanel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMOHDirectQuoteLineDetailList;
 import SMClasses.SMOHDirectQuoteLineList;
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
@@ -38,7 +40,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
@@ -47,28 +49,11 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 
 		/*******************************************************/
 
-		String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 		out.println(SMUtilities.getMasterStyleSheetLink());
 		//Customized title
-		String sReportTitle = "OHDirect Plus Quote List";
+		String sReportTitle = "View OHDirect Plus Quote";
 		
-		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
-			+ "Transitional//EN\">\n" 
-			+ "<HTML>\n" 
-			+ "  <HEAD>\n"
-			+ "    <TITLE>" + sReportTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE>\n"
-			+ "  </HEAD>\n"
-			+ "<BR>" 
-			+ "  <BODY BGCOLOR=\"#FFFFFF\">\n" 
-			+ "    <TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">\n" 
-			+ "      <TR>\n"
-			+ "        <TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + "</FONT></TD>\n"
-			+ "        <TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME).toString() + "</B></FONT></TD>\n"
-			+ "      </TR>\n" 
-			+ "      <TR>\n"
-			+ "        <TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD>\n"
-			+ "      </TR>\n" 
-		);
+		out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		
 		out.println("  <TR>\n"
 			+ "    <TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -202,39 +187,40 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\" >" + "\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ ql.getQuoteNumbers().get(i)
+				+ "<B>" + ql.getQuoteNumbers().get(i) + "</B"
 				+ "</TD>" + "\n"
 			;
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ ql.getCreatedDates().get(i)
+				+ "<B>" + ql.getCreatedDates().get(i) + "</B"
 				+ "</TD>" + "\n"
 			;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getCreatedBys().get(i)
+					+ "<B>" + ql.getCreatedBys().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getLastModifiedDates().get(i)
+					+ "<B>" + ql.getLastModifiedDates().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getLastModifiedBys().get(i)
+					+ "<B>" + ql.getLastModifiedBys().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getBillToNames().get(i)
+					+ "<B>" + ql.getBillToNames().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getShipToNames().get(i)
+					+ "<B>" + ql.getShipToNames().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
+			
 			s += "  </TR>" + "\n";
 		}
 		
@@ -290,7 +276,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
-		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
+		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL 
 				+ "\" style = \" color:white; font-weight:bold; \" >"
 			+ "Total Cost"
 			+ "</TD>" + "\n"
@@ -308,12 +294,10 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteLineList ql = new SMOHDirectQuoteLineList();
 		
-		String sRequest = "C_DealerQuoteLine?$filter=" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + sQuoteID + "'"
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
+			+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + sQuoteID + "'"
 			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "%20asc"
 		;
-		//String sRequest = "C_DealerQuote?%24filter="
-		//	+ SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "%20eq%20'" + sQuoteNumber + "'"
-		//;
 		
 		try {
 			ql.getQuoteLineList(sRequest, conn);
@@ -322,39 +306,108 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588019777]");
 		
+		BigDecimal bdTotalQuoteCost = new BigDecimal("0.00");
 		for(int i = 0; i < ql.getQuoteNumbers().size(); i++) {
 			//Print a row:
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + "\" >" + "\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ ql.getLineNumbers().get(i)
+				+ "<B>" + ql.getLineNumbers().get(i) + "</B"
 				+ "</TD>" + "\n"
 			;
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ ql.getQuantities().get(i)
+				+ "<B>" + ql.getQuantities().get(i) + "</B"
 				+ "</TD>" + "\n"
 			;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getLabels().get(i)
+					+ "<B>" + ql.getLabels().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getDescriptions().get(i)
+					+ "<B>" + ql.getDescriptions().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getLastConfigurationDescriptions().get(i)
+					+ "<B>" + ql.getLastConfigurationDescriptions().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getTotalCosts().get(i)
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
+					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ql.getTotalCosts().get(i)) + "</B"
 					+ "</TD>" + "\n"
 				;
+			
+			bdTotalQuoteCost = bdTotalQuoteCost.add(ql.getTotalCosts().get(i));
+			
+			s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i));
+			
+			s += "  </TR>" + "\n";
+		}
+		
+		//Print a line for the overall cost:
+		
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_BLACK + "\" >" + "\n";
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\""
+				+ " style = \" color:white; font-weight:bold; \""
+				+ "COLSPAN=5 >"
+				+ "QUOTE TOTAL:"
+				+ "</TD>" + "\n"
+			;
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" "
+				+ " style = \" color:white; font-weight:bold; \""
+				+ ">"
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalQuoteCost)
+				+ "</B>"
+				+ "</TD>" + "\n"
+			;
+		
+		s += "  </TR>" + "\n";
+		
+		return s;
+	}
+	
+	private String printQuoteLineDetails(Connection conn, String sQuoteLineID) throws Exception{
+		String s = "";
+		//Get the OHDirect connection settings:
+		SMOHDirectQuoteLineDetailList ql = new SMOHDirectQuoteLineDetailList();
+		
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINEDETAIL 
+			+ "?$filter=" + SMOHDirectFieldDefinitions.QUOTELINEDETAIL_FIELD_QUOTELINEID + "%20eq%20'" + sQuoteLineID + "'"
+			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINEDETAIL_FIELD_SORTORDER + "%20asc"
+		;
+		
+		try {
+			ql.getQuoteLineDetailList(sRequest, conn);
+		} catch (Exception e4) {
+			throw new Exception("Error [202004273622] - " + e4.getMessage());
+		}
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588019777]");
+		
+		for(int i = 0; i < ql.getQuoteLineDetailIDs().size(); i++) {
+			//Print a row:
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\" >" + "\n";
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+				+ " style = \" background-color:white;  \" "
+				+ ">"
+				+ "&nbsp;"
+				+ "</TD>" + "\n"
+			;
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=5 >"
+				//+ "<SPAN style = \" font-weight:bold; \" >"
+				//+ ql.getDescriptions().get(i)
+				//+ "</SPAN>"
+				//+ ": "
+				+ ql.getValues().get(i)
+				+ "</TD>" + "\n"
+			;
 			
 			s += "  </TR>" + "\n";
 		}

@@ -9,7 +9,6 @@ import org.json.simple.parser.JSONParser;
 
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import ServletUtilities.clsOEAuthFunctions;
-import smcontrolpanel.SMUtilities;
 
 /*
 Sample full request URL to obtain a single Quote for Quote Number: 'SQAL000008-1'

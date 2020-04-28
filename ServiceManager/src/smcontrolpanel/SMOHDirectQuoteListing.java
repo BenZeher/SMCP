@@ -3,7 +3,6 @@ package smcontrolpanel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +19,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMOHDirectQuoteListing extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
@@ -42,6 +39,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 
 		/*******************************************************/
 
@@ -58,6 +56,10 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 			+ "  </TR>\n"
 			+ "</TABLE>"
 		);
+		
+		if (sWarning.compareToIgnoreCase("") != 0) {
+			out.println("<FONT COLOR=RED><B>WARNING: " + sWarning + "</B></FONT><BR>" + "\n");
+		}
 		
 		out.println("<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">\n");
 		
@@ -193,7 +195,8 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 				sQuoteNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 					+ "smcontrolpanel.SMDisplayOHDirectQuote"
 					+ "?" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "=" + sQuoteNumberLink 
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
 					+ "\">" + sQuoteNumberLink + "</A>"
 				;
 			}

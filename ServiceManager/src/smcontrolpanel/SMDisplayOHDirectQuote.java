@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -24,8 +23,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMDisplayOHDirectQuote extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
@@ -71,13 +68,12 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		try {
 			out.println(printQuote(sDBID, sUserID, sQuoteNumber));
 		} catch (Exception e2) {
-			out.println("<FONT COLOR=RED><B>" + e2.getMessage() + "</B></FONT><BR>" + "\n");
-			//response.sendRedirect(
-			//		"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-			//		+ "Warning=" + clsServletUtilities.URLEncode(e2.getMessage())
-			//		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			//		//+ sParamString
-			//);			
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+					+ "Warning=" + ServletUtilities.clsServletUtilities.URLEncode(e2.getMessage())
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					//+ sParamString
+			);			
 			return;
 		}
 		
@@ -141,6 +137,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		return s;
 	}
 	private String printQuote(String sDBID, String sUserID, String sQuoteNumber) throws Exception{
+		
 		String s = "";
 		
 		Connection conn = null;
@@ -161,7 +158,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588088197]");
 			throw new Exception("Error [202004283532] - Error printing quote row - " + e.getMessage());
 		}
-		
+
 		return s;
 	}
 	private String printQuoteTable(String sDBID, String sUserID, String sQuoteNumber, Connection conn) throws Exception{

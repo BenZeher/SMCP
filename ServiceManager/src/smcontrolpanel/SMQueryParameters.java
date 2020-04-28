@@ -811,9 +811,9 @@ public class SMQueryParameters  extends HttpServlet {
 				//Build the dropdown strings:
 				if (rs.getString(1) != null){
 					if (sValuesString.compareToIgnoreCase("{") == 0){
-						sValuesString += "'" + rs.getString(1) + "'";
+						sValuesString += "" + rs.getString(1) + "";
 					}else{
-						sValuesString += ",'" + rs.getString(1) + "'";
+						sValuesString += "," + rs.getString(1) + "";
 					}
 				}else{
 					rs.close();

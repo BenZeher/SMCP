@@ -456,18 +456,18 @@ public class SMQueryGenerate extends HttpServlet {
 				//		"str_to_date('" + sParameterValue + "','%m/%d/%Y')");
 				s = s.replace(SMCustomQuery.STARTINGPARAMDELIMITER + sTextToReplace 
 						+ SMCustomQuery.ENDINGPARAMDELIMITER, 
-						sParameterValue);
+						clsDatabaseFunctions.FormatSQLStatement(sParameterValue));
 
 			}else{
 				s = s.replace(SMCustomQuery.STARTINGPARAMDELIMITER + sTextToReplace
 					+ SMCustomQuery.ENDINGPARAMDELIMITER, 
-					sParameterValue);
+					clsDatabaseFunctions.FormatSQLStatement(sParameterValue));
 			}
 			
 			if (bDebugMode){
 				pwOut.println("<BR>Text to be replaced = '" + sTextToReplace
 					+ "', parameter value = '" 
-					+ sParameterValue + "'.");
+					+ clsDatabaseFunctions.FormatSQLStatement(sParameterValue) + "'.");
 			}
 		}
 		return s;

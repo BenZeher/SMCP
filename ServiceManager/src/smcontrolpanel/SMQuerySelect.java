@@ -353,7 +353,7 @@ public class SMQuerySelect  extends HttpServlet {
 		out.println("<B>" + SMCustomQuery.DATABASE_ID_PARAM_VARIABLE + "</B> - Current database id used for the db parameter in hyperlinks (ie. &db=" + SMCustomQuery.DATABASE_ID_PARAM_VARIABLE+ ")<BR>");
 		out.println("<B>" + SMCustomQuery.USER_VARIABLE + "</B> - User name<BR>");
 		out.println("To create a user prompt, enclose any query parameters between <B>" + SMCustomQuery.STARTINGPARAMDELIMITER + "</B>"
-			+ " and <B>" + SMCustomQuery.ENDINGPARAMDELIMITER + "</B> surrounded by double quotes. For example: <B>\"[[" + "Enter your title here" +"]]\"</B><BR>");
+			+ " and <B>" + SMCustomQuery.ENDINGPARAMDELIMITER + "</B>. For example: <B>[[" + "Enter your title here" +"]]</B><BR>");
 		out.println("To create a prompt with a date picker, define the parameter as : <B>[[" 
 			+ SMCustomQuery.DATEPICKER_PARAM_VARIABLE + "{Prompt}{DefaultDate}]]</B><BR>");
 		out.println("Date picker example: <B>[[" 

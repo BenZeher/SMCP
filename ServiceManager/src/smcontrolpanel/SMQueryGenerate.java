@@ -431,6 +431,7 @@ public class SMQueryGenerate extends HttpServlet {
 			//If the parameter contains EITHER the 'query parameter base' OR the query DATE PICKER parameter base, add
 			//it to the list of parameter names:
 			if (sParam.contains(SMQueryParameters.QUERYPARAMBASE)){
+				System.out.println("[202004294549] - sParam = '" + sParam + "'");
 				sQueryParameterNames.add(sParam);
 				if (bDebugMode){
 					pwOut.println("<BR>sParam = '" + sParam
@@ -449,6 +450,8 @@ public class SMQueryGenerate extends HttpServlet {
 		for (int i = 0; i < sTextToBeReplaced.size(); i++){
 			String sParameterValue = clsManageRequestParameters.get_Request_Parameter(sQueryParameterNames.get(i), req);
 			String sTextToReplace = sTextToBeReplaced.get(i);
+			//System.out.println("[202004294823] - sParameterValue = '" + sParameterValue + "'");
+			//System.out.println("[202004294842] - sTextToReplace = '" + sTextToReplace + "'");
 			if (sTextToReplace.substring(0,SMCustomQuery.DATEPICKER_PARAM_VARIABLE.length())
 				.compareToIgnoreCase(SMCustomQuery.DATEPICKER_PARAM_VARIABLE) == 0){
 				//s = s.replace(SMCustomQuery.STARTINGPARAMDELIMITER + sTextToReplace 
@@ -473,7 +476,7 @@ public class SMQueryGenerate extends HttpServlet {
 		return s;
 	}
 	private void loadQueryParameters (String sQueryString, ArrayList<String> arrParams, PrintWriter out) throws Exception{
-		
+		//System.out.println("[202004294305] - sQueryString = '" + sQueryString + "'");
 		try {
 			Pattern p = Pattern.compile(clsStringFunctions.convertStringToRegex(SMCustomQuery.STARTINGPARAMDELIMITER));
 			String[] x = p.split(sQueryString);

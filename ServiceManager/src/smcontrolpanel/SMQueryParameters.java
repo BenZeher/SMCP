@@ -304,6 +304,7 @@ public class SMQueryParameters  extends HttpServlet {
 					}
 				} else if (isDropDownParameter(sParam)){
 					try {
+						System.out.println("[202004293400] - sParam = '" + sParam + "'");
 						//If it's a drop down list:
 						//Pick off the prompt:
 						// [[*DROPDOWNLIST*{Prompt}{\"1\",\"2\",\"3\"}{\"First choice\",\"Second choice\",\"Third choice\"}]]
@@ -330,7 +331,16 @@ public class SMQueryParameters  extends HttpServlet {
 						String[] sValues = y[2].substring(0, iParamDataEnd).split(",");
 						ArrayList<String> alValues = new ArrayList<String>(0);
 						for (int k = 0; k < sValues.length; k++){
-							alValues.add(sValues[k].replace("\"", ""));
+							//System.out.println("[202004292016] - sValues[" + k + "] = " + sValues[k]);
+							String sListValue = sValues[k].replace("\"", "");
+							if (sListValue.startsWith("'")) {
+								sListValue = sListValue.substring(1);
+							}
+							if (sListValue.endsWith("'")) {
+								sListValue = sListValue.substring(0, sListValue.length() - 1);
+							}
+							//System.out.println("[202004292507] - sListValue = " + sListValue);
+							alValues.add(sListValue);
 						}
 						
 						//Get the drop down list descriptions:

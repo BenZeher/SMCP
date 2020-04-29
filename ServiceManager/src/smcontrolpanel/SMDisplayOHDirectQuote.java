@@ -397,7 +397,17 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 				+ "</TD>" + "\n"
 			;
 
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=5 >"
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=2 >"
+					//+ "<SPAN style = \" font-weight:bold; \" >"
+					//+ ql.getDescriptions().get(i)
+					//+ "</SPAN>"
+					//+ ": "
+					+ ql.getDescriptions().get(i)
+					+ "</TD>" + "\n"
+				;
+			
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=3 >"
 				//+ "<SPAN style = \" font-weight:bold; \" >"
 				//+ ql.getDescriptions().get(i)
 				//+ "</SPAN>"
@@ -405,6 +415,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 				+ ql.getValues().get(i)
 				+ "</TD>" + "\n"
 			;
+		
 			
 			s += "  </TR>" + "\n";
 		}

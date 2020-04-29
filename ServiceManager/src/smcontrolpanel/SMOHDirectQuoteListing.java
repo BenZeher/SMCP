@@ -127,13 +127,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		
 		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
 				+ "\" style = \" color:white; font-weight:bold; \" >"
-			+ "Bill to"
-			+ "</TD>" + "\n"
-		;
-		
-		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
-				+ "\" style = \" color:white; font-weight:bold; \" >"
-			+ "Ship to"
+			+ "Name"
 			+ "</TD>" + "\n"
 		;
 		
@@ -176,7 +170,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 			;
 		
 		try {
-			ql.getQuoteList(sRequest, conn);
+			ql.getQuoteList(sRequest, conn, sDBID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273522] - " + e4.getMessage());
 		}
@@ -227,14 +221,10 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 				;
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getBillToNames().get(i)
+					+ ql.getQuoteNames().get(i)
 					+ "</TD>" + "\n"
 				;
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ ql.getShipToNames().get(i)
-					+ "</TD>" + "\n"
-				;
 			s += "  </TR>" + "\n";
 		}
 		

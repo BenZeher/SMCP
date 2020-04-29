@@ -246,7 +246,7 @@ public class TESTBatchExport extends HttpServlet{
 		ArrayList<String> arrNames = new ArrayList<String>(0);
 		SMOHDirectQuoteList ql = new SMOHDirectQuoteList();
 		try {
-			ql.getQuoteList(sRequest, conn);
+			ql.getQuoteList(sRequest, conn, sDBID);
 		} catch (Exception e4) {
 			System.out.println("[202004233047] - " + e4.getMessage());
 		}

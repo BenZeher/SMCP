@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,6 +37,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
@@ -66,7 +66,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		out.println( printQuoteHeadings());
 		long lStartingTime = System.currentTimeMillis();
 		try {
-			out.println(printQuote(sDBID, sUserID, sQuoteNumber));
+			out.println(printQuote(sDBID, sUserID, sQuoteNumber, sLicenseModuleLevel));
 		} catch (Exception e2) {
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -122,13 +122,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		
 		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
 				+ "\" style = \" color:white; font-weight:bold; \" >"
-			+ "Bill to"
-			+ "</TD>" + "\n"
-		;
-		
-		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
-				+ "\" style = \" color:white; font-weight:bold; \" >"
-			+ "Ship to"
+			+ "Name"
 			+ "</TD>" + "\n"
 		;
 		
@@ -136,7 +130,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		
 		return s;
 	}
-	private String printQuote(String sDBID, String sUserID, String sQuoteNumber) throws Exception{
+	private String printQuote(String sDBID, String sUserID, String sQuoteNumber, String sLicenseModuleLevel) throws Exception{
 		
 		String s = "";
 		
@@ -153,7 +147,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		}
 		
 		try {
-			s += printQuoteTable(sDBID, sUserID, sQuoteNumber, conn);
+			s += printQuoteTable(sDBID, sUserID, sQuoteNumber, conn, sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588088197]");
 			throw new Exception("Error [202004283532] - Error printing quote row - " + e.getMessage());
@@ -161,7 +155,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 
 		return s;
 	}
-	private String printQuoteTable(String sDBID, String sUserID, String sQuoteNumber, Connection conn) throws Exception{
+	private String printQuoteTable(String sDBID, String sUserID, String sQuoteNumber, Connection conn, String sLicenseModuleLevel) throws Exception{
 		String s = "";
 		
 		//Get the OHDirect connection settings:
@@ -173,7 +167,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		;
 		
 		try {
-			ql.getQuoteList(sRequest, conn);
+			ql.getQuoteList(sRequest, conn, sDBID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004274522] - " + e4.getMessage());
 		}
@@ -209,12 +203,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 				;
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getBillToNames().get(i) + "</B"
-					+ "</TD>" + "\n"
-				;
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getShipToNames().get(i) + "</B"
+					+ "<B>" + ql.getQuoteNames().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
@@ -229,7 +218,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		s += printQuoteLineHeader();
 		
 		try {
-			s += printQuoteLines(conn, sDBID, sUserID, ql.getQuoteIDs().get(0));
+			s += printQuoteLines(conn, sDBID, sUserID, ql.getQuoteIDs().get(0), sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588088198]");
 			throw new Exception("Error [202004283554] - Error printing quote lines - " + e.getMessage());
@@ -285,8 +274,14 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		return s;
 		
 	}
-	private String printQuoteLines(Connection conn, String sDBID, String sUserID, String sQuoteID) throws Exception{
+	private String printQuoteLines(Connection conn, String sDBID, String sUserID, String sQuoteID, String sLicenseModuleLevel) throws Exception{
 		String s = "";
+		
+		boolean bAllowDisplayItemInformation = SMSystemFunctions.isFunctionPermitted(
+			SMSystemFunctions.ICDisplayItemInformation, 
+			sUserID, 
+			conn, 
+			sLicenseModuleLevel);
 		
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteLineList ql = new SMOHDirectQuoteLineList();
@@ -297,7 +292,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		;
 		
 		try {
-			ql.getQuoteLineList(sRequest, conn);
+			ql.getQuoteLineList(sRequest, conn, sDBID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273622] - " + e4.getMessage());
 		}
@@ -318,8 +313,20 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 				+ "</TD>" + "\n"
 			;
 			
+			String sItemNumberLink = ql.getLabels().get(i);
+			if (bAllowDisplayItemInformation) {
+				sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+				+ "smic.ICDisplayItemInformation"
+				+ "?ItemNumber=" + sItemNumberLink
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
+				+ "\">" + sItemNumberLink + "</A>"
+			; 
+			}else {
+				sItemNumberLink = "<B>" + sItemNumberLink + "</B>";
+			}
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getLabels().get(i) + "</B"
+					+ sItemNumberLink
 					+ "</TD>" + "\n"
 				;
 			
@@ -340,7 +347,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 			
 			bdTotalQuoteCost = bdTotalQuoteCost.add(ql.getTotalCosts().get(i));
 			
-			s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i));
+			s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i), sDBID);
 			
 			s += "  </TR>" + "\n";
 		}
@@ -369,7 +376,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		return s;
 	}
 	
-	private String printQuoteLineDetails(Connection conn, String sQuoteLineID) throws Exception{
+	private String printQuoteLineDetails(Connection conn, String sQuoteLineID, String sDBID) throws Exception{
 		String s = "";
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteLineDetailList ql = new SMOHDirectQuoteLineDetailList();
@@ -380,7 +387,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		;
 		
 		try {
-			ql.getQuoteLineDetailList(sRequest, conn);
+			ql.getQuoteLineDetailList(sRequest, conn, sDBID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273622] - " + e4.getMessage());
 		}
@@ -397,12 +404,11 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 				+ "</TD>" + "\n"
 			;
 
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=2 >"
-					//+ "<SPAN style = \" font-weight:bold; \" >"
-					//+ ql.getDescriptions().get(i)
-					//+ "</SPAN>"
-					//+ ": "
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=2 >"
+					+ "<SPAN style = \" font-weight:bold; \" >"
 					+ ql.getDescriptions().get(i)
+					+ "</SPAN>"
+					+ ": "
 					+ "</TD>" + "\n"
 				;
 			

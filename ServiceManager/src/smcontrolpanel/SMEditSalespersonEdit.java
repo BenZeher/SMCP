@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.MySQLs;
-import SMClasses.SMUser;
 import SMDataDefinition.SMTabledefaultsalesgroupsalesperson;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableusers;

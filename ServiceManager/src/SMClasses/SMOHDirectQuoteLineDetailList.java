@@ -34,7 +34,7 @@ public class SMOHDirectQuoteLineDetailList {
 		
 	}
 	
-	public void getQuoteLineDetailList(String sRequestString, Connection conn) throws Exception{
+	public void getQuoteLineDetailList(String sRequestString, Connection conn, String sDBID) throws Exception{
 		arrQuoteLineIDs = new ArrayList<String>(0);
 		arrQuoteLineDetailIDs = new ArrayList<String>(0);
 		arrDescriptions = new ArrayList<String>(0);
@@ -44,7 +44,7 @@ public class SMOHDirectQuoteLineDetailList {
 		//Try to read the list:
 		String sJSONResult = "";
 		try {
-			sJSONResult = ServletUtilities.clsOEAuthFunctions.requestOHDirectData(conn, sRequestString);
+			sJSONResult = ServletUtilities.clsOEAuthFunctions.requestOHDirectData(conn, sRequestString, sDBID);
 		} catch (Exception e) {
 			throw new Exception("Error [202004231717] - " + e.getMessage());
 		}

@@ -81,13 +81,14 @@ public class clsOEAuthFunctions {
 	
 	public static String getOHDirectPlusRequest(
 		ServletUtilities.clsOHDirectOEAuth2Token token, 
-		String sRequestEndPoint) throws Exception{
+		String sRequestEndPoint,
+		String sDBID) throws Exception{
 	    BufferedReader reader = null;
 	    String sResult = "";
 	    try {
-	        URL url = new URL(token.getOHDirectRequestURLBase() + sRequestEndPoint);
+	        URL url = new URL(token.getOHDirectRequestURLBase(sDBID) + sRequestEndPoint);
 	        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-	        connection.setRequestProperty("Authorization", "Bearer " + token.getToken());
+	        connection.setRequestProperty("Authorization", "Bearer " + token.getToken(sDBID));
 	        connection.setDoOutput(true);
 	        connection.setRequestMethod("GET");
 	        reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -101,7 +102,7 @@ public class clsOEAuthFunctions {
 	    return sResult;
 	}
 	
-	public static String requestOHDirectData(Connection conn, String sEndPointQuery) throws Exception{
+	public static String requestOHDirectData(Connection conn, String sEndPointQuery, String sDBID) throws Exception{
 		String sResult = "";
 		
 		clsOHDirectSettings ohd = new clsOHDirectSettings();
@@ -113,18 +114,18 @@ public class clsOEAuthFunctions {
 		
 		clsOHDirectOEAuth2Token token = new clsOHDirectOEAuth2Token();
 		try {
-			sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery);
+			sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery, sDBID);
 		} catch (Exception e1) {
 			//IF it fails the first time, try to refresh the token:
 			try {
-				token.refreshToken(conn);
+				token.refreshToken(conn, sDBID);
 			} catch (Exception e) {
 				throw new Exception("Error [202004235737] - " + e.getMessage());
 			}
 			
 			//Try to read OHDirect again:
 			try {
-				sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery);
+				sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery, sDBID);
 			} catch (Exception e) {
 				throw new Exception("Error [202004235806] - " + e.getMessage());
 			}

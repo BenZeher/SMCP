@@ -19,7 +19,8 @@ public class clsOHDirectOEAuth2Token extends java.lang.Object{
 	
 	public void refreshToken(
 		Connection conn,
-		String sDBID
+		String sDBID,
+		String sUserID
 	) throws Exception{
 		
 		int iIndex = -1;
@@ -50,7 +51,10 @@ public class clsOHDirectOEAuth2Token extends java.lang.Object{
 				objsettings.getstokenuserpassword(), 
 				objsettings.getstokenurl(), 
 				objsettings.getsclientid(), 
-				objsettings.getsclientsecret()
+				objsettings.getsclientsecret(),
+				conn,
+				sUserID,
+				sDBID
 			)
 			);
 		} catch (Exception e) {

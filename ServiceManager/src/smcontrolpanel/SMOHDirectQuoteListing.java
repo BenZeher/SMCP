@@ -170,7 +170,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 			;
 		
 		try {
-			ql.getQuoteList(sRequest, conn, sDBID);
+			ql.getQuoteList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273522] - " + e4.getMessage());
 		}

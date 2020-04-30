@@ -37,7 +37,7 @@ public class SMOHDirectQuoteList {
 		
 	}
 	
-	public void getQuoteList(String sRequestString, Connection conn, String sDBID) throws Exception{
+	public void getQuoteList(String sRequestString, Connection conn, String sDBID, String sUserID) throws Exception{
 		arrQuoteNumbers = new ArrayList<String>(0);
 		arrQuoteIDs = new ArrayList<String>(0);
 		arrNames = new ArrayList<String>(0);
@@ -52,7 +52,7 @@ public class SMOHDirectQuoteList {
 		//Try to read the list:
 		String sJSONResult = "";
 		try {
-			sJSONResult = ServletUtilities.clsOEAuthFunctions.requestOHDirectData(conn, sRequestString, sDBID);
+			sJSONResult = ServletUtilities.clsOEAuthFunctions.requestOHDirectData(conn, sRequestString, sDBID, sUserID);
 		} catch (Exception e) {
 			throw new Exception("Error [202004231617] - " + e.getMessage());
 		}

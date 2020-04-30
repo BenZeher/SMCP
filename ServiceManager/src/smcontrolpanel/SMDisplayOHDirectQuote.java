@@ -167,7 +167,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		;
 		
 		try {
-			ql.getQuoteList(sRequest, conn, sDBID);
+			ql.getQuoteList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004274522] - " + e4.getMessage());
 		}
@@ -274,7 +274,12 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		return s;
 		
 	}
-	private String printQuoteLines(Connection conn, String sDBID, String sUserID, String sQuoteID, String sLicenseModuleLevel) throws Exception{
+	private String printQuoteLines(
+		Connection conn, 
+		String sDBID, 
+		String sUserID, 
+		String sQuoteID, 
+		String sLicenseModuleLevel) throws Exception{
 		String s = "";
 		
 		boolean bAllowDisplayItemInformation = SMSystemFunctions.isFunctionPermitted(
@@ -292,7 +297,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		;
 		
 		try {
-			ql.getQuoteLineList(sRequest, conn, sDBID);
+			ql.getQuoteLineList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273622] - " + e4.getMessage());
 		}
@@ -347,7 +352,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 			
 			bdTotalQuoteCost = bdTotalQuoteCost.add(ql.getTotalCosts().get(i));
 			
-			s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i), sDBID);
+			s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i), sDBID, sUserID);
 			
 			s += "  </TR>" + "\n";
 		}
@@ -376,7 +381,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		return s;
 	}
 	
-	private String printQuoteLineDetails(Connection conn, String sQuoteLineID, String sDBID) throws Exception{
+	private String printQuoteLineDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
 		String s = "";
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteLineDetailList ql = new SMOHDirectQuoteLineDetailList();
@@ -387,7 +392,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		;
 		
 		try {
-			ql.getQuoteLineDetailList(sRequest, conn, sDBID);
+			ql.getQuoteLineDetailList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273622] - " + e4.getMessage());
 		}

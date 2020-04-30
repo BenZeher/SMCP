@@ -7,15 +7,20 @@ import java.io.PrintStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
+import java.sql.Statement;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import SMDataDefinition.SMTablesystemlog;
+import SMDataDefinition.SMTableusers;
+
 public class clsOEAuthFunctions {
 
+	private final static String LOG_OPERATION_OHDIRECTTOKEN = "OHDIRECTTOKEN";
+	private final static String LOG_OPERATION_OHDIRECTREQUEST = "OHDIRECTREQUEST";
 	private static final Pattern pat = Pattern.compile(".*\"access_token\"\\s*:\\s*\"([^\"]+)\".*");
 	
 	public static String getOHDirectToken (
@@ -23,7 +28,10 @@ public class clsOEAuthFunctions {
 		String password,
 		String tokenURL,
 		String sClientID,
-		String sClientSecret
+		String sClientSecret,
+		Connection conn,
+		String sUserID,
+		String sDBID
 		) throws Exception{
 		
 		String sAuth = sClientID + ":" + sClientSecret;
@@ -69,6 +77,20 @@ public class clsOEAuthFunctions {
 	        }
 	        connection.disconnect();
 	    }
+	    try {
+			writeEntry(
+				"Getting OHDirect TOKEN for DBID:" + sDBID,
+				LOG_OPERATION_OHDIRECTTOKEN,
+				"[1588268769]",
+				sUserID,
+				Long.toString(System.currentTimeMillis() - lStartingTime),
+				conn, 
+				sDBID);
+		} catch (Exception e) {
+			System.out.println("[202004305332] - Error recording token request - " + e.getMessage());
+		}
+	    
+	    /*
 		java.util.Date todaysDate = new java.util.Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String formattedDate = formatter.format(todaysDate);
@@ -76,15 +98,21 @@ public class clsOEAuthFunctions {
 		// TJR - 4/27/2020 - leaving this line in deliberately for now to see how token logic is working...
 	    System.out.println("[202004271205] Retrieving token at " + formattedDate + ": " 
 	    + (System.currentTimeMillis() - lStartingTime) + " ms, token size: " + returnValue.length());
+	    */
 	    return returnValue;
 	}
 	
 	public static String getOHDirectPlusRequest(
 		ServletUtilities.clsOHDirectOEAuth2Token token, 
 		String sRequestEndPoint,
-		String sDBID) throws Exception{
+		String sDBID,
+		String sUserID,
+		Connection conn) throws Exception{
 	    BufferedReader reader = null;
 	    String sResult = "";
+	    
+	    long lStartingTime = System.currentTimeMillis();
+	    
 	    try {
 	        URL url = new URL(token.getOHDirectRequestURLBase(sDBID) + sRequestEndPoint);
 	        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -99,10 +127,24 @@ public class clsOEAuthFunctions {
 	    } catch (Exception e) {
 	    	throw new Exception("Error [1587585250] reading request - " + e.getMessage());	    
 	    }
+	    
+	    try {
+			writeEntry(
+					"Getting OHDirect REQUEST for DBID:" + sDBID + " - '" + sRequestEndPoint + "'",
+					LOG_OPERATION_OHDIRECTREQUEST,
+					"[1588268770]",
+					sUserID,
+					Long.toString(System.currentTimeMillis() - lStartingTime),
+					conn, 
+					sDBID);
+		} catch (Exception e) {
+			System.out.println("[202004305332] - Error recording token request - " + e.getMessage());
+		}
+	    
 	    return sResult;
 	}
 	
-	public static String requestOHDirectData(Connection conn, String sEndPointQuery, String sDBID) throws Exception{
+	public static String requestOHDirectData(Connection conn, String sEndPointQuery, String sDBID, String sUserID) throws Exception{
 		String sResult = "";
 		
 		clsOHDirectSettings ohd = new clsOHDirectSettings();
@@ -114,18 +156,18 @@ public class clsOEAuthFunctions {
 		
 		clsOHDirectOEAuth2Token token = new clsOHDirectOEAuth2Token();
 		try {
-			sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery, sDBID);
+			sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery, sDBID, sUserID, conn);
 		} catch (Exception e1) {
 			//IF it fails the first time, try to refresh the token:
 			try {
-				token.refreshToken(conn, sDBID);
+				token.refreshToken(conn, sDBID, sUserID);
 			} catch (Exception e) {
 				throw new Exception("Error [202004235737] - " + e.getMessage());
 			}
 			
 			//Try to read OHDirect again:
 			try {
-				sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery, sDBID);
+				sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery, sDBID, sUserID, conn);
 			} catch (Exception e) {
 				throw new Exception("Error [202004235806] - " + e.getMessage());
 			}
@@ -147,4 +189,63 @@ public class clsOEAuthFunctions {
 		}
 		return sFormattedDate;
 	}
+	
+	//Write entries to the 'systemlog':
+    public static boolean writeEntry (
+    		String sDescription,
+    		String sOperation,
+    		String sReference,
+    		String sUserID,
+    		String sTimeInMilliseconds,
+    		Connection conn,
+    		String sDBID
+   		) throws Exception{
+    	String m_sUserID = "";
+    	
+    	try {
+    		m_sUserID = sUserID.substring(0, SMTablesystemlog.suseridLength - 1);
+		} catch (Exception e1) {
+			m_sUserID = sUserID;
+		}
+
+    	String SQL = "";
+		SQL = "INSERT INTO " + SMTablesystemlog.TableName
+			+ " ("
+	    		+ SMTablesystemlog.datloggingtime
+	    		+ ", " + SMTablesystemlog.mdescription
+	    		+ ", " + SMTablesystemlog.soperation
+	    		+ ", " + SMTablesystemlog.mcomment
+	    		+ ", " + SMTablesystemlog.suserid
+	    		+ ", " + SMTablesystemlog.suserfullname
+	    		+ ", " + SMTablesystemlog.sreferenceid
+	    		+ ") ";
+   
+   		 SQL += "SELECT "
+   				+ " NOW()"
+   				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'"
+   				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sOperation) + "'"
+   				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sTimeInMilliseconds) + "'"
+   				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sUserID) + "'"
+   				+ ", CONCAT(" + SMTableusers.sUserFirstName + ",\" \"," +  SMTableusers.sUserLastName + ")"
+   				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sReference) + "'"
+   				+ " FROM " + SMTableusers.TableName
+   				+ " WHERE (";
+   		 	if(clsStringFunctions.isInteger(m_sUserID.trim())){
+   		 		SQL += "(" + SMTableusers.lid + "=" + m_sUserID + "))";
+   		 	}else {
+   		 		SQL += "(" + SMTableusers.sUserName + "='" + m_sUserID + "'))";
+   		 	} 
+		
+		//System.out.println(SQL);
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [1413217833]" + Long.toString(System.currentTimeMillis()) 
+					+ " - logging operation '" + LOG_OPERATION_OHDIRECTTOKEN  
+					+ " error using connnection: " + e.getMessage() + ".");
+		}
+
+    	return true;
+    }
 }

@@ -180,6 +180,8 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_POONHOLD = "POONHOLD";
 	public final static String LOG_OPERATION_APINVOICEONHOLD = "APINVOICEONHOLD";
 	public final static String LOG_OPERATION_APBATCHENTRYONHOLD = "APBATCHENTRYONHOLD";
+	public final static String LOG_OPERATION_OHDIRECTTOKEN = "OHDIRECTTOKEN";  //Used by clsOEAuthFunctions - not called directly
+	public final static String LOG_OPERATION_OHDIRECTREQUEST = "OHDIRECTREQUEST";  //Used by clsOEAuthFunctions - not called directly
 	
 	private Connection conn;
 	private ServletContext context;
@@ -796,6 +798,12 @@ public class SMLogEntry {
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APBATCHENTRYONHOLD);
     	m_arrOperationLabelDescriptions.add("Records whenever a user puts an AP invoice batch entry on hold or takes one OFF hold");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_OHDIRECTTOKEN);
+    	m_arrOperationLabelDescriptions.add("Records elapsed time when getting an OHDirect token");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_OHDIRECTREQUEST);
+    	m_arrOperationLabelDescriptions.add("Records elapsed time for an OHDirect data request");
     	
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){

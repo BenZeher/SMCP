@@ -431,7 +431,7 @@ public class SMQueryGenerate extends HttpServlet {
 			//If the parameter contains EITHER the 'query parameter base' OR the query DATE PICKER parameter base, add
 			//it to the list of parameter names:
 			if (sParam.contains(SMQueryParameters.QUERYPARAMBASE)){
-				System.out.println("[202004294549] - sParam = '" + sParam + "'");
+				//System.out.println("[202004294549] - sParam = '" + sParam + "'");
 				sQueryParameterNames.add(sParam);
 				if (bDebugMode){
 					pwOut.println("<BR>sParam = '" + sParam

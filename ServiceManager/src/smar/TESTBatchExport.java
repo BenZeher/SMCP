@@ -1,6 +1,8 @@
 package smar;
 import java.io.IOException;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
+import ServletUtilities.clsStringFunctions;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -159,6 +162,33 @@ public class TESTBatchExport extends HttpServlet{
 			return;
 		}
 		*/
+		
+		String SQL = "";
+		for (int i = 0; i < 26000; i++) {
+			SQL = "INSERT INTO tax (staxjurisdiction, bdtaxrate, sdescription, staxtype, sglacct, iactive, icalculateonpurchaseorsale,"
+					+ " icalculatetaxoncustomerinvoice, ishowinorderentry, ishowinaccountspayable"
+					+ ") VALUES ("
+					+ " 'JUR" + clsStringFunctions.PadLeft(Integer.toString(i), "0", 5) + "'"
+					+ ", 0.00"
+					+ ", 'LONG TAX DESCRIPTION'"
+					+ ", 'TYPE'"
+					+ ", 'GLACCT00000000'"
+					+ ", 1"
+					+ ", 0"
+					+ ", 1"
+					+ ", 1"
+					+ ", 1"
+					+ ")"
+			;
+			try {
+				Statement stmt = conn.createStatement();
+				stmt.execute(SQL);
+			} catch (SQLException e) {
+				System.out.println("[202005043349] - " + e.getMessage());
+			}
+		}
+		System.out.println("[202005043334] - DONE");
+		
 		
 		/*
 		//TEST OEAuth2 token processing:

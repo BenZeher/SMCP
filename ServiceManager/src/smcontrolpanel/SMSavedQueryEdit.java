@@ -1,5 +1,5 @@
 package smcontrolpanel;
-
+/*
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -44,7 +44,7 @@ public class SMSavedQueryEdit  extends HttpServlet {
 		if (sQueryString.compareToIgnoreCase("") == 0){
 			sQueryString = "";
 		}
-		
+	
 		//If it's a request to save the record, do that.
 		if(request.getParameter(PARAM_SAVEQUERY) != null){
 			try{
@@ -125,3 +125,4 @@ public class SMSavedQueryEdit  extends HttpServlet {
 		doPost(request, response);
 	}
 }
+*/

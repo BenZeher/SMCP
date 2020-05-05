@@ -113,7 +113,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 	
 	private static final String DATE_FIELD_WIDTH = "16";
 	private static final String PHONE_NUMBER_FIELD_WIDTH = "11";
-	
+	private static final long TAX_CODE_BUFFER_SIZE = 100;
 	
 	private boolean bDebugMode = false;
 	
@@ -559,6 +559,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				+ "(" + SMTabledefaultsalesgroupsalesperson.scustomercode + " = '" + entry.getM_sCustomerCode() + "')"
 			+ ")"
 		;
+		System.out.println("[202005041835] - Default salespersons SQL: '" + SQL + "'.");
 		ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(), 
@@ -972,6 +973,8 @@ public class SMEditOrderEdit  extends HttpServlet {
 		//if (entry.getitaxid().compareToIgnoreCase("") == 0){
 		//	bCurrentTaxWasFound = true;
 		//}
+		String sTempBuffer = "";
+		long lRecordCounter = 0;
 		try {
 			ResultSet rsTax = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -979,7 +982,9 @@ public class SMEditOrderEdit  extends HttpServlet {
 					sm.getsDBID(), 
 					"MySQL", 
 					this.toString() + " [1332425638] SQL: " + SQL);
+			
 			while (rsTax.next()){
+				lRecordCounter++;
 				//Get the tax ID of each record:
 				String sTaxID = Long.toString(rsTax.getLong(SMTabletax.lid));
 				//This will contain the 'selected' flag, if appropriate:
@@ -1009,7 +1014,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 					if (!bTaxIsActive){
 						sInactiveFlag = " (INACTIVE)";
 					}
-					s += "<OPTION" + sOptionSelected
+					sTempBuffer += "<OPTION" + sOptionSelected
 						+ " VALUE=\"" + sTaxID + "\">\n" 
 						+ rsTax.getString(SMTabletax.staxjurisdiction)
 						+ " - " + rsTax.getString(SMTabletax.staxtype)
@@ -1018,11 +1023,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 						+ "</OPTION>"
 					;
 				}
+				if ((lRecordCounter % TAX_CODE_BUFFER_SIZE) == 0) {
+					s += sTempBuffer;
+					sTempBuffer = "";
+				}
 			}
 			rsTax.close();
 		} catch (SQLException e) {
 			throw new SQLException("Error [1454445632] loading taxes - " + e.getMessage());
 		}
+		//Add any taxes left in the buffer:
+		s += sTempBuffer;
+		
 		/* - TJR - 2/4/2016 - removed this because if the user tries to save an order with a completely
 		 * missing tax, a lot of the order validation and saving fails and we don't want to try to
 		 * hack around those functions at this time.  They have to have at least an inactive tax type to save.

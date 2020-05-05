@@ -15380,7 +15380,7 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "UPDATE `callsheets`"
 					+ " LEFT JOIN users ON callsheets.sAlertInits=users.sIdentifierInitials"
 					+ " SET callsheets.sAlertFullName = CONCAT(users.sUserFirstName, ' ', users.sUserLastName)"
-					+ " WHERE (users.sUserFirstName fIS NOT NULL)"
+					+ " WHERE (users.sUserFirstName IS NOT NULL)"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

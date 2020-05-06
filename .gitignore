@@ -8,3 +8,5 @@ build/
 *.class
 
 .project
+
+TimeCardSystem/.settings/org.eclipse.jdt.core.prefs

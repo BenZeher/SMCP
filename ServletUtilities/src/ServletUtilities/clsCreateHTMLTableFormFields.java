@@ -514,16 +514,25 @@ public class clsCreateHTMLTableFormFields {
 			String sRemark
 	){
 	
+		long LIST_BUFFER_SIZE = 100;
 		String sRow = "<TR>\n";
 		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 		sRow += "<TD ALIGN=LEFT>&nbsp;<SELECT NAME = \"" + sFieldName + "\">";
+		String sTempBuffer = "";
 		for (int i = 0; i < sValues.size(); i++){
-			sRow += "<OPTION";
+			sTempBuffer += "<OPTION";
 			if (sValues.get(i).toString().compareTo(sDefaultValue) == 0){
-				sRow += " selected=yes";
+				sTempBuffer += " selected=yes";
 			}
-			sRow += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString() + "\n";
+			sTempBuffer += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString() + "\n";
+			
+			if ((i % LIST_BUFFER_SIZE) == 0) {
+				sRow += sTempBuffer;
+				sTempBuffer = "";
+			}
 		}
+		//Get anything left in the buffer:
+		sRow += sTempBuffer;
 		sRow += "</SELECT></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";

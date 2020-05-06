@@ -471,7 +471,6 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 		
 		//Tax type:
 		s += "<TD style=\" text-align:right; font-weight:bold; \">Tax:&nbsp;</TD>";
-		//TAXDROPDOWN
 		if (entry.getM_sexportsequencenumber().compareToIgnoreCase("0") == 0){
 			s += "<TD>"
 				+ "<SELECT NAME=\"" + ICPOInvoice.Paramitaxid + "\"" 

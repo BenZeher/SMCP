@@ -641,13 +641,22 @@ public class APEditInvoiceEdit  extends HttpServlet {
 					+ " onchange=\"flagDirty();\""
 					 + " >\n"
 				;
+			String sTempBuffer = "";
+			int TAX_BUFFER_SIZE = 100;
 				for (int i = 0; i < arrTaxes.size(); i++){
-					sControlHTML += "<OPTION";
+					sTempBuffer += "<OPTION";
 					if (arrTaxes.get(i).toString().compareTo(entry.getsitaxid()) == 0){
-						sControlHTML += " selected=yes";
+						sTempBuffer += " selected=yes";
 					}
-					sControlHTML += " VALUE=\"" + arrTaxes.get(i).toString() + "\">" + arrTaxDescriptions.get(i).toString() + "\n";
+					sTempBuffer += " VALUE=\"" + arrTaxes.get(i).toString() + "\">" + arrTaxDescriptions.get(i).toString() + "\n";
+					if ((i % TAX_BUFFER_SIZE) == 0) {
+						sControlHTML += sTempBuffer;
+						sTempBuffer = "";
+					}
 				}
+				//Get any remaining items from the buffer:
+				sControlHTML += sTempBuffer;
+				
 				sControlHTML += "</SELECT>"
 				;
 		}else{

@@ -156,6 +156,7 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 				+ "</TR>\n");
 	    ArrayList<String>arrTaxJurisdictionCheckboxes = new ArrayList<String>(0);
 	    
+	  //TAXDROPDOWN
 	    String SQL = "SELECT"
 	    	+ " DISTINCT "
 	    	+ SMTabletax.staxjurisdiction
@@ -172,6 +173,7 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 				+ sUserID
 				+ " -  "
 				+ sUserFullName);
+			//long lStartingTime = System.currentTimeMillis();
 			while (rsTaxJurisdictions.next()){
 				String sTaxJurisdiction = rsTaxJurisdictions.getString(SMTabletax.staxjurisdiction);
 				String sTaxJurisdictionMarker = TAX_JURISDICTION_CHECKBOX_STUB + sTaxJurisdiction;
@@ -194,6 +196,7 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 				);
 			}
 			rsTaxJurisdictions.close();
+			//System.out.println("[202005065917] - Elapsed time: " + (System.currentTimeMillis() - lStartingTime));
 		} catch (Exception e1) {
 			pwOut.println(
 				"<BR>\n<B><FONT COLOR=RED>Error [1454965679] reading tax jurisdictions with SQL: '" 

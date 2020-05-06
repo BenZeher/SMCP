@@ -350,6 +350,7 @@ public class clsServletUtilities {
 		}
 		sTable = sTable + ">";
 
+		//long lStartingTime = System.currentTimeMillis();
 		if (bVertical){
 			//find out total rows, including empty space:
 			int iTotalRows = (int)Math.ceil(sTableValues.size() / (double)iNumberOfColumns); 
@@ -362,6 +363,8 @@ public class clsServletUtilities {
 
 			int iArrayCounter = 0;
 			sTable = sTable + "<TR>\n";
+			String sTempBuffer = "";
+			int LIST_BUFFER_SIZE = 100;
 			for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
 				int iLessRow;
 				if (iCol < iFullColumns){
@@ -369,40 +372,61 @@ public class clsServletUtilities {
 				}else{
 					iLessRow = 1;
 				}
-				sTable = sTable + "<TD VALIGN=TOP";
+				
+				sTempBuffer = sTempBuffer + "<TD VALIGN=TOP";
 				if (bEqualWidth){
-					sTable = sTable + " WIDTH = " + 100 / iNumberOfColumns + "%";
+					sTempBuffer = sTempBuffer + " WIDTH = " + 100 / iNumberOfColumns + "%";
 				}
-				sTable = sTable + "><TABLE BORDER=0 WIDTH=100%>";
+				sTempBuffer = sTempBuffer + "><TABLE BORDER=0 WIDTH=100%>";
 				for (int iRow=0; iRow < iTotalRows - iLessRow; iRow++){
-					sTable = sTable + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n";
+					sTempBuffer = sTempBuffer + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n";
 					iArrayCounter++;
+					if ((iArrayCounter % LIST_BUFFER_SIZE) == 0) {
+						//System.out.println("[202005060338] - iArrayCounter = " + iArrayCounter);
+						sTable += sTempBuffer;
+						sTempBuffer = "";
+					}
 				}
+				//Get anything left in the buffer:
+				sTable += sTempBuffer;
 				sTable = sTable + "</TABLE></TD>\n";
-			}
 
+			}
+			
 			sTable = sTable + "</TR>\n";
 		}else{
 			//find out total rows, including empty space:
 			int iArrayCounter = 0;
+			String sTempBuffer = "";
+			int LIST_BUFFER_SIZE = 100;
 			while (iArrayCounter < sTableValues.size()){
-				sTable = sTable + "<TR>\n";
+				
+				sTempBuffer += "<TR>\n";
 				for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
-					sTable = sTable + "<TD VALIGN=TOP";
+					sTempBuffer = sTempBuffer + "<TD VALIGN=TOP";
 					if (bEqualWidth){
-						sTable = sTable + " WIDTH = " + 100 / iNumberOfColumns + "%";
+						sTempBuffer = sTempBuffer + " WIDTH = " + 100 / iNumberOfColumns + "%";
 					}
 					if (iArrayCounter < sTableValues.size()){
-						sTable = sTable + ">" + sTableValues.get(iArrayCounter) + " </TD>\n";
+						sTempBuffer = sTempBuffer + ">" + sTableValues.get(iArrayCounter) + " </TD>\n";
 					}else{
-						sTable = sTable + ">&nbsp;</TD>\n";
+						sTempBuffer = sTempBuffer + ">&nbsp;</TD>\n";
 					}
 					iArrayCounter++;
-					//System.out.println("iArrayCounter = " + iArrayCounter);
+
 				}
-				sTable = sTable + "</TR>\n";
+				sTempBuffer += "</TR>\n";
+				
+				if ((iArrayCounter % LIST_BUFFER_SIZE) == 0) {
+					//System.out.println("[202005061200] - iArrayCounter = " + iArrayCounter);
+					sTable += sTempBuffer;
+					sTempBuffer = "";
+				}
 			}
+			//Empty anything remaining in the buffer:
+			sTable += sTempBuffer;
 		}
+		//System.out.println("[202005060042] - Elapsed time building table: " + (System.currentTimeMillis() - lStartingTime));
 		sTable = sTable + "</TABLE>";
 		return sTable;
 	} 

@@ -1,23 +1,8 @@
 package smar;
-import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServlet;
 
 import SMClasses.SMOHDirectQuoteList;
@@ -727,6 +712,7 @@ insert into gltransactionlines_bak select * from gltransactionlines;
 		*/
 
 	}
+	/*
     private static void sendEmailWithEmbeddedHTML(
     		String host,
             final String userName, 
@@ -836,5 +822,5 @@ insert into gltransactionlines_bak select * from gltransactionlines;
 			throw new Exception("Error [1395085038] - sending message in sendEmailWithEmbeddedHTML - " + e.getMessage());
 		}
     }
-
+	*/
 }

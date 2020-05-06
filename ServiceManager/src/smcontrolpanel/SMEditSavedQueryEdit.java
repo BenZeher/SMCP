@@ -1,7 +1,8 @@
 package smcontrolpanel;
-/*
+
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -11,11 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTablesavedqueries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
-public class SMSavedQueryEdit  extends HttpServlet {
+public class SMEditSavedQueryEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static String PARAM_SAVEQUERY = "SAVEQUERY";
@@ -33,49 +35,21 @@ public class SMSavedQueryEdit  extends HttpServlet {
 		){
 			return;
 		}
-		//Get Query ID
-		String sQueryID = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYID, request);
-		if (sQueryID.compareToIgnoreCase("") == 0){
-			sQueryID = "";
-		}
-		
-		//Get the query passed in.
-		String sQueryString = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYSTRING, request);
-		if (sQueryString.compareToIgnoreCase("") == 0){
-			sQueryString = "";
-		}
-	
-		//If it's a request to save the record, do that.
-		if(request.getParameter(PARAM_SAVEQUERY) != null){
-			try{
-	    		String SQL = "UPDATE " + SMTablesavedqueries.TableName
-	    			+ " SET " + SMTablesavedqueries.ssql + " = "
-	    			+ sQueryString
-	    			+ " WHERE ("
-	    			+ SMTablesavedqueries.id " = " 
-	    			+ ")"
-		    	;
-		    		
-	    		if (!clsDatabaseFunctions.executeSQL(
-	    				SQL, 
-	    				getServletContext(), 
-	    				sDBID,
-	    				"MySQL",
-	    				this.toString() + ".doGet - User: " + sUserFullName)){
-	    			//bResetSuccessful = false;
-	    			sWarning = "Could not execute update statement.";
-	    		}
-	    	}catch (SQLException e){
-	    		//bResetSuccessful = false;
-	    		//sWarning = "Error updating flag - " + e.getMessage();
-	    	}
-		}
+
 		PrintWriter out = response.getWriter();
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+				                        + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		
+		//Get Query ID
+		String sEditQueryID = clsManageRequestParameters.get_Request_Parameter(SMSavedQueriesSelect.EDIT_QUERY_ID_PARAM, request);
+		String sQueryString = "";
+
+		
 		String title = "SM Edit Saved Query";
 		String subtitle = "";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -100,10 +74,33 @@ public class SMSavedQueryEdit  extends HttpServlet {
 
 		
 		out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-				+ "smcontrolpanel.SMSavedQueryEdit\">");
+				+ "smcontrolpanel.SMSavedQueryAction\">");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" 
 				+ SMUtilities.getFullClassName(this.toString()) + "\">");
+
+		
+		String SQL = "SELECT"
+				+ " " + SMTablesavedqueries.ssql
+				+ " FROM " + SMTablesavedqueries.TableName
+				+ " WHERE " + SMTablesavedqueries.id + " = " + sEditQueryID
+				;
+
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					getServletContext(), 
+					sDBID, 
+					"MySQL", 
+					SMUtilities.getFullClassName(this.toString()) + ".loadMechanics - user: " 
+					+ sUserFullName	);
+				if (rs.next()){
+					sQueryString = rs.getString(SMTablesavedqueries.ssql);
+				}
+				rs.close();
+			} catch (Exception e) {
+				out.println("Error [1391538712] - Could not load sql statement - " + e.getMessage());
+			}
 
 		//Multi-line text box here for the command:
 		out.println("<B><U>Edit query below:</U></B><BR>");
@@ -125,4 +122,4 @@ public class SMSavedQueryEdit  extends HttpServlet {
 		doPost(request, response);
 	}
 }
-*/
+

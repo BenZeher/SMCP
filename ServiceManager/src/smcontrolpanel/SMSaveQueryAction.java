@@ -38,6 +38,7 @@ public class SMSaveQueryAction extends HttpServlet {
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sQueryString = clsServletUtilities.URLDecode(clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYSTRING, request));
 	    String sQueryTitle = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYTITLE, request);
+	    String sQueryID = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYID, request);
 	    String sQueryComment = clsManageRequestParameters.get_Request_Parameter(SMTablesavedqueries.scomment, request);
 	    String sFontSize = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_FONTSIZE, request);
 		boolean bIncludeBorder = (request.getParameter(SMQuerySelect.PARAM_INCLUDEBORDER) != null);
@@ -56,25 +57,39 @@ public class SMSaveQueryAction extends HttpServlet {
     		SMQueryGenerate.SAVE_AS_PRIVATE_BUTTON, request).compareToIgnoreCase(SMQueryGenerate.SAVE_AS_PRIVATE_BUTTON_LABEL) == 0){
 	    	sPrivateQuery = "1";
 	    }
-	    //Try to insert this query into the saved queries table:
-	    String SQL = "INSERT INTO " + SMTablesavedqueries.TableName + "("
-    		+ SMTablesavedqueries.dattimesaved
-    		+ ", " + SMTablesavedqueries.scomment
-    		+ ", " + SMTablesavedqueries.ssql
-    		+ ", " + SMTablesavedqueries.stitle
-    		+ ", " + SMTablesavedqueries.suserfullname
-    		+ ", " + SMTablesavedqueries.luserid
-    		+ ", " + SMTablesavedqueries.iprivate
-    		+ ") VALUES ( "
-    		+ "NOW()"
-    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sQueryComment) + "'"
-    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sQueryString) + "'"
-    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sQueryTitle) + "'"
-    	    + ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
-    		+ ", " + sUserID 
-    		+ ", " + sPrivateQuery
-    		+ ")"
-	    ;
+	    boolean bUpdateExistingQuery = clsManageRequestParameters.get_Request_Parameter(
+	    		SMQueryGenerate.UPDATE_EXISTING_QUERY_BUTTON, request).compareToIgnoreCase("") != 0;
+	    
+	    String SQL = "";
+	    if(sQueryID.compareToIgnoreCase("") != 0 && bUpdateExistingQuery) {
+	    	 SQL = "UPDATE " + SMTablesavedqueries.TableName 
+	    	    + " SET " + SMTablesavedqueries.ssql + " = '" + clsDatabaseFunctions.FormatSQLStatement(sQueryString) + "'"
+	    	    + ", " + SMTablesavedqueries.scomment + " = '" + clsDatabaseFunctions.FormatSQLStatement(sQueryComment) + "'"
+	    	    + " WHERE (" + SMTablesavedqueries.id + " = " +  sQueryID + ")"
+	    	    ;
+	    	 
+	    } else {
+	    	//Try to insert this query into the saved queries table:
+		    SQL = "INSERT INTO " + SMTablesavedqueries.TableName + "("
+	    		+ SMTablesavedqueries.dattimesaved
+	    		+ ", " + SMTablesavedqueries.scomment
+	    		+ ", " + SMTablesavedqueries.ssql
+	    		+ ", " + SMTablesavedqueries.stitle
+	    		+ ", " + SMTablesavedqueries.suserfullname
+	    		+ ", " + SMTablesavedqueries.luserid
+	    		+ ", " + SMTablesavedqueries.iprivate
+	    		+ ") VALUES ( "
+	    		+ "NOW()"
+	    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sQueryComment) + "'"
+	    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sQueryString) + "'"
+	    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sQueryTitle) + "'"
+	    	    + ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
+	    		+ ", " + sUserID 
+	    		+ ", " + sPrivateQuery
+	    		+ ")"
+		    ;	
+	    }
+	    System.out.println(SQL);
 	    String sRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 				+ "?" + SMQuerySelect.PARAM_QUERYTITLE + "=" + sQueryTitle
 				+ "&" + SMQuerySelect.PARAM_FONTSIZE + "=" + sFontSize
@@ -106,7 +121,7 @@ public class SMSaveQueryAction extends HttpServlet {
 				"Title: '" + sQueryTitle + "', Private?: " + sPrivateQuery + ", Comment '" + sQueryComment + "'",
 				"QueryString: " + SQL,
 				"[1376509356]");
-	    sRedirect += "&Status=Query: '" + sQueryTitle + "' was saved successfully";
+	    sRedirect += "&Status=" + "Query: '" + sQueryTitle + "' was saved successfully";
 		response.sendRedirect(response.encodeRedirectURL(sRedirect));
 	    return;
 	}

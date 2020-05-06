@@ -126,6 +126,19 @@ public class SMQuerySelect  extends HttpServlet {
 	    	response.sendRedirect(sRedirectFromDelete);
 	    	return;
 	    }
+	    
+		//If we are handling a request to edit a query:
+	    String sEditQueryID = clsManageRequestParameters.get_Request_Parameter(SMSavedQueriesSelect.EDIT_QUERY_ID_PARAM, request);
+	    if (sEditQueryID.compareToIgnoreCase("") != 0){
+	    	String sRedirectFromEdit = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSavedQueryEdit"
+					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&" + SMSavedQueriesSelect.EDIT_QUERY_ID_PARAM + "=" + sEditQueryID
+					+ "&" + SMSavedQueriesSelect.SHOW_PUBLIC_QUERIES + "=" 
+					+ clsManageRequestParameters.get_Request_Parameter(SMSavedQueriesSelect.SHOW_PUBLIC_QUERIES, request)
+			;
+	    	response.sendRedirect(sRedirectFromEdit);
+	    	return;
+	    }
 		
 		//IF we are returning from a 'saved query' selection, then read the query and fill in the title and query from there:
 		String sQueryID = clsManageRequestParameters.get_Request_Parameter(SMSavedQueriesSelect.RADIO_BUTTON_GROUP_NAME, request);

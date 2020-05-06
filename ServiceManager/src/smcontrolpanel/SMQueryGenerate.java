@@ -29,9 +29,11 @@ public class SMQueryGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sQuerySaveClass = "smcontrolpanel.SMSaveQueryAction";
 	public static final String SAVE_AS_PRIVATE_BUTTON = "SavePrivateQueryButton";
-	public static final String SAVE_AS_PRIVATE_BUTTON_LABEL = "Save private query";
+	public static final String SAVE_AS_PRIVATE_BUTTON_LABEL = "Save new private query";
 	public static final String SAVE_AS_PUBLIC_BUTTON = "SavePublicQueryButton";
-	public static final String SAVE_AS_PUBLIC_BUTTON_LABEL = "Save public query";
+	public static final String SAVE_AS_PUBLIC_BUTTON_LABEL = "Save new public query";
+	public static final String UPDATE_EXISTING_QUERY_BUTTON = "UpdateExistingQuery";
+	public static final String UPDATE_EXISTING_QUERY_BUTTON_LABEL = "Update existing query";
 	
 	//formats
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
@@ -219,7 +221,7 @@ public class SMQueryGenerate extends HttpServlet {
 			if(!sQueryTitle.trim().equalsIgnoreCase("(Default Query Title)")) {
 					
 				out.println("<B>Query ID #:&nbsp;" + sQueryID + "</B><BR>" + "\n");
-				
+				out.println("<INPUT TYPE=HIDDEN NAME='" + SMQuerySelect.PARAM_QUERYID + "' VALUE='" + sQueryID + "'>" + "\n");
 				out.println("Comment:<BR>"
 					+ clsCreateHTMLFormFields.TDMemoBox(
 						SMTablesavedqueries.scomment, 
@@ -240,7 +242,13 @@ public class SMQueryGenerate extends HttpServlet {
 						(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
 					out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PUBLIC_BUTTON 
 							+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
-					);
+					);			
+					if(sQueryID.compareToIgnoreCase("") != 0) {
+						out.println("<INPUT TYPE=SUBMIT NAME='" + UPDATE_EXISTING_QUERY_BUTTON 
+								+ "' VALUE='" + UPDATE_EXISTING_QUERY_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
+						);
+					}
+					
 				}
 		    }
 			out.println("</FORM>");

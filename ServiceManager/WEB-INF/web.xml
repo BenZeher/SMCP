@@ -2149,6 +2149,16 @@
         <servlet-name>SMQuerySelect</servlet-name>
         <servlet-class>smcontrolpanel.SMQuerySelect</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditSavedQueryEdit</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditSavedQueryEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditSavedQueryAction</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditSavedQueryAction</servlet-class>
+    </servlet>
 
     <servlet>
         <servlet-name>SMRecalibrateCounters</servlet-name>
@@ -5458,6 +5468,16 @@
         <url-pattern>/smcontrolpanel.SMQuerySelect</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>SMEditSavedQueryEdit</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditSavedQueryEdit</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMEditSavedQueryAction</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditSavedQueryAction</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>SMRecalibrateCounters</servlet-name>
         <url-pattern>/smcontrolpanel.SMRecalibrateCounters</url-pattern>

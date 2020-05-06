@@ -36,6 +36,9 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 	public static final String DELETE_BUTTON_NAME = "DELETE_BUTTON";
 	public static final String DELETE_BUTTON_LABEL = "Delete";
 	public static final String DELETE_QUERY_ID_PARAM = "DELETE_QUERY_ID";
+	public static final String EDIT_BUTTON_NAME = "EDIT_BUTTON";
+	public static final String EDIT_BUTTON_LABEL = "Edit";
+	public static final String EDIT_QUERY_ID_PARAM = "EDIT_QUERY_ID";
 	public static final String SHOW_PUBLIC_QUERIES = "SHOWPUBLICQUERIES";
 	//public static final String SHOW_PRIVATE_QUERIES = "SHOWPRIVATEQUERIES";
 	private static final String TABLE_BACKGROUND_COLOR = "LightSteelBlue";
@@ -186,6 +189,11 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 		//Store which query the user wants to delete:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + DELETE_QUERY_ID_PARAM + "\" VALUE=\"" + "" + "\""
 		+ " id=\"" + DELETE_QUERY_ID_PARAM + "\""
+		+ "\">";
+		
+		//Store which query the user wants to edit:
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + EDIT_QUERY_ID_PARAM + "\" VALUE=\"" + "" + "\""
+		+ " id=\"" + EDIT_QUERY_ID_PARAM + "\""
 		+ "\">";
 
 		//Get the sort order:
@@ -372,6 +380,16 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 				+ "</button>" 
 			;
 			s += "</TD>";
+			
+		//	s += "<TD class=\"queryfieldcenteraligned" + sRowSuffix + "\" >";
+		//	s += "<button type=\"button\""
+		//		+ " value=\"" + EDIT_BUTTON_LABEL + sQueryID + "\""
+		//		+ " name=\"" + EDIT_BUTTON_NAME + "\""
+		//		+ " onClick=\"editQuery('" + sQueryID + "');\">"
+		//		+ EDIT_BUTTON_LABEL
+		//		+ "</button>" 
+		//	;
+		//	s += "</TD>";
 		}
 		
 		s += "</TR>";
@@ -478,9 +496,10 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 			+ "</A>"
 			+ "</TH>";
 
-		//If we are viewing private queries OR we are allowed to manage public queries, then add a column for deleting queries:
+		//If we are viewing private queries OR we are allowed to manage public queries, then add a column for deleting and editing queries:
 		if (!bViewPublicQueries || bAllowManagePublicQueries){
 			s += "<TH class=\"querylineheadingcenter\" >Delete?</TH>";
+			//s += "<TH class=\"querylineheadingcenter\" >Edit?</TH>";
 		}
 		s += " </TR>";
 		return s;
@@ -680,6 +699,11 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 			+ "    }\n"
 			+ "}\n"
 		;
+		s += "function editQuery(queryid){\n"
+				+ " document.getElementById(\"" + EDIT_QUERY_ID_PARAM + "\").value = queryid;\n"
+				+ " document.forms[\"MAINFORM\"].submit();\n"
+				+ "}\n"
+			;
 
 		s += "</script>\n";
 		return s;

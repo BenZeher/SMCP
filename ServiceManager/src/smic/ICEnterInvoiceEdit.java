@@ -77,6 +77,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 	public static final String ADD_NEW_LINE_LABEL = "Add New Line";
 	
 	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
+	private static final long TAX_CODE_BUFFER_SIZE = 100;
 	
 	private boolean bDebugMode = false;
 	
@@ -470,7 +471,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 		
 		//Tax type:
 		s += "<TD style=\" text-align:right; font-weight:bold; \">Tax:&nbsp;</TD>";
-		
+		//TAXDROPDOWN
 		if (entry.getM_sexportsequencenumber().compareToIgnoreCase("0") == 0){
 			s += "<TD>"
 				+ "<SELECT NAME=\"" + ICPOInvoice.Paramitaxid + "\"" 
@@ -483,6 +484,8 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 				+ "** SELECT A TAX TYPE **"
 				+ "</OPTION>";
 			
+			String sTempBuffer = "";
+			long lRecordCounter = 0;
 			String SQL = "SELECT"
 				+ " " + SMTabletax.lid
 				+ ", " + SMTabletax.staxjurisdiction
@@ -502,21 +505,29 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 					"MySQL", 
 					this.toString() + ".getEditHTML - user: " + sm.getUserName());
 				while (rsTax.next()){
-					s += "<OPTION";
+					lRecordCounter++;
+					sTempBuffer += "<OPTION";
 					String sTaxID = Long.toString(rsTax.getLong(SMTabletax.lid));
 					if (sTaxID.compareToIgnoreCase(entry.getitaxid()) == 0){
-						s += " selected=YES ";
+						sTempBuffer += " selected=YES ";
 					}
-					s += " VALUE=\"" + sTaxID + "\">" 
+					sTempBuffer += " VALUE=\"" + sTaxID + "\">" 
 					+ rsTax.getString(SMTabletax.staxjurisdiction)
 					+ " - " + rsTax.getString(SMTabletax.staxtype)
 					+ "</OPTION>";
+					
+					if ((lRecordCounter % TAX_CODE_BUFFER_SIZE) == 0) {
+						s += sTempBuffer;
+						sTempBuffer = "";
+					}
+					
 				}
 				rsTax.close();
 			} catch (SQLException e) {
 				throw new SQLException("Error [1454355931] loading taxes - " + e.getMessage());
 			}
-	
+			//Add any taxes left in the buffer:
+			s += sTempBuffer;
 			s += "</SELECT>";
 		}else{
 			String sTax = "N/A";

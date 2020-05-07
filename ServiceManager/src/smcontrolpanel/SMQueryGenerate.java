@@ -75,7 +75,7 @@ public class SMQueryGenerate extends HttpServlet {
 		String sQueryString = clsServletUtilities.URLDecode(clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYSTRING, request));
 		String sRawQueryString = clsServletUtilities.URLDecode(clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_RAWQUERYSTRING, request));
 		String sFontSize = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_FONTSIZE, request);
-		String sComment = clsManageRequestParameters.get_Request_Parameter(SMTablesavedqueries.scomment, request);
+		String sComment = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYCOMMENT, request);
 		boolean bIncludeBorder = (request.getParameter(SMQuerySelect.PARAM_INCLUDEBORDER) != null);
     	String sReportTitle = "Service Manager Query: " + sQueryTitle;  
     	String sCriteria = getParameterPromptsAndValues(request);

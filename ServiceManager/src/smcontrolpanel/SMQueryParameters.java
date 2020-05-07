@@ -84,6 +84,7 @@ public class SMQueryParameters  extends HttpServlet {
 		//Get the parameters from the SQL statement:
 		String sQueryString = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYSTRING, sm.getRequest());
 		String sSystemQueryID = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_SYSTEMQUERYID, sm.getRequest());
+		String sQueryComment = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYCOMMENT, sm.getRequest());
 		
 		//If we've passed in a 'system query' ID, then that means we aren't passing in a query string, but instead
 		// we are calling for a pre-built ('system') query from within the program:
@@ -144,6 +145,11 @@ public class SMQueryParameters  extends HttpServlet {
 			+ SMQuerySelect.PARAM_QUERYTITLE
 			+ "\" VALUE=\"" + clsStringFunctions.filter(sQueryTitle)
 			+ "\">" + "\n\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" 
+				+ SMQuerySelect.PARAM_QUERYCOMMENT
+				+ "\" VALUE=\"" + clsStringFunctions.filter(sQueryComment)
+				+ "\">" + "\n\n";
 
 		s += "<INPUT TYPE=HIDDEN NAME=\"" 
 			+ SMQuerySelect.PARAM_FONTSIZE

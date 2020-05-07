@@ -30,6 +30,7 @@ public class SMQuerySelect  extends HttpServlet {
 	public static String EXPORT_NOEXPORT_LABEL = "Do not export - display on screen";
 	public static String PARAM_QUERYID = "QUERYID";
 	public static String PARAM_QUERYTITLE = "QUERYTITLE";
+	public static String PARAM_QUERYCOMMENT = "QUERYCOMMENT";
 	public static String PARAM_QUERYSTRING = "QUERYSTRING";
 	public static String PARAM_RAWQUERYSTRING = "RAWQUERYSTRING";
 	public static String PARAM_SYSTEMQUERYID = "SYSTEMQUERYID";
@@ -98,17 +99,11 @@ public class SMQuerySelect  extends HttpServlet {
 			+ "&" + SMSavedQueriesSelect.SHOW_PUBLIC_QUERIES + "=Y"
 			+ "\">List all PUBLIC queries</A>");
 		
-		//String sQueryTitle = SMUtilities.URLDecode(SMUtilities.get_Request_Parameter(PARAM_QUERYTITLE, request));
-	
+		//Get any parameters passed in from saved queries
 		String sQueryTitle = clsManageRequestParameters.get_Request_Parameter(PARAM_QUERYTITLE, request);
-		if (sQueryTitle.compareToIgnoreCase("") == 0){
-			sQueryTitle = "";
-		}
 		String sQueryString = clsManageRequestParameters.get_Request_Parameter(PARAM_QUERYSTRING, request);
-		if (sQueryString.compareToIgnoreCase("") == 0){
-			sQueryString = "";
-		}
-		
+		String sQueryComment = clsManageRequestParameters.get_Request_Parameter(PARAM_QUERYCOMMENT, request);
+
 		//If we are handling a request to delete a query:
 	    String sDeleteQueryID = clsManageRequestParameters.get_Request_Parameter(SMSavedQueriesSelect.DELETE_QUERY_ID_PARAM, request);
 	    if (sDeleteQueryID.compareToIgnoreCase("") != 0){
@@ -135,6 +130,7 @@ public class SMQuerySelect  extends HttpServlet {
 			String SQL = "SELECT"
 				+ " " + SMTablesavedqueries.ssql
 				+ ", " + SMTablesavedqueries.stitle
+				+ ", " + SMTablesavedqueries.scomment
 				+ " FROM " + SMTablesavedqueries.TableName
 				+ " WHERE ("
 					+ "(" + SMTablesavedqueries.id + " = " + sQueryID + ")"
@@ -153,10 +149,11 @@ public class SMQuerySelect  extends HttpServlet {
 				if (rs.next()){
 					sQueryTitle = rs.getString(SMTablesavedqueries.stitle);
 					sQueryString = rs.getString(SMTablesavedqueries.ssql);
+					sQueryComment = rs.getString(SMTablesavedqueries.scomment);
 				}
 				rs.close();
 			} catch (SQLException e) {
-				out.println("<B><FONT COLOR=\"RED\">Could not read saved query with SQL: " + SQL + " - " + e.getMessage() + "</FONT></B><BR>");
+				out.println("<BR><B><FONT COLOR=\"RED\">WARNING: Could not read saved query with SQL: " + SQL + " - " + e.getMessage() + "</FONT></B><BR>");
 			}
 		}
 		
@@ -164,6 +161,7 @@ public class SMQuerySelect  extends HttpServlet {
 				+ CALLED_CLASS_NAME + "\" METHOD='POST'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + PARAM_QUERYID + "' VALUE='" + sQueryID + "'>");
+		out.println("<INPUT TYPE=HIDDEN NAME='" + PARAM_QUERYCOMMENT + "' VALUE='" + sQueryComment + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" 
 				+ SMUtilities.getFullClassName(this.toString()) + "\">");
 		out.println("<TABLE WIDTH=100% CELLPADDING=10 border=4>");

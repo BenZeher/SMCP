@@ -65,6 +65,7 @@ public class SMSaveQueryAction extends HttpServlet {
 	    	 SQL = "UPDATE " + SMTablesavedqueries.TableName 
 	    	    + " SET " + SMTablesavedqueries.ssql + " = '" + clsDatabaseFunctions.FormatSQLStatement(sQueryString) + "'"
 	    	    + ", " + SMTablesavedqueries.scomment + " = '" + clsDatabaseFunctions.FormatSQLStatement(sQueryComment) + "'"
+	    	    + ", " + SMTablesavedqueries.stitle + " = '" + clsDatabaseFunctions.FormatSQLStatement(sQueryTitle) + "'"
 	    	    + " WHERE (" + SMTablesavedqueries.id + " = " +  sQueryID + ")"
 	    	    ;
 	    	 

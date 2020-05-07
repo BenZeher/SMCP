@@ -99,6 +99,7 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 		
 		String sQueryString = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYSTRING, sm.getRequest());
 		String sQueryTitle = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYTITLE, sm.getRequest());
+		String sQueryComment = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYCOMMENT, sm.getRequest());
 		String sFontSize = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_FONTSIZE, sm.getRequest());
 		boolean bIncludeBorder = (sm.getRequest().getParameter(SMQuerySelect.PARAM_INCLUDEBORDER) != null);
 		boolean bExportAsCommaDelimited = clsManageRequestParameters.get_Request_Parameter(
@@ -127,6 +128,11 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 			+ SMQuerySelect.PARAM_QUERYTITLE
 			+ "\" VALUE=\"" + clsStringFunctions.filter(sQueryTitle)
 			+ "\">";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" 
+				+ SMQuerySelect.PARAM_QUERYCOMMENT
+				+ "\" VALUE=\"" + clsStringFunctions.filter(sQueryComment)
+				+ "\">";
 
 		s += "<INPUT TYPE=HIDDEN NAME=\"" 
 			+ SMQuerySelect.PARAM_FONTSIZE

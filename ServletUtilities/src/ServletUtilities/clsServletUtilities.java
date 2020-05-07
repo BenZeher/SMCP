@@ -360,11 +360,11 @@ public class clsServletUtilities {
 			if (iFullColumns == 0){
 				iFullColumns = iNumberOfColumns;
 			}
-
+			//String sTempBuffer = "";
 			int iArrayCounter = 0;
 			sTable = sTable + "<TR>\n";
-			String sTempBuffer = "";
-			int LIST_BUFFER_SIZE = 100;
+			
+			//int LIST_BUFFER_SIZE = 100;
 			for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
 				int iLessRow;
 				if (iCol < iFullColumns){
@@ -373,22 +373,22 @@ public class clsServletUtilities {
 					iLessRow = 1;
 				}
 				
-				sTempBuffer = sTempBuffer + "<TD VALIGN=TOP";
+				sTable = sTable + "<TD VALIGN=TOP";
 				if (bEqualWidth){
-					sTempBuffer = sTempBuffer + " WIDTH = " + 100 / iNumberOfColumns + "%";
+					sTable = sTable + " WIDTH = " + 100 / iNumberOfColumns + "%";
 				}
-				sTempBuffer = sTempBuffer + "><TABLE BORDER=0 WIDTH=100%>";
+				sTable = sTable + "><TABLE BORDER=0 WIDTH=100%>";
 				for (int iRow=0; iRow < iTotalRows - iLessRow; iRow++){
-					sTempBuffer = sTempBuffer + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n";
+					sTable = sTable + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n";
 					iArrayCounter++;
-					if ((iArrayCounter % LIST_BUFFER_SIZE) == 0) {
-						//System.out.println("[202005060338] - iArrayCounter = " + iArrayCounter);
-						sTable += sTempBuffer;
-						sTempBuffer = "";
-					}
+					//if ((iArrayCounter % LIST_BUFFER_SIZE) == 0) {
+					//	//System.out.println("[202005060338] - iArrayCounter = " + iArrayCounter);
+					//	sTable += sTempBuffer;
+					//	sTempBuffer = "";
+					//}
 				}
 				//Get anything left in the buffer:
-				sTable += sTempBuffer;
+				//sTable += sTempBuffer;
 				sTable = sTable + "</TABLE></TD>\n";
 
 			}

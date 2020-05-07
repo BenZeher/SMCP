@@ -117,6 +117,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		out.println("</BODY></HTML>");
 	}
 
+
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
@@ -171,7 +172,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				+ "<TD>&nbsp;</TD></TR>"
 		);
 
-		//Phrase name:
+		//Phrase group name:
 		pwOut.println("<TR>"
 			+ "<TD ALIGN=RIGHT><B>Group Name:</B>&nbsp;</TD>"
 			+ "<TD ALIGN=LEFT>" 
@@ -182,9 +183,37 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			+ "<TD ALIGN=LEFT>The name of the proposal phrase group</TD>"
 			+ "</TR>"
 		);
+		
+	   //Display all the phrases in the group
+		try{
+			String sSQL = "SELECT * FROM " + SMTableproposalphrases.TableName
+			+ " WHERE ("
+			+ "(" + SMTableproposalphrases.iphrasegroupid + " = " + iID + ")"
+			+ ")"
+			+ " ORDER BY " + SMTableproposalphrases.isortorder
+			;
+
+			ResultSet rsPhrase = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
+
+			pwOut.println("<TR><TD COLSPAN=3>");
+			pwOut.println("<B>Proposal Phrases</B>");
+			pwOut.println("</TD></TR>");
+			
+			while(rsPhrase.next()){
+				pwOut.println("<TR><TD COLSPAN=3>");
+				pwOut.println(rsPhrase.getString(SMTableproposalphrases.sproposalphrasename));
+				pwOut.println("</TD></TR>");
+			}
+
+			rsPhrase.close();
+		}catch (SQLException ex){
+			System.out.println("<BR>Error reading proposal phrase information - " + ex.getMessage());
+		}
+		
 		pwOut.println("</TABLE><BR><P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName 
 				+ "' STYLE='height: 0.24in'></P></FORM>");
 	}
+
 
 	private boolean Delete_Record(
 			String sProposalPhraseGroupID,

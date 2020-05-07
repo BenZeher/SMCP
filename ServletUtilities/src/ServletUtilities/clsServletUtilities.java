@@ -348,7 +348,7 @@ public class clsServletUtilities {
 		if (iTotalWidthPercentage > 0){
 			sTable = sTable  + " WIDTH=" + iTotalWidthPercentage + "%";
 		}
-		sTable = sTable + ">";
+		sTable = sTable + ">" + "\n";
 
 		//long lStartingTime = System.currentTimeMillis();
 		if (bVertical){
@@ -360,11 +360,11 @@ public class clsServletUtilities {
 			if (iFullColumns == 0){
 				iFullColumns = iNumberOfColumns;
 			}
-			//String sTempBuffer = "";
+			String sTempBuffer = "";
 			int iArrayCounter = 0;
-			sTable = sTable + "<TR>\n";
+			sTable = sTable + "  <TR>\n";
 			
-			//int LIST_BUFFER_SIZE = 100;
+			int LIST_BUFFER_SIZE = 100;
 			for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
 				int iLessRow;
 				if (iCol < iFullColumns){
@@ -373,27 +373,36 @@ public class clsServletUtilities {
 					iLessRow = 1;
 				}
 				
-				sTable = sTable + "<TD VALIGN=TOP";
+				sTempBuffer += "    <TD VALIGN=TOP";
 				if (bEqualWidth){
-					sTable = sTable + " WIDTH = " + 100 / iNumberOfColumns + "%";
+					sTempBuffer += " WIDTH = " + 100 / iNumberOfColumns + "%";
 				}
-				sTable = sTable + "><TABLE BORDER=0 WIDTH=100%>";
+				sTempBuffer += ">"  + "\n";
+				
+				sTempBuffer += "      <TABLE BORDER=0 WIDTH=100%>" + "\n";
+				
 				for (int iRow=0; iRow < iTotalRows - iLessRow; iRow++){
-					sTable = sTable + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n";
+					sTempBuffer += "          <TR>\n              <TD>" + sTableValues.get(iArrayCounter) + "</TD>\n          </TR>\n";
 					iArrayCounter++;
-					//if ((iArrayCounter % LIST_BUFFER_SIZE) == 0) {
-					//	//System.out.println("[202005060338] - iArrayCounter = " + iArrayCounter);
-					//	sTable += sTempBuffer;
-					//	sTempBuffer = "";
-					//}
 				}
-				//Get anything left in the buffer:
-				//sTable += sTempBuffer;
-				sTable = sTable + "</TABLE></TD>\n";
-
+				
+				sTempBuffer += "      </TABLE>" + "\n";
+				
+				sTempBuffer += "    </TD>" + "\n";
+				
+				if ((iArrayCounter % LIST_BUFFER_SIZE) == 0) {
+					//System.out.println("[202005060338] - iArrayCounter = " + iArrayCounter);
+					sTable += sTempBuffer;
+					sTempBuffer = "";
+				}
+				
 			}
+			//Get anything left in the buffer:
+			//sTable += sTempBuffer;
+			sTable += sTempBuffer; // + "      </TABLE>" + "\n" + "    </TD>\n";
 			
-			sTable = sTable + "</TR>\n";
+			sTable += "  </TR>\n";
+			sTable += "</TABLE>" + "\n";
 		}else{
 			//find out total rows, including empty space:
 			int iArrayCounter = 0;
@@ -425,9 +434,10 @@ public class clsServletUtilities {
 			}
 			//Empty anything remaining in the buffer:
 			sTable += sTempBuffer;
+			sTable += "</TABLE>" + "\n";
 		}
 		//System.out.println("[202005060042] - Elapsed time building table: " + (System.currentTimeMillis() - lStartingTime));
-		sTable = sTable + "</TABLE>";
+		
 		return sTable;
 	} 
 	public static String Build_HTML_Table (int iNumberOfColumns,

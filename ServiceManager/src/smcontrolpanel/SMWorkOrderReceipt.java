@@ -650,7 +650,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 		}else{
 			s += sTerms.replace("\n", "<BR>");
 		}
-		s += "<BR>";
+		s += "</p><BR>";
 		return s;
 	}
 /*

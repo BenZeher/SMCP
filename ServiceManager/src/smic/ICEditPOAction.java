@@ -224,7 +224,7 @@ public class ICEditPOAction extends HttpServlet{
 	    		smaction.getCurrentSession().setAttribute(ICPOHeader.ParamObjectName, entry);
 				smaction.redirectAction(
 					"", 
-					clsServletUtilities.URLEncode(entry.getObjectName() + ": " + entry.getsponumber() + " Line order changed succefully."),
+					clsServletUtilities.URLEncode(entry.getObjectName() + ": " + entry.getsponumber() + " Line order changed successfully."),
 					ICPOHeader.Paramlid + "=" + entry.getsID()
 					 );
 				     

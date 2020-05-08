@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -226,6 +227,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 	    out.println("Successfully updated proposal phrases " + sProposalPhraseName + ".");
 	    out.println("</BODY></HTML>");
 	}
+	
 
 	@Override
 	public void doGet(HttpServletRequest request,

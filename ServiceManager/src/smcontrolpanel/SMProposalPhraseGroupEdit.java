@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import SMDataDefinition.SMTableproposalphrasegroups;
 import SMDataDefinition.SMTableproposalphrases;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class SMProposalPhraseGroupEdit extends HttpServlet {
@@ -23,6 +25,10 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sObjectName = "Proposal Phrase Group";
 	private static final String sCalledClassName = "SMProposalPhraseGroupAction";
+	public static final String COMMAND_FLAG = "COMMANDFLAG";
+	public static final String UPDATE_COMMAND_VALUE = "UPDATEPHRASEGROUP";
+	public static final String UPDATE_BUTTON_LABEL = "Update Proposal Phrase Group";
+	public static final String SORT_LINE_COMMAND_VALUE = "SORTPHRASEORDER";
 	private boolean bDebug = false;
 	
 	@Override
@@ -50,6 +56,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		String title = "";
 		String subtitle = "";
 
+
+		//If this is a request to edit
 		if(request.getParameter("SubmitEdit") != null){
 			//User has chosen to edit:
 			title = "Edit " + sObjectName + " " + sProposalPhraseGroupID;
@@ -67,6 +75,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				Edit_Record(sProposalPhraseGroupID, out, sDBID, false);
 			}
 		}
+		
+		//If this is a request to delete
 		if(request.getParameter("SubmitDelete") != null){
 			//User has chosen to delete:
 			title = "Delete " + sObjectName + ": " + sProposalPhraseGroupID;
@@ -89,6 +99,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				}
 			}
 		}
+		
+		//If this is a request to Add
 		if(request.getParameter("SubmitAdd") != null){
 
 			String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
@@ -105,6 +117,15 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
+			
+			 String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+			 if(sWarning.compareToIgnoreCase("") != 0) {
+				 out.println("<B><FONT COLOR=RED>WARNING: " + sWarning + "</FONT></B>");
+			 }
+			 String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
+			 if(sStatus.compareToIgnoreCase("") != 0) {
+				 out.println("<B>STATUS: " + sStatus + "</B>");
+			 }
 
 			if (sNewCode == ""){
 				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
@@ -124,10 +145,17 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			String sDBID,
 			boolean bAddNew){
 
+		
+		//Add Javacript
+		pwOut.println(clsServletUtilities.getJQueryIncludeString());
+		pwOut.println(clsServletUtilities.getJQueryUIIncludeString());
+		pwOut.println(sCommandScripts());
+		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 
 				+ "smcontrolpanel." + sCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\" VALUE=\"" + "" + "\"" + "id=\"" + COMMAND_FLAG + "\"" + "\">");
 		pwOut.println("<TABLE BORDER=12 CELLSPACING=2>");
 
 		int iID = -1;
@@ -198,20 +226,27 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			pwOut.println("<TR><TD COLSPAN=3>");
 			pwOut.println("<B>Proposal Phrases</B>");
 			pwOut.println("</TD></TR>");
-			
+			pwOut.println("<tbody id=\"sortable\" style=\"overflow-y: auto;\">");
 			while(rsPhrase.next()){
-				pwOut.println("<TR><TD COLSPAN=3>");
+				pwOut.println("<TR><TD COLSPAN=3><span class=\"handle\">"
+						+ "<span class=\"ui-icon ui-icon-arrowthick-2-n-s\">" + "</span>" + "</span>"
+						+ "");
 				pwOut.println(rsPhrase.getString(SMTableproposalphrases.sproposalphrasename));
-				pwOut.println("</TD></TR>");
+				pwOut.println("</TD>");
+				pwOut.println("<INPUT TYPE=\"HIDDEN\" NAME=\"PROPOSALID" + rsPhrase.getString(SMTableproposalphrases.sid)
+				              + "\" VALUE=\"" + rsPhrase.getString(SMTableproposalphrases.isortorder) + "\" >");
+				pwOut.println("</TR>");
 			}
-
+			pwOut.println("</tbody>");
 			rsPhrase.close();
 		}catch (SQLException ex){
 			System.out.println("<BR>Error reading proposal phrase information - " + ex.getMessage());
 		}
 		
-		pwOut.println("</TABLE><BR><P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName 
-				+ "' STYLE='height: 0.24in'></P></FORM>");
+		pwOut.println("</TABLE><BR>");
+		
+		pwOut.println("<P>" + createUpdateButton() + "</P>");
+		pwOut.println("</FORM>");
 	}
 
 
@@ -271,6 +306,69 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		return true;
 	}
 
+	private String createUpdateButton(){
+		return "<button type=\"button\""
+			+ " value=\"" + UPDATE_BUTTON_LABEL + "\""
+			+ " name=\"" + UPDATE_BUTTON_LABEL + "\""
+			+ " onClick=\"update();\">"
+			+ UPDATE_BUTTON_LABEL
+			+ "</button>\n"
+			;
+	}
+	
+	private String sCommandScripts(){
+		String s = "";
+		
+		s += "<NOSCRIPT>\n"
+			+ "    <font color=red>\n"
+			+ "    <H3>This page requires that JavaScript be enabled to function properly</H3>\n"
+			+ "    </font>\n"
+			+ "</NOSCRIPT>\n"
+		;
+
+		s += "<script type='text/javascript'>\n";
+		
+		//Create drag sort line items. 
+		s += "$(document).ready(\n"
+				+ "   function() {\n"
+				+ "     $('.handle').css('cursor', 'pointer');\n"
+				+ "		$(\"tbody#sortable\").sortable({\n"
+				+ "		update: function(event, ui) {  \n" 
+				+ "         $('tbody#sortable tr').each(function() {\n"  
+				+ "         	$(this).children('input').val($(this).index() + 1);\n" 
+				+ "        	});\n"  
+				+ "          document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + SORT_LINE_COMMAND_VALUE + "\";\n"
+				+ "          document.forms[\"MAINFORM\"].submit();\n"
+				+ "     },\n" 
+				
+				+ "		handle: 'td:first .handle',\n"
+				+ "		cursor: 'move'\n,"
+				+ "		tolerance: 'pointer',\n"
+				+ "		containment: 'parent'\n"				
+				+ "}); \n"
+				+ " if(($(\"tbody#sortable\").children('tr').length <= 1)){\n"
+				+ "    $( \"tbody#sortable\").sortable( \"disable\" );\n"
+				+ "	}\n"
+				+ "		});\n"
+				;
+		
+		//Update:
+		s += "function update(){\n"
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
+					+ UPDATE_COMMAND_VALUE + "\";\n"
+				+ "    document.forms[\"MAINFORM\"].submit();\n"
+				+ "}\n"
+				;
+		
+		s += "</script>";
+		
+		s += "<style>"
+				+".ui-sortable-helper {\n" 
+				+ " display: table;\n"
+				+"}\n"  
+				+ "</style>\n\n";
+		return s;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

@@ -166,7 +166,7 @@ public class SMWorkOrderAction extends HttpServlet{
 	    
     	//If it's a request to save the work order:
     	if (sCommandValue.compareToIgnoreCase(
-    		    SMWorkOrderEdit.SAVECOMMAND_VALUE) == 0){
+    		    SMWorkOrderEdit.SAVECOMMAND_VALUE) == 0){    	    
        		try {
     				workorder.saveFromEditScreen(
     					getServletContext(), 
@@ -181,6 +181,7 @@ public class SMWorkOrderAction extends HttpServlet{
     						SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
     						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
     						+ "&" + SMWorkOrderEdit.RECORDWASCHANGED_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.RECORDWASCHANGED_FLAG, request)
+    						+ "&" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.VIEW_PRICING_FLAG, request)
     				);
     				return;
     			}

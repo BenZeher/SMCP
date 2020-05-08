@@ -302,8 +302,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (getdPrePostingWODiscountAmount().compareToIgnoreCase("") == 0){
 			setdPrePostingWODiscountAmount("0.0");
 		}
-		
-		setsPrePostingWODiscountDesc (clsManageRequestParameters.get_Request_Parameter(ParamsPrePostingWODiscountDesc, req).trim().replace("&quot;", "\""));
+		setsPrePostingWODiscountDesc(clsManageRequestParameters.get_Request_Parameter(ParamsPrePostingWODiscountDesc, req).trim().replace("&quot;", "\""));
 
 		
 		//Read the job times:
@@ -1089,8 +1088,8 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	    	+ ", " + SMTableworkorders.dattimedone + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdattimedone()) + "'"
 			+ ", " + SMTableworkorders.madditionalworkcomments + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmadditionalworkcomments()) + "'"
 			+ ", " + SMTableworkorders.mcomments + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmcomments()) + "'"
-			+ ", " + SMTableworkorders.dPrePostingWODiscountAmount + " = '" + clsDatabaseFunctions.FormatSQLStatement(getdPrePostingWODiscountAmount()) + "'"
-			+ ", " + SMTableworkorders.dPrePostingWODiscountPercentage + " = '" + clsDatabaseFunctions.FormatSQLStatement(getdPrePostingWODiscountPercentage()) + "'"
+			+ ", " + SMTableworkorders.dPrePostingWODiscountAmount + " = '" + Double.valueOf(getdPrePostingWODiscountAmount()) + "'"
+			+ ", " + SMTableworkorders.dPrePostingWODiscountPercentage + " = '" + Double.valueOf(getdPrePostingWODiscountPercentage()) + "'"
 			+ ", " + SMTableworkorders.sPrePostingWODiscountDesc + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsPrePostingWODiscountDesc()) + "'"
 			+ " WHERE (" 
 				+ SMTableworkorders.lid + " = " + getlid() 
@@ -2244,9 +2243,9 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				setmdbaaddress(rs.getString(SMTableworkorders.mdbaaddress));
 				setmdbaremittoaddress(rs.getString(SMTableworkorders.mdbaremittoaddress));
 				setsdbaworkorderlogo(rs.getString(SMTableworkorders.sdbaworkorderlogo));
-				setdPrePostingWODiscountPercentage (SMTableworkorders.dPrePostingWODiscountPercentage);
-				setdPrePostingWODiscountAmount (SMTableworkorders.dPrePostingWODiscountAmount);
-				setsPrePostingWODiscountDesc (SMTableworkorders.sPrePostingWODiscountDesc);
+				setdPrePostingWODiscountPercentage (Double.toString(rs.getDouble(SMTableworkorders.dPrePostingWODiscountPercentage)));
+				setdPrePostingWODiscountAmount (Double.toString(rs.getDouble(SMTableworkorders.dPrePostingWODiscountAmount)));
+				setsPrePostingWODiscountDesc (rs.getString(SMTableworkorders.sPrePostingWODiscountDesc));
 				rs.close();
 			}catch (SQLException ex){
 				throw new Exception("Error [1391438248] loading " + SMTableworkorders.ObjectName + " with SQL: " + SQL + " - " + ex.getMessage());
@@ -2432,6 +2431,20 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				sErrors += "Arrived at next site - '" + getdattimearrivedatnext() + "' is invalid.  ";
 				bValid = false;
 			}
+		}
+		
+		try{
+			Double.parseDouble(getdPrePostingWODiscountPercentage());
+		} catch (NumberFormatException e) {
+			bValid = false;
+			sErrors += "Invalid Percentage Discount: '" + getdPrePostingWODiscountPercentage() + "'.  ";
+		}
+		
+		try{
+			Double.parseDouble(getdPrePostingWODiscountAmount());
+		} catch (NumberFormatException e) {
+			bValid = false;
+			sErrors += "Invalid Amount Discount: '" + getdPrePostingWODiscountAmount() + "'.  ";
 		}
        
 		if(getDetailCount()> 0 && getstrimmedordernumber().compareToIgnoreCase("") == 0){
@@ -3382,7 +3395,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     		sResult += LineArray.get(i).read_out_debug_data();
     	}
     	return sResult;
-    }
+    } 
     private void initWorkOrderVariables(){
 		m_lid  = "-1";
 		m_smechanicinitials = "";

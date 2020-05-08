@@ -340,6 +340,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdbackchargehoursScale, rsOrder.getBigDecimal(SMTableworkorders.bdbackchargehours))  
 						+ "</FONT></TD>");
+					//TODO Add in Discount Info
 					pwOut.println("</TR>");
 
 					//accumulate totals

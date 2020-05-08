@@ -40,6 +40,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
+import ServletUtilities.clsValidateFormFields;
 import smic.ICItem;
 
 public class SMWorkOrderEdit  extends HttpServlet {
@@ -89,8 +90,12 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	public static final String FULLY_DISPLAYED_WARNING_VALUE_YES = "YES";
 	public static final String FULLY_DISPLAYED_WARNING_VALUE_NO = "NO";
 	public static final String PRE_POSTING_WO_PERCENT = "PREPOSTINGWOPERCENT";
-	public static final String PRE_POSTING_WO_DISCOUNT = "PREPOSTINGWODISCOUNT";
+	public static final String PRE_POSTING_WO_AMOUNT = "PREPOSTINGWOAMOUNT";
 	public static final String PRE_POSTING_WO_DESC = "PREPOSTINGWODESC";
+	public static final String DISCOUNTCHANGE_FLAG = "DISCOUNTCHANGEFLAG";
+	public static final String DISCOUNTCHANGED_VALUE = "DISCOUNTCHANGED";
+	public static final String DISCOUNT_TOTAL = "DISCOUNTTOTAL";
+	
 	
 
 	//This controls if the signature box should be displayed or not.
@@ -176,7 +181,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				return;
 			}
 		}
-
 		//Set booleans that control screen layout/content
 		m_bDisplaySigantureBox = wohead.isWorkOrderPosted();	
 		
@@ -192,7 +196,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 		smedit.getPWOut().println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 		boolean bUseGoogleDrivePicker = false;
-		String sPickerScript = "";
+		String sPickerScript = ""; 
 			try {
 			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
 						SMCreateGoogleDriveFolderParamDefinitions.WORK_ORDER_TYPE_PARAM_VALUE,
@@ -428,6 +432,16 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					sm.getsDBID(),
 					(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 		);
+		
+		//TODO to prevent saving bad stuff
+		if(bShowPrices==false) {
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\" VALUE=\"" 
+					+ wo_entry.getdPrePostingWODiscountAmount()+ "\">";
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\" VALUE=\"" 
+					+ wo_entry.getdPrePostingWODiscountPercentage() + "\">";
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\" VALUE=\"" 
+					+ wo_entry.getsPrePostingWODiscountDesc() + "\">";
+		}
 		
 		s += "<TR><TD>" + createItemsTable(
 				sm, 
@@ -792,7 +806,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	}
 
 	private String createItemsTable(
-			SMMasterEditEntry sm, 
+			SMMasterEditEntry sm,  
 			SMWorkOrderHeader workorder,
 			SMOrderHeader order,
 			boolean bDisplayAllItemsOnOrder,
@@ -832,6 +846,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			BigDecimal bdShippedValue = new BigDecimal("0.00");
 			BigDecimal bdTotalExtendedMaterialPrice = new BigDecimal("0.00");
 			BigDecimal bdTotalExtendedLaborPrice = new BigDecimal("0.00");
+			String sWODiscountTotal =  clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue);
+			BigDecimal bdWODiscountAmount = new BigDecimal("0.00");
+			bdWODiscountAmount= BigDecimal.valueOf(Double.valueOf(workorder.getdPrePostingWODiscountAmount()));
 			for (int i = 0; i < dummyorder.get_iOrderDetailCount(); i++){
 				bdShippedValue = bdShippedValue.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
 				boolean bIsLaborItem = false;
@@ -873,26 +890,91 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "</TR>"
 			;
 			
-			//
+			/*
 			//Add a row for the total discounted amount and percentage:
 			BigDecimal bdDiscountedAmount = new BigDecimal(dummyorder.getM_dPrePostingInvoiceDiscountAmount().replace(",",""));
-			//if (bdDiscountedAmount.compareTo(BigDecimal.ZERO) != 0){
+			if (bdDiscountedAmount.compareTo(BigDecimal.ZERO) != 0){
 			s += "<TR>"
 					+ "<TD align=left colspan=2><FONT SIZE=2><B>" 
-					+ dummyorder.getM_sPrePostingInvoiceDiscountDesc() + " Discount Percentage on Order:&nbsp;(" 
+					+ " Discount Percentage  on Order:&nbsp;(" 
 					+ dummyorder.getM_dPrePostingInvoiceDiscountPercentage() + "%)" 
-					+ "<B>&nbsp;&nbsp; Discount Total on Order: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDiscountedAmount)
+					+ "<B>&nbsp;&nbsp; Discount Total on Order: " 
+					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDiscountedAmount)
 					;
 
-			/*Add a row for the sub total after discount:
-				s += "<TR>"
-					+ "<TD align=left colspan=2 ><FONT SIZE=2><B>Subtotal after order discount: "
-					+ "<FONT SIZE=2>"*/ 
-			s+= "<B>&nbsp;&nbsp;Subtotal after order discount: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount)) + "</B></FONT>"
+			//Add a row for the sub total after discount:
+			s += "<TR>"
+					+ "<TD align=right><FONT SIZE=2><B>Subtotal after order discount:</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount)) + "</B></FONT>"
 					+ "</TD>"
 					+ "</TR>"
+				;
+			}
+			
+			//TODO Add Text Boxes for Discounts			
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNT_TOTAL + "\" VALUE=\"" 
+					+ sWODiscountTotal  + "\""
+					+ " id=\"" + DISCOUNT_TOTAL + "\""
+					+ ">";
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNTCHANGE_FLAG + "\" VALUE=\"" 
+					+ DISCOUNTCHANGED_VALUE  + "\""
+					+ " id=\"" + DISCOUNTCHANGE_FLAG + "\""
+					+ ">";
+			
+			s += "<TR>"
+					+ "<TD align=left ><FONT SIZE=2><B> " ;
+			s+= "Work Order Discount Percentage: ("
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\""
+					+ " ID=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\""
+					+ " VALUE=\"" + workorder.getdPrePostingWODiscountPercentage() + "\""
+					+ " SIZE=" + "6"
+					+ clsValidateFormFields.sDiscountPercentChange
+					+ ">%)";			
+			s+= " Work Order Discount Amount: "
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
+					+ " ID=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
+					+ " VALUE=\"" + workorder.getdPrePostingWODiscountAmount() + "\""
+					+ " SIZE=" + "6"
+					+ clsValidateFormFields.sDiscountAmountChange
+					+ ">"
+					+ "</B></FONT>"
+					+ "</TD>";
+			s+= "<TD>"
+					+ "</TD>";
+				s+= "</TR>"
 					;
-			//}
+			s += "<TR>"
+					+ "<TD align=left><FONT SIZE=2><B> " ;
+			s+= " Work Order Discount Description: ";
+			s+= "<TEXTAREA NAME=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\""
+					+ " ID=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\""
+					+ " rows=\"" + "2" + "\""
+					//+ " cols=\"" + Integer.toString(iCols) + "\""
+					+ "style=\"width:100%\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+  workorder.getsPrePostingWODiscountDesc().replace("\"", "&quot;")
+					+ "</TEXTAREA>";
+			s+= "</B></FONT>"
+					+ "</TD>"
+					+ "<TD></TD>"
+					+ "</TR>"
+					;
+			s += "<TR>"
+					+ "<TD align=right><FONT SIZE=2><B>Subtotal after calculated discount:</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdWODiscountAmount)) + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+				;
+*/
+			//Set Discount to the WO discount amount, rather than the whole Order
+			dummyorder.setM_dPrePostingInvoiceDiscountAmount(workorder.getdPrePostingWODiscountAmount());
 
 			//Add a row for the tax:
 			String sTaxAmount;
@@ -910,65 +992,11 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "</TD>"
 				+ "</TR>"
 			;
-			
-			//TODO
-			/*
-			String sDiscountAmount;
-			String sTotalWithTaxWithoutDiscount;
-			try {
-				sDiscountAmount = dummyorder.getM_dPrePostingInvoiceDiscountAmount();
-				sTotalWithTaxWithoutDiscount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.add(new BigDecimal(sTaxAmount.replace(",", ""))));
 
-			} catch (Exception e) {
-				sDiscountAmount = e.getMessage();
-				sTotalWithTaxWithoutDiscount = e.getMessage();
-			}
-			s += "<TR>"
-					+ "<TD align=left colspan=2><FONT SIZE=2><B> " 
-					+ "Discount Amount on Order: "
-					+  sDiscountAmount 
-					+ " Total Without Discount: "
-					+ sTotalWithTaxWithoutDiscount
-					+ "</B></FONT>"
-					+ "</TD>"
-					+ "</TR>"
-				;
-			*/
-			
-			//TODO Add Text Boxes for Discounts
-
-/*			String sWODiscountAmount = workorder.getdPrePostingWODiscountAmount();
-			String sWODiscountPercentage = workorder.getdPrePostingWODiscountPercentage();
-			String sWODDiscountDescription = workorder.getsPrePostingWODiscountDesc();
-			String sWODiscountTotal ;
-
-			s += "<TR>"
-					+ "<TD align=left colspan=2><FONT SIZE=2><B> " 
-					+ "Work Order Discount Amount: "
-					+  sWODiscountAmount 
-
-					+ sWODiscountPercentage
-					+ " Work Order Discount Description: "
-					+ sWODDiscountDescription
-					+ " Work Order Discount Percentage: ";
-
-			s+= "<INPUT TYPE=TEXT"
-					+ " NAME=\"" + PRE_POSTING_WO_PERCENT + "\""
-					+ " id = \"" + PRE_POSTING_WO_PERCENT + "\""
-					+ " VALUE=\"" + sWODiscountPercentage + "\""
-					+ " SIZE=" + "60"
-					+ ">"
-					+ "</B></FONT>"
-					+ "</TD>"
-					+ "</TR>"
-					;
-			*/
-			
-			
 			//Add a row for total INCLUDING tax:
 			String sTotalWithTax = "";
 			try {
-				sTotalWithTax = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount).add(new BigDecimal(sTaxAmount.replace(",", ""))));
+				sTotalWithTax = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdWODiscountAmount).add(new BigDecimal(sTaxAmount.replace(",", ""))));
 			} catch (Exception e) {
 				s += "Error [1390339789] calculating Total With Tax - " + e.getMessage();
 			}
@@ -2442,6 +2470,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "<TABLE class = \" innermost \" style=\" title:MechanicInfoTable; background-color: "
 				+ SMWorkOrderHeader.COMMENTS_TABLE_BG_COLOR + "; \" width=100% >\n";
 
+		//TODO
 		//Work order comments:
 		s += "<TR>";
 		s += "<TD><U><B>Description of work performed:</B></U></TD>";
@@ -3558,7 +3587,14 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "}\n\n"
 				;
 		
-		
+		s+=clsValidateFormFields.validateDiscountCalculation(
+				SMWorkOrderHeader.ParamsPrePostingWODiscountDesc, 
+				SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage, 
+				SMWorkOrderHeader.ParamdPrePostingWODiscountAmount, 
+				DISCOUNTCHANGE_FLAG, 
+				DISCOUNTCHANGED_VALUE,
+				DISCOUNT_TOTAL
+				);
 		s += "</script>\n";
 		return s;
 	}

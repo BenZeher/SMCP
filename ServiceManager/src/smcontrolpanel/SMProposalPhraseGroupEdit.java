@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 	public static final String UPDATE_COMMAND_VALUE = "UPDATEPHRASEGROUP";
 	public static final String UPDATE_BUTTON_LABEL = "Update Proposal Phrase Group";
 	public static final String SORT_LINE_COMMAND_VALUE = "SORTPHRASEORDER";
+	public static final String PROPOSAL_PHRASE_BACKGROUND_HOVER = "#EBEBEB";
+	
 	private boolean bDebug = false;
 	
 	@Override
@@ -149,7 +152,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		//Add Javacript
 		pwOut.println(clsServletUtilities.getJQueryIncludeString());
 		pwOut.println(clsServletUtilities.getJQueryUIIncludeString());
-		pwOut.println(sCommandScripts());
+		pwOut.println(sCommandScripts(getServletContext(), sDBID));
+		pwOut.println(getStyles());
 		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 
@@ -231,7 +235,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				pwOut.println("<TR><TD COLSPAN=3><span class=\"handle\">"
 						+ "<span class=\"ui-icon ui-icon-arrowthick-2-n-s\">" + "</span>" + "</span>"
 						+ "");
-				pwOut.println(rsPhrase.getString(SMTableproposalphrases.sproposalphrasename));
+				pwOut.println("<span class=\"clicktoeditproposalphrase\" id=\"" + rsPhrase.getString(SMTableproposalphrases.sid) + "\">" 
+						        + rsPhrase.getString(SMTableproposalphrases.sproposalphrasename) + "</span>");
 				pwOut.println("</TD>");
 				pwOut.println("<INPUT TYPE=\"HIDDEN\" NAME=\"PROPOSALID" + rsPhrase.getString(SMTableproposalphrases.sid)
 				              + "\" VALUE=\"" + rsPhrase.getString(SMTableproposalphrases.isortorder) + "\" >");
@@ -316,8 +321,10 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			;
 	}
 	
-	private String sCommandScripts(){
+	private String sCommandScripts(ServletContext context,  String sDBID){
 		String s = "";
+		String sEditProposalPhraseLinkBase = SMUtilities.getURLLinkBase(context) 
+				+ "smcontrolpanel.SMProposalPhrasesEdit"; 
 		
 		s += "<NOSCRIPT>\n"
 			+ "    <font color=red>\n"
@@ -349,7 +356,14 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				+ " if(($(\"tbody#sortable\").children('tr').length <= 1)){\n"
 				+ "    $( \"tbody#sortable\").sortable( \"disable\" );\n"
 				+ "	}\n"
-				+ "		});\n"
+				+ "";
+				//Click to edit proposal phrase
+				s +=  "$('span.clicktoeditproposalphrase').click(function(){\n"
+						+ "window.open(\"" + sEditProposalPhraseLinkBase + "?" + SMTableproposalphrases.sproposalphrasename + "=\" + $(this).attr('id') + \"" 
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+							+ "&SubmitEdit=Y"+ "\");\n"
+						+"});\n\n";	
+				s += "});\n"
 				;
 		
 		//Update:
@@ -359,14 +373,24 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				+ "    document.forms[\"MAINFORM\"].submit();\n"
 				+ "}\n"
 				;
-		
 		s += "</script>";
+	
+		return s;
+	}
+	
+	private String getStyles() {
+		String s = "";
+		s += "<style>";
 		
-		s += "<style>"
-				+".ui-sortable-helper {\n" 
-				+ " display: table;\n"
-				+"}\n"  
-				+ "</style>\n\n";
+		s += ".ui-sortable-helper {\n" 
+			 + " display: table;\n"
+			 +"}\n";  
+		
+		s += "span.clicktoeditproposalphrase:hover {"
+			 + " background-color: " + PROPOSAL_PHRASE_BACKGROUND_HOVER + ";"
+			 + "}"	
+			 ;	
+		s += "</style>\n\n";
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

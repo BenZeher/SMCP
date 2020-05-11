@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMJavaScriptFunctions;
 import SMClasses.SMOption;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
@@ -40,7 +41,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
-import ServletUtilities.clsValidateFormFields;
 import smic.ICItem;
 
 public class SMWorkOrderEdit  extends HttpServlet {
@@ -413,9 +413,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		boolean bShowPrices = (clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()).compareToIgnoreCase("") != 0);
 		
 		//ONLY allow the user to show prices until the work order is posted:
-		if (wo_entry.isWorkOrderPosted()){
+		/*if (wo_entry.isWorkOrderPosted()){
 			bShowPrices = false;
-		}
+		}*/
 		boolean bAllowItemViewing =
 				SMSystemFunctions.isFunctionPermitted(
 					SMSystemFunctions.ICDisplayItemInformation, 
@@ -602,7 +602,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 						getServletContext(), 
 						sDBID,
 						sLicenseModuleLevel))
-				&& (!wo_order.isWorkOrderPosted())
+				//&& (!wo_order.isWorkOrderPosted())
 		){
 			if (SMSystemFunctions.isFunctionPermitted(
 						SMSystemFunctions.SMZeroWorkOrderItemPrices, 
@@ -831,7 +831,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		//If the work order is posted, then we build the posted work order layout:
 		if (workorder.isWorkOrderPosted()){
-			s += displayItemsOnPostedWorkOrder(workorder, order, sm, bShowItemInformationLink);
+			s += displayItemsOnPostedWorkOrder(workorder, order, sm, bShowItemInformationLink,bShowPrices);
 		}else{
 			//If it's not posted, then if it's the 'EDIT' view, we build the 'edit' layout:
 			s += displayItemsForEditing(workorder, order, dummyorder, sm, bShowPrices, bAllowZeroWorkOrderItemPrices, bShowItemInformationLink);
@@ -1202,7 +1202,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			SMWorkOrderHeader workorder,
 			SMOrderHeader order,
 			SMMasterEditEntry sm,
-			boolean bShowItemInformationLink
+			boolean bShowItemInformationLink,
+			boolean bShowPrices
 			) throws Exception{
 		String s = "";
 		//Headings:
@@ -1241,7 +1242,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					order,
 					iNumberOfItemLines,
 					sm,
-					sm.getsDBID()
+					sm.getsDBID(),
+					bShowPrices
 				);
 			}
 		}
@@ -1723,7 +1725,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			SMOrderHeader order,
 			int iLineNumber,
 			SMMasterEditEntry sm,
-			String sDBID
+			String sDBID,
+			boolean bShowPrices
 			) throws Exception{
 			String s = "";
 			s += "<TR>";
@@ -1840,38 +1843,27 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			//PRICE
 			//IF we are supposed to show prices, add a column for that here:
 			//Set to zero column
-			//String sSetToZeroCheckboxFieldname = SMWorkOrderHeader.SET_TO_ZERO_CHECKBOX_MARKER 
-			//	+ SMUtilities.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER)
-			//	+  SMWorkOrderDetail.Paramllsetpricetozero;
-			//if (bShowPrices){
-			//	if (bActivateSetToZeroFunction){
-			//		s += "<TD class=\"readonlyrightfield\" style = \"vertical-align:top;\" ><INPUT TYPE=CHECKBOX";
-			//		if (wodetail.getssetpricetozero().compareToIgnoreCase("1") == 0){
-			//			s += SMUtilities.CHECKBOX_CHECKED_STRING;
-			//		}
-			//		s += " NAME=\"" + sSetToZeroCheckboxFieldname + "\""
-			//			+ " ID = \"" + sSetToZeroCheckboxFieldname + "\""
-			//			+ " disabled " //Can't change this on posted orders
-			//			+ " width=0.25>"
-			//			+ "</TD>"
-			//		;
-			//	
-			//		//Extended price COLUMN
-			//		s += "<TD class=\"readonlyrightfield\">" + wodetail.getsbdextendedprice() + "</TD>" + "\n";
-			//	}
-			//	iColumnCount++;
-			//}else{
-			//	//Set to zero column
-			//	//Since this is normally a 'checkbox' field, we'll only include it if the value is 'checked':
-			//	if (wodetail.getssetpricetozero().compareToIgnoreCase("1") == 0){
-			//	s += " <INPUT TYPE=HIDDEN NAME=\"" + sSetToZeroCheckboxFieldname + "\""
-			//		+ " id = \"" + sSetToZeroCheckboxFieldname + "\""
-			//		+ " VALUE=\"" + "yes" + "\""
-			//		+ ">" + "\n"
-			//		;
-			//	}
-			//}
-			
+			String sSetToZeroCheckboxFieldname = SMWorkOrderHeader.SET_TO_ZERO_CHECKBOX_MARKER 
+				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER)
+				+  SMWorkOrderDetail.Paramllsetpricetozero;
+			if (bShowPrices){
+
+					s += "<TD class=\"readonlyrightfield\" style = \"vertical-align:top;\" ><INPUT TYPE=CHECKBOX";
+					if (wodetail.getssetpricetozero().compareToIgnoreCase("1") == 0){
+						s += SMUtilities.CHECKBOX_CHECKED_STRING;
+					}
+					s += " NAME=\"" + sSetToZeroCheckboxFieldname + "\""
+						+ " ID = \"" + sSetToZeroCheckboxFieldname + "\""
+						+ " disabled " //Can't change this on posted orders
+						+ " width=0.25>"
+						+ "</TD>"
+					;
+				
+					//Extended price COLUMN
+					s += "<TD class=\"readonlyrightfield\">" + wodetail.getsbdextendedprice() + "</TD>" + "\n";
+				}
+				iColumnCount++;
+						
 			//Store the rest of the values for the lines in hidden variables here:
 			//Extended price:
 			s += " <INPUT TYPE=HIDDEN NAME=\"" 
@@ -3587,7 +3579,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "}\n\n"
 				;
 		
-		s+=clsValidateFormFields.validateDiscountCalculation(
+		s+=SMJavaScriptFunctions.validateDiscountCalculation(
 				SMWorkOrderHeader.ParamsPrePostingWODiscountDesc, 
 				SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage, 
 				SMWorkOrderHeader.ParamdPrePostingWODiscountAmount, 

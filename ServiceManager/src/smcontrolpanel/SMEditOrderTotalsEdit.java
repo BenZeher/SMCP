@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smar.ARCustomer;
+import SMClasses.SMJavaScriptFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsServletUtilities;
-import ServletUtilities.clsValidateFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -326,7 +326,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamdPrePostingInvoiceDiscountPercentage + "\""
 			+ " VALUE=\"" + entry.getM_dPrePostingInvoiceDiscountPercentage().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamdPrePostingInvoiceDiscountPercentage + "\""
-			+ clsValidateFormFields.sDiscountPercentChange
+			+ SMJavaScriptFunctions.sDiscountPercentChange
 			+ " SIZE=" + "8"
 			+ " MAXLENGTH= 7"
 			+ ">"
@@ -341,7 +341,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamdPrePostingInvoiceDiscountAmount + "\""
 			+ " VALUE=\"" + entry.getM_dPrePostingInvoiceDiscountAmount().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamdPrePostingInvoiceDiscountAmount + "\""
-			+ clsValidateFormFields.sDiscountAmountChange
+			+ SMJavaScriptFunctions.sDiscountAmountChange
 			+ " SIZE=" + "8"
 			+ " MAXLENGTH= 9"
 			+ ">"
@@ -521,7 +521,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 		;
 		s += "<script type=\"text/javascript\">\n";
 		
-		s+=clsValidateFormFields.validateDiscountCalculation(SMOrderHeader.ParamsPrePostingInvoiceDiscountDesc,
+		s+=SMJavaScriptFunctions.validateDiscountCalculation(SMOrderHeader.ParamsPrePostingInvoiceDiscountDesc,
 				SMOrderHeader.ParamdPrePostingInvoiceDiscountPercentage,
 				SMOrderHeader.ParamdPrePostingInvoiceDiscountAmount,
 				DISCOUNTCHANGE_FLAG,

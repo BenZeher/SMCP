@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMTableproposalphrasegroups;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class SMProposalPhraseGroupSelect extends HttpServlet {
 
@@ -53,6 +54,15 @@ public class SMProposalPhraseGroupSelect extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
 	    
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		 if(sWarning.compareToIgnoreCase("") != 0) {
+			 out.println("<B><FONT COLOR=RED>WARNING: " + sWarning + "</FONT></B>");
+		 }
+		 String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
+		 if(sStatus.compareToIgnoreCase("") != 0) {
+			 out.println("<B>STATUS: " + sStatus + "</B>");
+		 }
+		 
 	    out.println("<FORM NAME='MAINFORM' ACTION='" 
 	    		+ SMUtilities.getURLLinkBase(getServletContext()) 
 	    		+ "smcontrolpanel." + sCalledClassName + "' METHOD='POST'>");

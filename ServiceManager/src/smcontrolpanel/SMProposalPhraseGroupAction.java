@@ -17,7 +17,7 @@ import SMDataDefinition.SMTableproposalphrasegroups;
 import SMDataDefinition.SMTableproposalphrases;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import ServletUtilities.clsServletUtilities;
+
 
 public class SMProposalPhraseGroupAction extends HttpServlet{
 	

@@ -54,6 +54,7 @@ public class SMProposalPhrasesSelect extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
 	    
+	    
 	    out.println("<FORM NAME='MAINFORM' ACTION='" 
 	    		+ SMUtilities.getURLLinkBase(getServletContext()) 
 	    		+ "smcontrolpanel." + sCalledClassName + "' METHOD='POST'>");

@@ -110,7 +110,14 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
 			
 			if (sNewCode == ""){
-				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
+				String sRedirectString = 
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMProposalPhraseGroupSelect"
+						+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "&" + "Warning=" + clsServletUtilities.URLEncode(
+								"You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");	
+				response.sendRedirect(sRedirectString);
+				return;
+
 			}else {
 				String sRedirectString = 
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMProposalPhraseGroupAction"
@@ -118,24 +125,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 						+ "&" + SMTableproposalphrasegroups.sgroupname + "=" + clsServletUtilities.URLEncode(sNewCode);	
 				response.sendRedirect(sRedirectString);
 				return;
-			}
-			
-			//User has chosen to add a new object:
-			title = "Add " + sObjectName + ": " + sNewCode;
-			subtitle = "";
-			out.println(SMUtilities.SMCPTitleSubBGColor(
-					title, 
-					subtitle, 
-					SMUtilities.getInitBackGroundColor(getServletContext(), sDBID),
-					sCompanyName));
-
-			//Print a link to the first page after login:
-			out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to user login</A><BR><BR>");
-			
+			}	
 		}
-
 		out.println("</BODY></HTML>");
 	}
 

@@ -245,7 +245,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		smedit.setbIncludeDeleteButton(false);
 		smedit.setbIncludeUpdateButton(false);
 	    try {
-			smedit.createEditPage(getEditHTML(smedit, entry), "");
+			smedit.createEditPage(getEditHTML(smedit, entry,smedit.getsDBID()), "");
 		} catch (SQLException e) {
     		String sError = "Could not create edit page - " + e.getMessage();
 			response.sendRedirect(
@@ -258,7 +258,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		}
 	    return;
 	}
-	private String getEditHTML(SMMasterEditEntry sm, SMBidEntry entry) throws SQLException{
+	private String getEditHTML(SMMasterEditEntry sm, SMBidEntry entry, String sDBID) throws SQLException{
 
 		String s = "";
 		s += sStyleScripts();
@@ -292,12 +292,18 @@ public class SMEditBidEntry  extends HttpServlet {
 			sID = entry.slid();
 		}
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\" VALUE=\"" + "" + "\""
-		+ " id=\"" + COMMAND_FLAG + "\""
-		+ "\">";
+				+ " id=\"" + COMMAND_FLAG + "\""
+				+ "\">";
 		s += SMBidEntry.ParamObjectName 
-			+ "&nbsp;<span style = \" font-size:large; font-weight:bold; \" >" + "#" + sID + "</span>"
-			+ sCreatedBy
-		;
+				+ "&nbsp;" 
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+				+ "smcontrolpanel.SMEditBidEntry"
+				+ "?" + SMBidEntry.ParamID + "=" + sID 
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
+				+ sDBID 
+				+ "\"><span style = \" font-size:large; font-weight:bold; \" >#" 
+				+ sID + "</span></A>"  			
+				+ sCreatedBy;
 		
 		if (entry.slid().compareToIgnoreCase("-1") != 0){
 			if (entry.getdatcreatedtime().replace("\"", "&quot;").compareToIgnoreCase(

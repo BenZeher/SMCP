@@ -29,6 +29,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 	public static final String UPDATE_COMMAND_VALUE = "UPDATEPHRASEGROUP";
 	public static final String UPDATE_BUTTON_LABEL = "Update Proposal Phrase Group";
+	public static final String ADD_NEW_PHRASE_LABEL = "Add New Proposal Phrase";
 	public static final String SORT_LINE_COMMAND_VALUE = "SORTPHRASEORDER";
 	public static final String PROPOSAL_PHRASE_BACKGROUND_HOVER = "#EBEBEB";
 	
@@ -75,7 +76,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			if (sProposalPhraseGroupID == null){
 				out.println("Invalid " + sObjectName + "ID. Please go back and try again.");
 			}else{
-				Edit_Record(sProposalPhraseGroupID, out, sDBID, false);
+				Edit_Record(sProposalPhraseGroupID, out, sDBID, false, request);
 			}
 		}
 		
@@ -107,6 +108,18 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		if(request.getParameter("SubmitAdd") != null){
 
 			String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
+			
+			if (sNewCode == ""){
+				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
+			}else {
+				String sRedirectString = 
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMProposalPhraseGroupAction"
+						+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "&" + SMTableproposalphrasegroups.sgroupname + "=" + clsServletUtilities.URLEncode(sNewCode);	
+				response.sendRedirect(sRedirectString);
+				return;
+			}
+			
 			//User has chosen to add a new object:
 			title = "Add " + sObjectName + ": " + sNewCode;
 			subtitle = "";
@@ -121,21 +134,6 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
 			
-			 String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
-			 if(sWarning.compareToIgnoreCase("") != 0) {
-				 out.println("<B><FONT COLOR=RED>WARNING: " + sWarning + "</FONT></B>");
-			 }
-			 String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
-			 if(sStatus.compareToIgnoreCase("") != 0) {
-				 out.println("<B>STATUS: " + sStatus + "</B>");
-			 }
-
-			if (sNewCode == ""){
-				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
-			}
-			else{
-				Edit_Record(sNewCode, out, sDBID, true);
-			}
 		}
 
 		out.println("</BODY></HTML>");
@@ -146,8 +144,17 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			String sParameter, 
 			PrintWriter pwOut, 
 			String sDBID,
-			boolean bAddNew){
-
+			boolean bAddNew,
+			HttpServletRequest request){
+		
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		 if(sWarning.compareToIgnoreCase("") != 0) {
+			 pwOut.println("<B><FONT COLOR=RED>WARNING: " + sWarning + "</FONT></B>");
+		 }
+		 String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
+		 if(sStatus.compareToIgnoreCase("") != 0) {
+			 pwOut.println("<B>STATUS: " + sStatus + "</B>");
+		 }
 		
 		//Add Javacript
 		pwOut.println(clsServletUtilities.getJQueryIncludeString());
@@ -250,7 +257,10 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		
 		pwOut.println("</TABLE><BR>");
 		
-		pwOut.println("<P>" + createUpdateButton() + "</P>");
+		pwOut.println("<P>" + createUpdateButton() 
+							+ "&nbsp;&nbsp;" 
+							+ createAddNewPhraseButton() 
+				 + "</P>");
 		pwOut.println("</FORM>");
 	}
 
@@ -321,6 +331,16 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			;
 	}
 	
+	private String createAddNewPhraseButton(){
+		return "<button type=\"button\""
+			+ " value=\"" + ADD_NEW_PHRASE_LABEL + "\""
+			+ " name=\"" + ADD_NEW_PHRASE_LABEL + "\""
+			+ " onClick=\"addnewphrase();\">"
+			+ ADD_NEW_PHRASE_LABEL
+			+ "</button>\n"
+			;
+	}
+	
 	private String sCommandScripts(ServletContext context,  String sDBID){
 		String s = "";
 		String sEditProposalPhraseLinkBase = SMUtilities.getURLLinkBase(context) 
@@ -373,6 +393,14 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				+ "    document.forms[\"MAINFORM\"].submit();\n"
 				+ "}\n"
 				;
+		
+		//Add new:
+		s += "function addnewphrase(){\n"
+				+ "window.open(\"" + sEditProposalPhraseLinkBase + "?" + SMTableproposalphrases.sproposalphrasename + "=\" + -1 + \"" 
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&SubmitAdd=Y"+ "\");\n"
+				+ "}\n"
+						;
 		s += "</script>";
 	
 		return s;

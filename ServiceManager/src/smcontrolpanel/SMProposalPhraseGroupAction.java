@@ -50,7 +50,7 @@ public class SMProposalPhraseGroupAction extends HttpServlet{
 					smaction.getUserID())) {
 
 				smaction.redirectAction(
-					clsServletUtilities.URLEncode("Could not sort proposals"), 
+					"[1589219955] - Could not sort proposals", 
 					"", 
 					SMTableproposalphrasegroups.sid + "=" + sProposalPhraseGroupID
 					+ "&SubmitEdit=Y"
@@ -68,7 +68,24 @@ public class SMProposalPhraseGroupAction extends HttpServlet{
 			return;    	
 	    }
 	    
-	    //If its a request to update the proposal group name or create a new proposal group
+	    //Otherwise, its a request to update the proposal group name or create a new proposal group
+	    
+	    Connection conn = clsDatabaseFunctions.getConnection(
+	    		getServletContext(), 
+	    		smaction.getsDBID(), 
+				"MySQL", 
+				this.toString() + " - user: " +  smaction.getFullUserName()
+		);
+		if (conn == null){
+			smaction.redirectAction(
+					"[1589219956] - Error getting connection. ", 
+					"",
+					SMTableproposalphrasegroups.sid + "=" + sProposalPhraseGroupID
+					+ "&SubmitEdit=Y"
+					 );
+				     return;
+		}
+
 	    String sSQL = "";
 	    if (Integer.parseInt(sProposalPhraseGroupID) < 0){
 		    sSQL = "INSERT INTO " + SMTableproposalphrasegroups.TableName
@@ -85,21 +102,32 @@ public class SMProposalPhraseGroupAction extends HttpServlet{
 	    		+ " " + SMTableproposalphrasegroups.sid + " = " + sProposalPhraseGroupID 
 	    		;
 	    }
+	    
 	    try{
-	    	clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), smaction.getsDBID());
+	    	clsDatabaseFunctions.executeSQL(sSQL, conn );
 	    }catch (SQLException ex){
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589220091]");
 	    	smaction.redirectAction(
-	    			clsServletUtilities.URLEncode("Error saving proposal group."), 
+	    			"[1589219958] - Error saving proposal group.", 
 					"",
 					SMTableproposalphrasegroups.sid + "=" + sProposalPhraseGroupID
 					+ "&SubmitEdit=Y"
 					 );
 			return;
 		}
+	    //Get the last insert ID.
+	    if(Integer.parseInt(sProposalPhraseGroupID) < 0) {
+	    	try {
+				sProposalPhraseGroupID = Long.toString(clsDatabaseFunctions.getLastInsertID(conn));
+			} catch (Exception e) {
+				
+			}
+	    }
 	    
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589220090]");
 	    smaction.redirectAction(
     			"", 
-    			clsServletUtilities.URLEncode("Proposal group updated successfully."),
+    			"Proposal group updated successfully.",
 				SMTableproposalphrasegroups.sid + "=" + sProposalPhraseGroupID
 				+ "&SubmitEdit=Y"
 				 );

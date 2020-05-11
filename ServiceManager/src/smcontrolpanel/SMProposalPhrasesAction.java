@@ -53,6 +53,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 			out.println("Sort order '" + request.getParameter(SMTableproposalphrases.isortorder) + "' is invalid; it must be a whole integer - click 'Back' to correct.");
 			out.println("</BODY></HTML>");
 		}
+
 		if (sProposalPhraseName.trim().compareToIgnoreCase("") == 0){
 			out.println("Name cannot be blank - click 'Back' to correct.");
 			out.println("</BODY></HTML>");

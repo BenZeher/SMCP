@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import SMDataDefinition.SMTableproposalphrasegroups;
 import SMDataDefinition.SMTableproposalphrases;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsTextEditorFunctions;
 
@@ -92,7 +93,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		}
 		if(request.getParameter("SubmitAdd") != null){
 
-			String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
+			String sNewCode = clsStringFunctions.filter(clsManageRequestParameters.get_Request_Parameter("New" + sObjectName, request));
 			//User has chosen to add a new object:
 			title = "Add " + sObjectName + ": " + sNewCode;
 			subtitle = "";
@@ -107,12 +108,9 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
 
-			if (sNewCode == ""){
-				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
-			}
-			else{
-				Edit_Record(sNewCode, out, sDBID, true);
-			}
+
+			Edit_Record(sNewCode, out, sDBID, true);
+		
 		}
 
 		out.println("</BODY></HTML>");
@@ -150,8 +148,8 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 
 				rs.next();
 				iID = rs.getInt(SMTableproposalphrases.sid);
-				sProposalPhraseName = rs.getString(SMTableproposalphrases.sproposalphrasename);
-				sProposalPhrase = rs.getString(SMTableproposalphrases.mproposalphrase);
+				sProposalPhraseName = clsDatabaseFunctions.getRecordsetStringValue(rs, SMTableproposalphrases.sproposalphrasename);
+				sProposalPhrase = clsDatabaseFunctions.getRecordsetStringValue(rs, SMTableproposalphrases.mproposalphrase);
 				iProposalPhraseGroupID = rs.getInt(SMTableproposalphrases.iphrasegroupid);
 				iSortOrder = rs.getInt(SMTableproposalphrases.isortorder);
 				rs.close();
@@ -181,8 +179,10 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		pwOut.println("<TR>\n"
 			+ "<TD ALIGN=RIGHT><B>Name:</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>" 
-			+ clsStringFunctions.filter(sProposalPhraseName) + "<INPUT TYPE=HIDDEN NAME=\"" + SMTableproposalphrases.sproposalphrasename
-			+ "\" VALUE=\"" + sProposalPhraseName + "\">" 
+			+ "<INPUT TYPE=TEXT NAME=\"" + SMTableproposalphrases.sproposalphrasename
+			+ "\" VALUE=\"" + sProposalPhraseName + "\""
+			+ " SIZE=\"" + Integer.toString(SMTableproposalphrases.sproposalphrasenameLength) + "\""
+			+ " MAXLENGTH=\"" + Integer.toString(SMTableproposalphrases.sproposalphrasenameLength) + "\">" 
 			+ "</TD>\n"
 			+ "<TD ALIGN=LEFT>Proposal phrase name</TD>\n"
 			+ "</TR>\n"

@@ -559,6 +559,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				+ "(" + SMTabledefaultsalesgroupsalesperson.scustomercode + " = '" + entry.getM_sCustomerCode() + "')"
 			+ ")"
 		;
+		//System.out.println("[202005041835] - Default salespersons SQL: '" + SQL + "'.");
 		ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(), 

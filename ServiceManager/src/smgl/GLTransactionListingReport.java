@@ -1261,8 +1261,9 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				//And finally subtract the changes for this period, to get back to the balance just BEFORE the starting period:
 				bdStartingBalance = bdStartingBalance.subtract(rs.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforperiod));
 			}else{
-				throw new Exception("Error [1554829782] - starting balance for account " 
-					+ sAccount + " fiscal year " + sFiscalYear + ", period " + sStartingPeriod + " was not found.");
+				bdStartingBalance = new BigDecimal("0.00");
+				//throw new Exception("Error [1554829782] - starting balance for account " 
+				//	+ sAccount + " fiscal year " + sFiscalYear + ", period " + sStartingPeriod + " was not found.");
 			}
 		} catch (Exception e) {
 			throw new Exception("Error [1554829783] getting starting balance for account " 

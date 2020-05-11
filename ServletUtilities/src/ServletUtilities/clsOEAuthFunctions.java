@@ -77,13 +77,16 @@ public class clsOEAuthFunctions {
 	        }
 	        connection.disconnect();
 	    }
+	    
+	    long lEndingTime = System.currentTimeMillis();
+	    
 	    try {
 			writeEntry(
 				"Getting OHDirect TOKEN for DBID:" + sDBID,
 				LOG_OPERATION_OHDIRECTTOKEN,
 				"[1588268769]",
 				sUserID,
-				Long.toString(System.currentTimeMillis() - lStartingTime),
+				Long.toString(lEndingTime - lStartingTime),
 				conn, 
 				sDBID);
 		} catch (Exception e) {
@@ -128,13 +131,15 @@ public class clsOEAuthFunctions {
 	    	throw new Exception("Error [1587585250] reading request - " + e.getMessage());	    
 	    }
 	    
+	    long lEndingTime = System.currentTimeMillis();
+	    
 	    try {
 			writeEntry(
 					"Getting OHDirect REQUEST for DBID:" + sDBID + " - '" + sRequestEndPoint + "'",
 					LOG_OPERATION_OHDIRECTREQUEST,
 					"[1588268770]",
 					sUserID,
-					Long.toString(System.currentTimeMillis() - lStartingTime),
+					Long.toString(lEndingTime - lStartingTime),
 					conn, 
 					sDBID);
 		} catch (Exception e) {

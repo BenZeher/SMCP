@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -215,23 +217,6 @@ public class ICPOHeader extends clsMasterEntry{
 		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsgdoclink, req).trim();
 		m_screatedbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramscreatedbyfullname, req).trim();
 
-		if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
-			System.out.println("[202003241030-1] - ONHOLDCHECK - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
-				+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'.");
-		}
-		if (req.getParameter(ICPOHeader.Paramipaymentonhold) == null) {
-			if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
-				System.out.println("[202003271548-1] - ONHOLDCHECK - req.getParameter(ICPOHeader.Paramipaymentonhold) == null");
-			}
-			m_ipaymentonhold = "0";
-		}else {
-			if (clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req).compareToIgnoreCase("") == 0){
-				m_ipaymentonhold = "0";
-			}else{
-				m_ipaymentonhold = "1";
-			}
-		}
-
 		//System.out.println("[202003272552-1] - m_ipaymentonhold = '" + m_ipaymentonhold + "'.");
 		m_spaymentonholdbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramspaymentonholdbyfullname, req).trim();
 		m_lpaymentonholdbyuserid = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramlpaymentonholdbyuserid, req).trim();
@@ -241,6 +226,41 @@ public class ICPOHeader extends clsMasterEntry{
 		}
 		m_mpaymentonholdreason = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Parammpaymentonholdreason, req).trim();
 		m_mpaymentonholdvendorcomment = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Parammpaymentonholdvendorcomment, req).trim();
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss:SS");  
+		   LocalDateTime now = LocalDateTime.now();  
+		
+		if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
+			System.out.println("[202005125257] - " 
+					+ dtf.format(now) 
+					+ " - req.getParameter(ICPOHeader.Paramipaymentonhold) = '" + req.getParameter(ICPOHeader.Paramipaymentonhold) + "'."
+					+ ", QueryString = '" + this.getQueryString() + "'."
+				);
+			
+			System.out.println(
+				"[202003241030-1]"
+				+ " " + dtf.format(now)
+				+ " - ONHOLDCHECK - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
+				+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'."
+				+ ", QueryString = '" + this.getQueryString() + "'."
+			);
+		}
+		if (req.getParameter(ICPOHeader.Paramipaymentonhold) == null) {
+			if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
+				System.out.println("[202003271548-1]"
+					+ " " + dtf.format(now)
+					+ " - ONHOLDCHECK - req.getParameter(ICPOHeader.Paramipaymentonhold) == null"
+					+ ", QueryString = '" + this.getQueryString() + "'."
+				);
+			}
+			m_ipaymentonhold = "0";
+		}else {
+			if (clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req).compareToIgnoreCase("") == 0){
+				m_ipaymentonhold = "0";
+			}else{
+				m_ipaymentonhold = "1";
+			}
+		}
 	}
     public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	Connection conn = clsDatabaseFunctions.getConnection(

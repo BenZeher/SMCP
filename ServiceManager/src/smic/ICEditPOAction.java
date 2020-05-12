@@ -36,7 +36,7 @@ public class ICEditPOAction extends HttpServlet{
 
 		ICPOHeader entry = new ICPOHeader(request);
 		if ((entry.getsID().compareToIgnoreCase("") == 0) || (entry.getsID().compareToIgnoreCase("-1") == 0)) {
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss:SS");  
 			   LocalDateTime now = LocalDateTime.now();  
 			System.out.println("[202004175958] - ONHOLDCHECK - New PO created by " + smaction.getFullUserName() + " for vendor '" + entry.getsvendor() + " on " + dtf.format(now) + "." );
 		}

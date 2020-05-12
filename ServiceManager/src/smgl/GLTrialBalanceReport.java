@@ -684,7 +684,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+ " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
 		;
 		
-		//System.out.println("[1553548501] - SQL = '" + sSQL + "'");
+		System.out.println("[1553548501] - SQL = '" + sSQL + "'");
 			
 		boolean bOddRow = false;
 		BigDecimal bdDebitTotal = new BigDecimal("0.00");

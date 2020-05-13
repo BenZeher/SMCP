@@ -3631,7 +3631,8 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			String sJobCostWorkDescription,
 			String sWorkOrderComments,
 			String sWorkOrderAdditionalWorkComments,
-			String sWorkOrderDetailSheet
+			String sWorkOrderDetailSheet,
+			String sWorkOrderDiscountAmt
 			) {
 		String s = "";
 		if (sJobCostWorkDescription != null){
@@ -3666,6 +3667,17 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				s += "<BR>";
 			}
 			s += "<B><I>Detail sheet: </I></B>" + sDetailSheetText.replace("\n", "<BR>"); 
+		}
+		String sDiscountAmt = sWorkOrderDiscountAmt.trim();
+		if (sDiscountAmt == null){
+			sDiscountAmt = "";
+		}
+		System.out.println("[202013415108] " +sDiscountAmt );
+		if (sDiscountAmt.compareToIgnoreCase("0.0") !=0){
+			if (s.compareToIgnoreCase("") != 0){
+				s += "<BR>";
+			}
+			s += "<B><I>Total Discount Applied to Work Order: </I></B>" + sDiscountAmt.replace("\n", "<BR>"); 
 		}
 		return s;
 	}

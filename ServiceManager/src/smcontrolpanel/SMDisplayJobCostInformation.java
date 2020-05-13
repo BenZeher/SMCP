@@ -329,7 +329,8 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mworkdescription), 
 						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mcomments), 
 						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.madditionalworkcomments),
-						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mdetailsheettext)).replaceAll("[^\\x00-\\x7F]", " ");
+						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mdetailsheettext).replaceAll("[^\\x00-\\x7F]", " "),
+							Double.toString(rsOrder.getDouble(SMTableworkorders.TableName + "." + SMTableworkorders.dPrePostingWODiscountAmount)));
 					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sWorkDescription + "</FONT></TD>");
 					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdqtyofhoursScale, rsOrder.getBigDecimal(SMTableworkorders.bdqtyofhours))  

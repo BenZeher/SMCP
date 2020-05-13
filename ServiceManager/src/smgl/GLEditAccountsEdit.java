@@ -79,7 +79,7 @@ public class GLEditAccountsEdit extends HttpServlet {
     				response.sendRedirect(
     						"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditAccounts"
     						+ "?" + GLAccount.Paramsacctid + "=" + glacct.getM_sacctid()
-    					+ "&Warning=Error deleting gl acct: " + glacct.getErrorMessageString()
+    					+ "&Warning=Error deleting gl acct: " + ServletUtilities.clsServletUtilities.URLEncode(glacct.getErrorMessageString())
     					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     				);
 						return;

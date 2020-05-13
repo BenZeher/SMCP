@@ -384,7 +384,7 @@ public class GLExternalPull {
 
 		//First, update the fiscal sets and financial data for the pull:
 		
-		//We'll need to updated the fiscal sets and financial data, but there's no way
+		//We'll need to update the fiscal sets and financial data, but there's no way
 		//to do that after the GL transaction line records are deleted.  So we'll
 		// first NEGATE all the transactions for this pull, and tell the fiscal set updater
 		// to update the fiscal sets and financial data for them.  This will effectively

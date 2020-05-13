@@ -39,7 +39,7 @@ public class GLEditAccountsUpdate extends HttpServlet{
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditAccountsEdit"
 					+ "?" + glacct.getQueryString()
-					+ "&Warning=Could not save: " + glacct.getErrorMessageString()
+					+ "&Warning=Could not save: " + ServletUtilities.clsServletUtilities.URLEncode(glacct.getErrorMessageString())
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 			return;

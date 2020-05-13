@@ -846,7 +846,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			BigDecimal bdShippedValue = new BigDecimal("0.00");
 			BigDecimal bdTotalExtendedMaterialPrice = new BigDecimal("0.00");
 			BigDecimal bdTotalExtendedLaborPrice = new BigDecimal("0.00");
-			String sWODiscountTotal =  clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue);
 			BigDecimal bdWODiscountAmount = new BigDecimal("0.00");
 			bdWODiscountAmount= BigDecimal.valueOf(Double.valueOf(workorder.getdPrePostingWODiscountAmount()));
 			for (int i = 0; i < dummyorder.get_iOrderDetailCount(); i++){
@@ -864,115 +863,113 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					bdTotalExtendedLaborPrice = bdTotalExtendedLaborPrice.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
 				}
 			}
+			String sWODiscountTotal =  clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue);
 			bdTotalExtendedMaterialPrice = bdShippedValue.subtract(bdTotalExtendedLaborPrice);
 			s += "<TR>"
+					+ "<TD></TD>"
 					+ "<TD align=right><FONT SIZE=2><B>Material total:</B></FONT></TD>"
 					+ "<TD align=right>"
 					+ "<FONT SIZE=2>" 
-					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalExtendedMaterialPrice) + "</B></FONT>"
+					+ "<B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalExtendedMaterialPrice) + "</B></FONT>"
 					+ "</TD>"
 					+ "</TR>"
-				;
+					;
 			s += "<TR>"
+					+ "<TD></TD>"
 					+ "<TD align=right><FONT SIZE=2><B>Labor total:</B></FONT></TD>"
 					+ "<TD align=right>"
 					+ "<FONT SIZE=2>" 
 					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalExtendedLaborPrice) + "</B></FONT>"
 					+ "</TD>"
 					+ "</TR>"
-				;
+					;
 			s += "<TR>"
-				+ "<TD align=right><FONT SIZE=2><B>Extended price total:</B></FONT></TD>"
-				+ "<TD align=right>"
-				+ "<FONT SIZE=2>" 
-				+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue) + "</B></FONT>"
-				+ "</TD>"
-				+ "</TR>"
-			;
-			
-			/*
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Extended price total:</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue) + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					; 
+
+
 			//Add a row for the total discounted amount and percentage:
 			BigDecimal bdDiscountedAmount = new BigDecimal(dummyorder.getM_dPrePostingInvoiceDiscountAmount().replace(",",""));
 			if (bdDiscountedAmount.compareTo(BigDecimal.ZERO) != 0){
-			s += "<TR>"
-					+ "<TD align=left colspan=2><FONT SIZE=2><B>" 
-					+ " Discount Percentage  on Order:&nbsp;(" 
-					+ dummyorder.getM_dPrePostingInvoiceDiscountPercentage() + "%)" 
-					+ "<B>&nbsp;&nbsp; Discount Total on Order: " 
-					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDiscountedAmount)
-					;
+				s += "<TR>"
+						+ "<TD align=left><FONT SIZE=2><B>" 
+						+ " Discount Percentage  on Order:&nbsp;(" 
+						+ dummyorder.getM_dPrePostingInvoiceDiscountPercentage() + "%)" 
+						+ "<B></FONT>"
+						;
 
-			//Add a row for the sub total after discount:
-			s += "<TR>"
-					+ "<TD align=right><FONT SIZE=2><B>Subtotal after order discount:</B></FONT></TD>"
-					+ "<TD align=right>"
-					+ "<FONT SIZE=2>" 
-					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount)) + "</B></FONT>"
-					+ "</TD>"
-					+ "</TR>"
-				;
+				s+= "<TD></TD>"
+						+"<TD></TD>"
+						+ "</TR>";
+				//Add a row for the sub total after discount:
+				/*s +=  "<TD align=right><FONT SIZE=2><B>Subtotal after order discount:</B></FONT></TD>"
+						+ "<TD align=right>"
+						+ "<FONT SIZE=2>" 
+						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount)) + "</B></FONT>"
+						+ "</TD>"
+						+ "</TR>"
+						;*/
 			}
-			
+
 			//TODO Add Text Boxes for Discounts			
-			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNT_TOTAL + "\" VALUE=\"" 
-					+ sWODiscountTotal  + "\""
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNT_TOTAL + "\" VALUE=" 
+					+ sWODiscountTotal  + ""
 					+ " id=\"" + DISCOUNT_TOTAL + "\""
 					+ ">";
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNTCHANGE_FLAG + "\" VALUE=\"" 
 					+ DISCOUNTCHANGED_VALUE  + "\""
 					+ " id=\"" + DISCOUNTCHANGE_FLAG + "\""
 					+ ">";
-			
+
 			s += "<TR>"
 					+ "<TD align=left ><FONT SIZE=2><B> " ;
-			s+= "Work Order Discount Percentage: ("
+			s+= "Discount Percentage: ("
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\""
 					+ " ID=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\""
-					+ " VALUE=\"" + workorder.getdPrePostingWODiscountPercentage() + "\""
+					+ " VALUE=" + workorder.getdPrePostingWODiscountPercentage() + ""
 					+ " SIZE=" + "6"
-					+ clsValidateFormFields.sDiscountPercentChange
+					+ SMJavaScriptFunctions.sDiscountPercentChange
 					+ ">%)";			
-			s+= " Work Order Discount Amount: "
+			s+= " Discount Amount: "
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
 					+ " ID=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
-					+ " VALUE=\"" + workorder.getdPrePostingWODiscountAmount() + "\""
+					+ " VALUE=" + workorder.getdPrePostingWODiscountAmount() + ""
 					+ " SIZE=" + "6"
-					+ clsValidateFormFields.sDiscountAmountChange
-					+ ">"
-					+ "</B></FONT>"
-					+ "</TD>";
-			s+= "<TD>"
-					+ "</TD>";
-				s+= "</TR>"
-					;
-			s += "<TR>"
-					+ "<TD align=left><FONT SIZE=2><B> " ;
-			s+= " Work Order Discount Description: ";
-			s+= "<TEXTAREA NAME=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\""
+					+ SMJavaScriptFunctions.sDiscountAmountChange
+					+ ">";
+			s+= " Discount Description: ";
+			s+= "<INPUT TYPE=TEXT"
+					+ " NAME=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\""
 					+ " ID=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\""
-					+ " rows=\"" + "2" + "\""
-					//+ " cols=\"" + Integer.toString(iCols) + "\""
-					+ "style=\"width:100%\""
+					+  " VALUE= \"" +  workorder.getsPrePostingWODiscountDesc().replace("\"", "&quot;")+ "\""
+					+ " SIZE=" + "14"
 					+ " onchange=\"flagDirty();\""
-					+ ">"
-					+  workorder.getsPrePostingWODiscountDesc().replace("\"", "&quot;")
-					+ "</TEXTAREA>";
-			s+= "</B></FONT>"
+					+ "><TD align=right><FONT SIZE=2><B>Calculated discount amount: ";
+			s+= "</B></FONT></TD>"
 					+ "</TD>"
-					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>"
+					+ workorder.getdPrePostingWODiscountAmount() + ""
+					+ "</FONT></B></TD>"
 					+ "</TR>"
 					;
 			s += "<TR>"
+					+ "<TD></TD>"
 					+ "<TD align=right><FONT SIZE=2><B>Subtotal after calculated discount:</B></FONT></TD>"
 					+ "<TD align=right>"
 					+ "<FONT SIZE=2>" 
 					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdWODiscountAmount)) + "</B></FONT>"
 					+ "</TD>"
 					+ "</TR>"
-				;
-*/
+					;
+
 			//Set Discount to the WO discount amount, rather than the whole Order
 			dummyorder.setM_dPrePostingInvoiceDiscountAmount(workorder.getdPrePostingWODiscountAmount());
 
@@ -984,14 +981,14 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sTaxAmount = e.getMessage();
 			}
 			s += "<TR>"
-				+ "<TD align=right><FONT SIZE=2><B>Estimated Tax (calculated only on " 
-				+ "shipped items that are TAXABLE):</B></FONT></TD>"
-				+ "<TD align=right>"
-				+ "<FONT SIZE=2>" 
-				+ "<B>" + sTaxAmount + "</B></FONT>"
-				+ "</TD>"
-				+ "</TR>"
-			;
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Tax (calculated only on TAXABLE items):</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + sTaxAmount + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
 
 			//Add a row for total INCLUDING tax:
 			String sTotalWithTax = "";
@@ -1001,17 +998,19 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				s += "Error [1390339789] calculating Total With Tax - " + e.getMessage();
 			}
 			s += "<TR>"
-				+ "<TD align=right><FONT SIZE=2><B>Extended price total INCLUDING discount and tax:</B></FONT></TD>"
-				+ "<TD align=right >"
-				+ "<FONT SIZE=2>" 
-				+ "<B>" + sTotalWithTax + "</B></FONT>"
-				+ "</TD>"
-				+ "</TR>"
-			;
-			
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Extended price total INCLUDING discount and tax:</B></FONT></TD>"
+					+ "<TD align=right >"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + sTotalWithTax + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+
 			//If we can set prices to to 0.00 then create a button to recalculate total
 			if(bAllowZeroWorkOrderItemPrices){
 				s += "<TR>"
+					+ "<TD></TD>"
 					+ "<TD></TD>"
 					+ "<TD align=right >"
 					+ "<BR>" + createCalculateTotalsButton()

@@ -341,7 +341,8 @@ public class SMListNearbyOrdersReport extends java.lang.Object{
 							rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mworkdescription), 
 							rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mcomments), 
 							rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.madditionalworkcomments),
-							rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mdetailsheettext));
+							rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mdetailsheettext),
+							Double.toString(rsJobCost.getDouble(SMTableworkorders.TableName + "." + SMTableworkorders.dPrePostingWODiscountAmount)));
 					sJobCostInfo += "<tr style = \" vertical-align:top; \">" +
 							"<td ALIGN=CENTER VALIGN=VTOP>" + USDateOnlyformatter.format(rsJobCost.getDate(SMTableworkorders.TableName + "." + SMTableworkorders.datscheduleddate)) + "</td>" +
 							"<td ALIGN=CENTER VALIGN=VTOP>" + rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.smechanicname) + "</td>" + 
@@ -356,7 +357,8 @@ public class SMListNearbyOrdersReport extends java.lang.Object{
 								rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mworkdescription), 
 								rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mcomments), 
 								rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.madditionalworkcomments),
-								rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mdetailsheettext));
+								rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mdetailsheettext),
+								Double.toString(rsJobCost.getDouble(SMTableworkorders.TableName + "." + SMTableworkorders.dPrePostingWODiscountAmount)));
 						sJobCostInfo += "<tr style = \" vertical-align:top; \">" +
 							"<TD ALIGN=CENTER VALIGN=VTOP>" + USDateOnlyformatter.format(rsJobCost.getDate(SMTableworkorders.TableName + "." + SMTableworkorders.datscheduleddate)) + "</td>" +
 							"<TD ALIGN=CENTER VALIGN=VTOP>" + rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.smechanicname) + "</td>" +

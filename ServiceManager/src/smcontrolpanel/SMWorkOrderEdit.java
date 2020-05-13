@@ -982,8 +982,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			}
 			s += "<TR>"
 					+ "<TD></TD>"
-					+ "<TD align=right><FONT SIZE=2><B>Estimated Tax (calculated only on " 
-					+ "shipped items that are TAXABLE):</B></FONT></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Tax (calculated only on TAXABLE items):</B></FONT></TD>"
 					+ "<TD align=right>"
 					+ "<FONT SIZE=2>" 
 					+ "<B>" + sTaxAmount + "</B></FONT>"

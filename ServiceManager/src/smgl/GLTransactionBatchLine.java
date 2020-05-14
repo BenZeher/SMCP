@@ -324,6 +324,40 @@ public class GLTransactionBatchLine {
 			throw new Exception("Error [1555098257] - " + e.getMessage());
 		}
 	}
+	public void loadExternalCompanyLine(Connection conn, String sLid, String sExternalDBName) throws Exception{
+		String SQL = "SELECT * FROM " + sExternalDBName + "." + SMTablegltransactionbatchlines.TableName
+			+ " WHERE ("
+				+ "(" + SMTablegltransactionbatchlines.lid + " = " + sLid + ")"
+			+ ")"
+		;
+	
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()){
+				setslid(Long.toString(rs.getLong(SMTablegltransactionbatchlines.lid)));
+				setsbatchnumber(Long.toString(rs.getLong(SMTablegltransactionbatchlines.lbatchnumber)));
+				setsentrynumber(Long.toString(rs.getLong(SMTablegltransactionbatchlines.lentrynumber)));
+				setslinenumber(Long.toString(rs.getLong(SMTablegltransactionbatchlines.llinenumber)));
+				setsdescription(rs.getString(SMTablegltransactionbatchlines.sdescription));
+				setsreference(rs.getString(SMTablegltransactionbatchlines.sreference));
+				setscomment(rs.getString(SMTablegltransactionbatchlines.scomment));
+				setstransactiondate(clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+						rs.getString(SMTablegltransactionbatchlines.dattransactiondate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE));
+				setsacctid(rs.getString(SMTablegltransactionbatchlines.sacctid));
+				setsdebitamt(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablegltransactionbatchlines.bddebitamt)));
+				setscreditamt(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablegltransactionbatchlines.bdcreditamt)));
+				setssourceledger(rs.getString(SMTablegltransactionbatchlines.ssourceledger));
+				setssourcetype(rs.getString(SMTablegltransactionbatchlines.ssourcetype));
+
+			}else{
+				rs.close();
+				throw new Exception("Error [1589492745] - No external GL transaction batch line found with lid = " + sLid + ".");
+			}
+			rs.close();
+		} catch (Exception e) {
+			throw new Exception("Error [1589492746] - " + e.getMessage());
+		}
+	}
 	public void setAmount(String sAmount){
 		//This function determines whether a transaction amount should be recorded as a debit or a credit:
 		//First we have to get the 'normal' balance type:

@@ -768,7 +768,90 @@ public class GLTransactionBatchEntry {
 			throw new Exception("Error [1555337560] loading batch entry lines - " + e.getMessage());
 		}
 	}
-
+	public void loadExternalCompanyEntry(Connection conn, String sExternalDBName) throws Exception{
+		
+		String SQL = "";
+		if (
+			(getslid().compareToIgnoreCase("") != 0)
+			&& (getslid().compareToIgnoreCase("-1") != 0)
+			&& (getslid().compareToIgnoreCase("0") != 0)	
+		){
+			SQL = "SELECT * FROM " + sExternalDBName + "." + SMTablegltransactionbatchentries.TableName
+				+ " WHERE ("
+					+ "(" + SMTablegltransactionbatchentries.lid + " = " + getslid() + ")"
+				+ ")"
+			;
+		}else{
+			if (
+				(getsbatchnumber().compareToIgnoreCase("") != 0)
+				&& (getsentrynumber().compareToIgnoreCase("") != 0)
+			){
+			SQL = "SELECT * FROM " + sExternalDBName + "." + SMTablegltransactionbatchentries.TableName
+					+ " WHERE ("
+						+ "(" + SMTablegltransactionbatchentries.lbatchnumber + " = " + getsbatchnumber() + ")"
+						+ " AND (" + SMTablegltransactionbatchentries.lentrynumber + " = " + getsentrynumber() + ")"
+					+ ")"
+				;
+			}
+		}
+		
+		if (SQL.compareToIgnoreCase("") == 0){
+			throw new Exception("Error [1555337487] - can't load external company batch entry without an ID or batch and entry number.");
+		}
+		
+		ResultSet rs = null;
+		try {
+			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()){
+				setslid(Long.toString(rs.getLong(SMTablegltransactionbatchentries.lid)));
+				setsbatchnumber(Long.toString(rs.getLong(SMTablegltransactionbatchentries.lbatchnumber)));
+				setsentrynumber(Long.toString(rs.getLong(SMTablegltransactionbatchentries.lentrynumber)));
+				setsentrydescription(rs.getString(SMTablegltransactionbatchentries.sentrydescription));
+				setsdatentrydate(clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+					rs.getString(SMTablegltransactionbatchentries.datentrydate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE));
+				setslastline(Long.toString(rs.getLong(SMTablegltransactionbatchentries.llastline)));
+				setsdatdocdate(clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+					rs.getString(SMTablegltransactionbatchentries.datdocdate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE));
+				setsfiscalyear(Long.toString(rs.getLong(SMTablegltransactionbatchentries.ifiscalyear)));
+				setsfiscalperiod(Long.toString(rs.getLong(SMTablegltransactionbatchentries.ifiscalperiod)));
+				setssourceledgertransactionlink(rs.getString(SMTablegltransactionbatchentries.ssourceledgertransactionid));
+				setssourceledger(rs.getString(SMTablegltransactionbatchentries.ssourceledger));
+				setsautoreverse(Integer.toString(rs.getInt(SMTablegltransactionbatchentries.iautoreverse)));
+				setsclosingentry(Integer.toString(rs.getInt(SMTablegltransactionbatchentries.iclosingentry)));
+			}else{
+				rs.close();
+				throw new Exception("Error [1555337958] - No external company GL transaction batch entry found with lid = " + getslid() + ".");
+			}
+			rs.close();
+		} catch (Exception e) {
+			rs.close();
+			throw new Exception("Error [1555337959] - loading external company " + OBJECT_NAME + " with ID " + getslid() + " - " + e.getMessage());
+		}
+		
+		//Load the lines:
+		m_arrBatchEntryLines.clear();
+		SQL = "SELECT"
+			+ " " + SMTablegltransactionbatchlines.lid
+			+ " FROM " + sExternalDBName + "." + SMTablegltransactionbatchlines.TableName 
+			+ " WHERE ("
+				+ "(" + SMTablegltransactionbatchlines.lbatchnumber + " = " + getsbatchnumber() + ")"
+				+ " AND (" + SMTablegltransactionbatchlines.lentrynumber + " = " + getsentrynumber() + ")"
+			+ ") ORDER BY " + SMTablegltransactionbatchlines.llinenumber
+		;
+		rs = null;
+		try {
+			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rs.next()){
+				GLTransactionBatchLine line = new GLTransactionBatchLine();
+				line.loadExternalCompanyLine(conn, Long.toString(rs.getLong(SMTablegltransactionbatchlines.lid)), sExternalDBName);
+				addLine(line);
+			}
+			rs.close();
+		} catch (Exception e) {
+			rs.close();
+			throw new Exception("Error [1555337960] loading batch entry lines - " + e.getMessage());
+		}
+	}
 	public String getslid(){
 		return m_slid;
 	}

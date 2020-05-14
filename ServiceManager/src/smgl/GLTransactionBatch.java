@@ -523,6 +523,71 @@ public class GLTransactionBatch {
 		}
 
 	}
+	public void copyBatch(
+			GLTransactionBatch targetbatch, 
+			String sUserFullName, 
+			String sUserID, 
+			Connection conn,
+			ServletContext context,
+			String sDBID
+			) throws Exception{
+		
+		//Copy the batch fields:
+		targetbatch.setlcreatedby(sUserID);
+		targetbatch.setllasteditedby(sUserID);
+		
+		clsDBServerTime st = new clsDBServerTime(conn);
+		targetbatch.setsbatchdate(st.getCurrentDateTimeInSelectedFormat(SMUtilities.DATE_FORMAT_FOR_DISPLAY));
+		targetbatch.setsbatchdescription(getsbatchdescription());
+		targetbatch.setsbatchlastentry(getsbatchlastentry());
+		targetbatch.setsbatchstatus(Integer.toString(SMClasses.SMBatchStatuses.ENTERED));
+		//targetbatch.setslasteditdate(""); - this will be set when we save
+		
+		for(int iEntry = 0; iEntry < getBatchEntryArray().size(); iEntry++){
+			targetbatch.addBatchEntry(getBatchEntryArray().get(iEntry));
+		}
+		
+		targetbatch.save_with_data_transaction(context, sDBID, sUserID, sUserFullName, false);
+		
+		return;
+	}
+	public void loadExternalCompanyBatch(Connection conn, String sExternalDBName) throws Exception{
+		String SQL = "SELECT * FROM " + sExternalDBName + "." + SMTablegltransactionbatches.TableName
+			+ " WHERE ("
+				+ "(" + SMTablegltransactionbatches.lbatchnumber + " = " + getsbatchnumber() + ")"
+			+ ")"
+		;
+		ResultSet rs = null;
+		try {
+			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()){
+				setsbatchdate(clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
+					rs.getString(SMTablegltransactionbatches.datbatchdate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE));
+				setsbatchdescription(rs.getString(SMTablegltransactionbatches.sbatchdescription));
+				setsbatchlastentry(Long.toString(rs.getLong(SMTablegltransactionbatches.lbatchlastentry)));
+				setsbatchstatus(Integer.toString(rs.getInt(SMTablegltransactionbatches.ibatchstatus)));
+				setlcreatedby(rs.getString(SMTablegltransactionbatches.lcreatedby));
+				setslasteditdate(clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
+					rs.getString(SMTablegltransactionbatches.datlasteditdate), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE));
+				setllasteditedby(rs.getString(SMTablegltransactionbatches.llasteditedby));
+				setsposteddate(clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
+					rs.getString(SMTablegltransactionbatches.datpostdate), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE));
+			}else{
+				rs.close();
+				throw new Exception("Error [1555340829] - No external company GL transaction batch found with batch number " + getsbatchnumber() + ".");
+			}
+			rs.close();
+		} catch (Exception e1) {
+			rs.close();
+			throw new Exception("Error [1555340830] loading external company batch - " + e1.getMessage());
+		}
+		
+		try {
+			loadExternalCompanyEntries(conn, sExternalDBName);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
 
 	public void loadEntries(ServletContext context, String sDBID, String sUserID) throws Exception{
 		Connection conn;
@@ -568,6 +633,31 @@ public class GLTransactionBatch {
 		} catch (Exception e) {
 			rs.close();
 			throw new Exception("Error [155534054] loading batch entries - " + e.getMessage());
+		}
+	}
+	private void loadExternalCompanyEntries(Connection conn, String sExternalDBName) throws Exception{
+		//Load the entries:
+		m_arrBatchEntries.clear();
+		String SQL = "SELECT"
+			+ " " + SMTablegltransactionbatchentries.lid
+			+ " FROM " + sExternalDBName + "." + SMTablegltransactionbatchentries.TableName 
+			+ " WHERE ("
+				+ "(" + SMTablegltransactionbatchentries.lbatchnumber + " = " + getsbatchnumber() + ")"
+			+ ") ORDER BY " + SMTablegltransactionbatchentries.lentrynumber
+		;
+		ResultSet rs = null;
+		try {
+			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rs.next()){
+				GLTransactionBatchEntry entry = new GLTransactionBatchEntry();
+				entry.setslid(Long.toString(rs.getLong(SMTablegltransactionbatchentries.lid)));
+				entry.loadExternalCompanyEntry(conn, sExternalDBName);
+				addBatchEntry(entry);
+			}
+			rs.close();
+		} catch (Exception e) {
+			rs.close();
+			throw new Exception("Error [155534454] loading external company batch entries - " + e.getMessage());
 		}
 	}
     public void flag_as_deleted (

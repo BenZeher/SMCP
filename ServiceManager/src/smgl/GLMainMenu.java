@@ -217,6 +217,7 @@ public class GLMainMenu extends HttpServlet {
 		arMenu.add(SMSystemFunctions.GLClearPostedAndDeletedBatches);
 		arMenu.add(SMSystemFunctions.GLClearTransactions);
 		arMenu.add(SMSystemFunctions.GLClearFiscalData);
+		arMenu.add(SMSystemFunctions.GLDuplicateExternalCompanyBatch);
 
 		if (bMobileView){
 			SMUtilities.buildMobileMenuTable(

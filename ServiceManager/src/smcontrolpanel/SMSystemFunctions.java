@@ -343,6 +343,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMEditVendorReturns = 1248;
 	public static long SMEditOHDirectSettings = 1249;
 	public static long SMViewOHDirectQuote = 1250;
+	public static long GLDuplicateExternalCompanyBatch = 1251;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2810,6 +2811,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smcontrolpanel.SMDisplayOHDirectQuote"); 
 			arrFunctionDescriptions.add("View a selected OHDirect quote.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
+			
+			arrFunctions.add("GL Duplicate External Company Batch"); 
+			arrFunctionIDs.add(GLDuplicateExternalCompanyBatch); 
+			arrFunctionLinks.add("smgl.GLDuplicateExternalBatchSelect"); 
+			arrFunctionDescriptions.add("Allows you to duplicate a posted batch in an external company, and then edit/post it in the current company.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}
 

@@ -2594,6 +2594,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLDuplicateExternalBatchAction</servlet-name>
+        <servlet-class>smgl.GLDuplicateExternalBatchAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLDuplicateExternalBatchSelect</servlet-name>
+        <servlet-class>smgl.GLDuplicateExternalBatchSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLEditAccounts</servlet-name>
         <servlet-class>smgl.GLEditAccounts</servlet-class>
     </servlet>
@@ -5898,6 +5908,16 @@
     <servlet-mapping>
         <servlet-name>GLConvertACCPACAction</servlet-name>
         <url-pattern>/smgl.GLConvertACCPACAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLDuplicateExternalBatchAction</servlet-name>
+        <url-pattern>/smgl.GLDuplicateExternalBatchAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GLDuplicateExternalBatchSelect</servlet-name>
+        <url-pattern>/smgl.GLDuplicateExternalBatchSelect</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

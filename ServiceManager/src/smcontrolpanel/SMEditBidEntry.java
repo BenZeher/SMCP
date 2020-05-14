@@ -301,7 +301,7 @@ public class SMEditBidEntry  extends HttpServlet {
 				+ "?" + SMBidEntry.ParamID + "=" + sID 
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
 				+ sDBID 
-				+ "\"><span style = \" font-size:large; font-weight:bold; \" >#" 
+				+ "\"><span style = \" font-size:large; font-weight:bold; \" >" 
 				+ sID + "</span></A>"  			
 				+ sCreatedBy;
 		

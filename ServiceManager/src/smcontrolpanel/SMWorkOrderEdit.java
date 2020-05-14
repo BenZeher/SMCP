@@ -929,7 +929,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 			s += "<TR>"
 					+ "<TD align=left ><FONT SIZE=2><B> " ;
-			s+= "Discount Percentage: ("
+			s+= "<I>Discount</I> Percentage: ("
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\""
 					+ " ID=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\""
@@ -937,7 +937,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ " SIZE=" + "6"
 					+ SMJavaScriptFunctions.sDiscountPercentChange
 					+ ">%)";			
-			s+= " Discount Amount: "
+			s+= " Amount: "
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
 					+ " ID=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
@@ -945,7 +945,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ " SIZE=" + "6"
 					+ SMJavaScriptFunctions.sDiscountAmountChange
 					+ ">";
-			s+= " Discount Description: ";
+			s+= " Description: ";
 			s+= "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\""
 					+ " ID=\"" + SMWorkOrderHeader.ParamsPrePostingWODiscountDesc + "\""
@@ -956,7 +956,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			s+= "</B></FONT></TD>"
 					+ "</TD>"
 					+ "<TD align=right><FONT SIZE=2><B>"
-					+ workorder.getdPrePostingWODiscountAmount() + ""
+					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(workorder.getdPrePostingWODiscountAmount()))) + ""
 					+ "</FONT></B></TD>"
 					+ "</TR>"
 					;

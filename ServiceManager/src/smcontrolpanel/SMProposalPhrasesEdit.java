@@ -62,6 +62,15 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 			out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
+			String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+			 if(sWarning.compareToIgnoreCase("") != 0) {
+				 out.println("<B><FONT COLOR=RED>WARNING: " + sWarning + "</FONT></B>");
+			 }
+			 String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
+			 if(sStatus.compareToIgnoreCase("") != 0) {
+				 out.println("<B>STATUS: " + sStatus + "</B>");
+			 }
+			
 			if (sProposalPhraseID == null){
 				out.println("Invalid " + sObjectName + "ID. Please go back and try again.");
 			}else{
@@ -180,7 +189,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 			+ "<TD ALIGN=RIGHT><B>Name:</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>" 
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMTableproposalphrases.sproposalphrasename
-			+ "\" VALUE=\"" + sProposalPhraseName + "\""
+			+ "\" VALUE=\"" + clsStringFunctions.filter(sProposalPhraseName) + "\""
 			+ " SIZE=\"" + Integer.toString(SMTableproposalphrases.sproposalphrasenameLength) + "\""
 			+ " MAXLENGTH=\"" + Integer.toString(SMTableproposalphrases.sproposalphrasenameLength) + "\">" 
 			+ "</TD>\n"
@@ -243,8 +252,9 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 			+ "</TR>\n"
 		);
 		
-		pwOut.println("</TABLE><BR><P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName 
-				+ "' STYLE='height: 0.24in'></P></FORM>");
+		pwOut.println("</TABLE><BR><P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'>"
+				+ "&nbsp;&nbsp;<INPUT TYPE=SUBMIT NAME='DeleteEdit' VALUE='Delete " + sObjectName + "' onclick=\"alert('Are you sure?');\" STYLE='height: 0.24in'>"
+				+ "</P></FORM>");
 	}
 
 	private boolean Delete_Record(
@@ -265,9 +275,8 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 			return false;
 		}
 
-		String SQL = "DELETE FROM " + SMTableproposalphrases.TableName
-		+ " WHERE ("
-		+ SMTableproposalphrases.sid + " = " + sProposalPhraseID
+		String SQL = "DELETE FROM " + SMTableproposalphrases.TableName + " WHERE ("
+		+ SMTableproposalphrases.sid + "=" + sProposalPhraseID + ""
 		+ ")"
 		;
 		try {

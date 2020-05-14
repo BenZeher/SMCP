@@ -122,7 +122,7 @@ public class SMEditDirectOrderDetailEntryAction extends HttpServlet{
     					+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
     					+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
     						+ clsManageRequestParameters.get_Request_Parameter(SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM, request)
-    					+ "&Warning=Error: " + clsStringFunctions.filter(e.getMessage())
+    					+ "&Warning=Error: " + SMUtilities.URLEncode(e.getMessage())
     				;
     			redirectProcess(sRedirectString, response);
     			return;

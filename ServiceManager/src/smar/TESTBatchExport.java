@@ -1,13 +1,11 @@
 package smar;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+
 import javax.servlet.http.HttpServlet;
 
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
-import ServletUtilities.clsStringFunctions;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -19,18 +17,18 @@ public class TESTBatchExport extends HttpServlet{
 		java.sql.Connection conn = null;
 		
 		//Localhost settings:
-		String sURL = "localhost"; //Google Cloud SQL = 35.243.233.33
-		String sDBID = "servmgr1"; //servmgr1 - default
-		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
-		String sUser = "smuser7sT559";//"smuser7sT559";
-		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
-		
-//		//Google server settings:
-//		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.233.33
+//		String sURL = "localhost"; //Google Cloud SQL = 35.243.233.33
 //		String sDBID = "servmgr1"; //servmgr1 - default
 //		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
 //		String sUser = "smuser7sT559";//"smuser7sT559";
 //		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
+		
+		//Google server settings:
+		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.233.33
+		String sDBID = "servmgrmadg"; //servmgr1 - default
+		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
+		String sUser = "smuser7sT559";//"smuser7sT559";
+		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
 		
 		
 		//OHD Tampa settings:
@@ -51,10 +49,15 @@ public class TESTBatchExport extends HttpServlet{
 		String sPassword = "smuser";
 		*/
 		
+		//String sConnectStringParams = "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
+		//sConnString = "jdbc:" + "mysql" + "://" + sURL + ":" + "3306" + "/" + "servmgr1" + sConnectStringParams;
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			//Local string for laptop:
 			conn = DriverManager.getConnection(sConnString, sUser, sPassword);
+
+			
 			//conn = DriverManager.getConnection("jdbc:mysql://" + "smcp001.com" + ":3306/" + "servmgr1" + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True"
 				//+ "&allowMultiQueries=true"
 				//,"smuser7sT559", "kJ26D3G9bvK8");
@@ -148,30 +151,34 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
-		String SQL = "";
-		for (int i = 0; i < 26000; i++) {
-			SQL = "INSERT INTO tax (staxjurisdiction, bdtaxrate, sdescription, staxtype, sglacct, iactive, icalculateonpurchaseorsale,"
-					+ " icalculatetaxoncustomerinvoice, ishowinorderentry, ishowinaccountspayable"
-					+ ") VALUES ("
-					+ " 'JUR" + clsStringFunctions.PadLeft(Integer.toString(i), "0", 5) + "'"
-					+ ", 0.00"
-					+ ", 'LONG TAX DESCRIPTION'"
-					+ ", 'TYPE'"
-					+ ", 'GLACCT00000000'"
-					+ ", 1"
-					+ ", 0"
-					+ ", 1"
-					+ ", 1"
-					+ ", 1"
-					+ ")"
-			;
-			try {
-				Statement stmt = conn.createStatement();
-				stmt.execute(SQL);
-			} catch (SQLException e) {
-				System.out.println("[202005043349] - " + e.getMessage());
-			}
+    	GLTransactionBatch externalbatch = new GLTransactionBatch("1397");
+    	try {
+			externalbatch.loadExternalCompanyBatch(conn, "1", "1397");
+		} catch (Exception e1) {
+			System.out.println("[202005154012] - " + e1.getMessage());
 		}
+    	System.out.println("[202005043334] - DONE");
+    	
+    	GLTransactionBatch duplicatedbatch = null;
+    	try {
+    		duplicatedbatch = externalbatch.duplicateCurrentBatch(
+    				conn, 
+    				"Tom Ronayne", 
+    				"2", 
+    				"DBID", 
+    				null
+    		);
+		} catch (Exception e) {
+			System.out.println("[202005154541] - Exception: " + e.getMessage() + ".");
+		}
+    	
+		//Save the batch:
+		try {
+			duplicatedbatch.save_without_data_transaction(conn, "2", "Tom Ronayne", false);
+		} catch (Exception e) {
+			System.out.println("[202005154542] - Exception: " + e.getMessage() + ".");
+		}
+		
 		System.out.println("[202005043334] - DONE");
 		
 		

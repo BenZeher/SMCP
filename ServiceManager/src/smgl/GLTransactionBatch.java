@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegloptions;
@@ -523,14 +524,15 @@ public class GLTransactionBatch {
 		}
 
 	}
-	public void copyBatch(
-			GLTransactionBatch targetbatch, 
+	public GLTransactionBatch copyBatch(
 			String sUserFullName, 
 			String sUserID, 
 			Connection conn,
 			ServletContext context,
 			String sDBID
 			) throws Exception{
+		
+		GLTransactionBatch targetbatch = new GLTransactionBatch("-1");
 		
 		//Copy the batch fields:
 		targetbatch.setlcreatedby(sUserID);
@@ -544,19 +546,74 @@ public class GLTransactionBatch {
 		//targetbatch.setslasteditdate(""); - this will be set when we save
 		
 		for(int iEntry = 0; iEntry < getBatchEntryArray().size(); iEntry++){
+			System.out.println("[202005155148] - fiscal period: " + getBatchEntryArray().get(iEntry).getsfiscalperiod());
+			System.out.println("[202005155149] - fiscal year: " + getBatchEntryArray().get(iEntry).getsfiscalyear());
 			targetbatch.addBatchEntry(getBatchEntryArray().get(iEntry));
 		}
 		
-		targetbatch.save_with_data_transaction(context, sDBID, sUserID, sUserFullName, false);
-		
-		return;
+		return targetbatch;
 	}
-	public void loadExternalCompanyBatch(Connection conn, String sExternalDBName) throws Exception{
-		String SQL = "SELECT * FROM " + sExternalDBName + "." + SMTablegltransactionbatches.TableName
+	
+	public GLTransactionBatch duplicateCurrentBatch(
+			Connection conn, 
+			String sUserFullName,
+			String sUserID,
+			String sDBID,
+			ServletContext context
+			) throws Exception{
+			
+			//If the batch isn't posted, then return an error:
+			if (getsbatchstatus().compareToIgnoreCase(Integer.toString(SMBatchStatuses.POSTED)) != 0){
+				throw new Exception("Error [202005151322] - batch " + getsbatchnumber() + " has not been posted, so it can't be duplicated yet.");
+			}
+			
+			//Create a new batch in our company and copy all the fields, entries, and lines:
+			GLTransactionBatch duplicatedbatch = null;
+			try {
+				duplicatedbatch = copyBatch(
+					sUserFullName, 
+					sUserID, 
+					conn,
+					context,
+					sDBID
+				);
+			} catch (Exception e) {
+				throw new Exception("Error [202005141911] - copying from external company batch - " + e.getMessage());
+			}
+			
+			return duplicatedbatch;
+			
+		}
+	public void loadExternalCompanyBatch(Connection conn, String sExternalCompanyID, String sExternalBatchNumber) throws Exception{
+		
+		//Get the DB name:
+		String SQL = "SELECT"
+			+ " " + SMTableglexternalcompanies.sdbname
+			+ ", " + SMTableglexternalcompanies.scompanyname
+			+ " FROM " + SMTableglexternalcompanies.TableName
 			+ " WHERE ("
-				+ "(" + SMTablegltransactionbatches.lbatchnumber + " = " + getsbatchnumber() + ")"
+				+ "(" + SMTableglexternalcompanies.lid + " = " + sExternalCompanyID + ")"
 			+ ")"
 		;
+		String sDBName = "";
+		try {
+			ResultSet rsExternalCompany = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsExternalCompany.next()) {
+				sDBName = rsExternalCompany.getString(SMTableglexternalcompanies.sdbname);
+			}else {
+				throw new Exception("Error [202005143317] - could not read external company record for ID '" + sExternalCompanyID + "'.");
+			}
+			rsExternalCompany.close();
+		} catch (Exception e) {
+			throw new Exception("Error [202005154814] - could not get external company data with SQL: '" + SQL + "'.");
+		}
+		
+		SQL = "SELECT * FROM " + sDBName + "." + SMTablegltransactionbatches.TableName
+			+ " WHERE ("
+				+ "(" + SMTablegltransactionbatches.lbatchnumber + " = " + sExternalBatchNumber + ")"
+			+ ")"
+		;
+		
 		ResultSet rs = null;
 		try {
 			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -574,7 +631,7 @@ public class GLTransactionBatch {
 					rs.getString(SMTablegltransactionbatches.datpostdate), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE));
 			}else{
 				rs.close();
-				throw new Exception("Error [1555340829] - No external company GL transaction batch found with batch number " + getsbatchnumber() + ".");
+				throw new Exception("Error [1555340829] - No external company GL transaction batch found with batch number " + sExternalBatchNumber + ".");
 			}
 			rs.close();
 		} catch (Exception e1) {
@@ -583,7 +640,7 @@ public class GLTransactionBatch {
 		}
 		
 		try {
-			loadExternalCompanyEntries(conn, sExternalDBName);
+			loadExternalCompanyEntries(conn, sDBName);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}

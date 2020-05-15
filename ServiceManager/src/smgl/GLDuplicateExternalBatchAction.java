@@ -2,17 +2,16 @@ package smgl;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import SMDataDefinition.SMTableglexternalcompanies;
-import ServletUtilities.clsDatabaseFunctions;
+import SMDataDefinition.SMTablegltransactionbatches;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class GLDuplicateExternalBatchAction extends HttpServlet{
 	
@@ -30,7 +29,7 @@ public class GLDuplicateExternalBatchAction extends HttpServlet{
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLDuplicateExternalCompanyBatch)){return;}
 	    //Read the entry fields from the request object:
 	    String sExternalCompanyID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(GLDuplicateExternalBatchSelect.RADIO_BUTTONS_NAME, request);
-	    String sBatchNumber = request.getParameter(GLDuplicateExternalBatchSelect.PARAM_BATCH_NUMBER);
+	    String sExternalBatchNumber = request.getParameter(GLDuplicateExternalBatchSelect.PARAM_BATCH_NUMBER);
 		
 		if (request.getParameter(GLDuplicateExternalBatchSelect.CONFIRM_PROCESS) == null){
 			smaction.getCurrentSession().setAttribute(GLDuplicateExternalBatchSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
@@ -60,9 +59,28 @@ public class GLDuplicateExternalBatchAction extends HttpServlet{
 				return;
 		}
 
-    	String sNewBatchNumber = "";
+    	GLTransactionBatch externalbatch = new GLTransactionBatch(sExternalBatchNumber);
     	try {
-    		sNewBatchNumber = duplicateBatch(conn, sBatchNumber, sExternalCompanyID, smaction.getFullUserName(), smaction.getUserID(), smaction.getsDBID());
+			externalbatch.loadExternalCompanyBatch(conn, sExternalCompanyID, sExternalBatchNumber);
+		} catch (Exception e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589483934]");
+			smaction.getCurrentSession().setAttribute(GLDuplicateExternalBatchSelect.SESSION_WARNING_OBJECT, e1.getMessage());
+			smaction.redirectAction(
+					"", 
+					"", 
+		    		""
+				);
+				return;
+		}
+    	GLTransactionBatch duplicatedbatch = null;
+    	try {
+    		duplicatedbatch = externalbatch.duplicateCurrentBatch(
+    				conn, 
+    				smaction.getFullUserName(), 
+    				smaction.getUserID(), 
+    				smaction.getsDBID(), 
+    				getServletContext()
+    		);
 		} catch (Exception e) {
 			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589483734]");
 			smaction.getCurrentSession().setAttribute(GLDuplicateExternalBatchSelect.SESSION_WARNING_OBJECT, e.getMessage());
@@ -74,84 +92,49 @@ public class GLDuplicateExternalBatchAction extends HttpServlet{
 				return;
 		}
     	
+		//Save the batch:
+		try {
+			duplicatedbatch.save_with_data_transaction(getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName(), false);
+		} catch (Exception e) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589483434]");
+			smaction.getCurrentSession().setAttribute(GLDuplicateExternalBatchSelect.SESSION_WARNING_OBJECT, e.getMessage());
+			smaction.redirectAction(
+					"", 
+					"", 
+		    		""
+				);
+				return;
+		}
+    	
 		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589483834]");
+		String sNewBatchNumberLink = duplicatedbatch.getsbatchnumber();
+		boolean bAllowGLBatchEditing = SMSystemFunctions.isFunctionPermitted(
+			SMSystemFunctions.GLEditBatches, 
+			smaction.getUserID(), 
+			conn, 
+			(String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+		);
+		
+		if (bAllowGLBatchEditing) {
+			sNewBatchNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl." 
+    	    		+ "GLEditBatchesEdit" 
+    	    		+ "?" + SMTablegltransactionbatches.lbatchnumber + "=" + sNewBatchNumberLink
+    	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+    	    		+ "\">"
+    	    		+ sNewBatchNumberLink
+    	    		+ "</A>";
+		}
+		
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589483834]");
+		
 		smaction.redirectAction(
 			"", 
-			"External company batch number " + sBatchNumber + " was successfully duplicated in the current company as batch number " + sNewBatchNumber + ".",
+			"External company batch number " + sExternalBatchNumber + " was successfully duplicated in the current company as batch number " + sNewBatchNumberLink + ".",
     		""
 		);
 		return;
 	}
-	private String duplicateBatch(
-		Connection conn, 
-		String sBatchNumber, 
-		String sExternalCompanyID,
-		String sUserFullName,
-		String sUserID,
-		String sDBID
-		) throws Exception{
-		
-		//Get the DB name:
-		String SQL = "SELECT"
-			+ " " + SMTableglexternalcompanies.sdbname
-			+ ", " + SMTableglexternalcompanies.scompanyname
-			+ " FROM " + SMTableglexternalcompanies.TableName
-			+ " WHERE ("
-				+ "(" + SMTableglexternalcompanies.lid + " = " + sExternalCompanyID + ")"
-			+ ")"
-		;
-		String sDBName = "";
-		String sCompanyName = "";
-		try {
-			ResultSet rsExternalCompany = clsDatabaseFunctions.openResultSet(SQL, conn);
-			if (rsExternalCompany.next()) {
-				sDBName = rsExternalCompany.getString(SMTableglexternalcompanies.sdbname);
-				sCompanyName = rsExternalCompany.getString(SMTableglexternalcompanies.scompanyname);
-			}else {
-				throw new Exception("Error [202005143317] - could not read external company record for ID '" + sExternalCompanyID + "'.");
-			}
-			rsExternalCompany.close();
-		} catch (Exception e) {
-			System.out.println("[202005143404] - Error reading external company table with SQL: '" + SQL + "' - " + e.getMessage());
-		}
-		
-		
-		
-		//Load the batch we're duplicating:
-		GLTransactionBatch externalbatch = new GLTransactionBatch(sBatchNumber);
-		try {
-			externalbatch.loadExternalCompanyBatch(conn, sDBName);
-		} catch (Exception e) {
-			throw new Exception("Error [202005143648] - loading external company batch - " + e.getMessage());
-		}
-		
-		//Create a new batch in our company:
-		GLTransactionBatch batch = new GLTransactionBatch("-1");
-		
-		//Copy all the fields, entries, and lines:
-		try {
-			externalbatch.copyBatch(
-				batch, 
-				sUserFullName, 
-				sUserID, 
-				conn,
-				getServletContext(),
-				sDBID
-			);
-		} catch (Exception e) {
-			throw new Exception("Error [202005141911] - copying from external company batch - " + e.getMessage());
-		}
-		
-		//Save the batch:
-		try {
-			batch.save_with_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName, false);
-		} catch (Exception e) {
-			throw new Exception("Error [202005142031] - saving new batch - " + e.getMessage() + ".");
-		}
-		
-		return batch.getsbatchnumber();
-		
-	}
+
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

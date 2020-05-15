@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMDataDefinition.SMTableproposalphrasegroups;
 import SMDataDefinition.SMTableproposalphrases;
 import ServletUtilities.clsDatabaseFunctions;
 
 public class SMProposalPhrasesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static final String sObjectName = "Proposal Phrase";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -72,8 +72,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 	    			"&" + SMTableproposalphrases.sproposalphrasename + "=" + Long.toString(lID) + "&SubmitEdit=Y");
 			return;
 	    }
-	    
-		
+	    	
 		//if it a request to update
 		if(request.getParameter("SubmitEdit") != null) {
 			//Start transaction
@@ -102,7 +101,6 @@ public class SMProposalPhrasesAction extends HttpServlet{
 				return;
 			}
 			
-		    
 		    //Now we update the sort oder
 		    try {
 				updateSortOrder(conn, iSortOrder, lID);
@@ -135,16 +133,15 @@ public class SMProposalPhrasesAction extends HttpServlet{
 						"&" + SMTableproposalphrases.sproposalphrasename + "=" + Long.toString(lID)+ "&SubmitEdit=Y");
 				return;
 			}
-			smaction.setCallingClass("smcontrolpanel.SMProposalPhraseGroupSelect");
+			smaction.setCallingClass("smcontrolpanel.SMProposalPhraseGroupEdit");
 			smaction.redirectAction("", "Delete successful", 
-					"&" + SMTableproposalphrases.sproposalphrasename + "=" + Long.toString(lID)+ "&SubmitEdit=Y");
+					"&" + SMTableproposalphrasegroups.sid+ "=" + sProposalPhraseGroupID + "&SubmitEdit=Y");
 			return;
 		}
 	    //Free connection
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589392293]");
 		smaction.redirectAction("", "", 
 				"&" + SMTableproposalphrases.sproposalphrasename + "=" + Long.toString(lID)+ "&SubmitEdit=Y");
-	    
 	    return;
 	}
 	

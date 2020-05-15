@@ -54,7 +54,6 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		
 		String sProposalPhraseGroupID = clsStringFunctions.filter(request.getParameter(SMTableproposalphrasegroups.sid));
 
 		String title = "";
@@ -80,7 +79,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			}
 		}
 		
-		//If this is a request to delete
+		//If this is a request to delete from the select
 		if(request.getParameter("SubmitDelete") != null){
 			//User has chosen to delete:
 			title = "Delete " + sObjectName + ": " + sProposalPhraseGroupID;
@@ -150,7 +149,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		//Add Javacript
 		pwOut.println(clsServletUtilities.getJQueryIncludeString());
 		pwOut.println(clsServletUtilities.getJQueryUIIncludeString());
-		pwOut.println(sCommandScripts(getServletContext(), sDBID));
+		pwOut.println(sCommandScripts(getServletContext(), sDBID, sParameter));
 		pwOut.println(getStyles());
 		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
@@ -332,7 +331,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			;
 	}
 	
-	private String sCommandScripts(ServletContext context,  String sDBID){
+	private String sCommandScripts(ServletContext context,  String sDBID, String sGroupID){
 		String s = "";
 		String sEditProposalPhraseLinkBase = SMUtilities.getURLLinkBase(context) 
 				+ "smcontrolpanel.SMProposalPhrasesEdit"; 
@@ -388,6 +387,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		//Add new:
 		s += "function addnewphrase(){\n"
 				+ "window.open(\"" + sEditProposalPhraseLinkBase + "?" + SMTableproposalphrases.sproposalphrasename + "=\" + -1 + \"" 
+				+ "&" + SMTableproposalphrases.iphrasegroupid + "=" + sGroupID
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&SubmitAdd=Y"+ "\");\n"
 				+ "}\n"

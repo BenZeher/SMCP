@@ -94,10 +94,7 @@ public class SMProposalPhrasesSelect extends HttpServlet {
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " 
 			+ sObjectName + "'></P>";
 		sOutPut = sOutPut + 
-			" New Proposal Phrase To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectName + "\" SIZE=28 MAXLENGTH=" + 
-			Integer.toString(SMTableproposalphrases.sproposalphrasenameLength) + 
-			" STYLE=\"width: 2.41in; height: 0.25in\"> Proposal phrase name maximum length is " + 
-			Integer.toString(SMTableproposalphrases.sproposalphrasenameLength) + ".</P>";
+			" <INPUT TYPE=HIDDEN NAME=\"New" + sObjectName + "\" VALUE=\"\"</P>";
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);
 		

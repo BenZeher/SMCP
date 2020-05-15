@@ -47,6 +47,10 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sProposalPhraseID = clsStringFunctions.filter(request.getParameter(SMTableproposalphrases.sproposalphrasename));
+		String sProposalGroupID = clsManageRequestParameters.get_Request_Parameter(SMTableproposalphrases.iphrasegroupid, request);
+		if(sProposalGroupID.compareToIgnoreCase("") == 0) {
+			sProposalGroupID = "0";
+		}
 
 		String title = "";
 		String subtitle = "";
@@ -118,7 +122,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 				+ "\">Return to user login</A><BR><BR>");
 
 
-			Edit_Record(sNewCode, out, sDBID, true);
+			Edit_Record(sProposalGroupID, out, sDBID, true);
 		
 		}
 
@@ -166,7 +170,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 				pwOut.println("<BR>Error reading proposal phrase information - " + ex.getMessage());
 			}
 		}else{
-			sProposalPhraseName = sParameter;
+			iProposalPhraseGroupID = Integer.parseInt(sParameter);
 		}
 
 		//Display fields:

@@ -128,7 +128,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	public static final String ParamdPrePostingWODiscountPercentage = "dPrePostingWODiscountPercentage";
 	public static final String ParamdPrePostingWODiscountAmount = "dPrePostingWODiscountAmount";
 	public static final String ParamsPrePostingWODiscountDesc = "sPrePostingWODiscountDesc";
-	public static final String ParamiViewPrices = "iViewPrices";
 	public static final String COMMONLY_USED_ITEMS_SEARCH_NO_OF_DAYS = "180";
 	public static final String COMMONLY_USED_ITEMS_SEARCH_NO_OF_ITEMS = "50";
 	
@@ -190,7 +189,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	private String m_dPrePostingWODiscountPercentage;
 	private String m_dPrePostingWODiscountAmount;
 	private String m_sPrePostingWODiscountDesc;
-	private String m_iViewPrices;
 	
 	//variables to display most recent items
 	private String m_snumberofdays;
@@ -305,9 +303,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			setdPrePostingWODiscountAmount("0.0");
 		}
 		setsPrePostingWODiscountDesc(clsManageRequestParameters.get_Request_Parameter(ParamsPrePostingWODiscountDesc, req).trim().replace("&quot;", "\""));
-		
-		setiViewPrices(clsManageRequestParameters.get_Request_Parameter(ParamiViewPrices, req).trim().replace("&quot;", "\""));
-		
+
 		
 		//Read the job times:
 		if (clsManageRequestParameters.get_Request_Parameter(
@@ -1230,8 +1226,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			+ ", " + SMTableworkorders.slasteditedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 		    + ", " + SMTableworkorders.llasteditedbyuserid + " = " + sUserID
 			+ ", " + SMTableworkorders.lsignatureboxwidth + " = " + clsDatabaseFunctions.FormatSQLStatement(getlsignatureboxwidth())
-			+ ", " + SMTableworkorders.lsignatureboxwidth + " = " + clsDatabaseFunctions.FormatSQLStatement(getlsignatureboxwidth())
-			+ ", " + SMTableworkorders.iViewPrices + " = " + getiViewPrices()
 			+ " WHERE (" 
 				+ SMTableworkorders.lid + " = " + getlid() 
 			+ ")";
@@ -1607,7 +1601,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		+ ", " + SMTableworkorders.dPrePostingWODiscountAmount 
 		+ ", " + SMTableworkorders.dPrePostingWODiscountPercentage 
 		+ ", " + SMTableworkorders.sPrePostingWODiscountDesc 
-		+ ", " + SMTableworkorders.iViewPrices
 		+ ") VALUES ("
 		+ " " + wo_header.getsbackchargehours().replace(",", "")
 		+ ", " + wo_header.getsqtyofhours().replace(",", "")
@@ -1642,7 +1635,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		+ ", " + wo_header.getdPrePostingWODiscountAmount() 
 		+ ", " + wo_header.getdPrePostingWODiscountPercentage() 
 		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(wo_header.getsPrePostingWODiscountDesc()) + "'"
-		+ ", " + wo_header.getiViewPrices()
 		+ ")"
 		;
 		
@@ -2254,7 +2246,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				setdPrePostingWODiscountPercentage (Double.toString(rs.getDouble(SMTableworkorders.dPrePostingWODiscountPercentage)));
 				setdPrePostingWODiscountAmount (Double.toString(rs.getDouble(SMTableworkorders.dPrePostingWODiscountAmount)));
 				setsPrePostingWODiscountDesc (rs.getString(SMTableworkorders.sPrePostingWODiscountDesc));
-				setiViewPrices(Integer.toString(rs.getInt(SMTableworkorders.iViewPrices)));
 				rs.close();
 			}catch (SQLException ex){
 				throw new Exception("Error [1391438248] loading " + SMTableworkorders.ObjectName + " with SQL: " + SQL + " - " + ex.getMessage());
@@ -3361,13 +3352,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	public String getmdbaremittoaddress (){
 		return m_mdbaremittoaddress;
 	}
-	
-	public void setiViewPrices (String sViewPrices){
-		m_iViewPrices = sViewPrices;
-	}
-	public String getiViewPrices (){
-		return m_iViewPrices;
-	}
 
     public String read_out_debug_data(){
     	String sResult = "  ** SMWorkOrderHeader read out: ";
@@ -3459,7 +3443,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		m_dPrePostingWODiscountPercentage = "0.00";
 		m_dPrePostingWODiscountAmount = "0.00";
 		m_sPrePostingWODiscountDesc = "";
-		m_iViewPrices = "0";
+
 		
 		//This value indicates that this mech
 		LineArray = new ArrayList<SMWorkOrderDetail>(0);

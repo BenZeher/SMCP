@@ -49,31 +49,6 @@ public class SMWorkOrderSignatureAction extends HttpServlet{
 	    //First get the command value that was passed in:
 	    String sCommandValue = clsManageRequestParameters.get_Request_Parameter(SMWorkOrderSignatureEdit.COMMAND_FLAG, request);
 	    
-	    
-	    //If remove prices button is clicked
-	    if (sCommandValue.compareToIgnoreCase(SMWorkOrderSignatureEdit.REMOVE_PRICING_COMMAND_VALUE)==0) {
-    		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-				+ "smcontrolpanel.SMWorkOrderSignatureEdit"
-				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&" + SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
-				+ "&" + SMWorkOrderSignatureEdit.VIEW_PRICING_COMMAND_VALUE + "=" 
-			;
-			redirectProcess(sRedirectString, response);
-			return;
-	    }
-	    
-	    //If view prices button is clicked
-	    if (sCommandValue.compareToIgnoreCase(SMWorkOrderSignatureEdit.VIEW_PRICING_COMMAND_VALUE)==0) {
-    		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-				+ "smcontrolpanel.SMWorkOrderSignatureEdit"
-				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&" + SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
-				+ "&" + SMWorkOrderSignatureEdit.VIEW_PRICING_COMMAND_VALUE + "=" + "Y"
-			;
-			redirectProcess(sRedirectString, response);
-			return;
-	    }
-	    
     	//If it's a request to save the work order:
     	if (sCommandValue.compareToIgnoreCase(
     			SMWorkOrderSignatureEdit.SAVECOMMAND_VALUE) == 0){
@@ -115,7 +90,7 @@ public class SMWorkOrderSignatureAction extends HttpServlet{
 					SMTableworkorders.ObjectName + " was successfully saved.",
 					SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-					+ "&" + SMWorkOrderSignatureEdit.VIEW_PRICING_COMMAND_VALUE + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderSignatureEdit.VIEW_PRICING_COMMAND_VALUE, request)
+						+ "&" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.VIEW_PRICING_FLAG, request)
 				);
 			}
     	}

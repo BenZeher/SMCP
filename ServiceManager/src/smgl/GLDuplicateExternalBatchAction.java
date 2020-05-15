@@ -92,6 +92,9 @@ public class GLDuplicateExternalBatchAction extends HttpServlet{
 				return;
 		}
     	
+		//Modify the duplicated batch description:
+		duplicatedbatch.setsbatchdescription("Duplicated from company ID: " + sExternalCompanyID + ", batch number " + sExternalBatchNumber);
+    	
 		//Save the batch:
 		try {
 			duplicatedbatch.save_with_data_transaction(getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName(), false);

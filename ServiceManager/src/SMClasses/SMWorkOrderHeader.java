@@ -3672,7 +3672,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (sDiscountAmt == null){
 			sDiscountAmt = "";
 		}
-		System.out.println("[202013415108] " +sDiscountAmt );
 		if (sDiscountAmt.compareToIgnoreCase("0.0") !=0){
 			if (s.compareToIgnoreCase("") != 0){
 				s += "<BR>";

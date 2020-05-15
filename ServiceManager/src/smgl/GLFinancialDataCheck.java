@@ -894,7 +894,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			;
 		rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 		if (rs.next()) {
-			iStartingFiscalYear = rs.getInt(SMTableglfiscalsets.ifiscalyear);
+			iEndingFiscalYear = rs.getInt(SMTableglfiscalsets.ifiscalyear);
 		}else {
 			rs.close();
 			throw new Exception("Error [202005155902] - could not get any fiscal year records with SQL: '" + SQL + "'.");
@@ -902,47 +902,40 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		rs.close();
 		
 		//Get a list of GL accounts we need to check:
+		ArrayList<String>arrGLAccounts = new ArrayList<String>(0);
 		if (sGLAccount.compareToIgnoreCase("") == 0) {
 			SQL = "SELECT "
 				+ " " + SMTableglaccounts.sAcctID
 				+ " FROM " + SMTableglaccounts.TableName
 				+ " ORDER BY " + SMTableglaccounts.sAcctID
 			;
-		}else {
-			SQL = "SELECT "
-				+ " " + SMTableglaccounts.sAcctID
-				+ " FROM " + SMTableglaccounts.TableName
-				+ " WHERE ("
-					+ "(" + SMTableglaccounts.sAcctID + " = '" + sGLAccount + ")"
-				+ ")"
-				+ " ORDER BY " + SMTableglaccounts.sAcctID
-			;
-		}
-		
-		ArrayList<String>arrGLAccounts = new ArrayList<String>(0);
-		try {
-			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-			while (rs.next()) {
-				arrGLAccounts.add(rs.getString(SMTableglaccounts.sAcctID));
+			try {
+				rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+				while (rs.next()) {
+					arrGLAccounts.add(rs.getString(SMTableglaccounts.sAcctID));
+				}
+			} catch (Exception e1) {
+				throw new Exception("Error [202005151944] - could not read GL accounts with SQL: '" + SQL + "' - " + e1.getMessage());
 			}
-		} catch (Exception e1) {
-			throw new Exception("Error [202005151944] - could not read GL accounts with SQL: '" + SQL + "' - " + e1.getMessage());
+			rs.close();
+		}else {
+			arrGLAccounts.add(sGLAccount);
 		}
-		rs.close();
 		
 		//Now for every fiscal year, make sure there are fiscal sets for every GL account:
 		for (int iFiscalYear = iStartingFiscalYear; iFiscalYear <= iEndingFiscalYear; iFiscalYear++) {
 			//Add any fiscal sets that don't exist for any accounts:
-			for (int iGLCounter = 0; iGLCounter <= arrGLAccounts.size(); iGLCounter++) {
+			for (int iGLCounter = 0; iGLCounter < arrGLAccounts.size(); iGLCounter++) {
 				//INSERT ANY MISSING FISCAL SETS:
 				SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
 					+ SMTableglfiscalsets.ifiscalyear
 					+ ", " + SMTableglfiscalsets.sAcctID
 					+ ") VALUES ("
 					+ Integer.toString(iFiscalYear)
-					+ ", " + arrGLAccounts.get(iGLCounter)
+					+ ", '" + arrGLAccounts.get(iGLCounter) + "'"
 					+ ")"
-					+ " ON DUPLICATE KEY IGNORE"
+					+ " ON DUPLICATE KEY UPDATE " + SMTableglfiscalsets.ifiscalyear + " = " + SMTableglfiscalsets.ifiscalyear
+					+ ", " + SMTableglfiscalsets.sAcctID + " = " + SMTableglfiscalsets.sAcctID
 				;
 				try {
 					Statement stmt = conn.createStatement();
@@ -1009,7 +1002,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		
 		try {
-			String sResult = insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
+			/* String sResult = */ 
+				insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
 		} catch (Exception e) {
 			throw new Exception("Error [202005154425] - " + e.getMessage());
 		}
@@ -1048,11 +1042,19 @@ public class GLFinancialDataCheck extends java.lang.Object{
 //		}
 		
 		String sInsertBuffer = "";
+		int iStartingFiscalYear = 0;
+		if (sStartingFiscalYear.compareToIgnoreCase("") != 0) {
+			try {
+				iStartingFiscalYear = Integer.parseInt(sStartingFiscalYear);
+			} catch (Exception e) {
+				throw new Exception("Error [202005150107] - could not parse starting fiscal year '" + sStartingFiscalYear + "' " + e.getMessage());
+			}
+		}
 		try {
 			for (int iFiscalSetCounter = 0; iFiscalSetCounter < arrFiscalSets.size(); iFiscalSetCounter++){
 				//We only need the fiscal sets from our selected 'starting fiscal year' forward, not the historical ones we
 				//added to the array:
-				if (arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear >= Integer.parseInt(sStartingFiscalYear)){
+				if (arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear >= iStartingFiscalYear){
 					for (int iPeriodCounter = 1; iPeriodCounter < SMTableglfiscalperiods.MAX_NUMBER_OF_EDITABLE_USER_PERIODS; iPeriodCounter++){
 						if (sInsertBuffer.compareToIgnoreCase("") != 0){
 							sInsertBuffer += ",";

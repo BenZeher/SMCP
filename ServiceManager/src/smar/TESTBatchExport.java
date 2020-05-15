@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
+import smgl.GLFinancialDataCheck;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -17,18 +18,18 @@ public class TESTBatchExport extends HttpServlet{
 		java.sql.Connection conn = null;
 		
 		//Localhost settings:
-//		String sURL = "localhost"; //Google Cloud SQL = 35.243.233.33
-//		String sDBID = "servmgr1"; //servmgr1 - default
-//		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
-//		String sUser = "smuser7sT559";//"smuser7sT559";
-//		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
-		
-		//Google server settings:
-		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.233.33
-		String sDBID = "servmgrmadg"; //servmgr1 - default
+		String sURL = "localhost"; //Google Cloud SQL = 35.243.233.33
+		String sDBID = "servmgr1"; //servmgr1 - default
 		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
 		String sUser = "smuser7sT559";//"smuser7sT559";
 		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
+		
+		//Google server settings:
+//		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.233.33
+//		String sDBID = "servmgrmadg"; //servmgr1 - default
+//		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
+//		String sUser = "smuser7sT559";//"smuser7sT559";
+//		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
 		
 		
 		//OHD Tampa settings:
@@ -151,6 +152,15 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		GLFinancialDataCheck fdc = new GLFinancialDataCheck();
+		try {
+			fdc.checkMissingFiscalSets("12345073", conn, "");
+		} catch (Exception e) {
+			System.out.println("[202005151708] - " + e.getMessage());
+		}
+		System.out.println("[202005043334] - DONE");
+		
+		/*
     	GLTransactionBatch externalbatch = new GLTransactionBatch("1397");
     	try {
 			externalbatch.loadExternalCompanyBatch(conn, "1", "1397");
@@ -180,7 +190,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println("[202005043334] - DONE");
-		
+		*/
 		
 		/*
 		//TEST OEAuth2 token processing:
@@ -257,7 +267,6 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		System.out.println("DONE");
 		*/
-		
 		
 		String sRequest = "C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'";
 		sRequest = "C_DealerQuote?%24filter="

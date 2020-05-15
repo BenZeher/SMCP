@@ -279,14 +279,14 @@ public class GLAccount extends java.lang.Object{
 				
 				//Now add any missing fiscal set and financial statement data records for the new account:
 				//TODO - test this:
-				/*
+				
 				GLFinancialDataCheck fdc = new GLFinancialDataCheck();
 				try {
 					fdc.checkMissingFiscalSets(m_sacctid, conn, "");
 				} catch (Exception e) {
 					throw new Exception("Error [202005150233] - " + e.getMessage());
 				}
-				*/
+				
 			}
 		}catch(Exception e){
 			m_sErrorMessageArray.add("Error [1520285260] saving gl account with SQL '" + SQL + " - " + e.getMessage());

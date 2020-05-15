@@ -57,7 +57,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 	throws ServletException, IOException {
 
 		PrintWriter out = response.getWriter();
-	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.APAgedPayables)){
+	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.GLTrialBalance)){
 	    	return;
 	    }
 		//Get the session info:

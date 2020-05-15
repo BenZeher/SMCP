@@ -287,7 +287,9 @@ public class GLAccount extends java.lang.Object{
 			return false;
 		}
     }
-
+    public void addMissingFinancialRecordsForAccount() throws Exception{
+    	x
+    }
 	private boolean validateEntries(String sDBID, ServletContext context, String sUserFullName){
 		
 		boolean bEntriesAreValid = true;

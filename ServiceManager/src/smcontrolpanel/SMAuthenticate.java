@@ -357,7 +357,10 @@ public class SMAuthenticate{
         				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
         			)
     			){
-					out.println("<HTML>WARNING: You do not currently have access to this particular function.</BODY></HTML>");
+					out.println("<HTML>WARNING: You (user ID '" + sUserIDFromSession + "') do not currently"
+						+ " have access to this particular function (function ID: " + Long.toString(lFunctionID) + ")" 
+						+ " in database with ID '" + sDBIDFromSession + "'"
+						+ ".</BODY></HTML>");
 						return false;
     			}else{
     				return true;

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMOption;
+import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
@@ -26,6 +27,7 @@ import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDBServerTime;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import smic.ICItem;
 
@@ -39,6 +41,10 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 	public static final String EDITCOMMAND_VALUE = "EDIT";
 	public static final String SAVE_BUTTON_LABEL = "<B><FONT COLOR=RED>S</FONT></B>ave"; //S
 	public static final String SAVECOMMAND_VALUE = "SAVE";
+	public static final String VIEW_PRICING_LABEL = "<B><FONT COLOR=RED>V</FONT></B>iew prices"; //V
+	public static final String VIEW_PRICING_COMMAND_VALUE = "VIEWPRICING";
+	public static final String REMOVE_PRICING_LABEL = "<B><FONT COLOR=RED>R</FONT></B>emove prices"; //R
+	public static final String REMOVE_PRICING_COMMAND_VALUE = "HIDEPRICING";
 	public static final String CLEAR_SIGNATURE_BUTTON_LABEL = "<B><FONT COLOR=RED>C</FONT></B>lear signature"; //C
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
@@ -149,7 +155,13 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		if (sStatus.compareToIgnoreCase("") != 0){
 			smedit.getPWOut().println("<B>" + sStatus + "</B><BR>");
 		}		
-
+		boolean bViewPrices = false;
+		if(clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_COMMAND_VALUE, smedit.getRequest()).compareToIgnoreCase("Y")==0) {
+			wohead.setiViewPrices("1");
+			bViewPrices = true;
+		}else {
+			wohead.setiViewPrices("0");
+		}
 	    //Print a link to the first page after login:
 		smedit.getPWOut().println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
@@ -161,7 +173,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 				+ "<script type='text/javascript' src='scripts/PopupWindow.js'></script>\n"
 			);
 			createEditPage(
-				getEditHTML(smedit, wohead, SMTableworkorders.ObjectName),
+				getEditHTML(smedit, wohead, SMTableworkorders.ObjectName,bViewPrices),
 				SMWorkOrderHeader.FORM_NAME,
 				smedit.getPWOut(),
 				smedit
@@ -196,7 +208,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 
 	}
 	
-	private String getEditHTML(SMMasterEditEntry sm, SMWorkOrderHeader wo_entry, String sObjectName) throws Exception{
+	private String getEditHTML(SMMasterEditEntry sm, SMWorkOrderHeader wo_entry, String sObjectName, Boolean bViewPrices) throws Exception{
 		String s = "";
 		s += sCommandScripts(wo_entry, sm);
 		s += sSignatureScripts(wo_entry);
@@ -216,12 +228,20 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 				+ wo_entry.getlid() + "\">";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.Paramltimestamp + "\" VALUE=\"" 
 				+ wo_entry.getstimestamp() + "\">";
-		//Record the time the use last loaded the work order:
+		//Record the time the user last loaded the work order:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.Paramlastreadrecordtimestamp + "\" VALUE=\"" 
 			+ wo_entry.getslastreadrecordtimestamp() + "\">" + "\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.Paramstrimmedordernumber + "\" VALUE=\"" 
 				+ wo_entry.getstrimmedordernumber() + "\">";
-		
+
+		//Store whether we are in 'view pricing' mode:
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + VIEW_PRICING_COMMAND_VALUE + "\" VALUE=\"" 
+		+ clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_COMMAND_VALUE, sm.getRequest()) + "\""
+		+ " id=\"" + VIEW_PRICING_COMMAND_VALUE + "\""
+		+ "\">";
+		//Record if the Prices have been viewed
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.ParamiViewPrices + "\" VALUE=\"" 
+				+ wo_entry.getiViewPrices() + "\">";
 		//New Row
 		s += "<TR>";
 		
@@ -246,13 +266,15 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 			+ "</TD></TR>";
 
 		//Create the order commands line at the top:
-		s += "<TR><TD>" + createCommandsTable(wo_entry) + "</TD></TR>";
+		s += "<TR><TD>" + createCommandsTable(wo_entry, sm,bViewPrices) + "</TD></TR>";
 	
-		s += "<TR><TD>" + createItemsTable(sm, wo_entry) + "</TD></TR>";
+		s += "<TR><TD>" + createItemsTable(sm, wo_entry, bViewPrices) + "</TD></TR>";
 
 		//Create work performed codes table:
 		s += "<TR><TD>" + createWorkPerformedTable(sm, wo_entry, orderheader);
 
+		//TODO Insert create Totals Table
+		
 		//Create the comments area table:
 		s += "<TR><TD>" + createMechanicInfoTable(sm, wo_entry) + "</TD></TR>";
 
@@ -263,7 +285,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		s += "<TR><TD>" + createSignatureBlockTable(sm, wo_entry) + "</TD></TR>";
 
 		//Create the order commands line at the bottom:
-		s += "<TR><TD>" + createCommandsTable(wo_entry) + "</TD></TR>";
+		s += "<TR><TD>" + createCommandsTable(wo_entry,sm,bViewPrices) + "</TD></TR>";
 
 		//Close the parent table:
 		s += "</TR>";
@@ -307,7 +329,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 	}
 
 	private String createCommandsTable(
-			SMWorkOrderHeader wo_order){
+			SMWorkOrderHeader wo_order, SMMasterEditEntry sm, Boolean bViewPrices){
 		String s = "";
 		
 		//Create the table:
@@ -321,7 +343,37 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		//SAVE button:
 		//We need to be able to save no matter what:
 		s += createSaveButton();
-		
+		if (
+				(SMSystemFunctions.isFunctionPermitted(
+						SMSystemFunctions.SMViewPricingOnWorkOrders, 
+						sm.getUserID(), 
+						getServletContext(), 
+						sm.getsDBID(),
+						(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)))
+		){
+			if (SMSystemFunctions.isFunctionPermitted(
+						SMSystemFunctions.SMZeroWorkOrderItemPrices, 
+						sm.getUserID(), 
+						getServletContext(), 
+						sm.getsDBID(),
+						(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
+					){
+				//No need to show the button unless it's turned off currently:
+				if (!bViewPrices){
+					s += createViewPricesButton();
+				}else{
+					s += createRemovePricesButton();
+				}
+			}else{
+				//No need to show the button unless it's turned off currently:
+				if (!bViewPrices){
+					s += createViewPricesButton();
+				}else{
+					s += createRemovePricesButton();
+				}
+			}
+		}
+				
 		s += "</TABLE style=\" title:ENDOrderCommands; \">\n";
 		return s;
 	}
@@ -342,16 +394,37 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 				+ "</button>\n"
 				;
 	}
+	
+	private String createViewPricesButton(){
+		return "<button type=\"button\""
+				+ " value=\"" + VIEW_PRICING_LABEL + "\""
+				+ " name=\"" + VIEW_PRICING_LABEL + "\""
+				+ " onClick=\"viewpricing();\">"
+				+ VIEW_PRICING_LABEL
+				+ "</button>\n"
+				;
+	}
+	
+	private String createRemovePricesButton(){
+		return "<button type=\"button\""
+				+ " value=\"" + REMOVE_PRICING_LABEL + "\""
+				+ " name=\"" + REMOVE_PRICING_LABEL + "\""
+				+ " onClick=\"removepricing();\">"
+				+ REMOVE_PRICING_LABEL
+				+ "</button>\n"
+				;
+	}
 
 	private String createItemsTable(
 			SMMasterEditEntry sm, 
-			SMWorkOrderHeader workorder) throws Exception{
+			SMWorkOrderHeader workorder,
+			Boolean bViewPrices) throws Exception{
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:ItemsTable; background-color: "
 				+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \" >\n";
 
-		s += createItemsTableForWorkOrderSigning(sm, workorder);
+		s += createItemsTableForWorkOrderSigning(sm, workorder,bViewPrices);
 		
 		//Close the table:
 		s += "</TABLE style = \" title:ItemsTable; \">\n";
@@ -360,15 +433,17 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 	}
 	private String createItemsTableForWorkOrderSigning(
 			SMMasterEditEntry sm, 
-			SMWorkOrderHeader workorder) throws Exception{
+			SMWorkOrderHeader workorder,
+			Boolean bViewPrices) throws Exception{
 		String s = "";
-		s += displayItemsForCustomerView(workorder, sm);
+		s += displayItemsForCustomerView(workorder, sm, bViewPrices);
 		return s;
 	}
 
 	private String displayItemsForCustomerView(
 			SMWorkOrderHeader workorder,
-			SMMasterEditEntry sm
+			SMMasterEditEntry sm,
+			Boolean bViewPrices
 			) throws Exception{
 		String s = "";
 		
@@ -382,6 +457,132 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		s += "</TR>";
 		;
 
+		SMOrderHeader orderheader = new SMOrderHeader();
+		orderheader.setM_strimmedordernumber(workorder.getstrimmedordernumber());
+		if (workorder.getstrimmedordernumber().compareToIgnoreCase("") != 0){
+			if (!orderheader.load(getServletContext(), sm.getsDBID(), sm.getUserID(), sm.getFullUserName())){
+				throw new Exception("Could not load order header '" + workorder.getstrimmedordernumber()
+					+ "' - " + orderheader.getErrorMessages());
+			}
+		}
+		
+		//IF we need to show prices, we are going to load the order into a new object, to be used ONLY for calculating prices and totals:
+		SMOrderHeader dummyorder = new SMOrderHeader();
+		dummyorder.setM_strimmedordernumber(orderheader.getM_strimmedordernumber());
+		if (orderheader.getM_strimmedordernumber().compareToIgnoreCase("") != 0){
+			if (!dummyorder.load(getServletContext(), sm.getsDBID(), sm.getUserID(), sm.getsDBID())){
+				throw new Exception("Error loading order to calculate prices - " + dummyorder.getErrorMessages() + ".");
+			}
+		}
+		//First, remove all the lines on the dummy order so we can use it to recalculate only the items on the work order:
+		dummyorder.getM_arrOrderDetails().clear();
+		
+		for (int i = 0; i < workorder.getDetailCount(); i++){
+			//IF it's an item, not a work performed code:
+			if (workorder.getDetailByIndex(i).getsdetailtype().compareToIgnoreCase(
+					Integer.toString(SMTableworkorderdetails.WORK_ORDER_DETAIL_TYPE_ITEM)) == 0){
+				
+				//We need to add a dummy line to the dummy order, so we can calculate prices and totals:
+				SMOrderDetail dummydetail = new SMOrderDetail();
+				dummydetail.setM_dQtyOrdered(workorder.getDetailByIndex(i).getsbdquantity().replace(",",""));
+				dummydetail.setM_dQtyShipped(workorder.getDetailByIndex(i).getsbdquantity().replace(",",""));
+				dummydetail.setM_dUniqueOrderID(orderheader.getM_siID());
+				dummydetail.setM_strimmedordernumber(orderheader.getM_strimmedordernumber());
+				dummydetail.setM_sItemNumber(workorder.getDetailByIndex(i).getsitemnumber());
+				//IF it's a 'configured' line that already exists on the order, we need to use the UNIT PRICE
+				//from that line on the order, not necessarily the calculated price for the item:
+				int iDetailNumber = 0;
+				try {
+					iDetailNumber = Integer.parseInt(workorder.getDetailByIndex(i).getsorderdetailnumber());
+				} catch (Exception e2) {
+					throw new Exception("Error [1430769480] parsing detail number '" + workorder.getDetailByIndex(i).getsorderdetailnumber() + "' - " + e2.getMessage());
+				}
+				
+				BigDecimal bdQtyAssigned = new BigDecimal("0.0000");
+				if (workorder.getDetailByIndex(i).getsbdqtyassigned().compareToIgnoreCase("") == 0){
+					workorder.getDetailByIndex(i).setsbdqtyassigned("0.0000");
+				}
+				try {
+					bdQtyAssigned = new BigDecimal(workorder.getDetailByIndex(i).getsbdqtyassigned().replace(",", ""));
+				} catch (Exception e1) {
+					throw new Exception("Error [1430769481] parsing qty assigned '" + workorder.getDetailByIndex(i).getsbdqtyassigned() + "' - " + e1.getMessage());
+				}
+				//Get the actual order detail that corresponds to this work order detail:
+				SMOrderDetail actualorderdetail = new SMOrderDetail();
+				if (iDetailNumber > 0){
+					actualorderdetail = orderheader.getOrderDetailByDetailNumber(workorder.getDetailByIndex(i).getsorderdetailnumber());
+				}else{
+					actualorderdetail = null;
+				}
+				//Try to figure out if it's taxable from the item master:
+				String sTaxable = "1";
+				ICItem item = new ICItem(workorder.getDetailByIndex(i).getsitemnumber());
+				if (item.load(getServletContext(), sm.getsDBID())){
+					sTaxable = item.getTaxable();
+				//If we can't load the item, then check the order detail, if there is one:
+				}else{
+					if (actualorderdetail != null){
+						sTaxable = actualorderdetail.getM_iTaxable();
+					}
+				}
+				dummydetail.setM_iTaxable(sTaxable);
+				//Try to set the correct unit price here:
+				//If the order detail is a configured item, and if it corresponds to an actual order line:
+				if ((actualorderdetail != null) && (bdQtyAssigned.compareTo(BigDecimal.ZERO)) > 0){
+					try {
+						//Set the unit price to match the unit price on the order for this line:
+						dummydetail.setM_dOrderUnitPrice(actualorderdetail.getM_dOrderUnitPrice());
+						//extend the unit price times the qty:
+						orderheader.calculateExtendedPrice(dummydetail);
+					} catch (Exception e) {
+						throw new SQLException(e.getMessage() + ".");
+					}
+				}else{
+					//Don't bother with calculating an item on a work order if it has not order associated with it:
+					if (
+						(orderheader.getM_strimmedordernumber().compareToIgnoreCase("") != 0)
+						&& (orderheader.getM_strimmedordernumber() != null)
+					){
+						//Otherwise, just calculate the price for this item and this qty, disregarding the unit price on the order:
+						try {
+							dummyorder.updateLinePrice(dummydetail, sm.getsDBID(), sm.getUserName(), getServletContext());
+						} catch (Exception e) {
+							throw new Exception ("Error [1431442449] updating price for item '" + dummydetail.getM_sItemNumber() + "' - " + e.getMessage());
+						}
+					}
+				}
+				String sExtendedPrice = dummydetail.getM_dExtendedOrderPrice();
+				if(workorder.getDetailByIndex(i).getssetpricetozero().compareToIgnoreCase("1") == 0) {
+					//Set the work order detail price to 0.00 so the display price is 0.00
+					sExtendedPrice = "0.00";
+					//Set the dummy order detail to 0.00 so totals are calculated correctly on the work order
+					dummydetail.setM_dExtendedOrderPrice("0.00");
+				}
+				
+				workorder.getDetailByIndex(i).setsbdextendedprice(sExtendedPrice);
+				dummyorder.addNewDetail(dummydetail);
+			}
+		}
+		
+		BigDecimal bdShippedValue = new BigDecimal("0.00");
+		BigDecimal bdTotalExtendedLaborPrice = new BigDecimal("0.00");
+		BigDecimal bdWODiscountAmount = new BigDecimal("0.00");
+		bdWODiscountAmount= BigDecimal.valueOf(Double.valueOf(workorder.getdPrePostingWODiscountAmount()));
+		for (int i = 0; i < dummyorder.get_iOrderDetailCount(); i++){
+			bdShippedValue = bdShippedValue.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
+			boolean bIsLaborItem = false;
+			ICItem item = new ICItem(dummyorder.getOrderDetail(i).getM_sItemNumber());
+			if(!item.load(getServletContext(), sm.getsDBID())){
+				//TJR - 1/12/2015 - we are assuming that if we can't read this item, it's NOT a labor item:
+				//System.out.println(" [1421078747] Cannot find item '" + dummyorder.getOrderDetail(i).getM_sItemNumber()
+				//	+ "' to calculate material and labor totals.");
+			}else{
+				bIsLaborItem = item.getLaborItem().compareToIgnoreCase("1") == 0;
+			}
+			if (bIsLaborItem){
+				bdTotalExtendedLaborPrice = bdTotalExtendedLaborPrice.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
+			}
+		}
 		//Display each of the items on the order:
 		int iNumberOfItemLines = 0;
 		//We'll display all NON-LABOR items on the work order first:
@@ -443,7 +644,72 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 				}
 			}
 		}
+		
+		if(bViewPrices) {
+			s += "<TR><TD><B><U>PRICES:</U></B></TD>";
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Subtotal:&nbsp;&nbsp;&nbsp;</B></FONT></TD>"
+					+ "<TD align=left>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue) + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+			if(bdWODiscountAmount != BigDecimal.ZERO) {
+				s += "<TR>"
+						+ "<TD></TD>"
+						+ "<TD></TD>"
+						+ "<TD align=right><FONT SIZE=2><B>Subtotal after discount:&nbsp;&nbsp;&nbsp;</B></FONT></TD>"
+						+ "<TD align=left>"
+						+ "<FONT SIZE=2>" 
+						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdWODiscountAmount)) + "</B></FONT>"
+						+ "</TD>"
+						+ "</TR>"
+						;
+			}
+			//Set Discount to the WO discount amount, rather than the whole Order
+			dummyorder.setM_dPrePostingInvoiceDiscountAmount(workorder.getdPrePostingWODiscountAmount());
 
+			//Add a row for the tax:
+			String sTaxAmount;
+			try {
+				sTaxAmount = dummyorder.getTaxAmount(sm.getsDBID(), sm.getUserName(), getServletContext());
+			} catch (Exception e) {
+				sTaxAmount = e.getMessage();
+			}
+			if(sTaxAmount.compareToIgnoreCase("0.00")!=0) {
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Tax:&nbsp;&nbsp;&nbsp;</B></FONT></TD>"
+					+ "<TD align=left>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + sTaxAmount + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+			}
+			//Add a row for total INCLUDING tax:
+			String sTotalWithTax = "";
+			try {
+				sTotalWithTax = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdWODiscountAmount).add(new BigDecimal(sTaxAmount.replace(",", ""))));
+			} catch (Exception e) {
+				s += "Error [1390339789] calculating Total With Tax - " + e.getMessage();
+			}
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Total:&nbsp;&nbsp;&nbsp;</B></FONT></TD>"
+					+ "<TD align=left >"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + sTotalWithTax + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+
+		}
 		//Record the number of item lines in total:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.NUMBER_OF_ITEM_LINES_USED + "\" VALUE=\"" + Integer.toString(iNumberOfItemLines) + "\"" + ">";
 		return s;
@@ -943,6 +1209,22 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		s += "        'target':document\n";
 		s += "    });\n";
 		
+		s += "    shortcut.add(\"Alt+v\",function() {\n";
+		s += "        viewpricing();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+r\",function() {\n";
+		s += "        viewpricing();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
 		s += "}\n";
 		s += "\n";
 
@@ -1019,6 +1301,22 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
 					 + SAVECOMMAND_VALUE + "\";\n"
 			+ "    document.forms[\"" + SMWorkOrderHeader.FORM_NAME + "\"].submit();\n"
+			+ "}\n"
+		;
+		
+		//Turn on the ability to view pricing:
+		s += "function viewpricing(){\n"
+			+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + VIEW_PRICING_COMMAND_VALUE + "\";\n"
+			+ "        document.forms[\"" + SMWorkOrderHeader.FORM_NAME + "\"].submit();\n"
+			//+ "    }\n"
+			+ "}\n"
+		;
+		
+		//Turn on the ability to view pricing:
+		s += "function removepricing(){\n"
+			+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REMOVE_PRICING_COMMAND_VALUE + "\";\n"
+			+ "        document.forms[\"" + SMWorkOrderHeader.FORM_NAME + "\"].submit();\n"
+			//+ "    }\n"
 			+ "}\n"
 		;
 						

@@ -837,18 +837,45 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		return sMessages;
 	}
-	public void insertMissingFiscalSets(
+	public void checkMissingFiscalSets(		
+			String sGLAccount,
+			Connection conn,
+			String sStartingFiscalYear) throws Exception{
+		
+		try {
+			insertMissingFiscalSets(sGLAccount, conn, sStartingFiscalYear);
+		} catch (Exception e) {
+			throw new Exception("Error [202005154917] - " + e.getMessage());
+		}
+		
+		return;
+	}
+	private void insertMissingFiscalSets(
 		String sGLAccount,
 		Connection conn,
 		String sStartingFiscalYear
 		) throws Exception{
 
+		String SQL = "";
+		
 		//If there are any fiscal sets missing for any accounts, insert those now:
-		String SQL = "SELECT"
-			+ " " + SMTableglfiscalsets.ifiscalyear
-			+ " FROM " + SMTableglfiscalsets.TableName
-			+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear
-		;
+		if (sStartingFiscalYear.compareToIgnoreCase("") == 0) {
+			SQL = "SELECT"
+				+ " " + SMTableglfiscalsets.ifiscalyear
+				+ " FROM " + SMTableglfiscalsets.TableName
+				+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear
+			;
+		}else {
+			SQL = "SELECT"
+					+ " " + SMTableglfiscalsets.ifiscalyear
+					+ " FROM " + SMTableglfiscalsets.TableName
+					+ " WHERE ("
+						+ "(" + SMTableglfiscalsets.ifiscalyear + " >= " + sStartingFiscalYear + ")"
+					+ ")"
+					+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear
+				;
+		}
+
 		int iStartingFiscalYear = 0;
 		ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 		if (rs.next()) {
@@ -908,7 +935,21 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//Add any fiscal sets that don't exist for any accounts:
 			for (int iGLCounter = 0; iGLCounter <= arrGLAccounts.size(); iGLCounter++) {
 				//INSERT ANY MISSING FISCAL SETS:
-				SQL = 
+				SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
+					+ SMTableglfiscalsets.ifiscalyear
+					+ ", " + SMTableglfiscalsets.sAcctID
+					+ ") VALUES ("
+					+ Integer.toString(iFiscalYear)
+					+ ", " + arrGLAccounts.get(iGLCounter)
+					+ ")"
+					+ " ON DUPLICATE KEY IGNORE"
+				;
+				try {
+					Statement stmt = conn.createStatement();
+					stmt.execute(SQL);
+				} catch (Exception e) {
+					throw new Exception("Error [202005154200] - could not insert fiscal set with SQL: '" + SQL + "' - " + e.getMessage());
+				}
 			}
 		}
 		
@@ -967,9 +1008,15 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			throw new Exception("Error [202005155432] " + "in rsFiscalYears loop with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 		
+		try {
+			String sResult = insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202005154425] - " + e.getMessage());
+		}
+		
 		return;
 	}
-	private String insertMissingFinancialRecords(ArrayList<clsFiscalSet>arrFiscalSets, String sStartingFiscalYear, Connection conn) throws Exception{
+	private static String insertMissingFinancialRecords(ArrayList<clsFiscalSet>arrFiscalSets, String sStartingFiscalYear, Connection conn) throws Exception{
 		String SQL = "";
 		long lStartingNumberOfRecords = 0L;
 		long lEndingNumberOfRecords = 0L;

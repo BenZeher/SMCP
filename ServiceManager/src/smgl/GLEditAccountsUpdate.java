@@ -1,11 +1,14 @@
 package smgl;
 import java.io.IOException;
+import java.sql.Connection;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -35,7 +38,20 @@ public class GLEditAccountsUpdate extends HttpServlet{
 		GLAccount glacct = new GLAccount("");
 		glacct.loadFromHTTPRequest(request);
 
-		if(!glacct.save(getServletContext(), sDBID, sUserFullName)){
+		Connection conn = null;
+		try {
+			conn = clsDatabaseFunctions.getConnectionWithException(getServletContext(), sDBID, "MySQL", this.toString() + ", user: " + sUserFullName);
+		} catch (Exception e) {
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditAccountsEdit"
+					+ "?" + glacct.getQueryString()
+					+ "&Warning=Could not get data connection - " + ServletUtilities.clsServletUtilities.URLEncode(e.getMessage())
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			);
+			return;
+		}
+		
+		if(!glacct.save(conn)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditAccountsEdit"
 					+ "?" + glacct.getQueryString()

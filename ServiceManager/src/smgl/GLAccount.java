@@ -206,21 +206,16 @@ public class GLAccount extends java.lang.Object{
     		}
         	return true;
         }
-    public boolean save(ServletContext context, String sDBIB, String sUserFullName){
+    public boolean save(Connection conn){
     	String SQL = MySQLs.Get_GL_Account_SQL(m_sacctid);
     	
 		m_sErrorMessageArray.clear();
-		if(!validateEntries(sDBIB, context, sUserFullName)){
+		if(!validateEntries(conn)){
 			return false;
 		}
     	
     	try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(
-					SQL, 
-					context,
-					sDBIB,
-					"MySQL",
-					this.toString() + ".save");
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(rs.next()){
 				//If it's supposed to be a new record, then return an error:
 				if(m_iNewRecord.compareToIgnoreCase("1") == 0){
@@ -244,7 +239,7 @@ public class GLAccount extends java.lang.Object{
 						m_sbdannualbudget,
 						m_inormalbalancetype
 						);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE SQL: '" + SQL + "'.");
 					return false;
 				}else{
@@ -260,6 +255,7 @@ public class GLAccount extends java.lang.Object{
 					return false;
 				}
 				rs.close();
+				
 				//Insert the record:
 				SQL = MySQLs.Insert_GL_Account_SQL(
 						clsDatabaseFunctions.FormatSQLStatement(m_sacctid), 
@@ -274,23 +270,33 @@ public class GLAccount extends java.lang.Object{
 						m_sbdannualbudget,
 						m_inormalbalancetype
 						);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 					m_sErrorMessageArray.add("Cannot execute INSERT SQL '" + SQL + "'.");
 					return false;
 				}else{
 					m_iNewRecord = "0";
-					return true;
 				}
+				
+				//Now add any missing fiscal set and financial statement data records for the new account:
+				//TODO - test this:
+				/*
+				GLFinancialDataCheck fdc = new GLFinancialDataCheck();
+				try {
+					fdc.checkMissingFiscalSets(m_sacctid, conn, "");
+				} catch (Exception e) {
+					throw new Exception("Error [202005150233] - " + e.getMessage());
+				}
+				*/
 			}
-		}catch(SQLException e){
+		}catch(Exception e){
 			m_sErrorMessageArray.add("Error [1520285260] saving gl account with SQL '" + SQL + " - " + e.getMessage());
 			return false;
 		}
+    	
+    	return true;
     }
-    public void addMissingFinancialRecordsForAccount() throws Exception{
-    	x
-    }
-	private boolean validateEntries(String sDBID, ServletContext context, String sUserFullName){
+
+	private boolean validateEntries(Connection conn){
 		
 		boolean bEntriesAreValid = true;
 		m_sErrorMessageArray.clear();
@@ -326,7 +332,7 @@ public class GLAccount extends java.lang.Object{
     	}
     	
     	try {
-			validate_account_structure(sDBID, context, sUserFullName);
+			validate_account_structure(conn);
 		} catch (Exception e) {
 			m_sErrorMessageArray.add(e.getMessage());
 			bEntriesAreValid = false;
@@ -339,13 +345,7 @@ public class GLAccount extends java.lang.Object{
     	String SQL;
 		try {
 			SQL = "SELECT COUNT(*) FROM " + SMTableglaccountgroups.TableName;
-			ResultSet rsCount = clsDatabaseFunctions.openResultSet(
-				SQL, 
-				context, 
-				sDBID, 
-				"MySQL", 
-				clsServletUtilities.getFullClassName(this.toString()) + ".validate_entries - user: " + sUserFullName)
-			;
+			ResultSet rsCount = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rsCount.next()){
 				if (rsCount.getLong(1) != 0L){
 					bAccountGroupRecordsExist = true;
@@ -389,13 +389,7 @@ public class GLAccount extends java.lang.Object{
 	    		+ ")"
 	    	;
 	    	try {
-				ResultSet rsAccountGroups = clsDatabaseFunctions.openResultSet(
-					SQL, 
-					context, 
-					sDBID, 
-					"MySQL", 
-					clsServletUtilities.getFullClassName(this.toString()) + ".validate_entries - user: " + sUserFullName)
-				;
+				ResultSet rsAccountGroups = clsDatabaseFunctions.openResultSet(SQL, conn);
 				if (!rsAccountGroups.next()){
 					m_sErrorMessageArray.add("The account group is invalid.");
 				}
@@ -408,17 +402,14 @@ public class GLAccount extends java.lang.Object{
     	return bEntriesAreValid;
 	}
 	
-	private void validate_account_structure(String sDBID, ServletContext context, String sUserFullName) throws Exception{
+	private void validate_account_structure(Connection conn) throws Exception{
 		
 		//If there ARE no account structures yet, then we don't try to validate them:
 		String SQL = "SELECT COUNT(*) FROM " + SMTableglaccountstructures.TableName;
 		try {
 			ResultSet rsStructureCount = clsDatabaseFunctions.openResultSet(
 				SQL, 
-				context, 
-				sDBID, 
-				"MySQL", 
-				clsServletUtilities.getFullClassName(this.toString()) + ".validate_account_structure - user: " + sUserFullName
+				conn
 			);
 			if (rsStructureCount.next()){
 				if (rsStructureCount.getLong(1) == 0){
@@ -439,7 +430,7 @@ public class GLAccount extends java.lang.Object{
     	GLAccountStructure struct = new GLAccountStructure();
     	struct.setlid(m_laccountstructureid);
     	try {
-			struct.load(sDBID, context, sUserFullName);
+			struct.load(conn);
 		} catch (Exception e) {
 			throw new Exception("Error [1527865061] - could not load GL account structure with ID '" + m_laccountstructureid + "' - " + e.getMessage());
 		}
@@ -587,11 +578,7 @@ public class GLAccount extends java.lang.Object{
     			+ ")"
     		;
     		ResultSet rs = clsDatabaseFunctions.openResultSet(
-    			SQL, 
-    			context, 
-    			sDBID, 
-    			"MySQL", 
-    			clsServletUtilities.getFullClassName(this.toString()) + ".validate_account_structure - user: " + sUserFullName);
+    			SQL, conn);
     		boolean bNoMatchingSegmentFound = true;
     		int iRecordCounter = 0;
     		while (rs.next()){

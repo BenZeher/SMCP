@@ -38,7 +38,7 @@ public class GLFiscalYear extends java.lang.Object{
 	public String m_silastediteddatetime;
 	public String m_slasteditedbyfullusername;
 	public String m_sinumberofperiods;
-	public String m_silockclosing;
+	public String m_sipreventclosingprocess;
 	public String m_siclosed;
 	public String m_silockclosingperiod;
 	public String m_sdatbeginningdateperiod1;
@@ -90,7 +90,7 @@ public class GLFiscalYear extends java.lang.Object{
 		m_slasteditedbyfullusername = "";
 		m_silastediteddatetime = clsServletUtilities.EMPTY_DATETIME_VALUE;
 		m_sinumberofperiods = "0";
-		m_silockclosing = "1";
+		m_sipreventclosingprocess = "1";
 		m_siclosed = "0";
 		m_silockclosingperiod = "1";
 		m_sdatbeginningdateperiod1 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
@@ -142,10 +142,10 @@ public class GLFiscalYear extends java.lang.Object{
 		m_silastediteddatetime = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datlastediteddateandtime, req).trim();
 		m_sinumberofperiods = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.inumberofperiods, req).trim();
 		
-		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.ilockclosing, req).compareToIgnoreCase("") == 0){
-			m_silockclosing = "0";
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.ipreventclosingprocess, req).compareToIgnoreCase("") == 0){
+			m_sipreventclosingprocess = "0";
 		}else{
-			m_silockclosing = "1";
+			m_sipreventclosingprocess = "1";
 		}
 		
 		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.ilockclosingperiod, req).compareToIgnoreCase("") == 0){
@@ -292,7 +292,7 @@ public class GLFiscalYear extends java.lang.Object{
 				m_silastediteddatetime  = clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
 					rs.getString(SMTableglfiscalperiods.datlastediteddateandtime), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE);
 				m_sinumberofperiods = Integer.toString(rs.getInt(SMTableglfiscalperiods.inumberofperiods));
-				m_silockclosing = Integer.toString(rs.getInt(SMTableglfiscalperiods.ilockclosing));
+				m_sipreventclosingprocess = Integer.toString(rs.getInt(SMTableglfiscalperiods.ipreventclosingprocess));
 				m_siclosed = Integer.toString(rs.getInt(SMTableglfiscalperiods.iclosed));
 				m_silockclosingperiod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ilockclosingperiod));
 				m_sdatbeginningdateperiod1 = clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -437,7 +437,7 @@ public class GLFiscalYear extends java.lang.Object{
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod11
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod12
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod13
-				+ ", " + SMTableglfiscalperiods.ilockclosing
+				+ ", " + SMTableglfiscalperiods.ipreventclosingprocess
 				+ ", " + SMTableglfiscalperiods.iclosed
 				+ ", " + SMTableglfiscalperiods.ilockclosingperiod
 				+ ", " + SMTableglfiscalperiods.ifiscalyear
@@ -617,7 +617,7 @@ public class GLFiscalYear extends java.lang.Object{
 					clsServletUtilities.EMPTY_SQL_DATE_VALUE
 				) + "'"
 
-			+ ", " + get_silockclosing()
+			+ ", " + get_sipreventclosingprocess()
 			+ ", " + get_siclosed()
 			+ ", " + get_silockclosingperiod()
 			+ ", " + get_sifiscalyear()
@@ -830,7 +830,7 @@ public class GLFiscalYear extends java.lang.Object{
 						clsServletUtilities.DATE_FORMAT_FOR_SQL, 
 						clsServletUtilities.EMPTY_SQL_DATE_VALUE
 					) + "'"				
-				+ ", " + SMTableglfiscalperiods.ilockclosing + " = " + get_silockclosing()
+				+ ", " + SMTableglfiscalperiods.ipreventclosingprocess + " = " + get_sipreventclosingprocess()
 				+ ", " + SMTableglfiscalperiods.iclosed + " = " + get_siclosed()
 				+ ", " + SMTableglfiscalperiods.ilockclosingperiod + " = " + get_silockclosingperiod()
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid + " = " + get_slasteditedbyuserid()	
@@ -1199,7 +1199,7 @@ public class GLFiscalYear extends java.lang.Object{
 		}   
     	
        	try {
-			set_silockclosing(clsValidateFormFields.validateIntegerField(get_silockclosing(), "Lock closing", 0, 1));
+			set_sipreventclosingprocess(clsValidateFormFields.validateIntegerField(get_sipreventclosingprocess(), "Prevent closing process", 0, 1));
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}
@@ -2025,6 +2025,8 @@ public class GLFiscalYear extends java.lang.Object{
 			throw new Exception("Error [2019193817296] " + "Could not load fiscal year " + sFiscalYear + " - " + e.getMessage() + ".");
 		}
 		
+		//System.out.println("[202005180421] - sFiscalYear = " + sFiscalYear + ", period = " + Integer.toString(iPeriod) + ".");
+		
 		switch (iPeriod){
 		case 1:
 			sPeriodIsLocked = get_siperiod1locked();
@@ -2067,6 +2069,7 @@ public class GLFiscalYear extends java.lang.Object{
 			break;
 		case 15:
 			sPeriodIsLocked = get_silockclosingperiod();
+			//System.out.println("[202005180503] - period 15 - get_silockclosingperiod() = '" + get_silockclosingperiod() + "'.");
 			break;
 		default:
 			throw new Exception("Error [2019190160302] " + "period '" + Integer.toString(iPeriod) + "' is not valid.");
@@ -2261,8 +2264,8 @@ public class GLFiscalYear extends java.lang.Object{
 	public void set_sinumberofperiods(String sNumberOfPeriods) {
 		m_sinumberofperiods = sNumberOfPeriods;
 	}
-	public void set_silockclosing(String sLockClosing) {
-		m_silockclosing = sLockClosing;
+	public void set_sipreventclosingprocess(String sPreventClosingProcess) {
+		m_sipreventclosingprocess = sPreventClosingProcess;
 	}
 	public void set_siclosed(String sClosed) {
 		m_siclosed = sClosed;
@@ -2403,8 +2406,8 @@ public class GLFiscalYear extends java.lang.Object{
 	public String get_sinumberofperiods() {
 		return m_sinumberofperiods;
 	}
-	public String get_silockclosing() {
-		return m_silockclosing;
+	public String get_sipreventclosingprocess() {
+		return m_sipreventclosingprocess;
 	}
 	public String get_siclosed() {
 		return m_siclosed;

@@ -387,7 +387,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 	        	//Fiscal year - period:
 	        	pwOut.println("    <TD>");
 	        	String sFiscalPeriod = entry.getsfiscalperiod();
-	        	if (sFiscalPeriod.compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) == 0){
+	        	if (sFiscalPeriod.compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD)) == 0){
 	        		sFiscalPeriod = "CLOSING";
 	        	}
 	        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(entry.getsfiscalyear() + " - " + sFiscalPeriod));

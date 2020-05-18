@@ -658,7 +658,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 						sControlHTML += "<OPTION";
 						try {
 							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
-								if (Integer.parseInt(entry.getsfiscalperiod()) == SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == SMTableglfiscalsets.CLOSING_PERIOD){
 									sControlHTML += " selected=YES ";	
 								}
 							}
@@ -667,7 +667,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 							//stop anything, just go on:
 						}
 						sControlHTML += " VALUE=\"" 
-							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD) 
 							+ "\">" 
 							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + "CLOSING PERIOD" 
 							+ "</OPTION>\n"
@@ -683,7 +683,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			sControlHTML += "    </TD>\n";
 		}else{
-			if((entry.getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) ==0)) {
+			if((entry.getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD)) ==0)) {
 				sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_FISCAL_YEAR_AND_PERIOD + "\""
 			    		+ " VALUE=\"" + entry.getsfiscalyear() + FISCAL_YEAR_AND_PERIOD_DELIMITER + entry.getsfiscalperiod() + "\""
 			    		+ ">"

@@ -360,10 +360,10 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 
         //Lock closing
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
-	    	SMTableglfiscalperiods.ilockclosing, 
-			Integer.parseInt(entry.get_silockclosing()), 
-			"Lock closing?", 
-			"<I>When this is checked, you cannot close the fiscal year.</I>"
+	    	SMTableglfiscalperiods.ipreventclosingprocess, 
+			Integer.parseInt(entry.get_sipreventclosingprocess()), 
+			"Prevent processing year-end close?", 
+			"<I>When this is checked, you cannot run the fiscal year closing.</I>"
 			)
 		;
 
@@ -382,7 +382,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	SMTableglfiscalperiods.ilockclosingperiod, 
 			Integer.parseInt(entry.get_silockclosingperiod()), 
-			"Lock adjustments to year end closing?", 
+			"Lock closing period?", 
 			"<I>When this is checked, you can not post adjustments to the closing period (normally for <B>RETAINED EARNINGS</B>).</I>"
 			)
 		;

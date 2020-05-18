@@ -2,13 +2,17 @@ package smgl;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTablegltransactionbatches;
+import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -93,7 +97,43 @@ public class GLDuplicateExternalBatchAction extends HttpServlet{
 		}
     	
 		//Modify the duplicated batch description:
-		duplicatedbatch.setsbatchdescription("Duplicated from company ID: " + sExternalCompanyID + ", batch number " + sExternalBatchNumber);
+    	String sCompanyName = "";
+    	String SQL = "SELECT * FROM " + SMTableglexternalcompanies.TableName
+    		+ " WHERE ("
+    			+ "(" + SMTableglexternalcompanies.lid + " = " + sExternalCompanyID + ")"
+    		+ ")"
+    	;
+    	try {
+			ResultSet rsCompany = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsCompany.next()) {
+				sCompanyName = rsCompany.getString(SMTableglexternalcompanies.scompanyname);
+			}
+			rsCompany.close();
+		} catch (SQLException e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1589483334]");
+			smaction.getCurrentSession().setAttribute(GLDuplicateExternalBatchSelect.SESSION_WARNING_OBJECT,
+				"Error [1589813447] reading company name with SQL: '" + SQL + "'  - " + e1.getMessage()
+			);
+			smaction.redirectAction(
+					"", 
+					"", 
+		    		""
+				);
+				return;
+		}
+    	
+    	//Truncate the company name if needed:
+    	String sDescString = "Duplicated from: COMPANYNAME, batch  " + sExternalBatchNumber;
+    	int iDescriptionStringLength = sDescString.length() - "COMPANYNAME".length();
+    	int iCharsAvailableForCompanyName = SMTablegltransactionbatches.sBatchDescriptionLength - iDescriptionStringLength;
+    	//Replace the description string with the longest allowable truncated version of the company name:
+    	if (sCompanyName.length() > iCharsAvailableForCompanyName) {
+    		sDescString = sDescString.replace("COMPANYNAME", sCompanyName.substring(0, iCharsAvailableForCompanyName - 1));
+    	}else {
+    		sDescString = sDescString.replace("COMPANYNAME", sCompanyName);
+    	}
+    	
+		duplicatedbatch.setsbatchdescription(sDescString);
     	
 		//Save the batch:
 		try {

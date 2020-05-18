@@ -117,7 +117,7 @@ public class GLCloseFiscalYearAction extends HttpServlet{
     	glentry.setsdatentrydate(sBatchDate);
     	glentry.setsentrydescription("Closing Entry");
     	glentry.setsentrynumber("1");
-    	glentry.setsfiscalperiod(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS));
+    	glentry.setsfiscalperiod(Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD));
     	glentry.setsfiscalyear(sFiscalYear);
     	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL));
     	//Flag this as a 'closing entry':

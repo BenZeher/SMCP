@@ -2,7 +2,7 @@ package SMDataDefinition;
 
 public class SMTableglfiscalsets {
 	public static String TableName = "glfiscalsets";
-	public static int TOTAL_NUMBER_OF_GL_PERIODS = 15;
+	public static int CLOSING_PERIOD = 15;
 	
 	//Field names:
 	public static String sAcctID = "sacctid";

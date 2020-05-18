@@ -334,7 +334,7 @@ public class GLTransactionBatch {
 		//If there are ANY entries for period 15, we have to make sure that the following fiscal year is built, so that 
 		//we can update opening balances:
 		for (int i = 0; i < m_arrBatchEntries.size(); i++){
-			if (m_arrBatchEntries.get(i).getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) == 0){
+			if (m_arrBatchEntries.get(i).getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD)) == 0){
 				//Then we need to make sure there's a subsequent fiscal year built:
 				GLFiscalYear fyr = new GLFiscalYear();
 				int iFiscalYear = Integer.parseInt(m_arrBatchEntries.get(i).getsfiscalyear());
@@ -546,8 +546,8 @@ public class GLTransactionBatch {
 		//targetbatch.setslasteditdate(""); - this will be set when we save
 		
 		for(int iEntry = 0; iEntry < getBatchEntryArray().size(); iEntry++){
-			System.out.println("[202005155148] - fiscal period: " + getBatchEntryArray().get(iEntry).getsfiscalperiod());
-			System.out.println("[202005155149] - fiscal year: " + getBatchEntryArray().get(iEntry).getsfiscalyear());
+			//System.out.println("[202005155148] - fiscal period: " + getBatchEntryArray().get(iEntry).getsfiscalperiod());
+			//System.out.println("[202005155149] - fiscal year: " + getBatchEntryArray().get(iEntry).getsfiscalyear());
 			targetbatch.addBatchEntry(getBatchEntryArray().get(iEntry));
 		}
 		
@@ -579,6 +579,61 @@ public class GLTransactionBatch {
 				);
 			} catch (Exception e) {
 				throw new Exception("Error [202005141911] - copying from external company batch - " + e.getMessage());
+			}
+			
+			//Check to make sure that all the entry periods are unlocked:
+			
+			//First, get a list of all the unique fiscal years/periods:
+			ArrayList<String>arrFiscalYearsInBatch = new ArrayList<String>(0);
+			ArrayList<String>arrFiscalPeriodsInBatch = new ArrayList<String>(0);
+			for (int i = 0; i < getBatchEntryArray().size(); i++) {
+				boolean bPeriodIsAlreadyListed = false;
+				for (int j = 0; j < arrFiscalPeriodsInBatch.size(); j++) {
+					if (
+						(arrFiscalYearsInBatch.get(j).compareToIgnoreCase(getBatchEntryArray().get(i).getsfiscalyear()) == 0)
+						&& (arrFiscalPeriodsInBatch.get(j).compareToIgnoreCase(getBatchEntryArray().get(i).getsfiscalperiod()) == 0)
+							
+					) {
+						bPeriodIsAlreadyListed = true;
+					}
+				}
+				if (!bPeriodIsAlreadyListed) {
+					arrFiscalYearsInBatch.add(getBatchEntryArray().get(i).getsfiscalyear());
+					arrFiscalPeriodsInBatch.add(getBatchEntryArray().get(i).getsfiscalperiod());
+				}
+			}
+			
+			//Now check each of those periods to see if it's unlocked:
+			String sResultsString = "";
+			for(int i = 0; i < arrFiscalPeriodsInBatch.size(); i++) {
+				GLFiscalYear fy = new GLFiscalYear();
+				int iFiscalPeriod;
+				try {
+					iFiscalPeriod = Integer.parseInt(arrFiscalPeriodsInBatch.get(i));
+				} catch (Exception e) {
+					throw new Exception("Error [202005184619] - could not parse fiscal period '" + arrFiscalPeriodsInBatch.get(i) + " - " + e.getMessage());
+				}
+				
+				try {
+					if(fy.isPeriodLocked(arrFiscalYearsInBatch.get(i), iFiscalPeriod, conn)) {
+						String sFiscalPeriod = arrFiscalPeriodsInBatch.get(i);
+						if (iFiscalPeriod == SMTableglfiscalsets.CLOSING_PERIOD) {
+							sFiscalPeriod = "CLOSING period";
+						}else {
+							sFiscalPeriod = "period " + sFiscalPeriod;
+						}
+						sResultsString += "Fiscal year " 
+							+ arrFiscalYearsInBatch.get(i) 
+							+ ", period "  
+							+ sFiscalPeriod 
+							+ " must be unlocked.  ";
+					}
+				} catch (Exception e) {
+					throw new Exception("Error [202005184709] - " + e.getMessage());
+				}
+			}
+			if (sResultsString.compareToIgnoreCase("") != 0) {
+				throw new Exception("Error [202005183848] - " + sResultsString);
 			}
 			
 			return duplicatedbatch;
@@ -985,7 +1040,7 @@ public class GLTransactionBatch {
     		String SQL = "UPDATE"
     			+ " " + SMTableglfiscalperiods.TableName
     			+ " SET " + SMTableglfiscalperiods.iclosed + " = 1"
-    			+ ", " + SMTableglfiscalperiods.ilockclosing + " = 1"
+    			+ ", " + SMTableglfiscalperiods.ipreventclosingprocess + " = 1"
     			+ ", " + SMTableglfiscalperiods.ilockclosingperiod + " = 1"
     			+ ", " + SMTableglfiscalperiods.iperiod1locked + " = 1"
     			+ ", " + SMTableglfiscalperiods.iperiod2locked + " = 1"
@@ -1193,7 +1248,7 @@ public class GLTransactionBatch {
 	    	//Testing this:
 	    	SQL = "SELECT"
 	    		+ " IF(TRANSACTIONQUERY.NETPERIODCHANGE IS NOT NULL, TRANSACTIONQUERY.NETPERIODCHANGE, 0.00) AS 'NETPERIODCHANGEFORACCOUNT'"
-				+ ", " + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) + " AS 'FISCALPERIOD'"
+				+ ", " + Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD) + " AS 'FISCALPERIOD'"
 				+ ", " + Integer.toString(iClosingFiscalYear) + " AS 'FISCALYEAR'"
 				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + " AS 'GLACCT'"
 	    		+ " FROM " + SMTableglaccounts.TableName
@@ -1207,7 +1262,7 @@ public class GLTransactionBatch {
  					+ "(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear 
  						+ " = " + Integer.toString(iClosingFiscalYear) + ")"
  					+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod 
- 						+ " = " + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) + ")"
+ 						+ " = " + Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD) + ")"
 				+ ")"		
  				+ " GROUP BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				+ ") AS TRANSACTIONQUERY"

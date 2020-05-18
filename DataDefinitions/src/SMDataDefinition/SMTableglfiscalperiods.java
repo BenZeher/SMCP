@@ -11,9 +11,12 @@ public class SMTableglfiscalperiods {
 	public static String slasteditedbyfullusername = "slasteditedbyfullusername";
 	public static String datlastediteddateandtime = "datlastediteddateandtime";
 	public static String inumberofperiods = "inumberofperiods";
-	public static String ilockclosing = "ilockclosing";
+	
+	//This will prevent the user from doing a closing:
+	public static String ipreventclosingprocess = "ilockclosing";
 	public static String iclosed = "iclosed";
-	//public static String ilockadjustmentperiod = "ilockadjustmentperiod";
+
+	//This simply indicates whether the closing period (15) is locked or not:
 	public static String ilockclosingperiod = "ilockclosingperiod";
 	
 	public static String datbeginningdateperiod1 = "datbeginningdateperiod1";

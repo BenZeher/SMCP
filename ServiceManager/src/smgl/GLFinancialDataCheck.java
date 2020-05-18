@@ -1072,7 +1072,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 						sInsertBuffer += ",";
 					}
 					sInsertBuffer += "(" 
-							+ Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)
+							+ Integer.toString(SMTableglfiscalsets.CLOSING_PERIOD)
 							+ ", " + Integer.toString(arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear)
 							+ ", '" + arrFiscalSets.get(iFiscalSetCounter).m_sAcctID + "'"
 							+ ")"

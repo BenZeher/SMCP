@@ -18,6 +18,7 @@ import SMDataDefinition.SMTableglaccountsegments;
 import SMDataDefinition.SMTableglacctsegmentvalues;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTableglfinancialstatementdata;
+import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
@@ -103,6 +104,8 @@ public class GLTransactionListingSelect extends HttpServlet {
 			+ " CONCAT(CAST(" + SMTableglfinancialstatementdata.ifiscalyear + " AS CHAR), '" 
 				+ PARAM_VALUE_DELIMITER 
 				+ "', CAST(" + SMTableglfinancialstatementdata.ifiscalperiod + " AS CHAR)) AS FISCALSELECTION"
+			+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+			+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
 			+ " FROM " + SMTableglfinancialstatementdata.TableName
 			+ " ORDER BY " + SMTableglfinancialstatementdata.ifiscalyear + " DESC, " + SMTableglfinancialstatementdata.ifiscalperiod + " DESC"
 		;
@@ -116,9 +119,16 @@ public class GLTransactionListingSelect extends HttpServlet {
 				+ " - "
 				+ sUserFullName
 			);
+			
 			while(rsFiscalSelections.next()){
 				alValues.add(rsFiscalSelections.getString("FISCALSELECTION"));
-				alOptions.add(rsFiscalSelections.getString("FISCALSELECTION"));
+				if (rsFiscalSelections.getInt(SMTableglfinancialstatementdata.ifiscalperiod) == SMTableglfiscalsets.CLOSING_PERIOD) {
+					alOptions.add(Integer.toString(rsFiscalSelections.getInt(SMTableglfinancialstatementdata.ifiscalyear)) 
+						+ PARAM_VALUE_DELIMITER
+						+ "CLOSING PERIOD");
+				}else {
+					alOptions.add(rsFiscalSelections.getString("FISCALSELECTION"));
+				}
 			}
 			rsFiscalSelections.close();
 		} catch (Exception e1) {

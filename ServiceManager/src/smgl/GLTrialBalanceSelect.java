@@ -18,6 +18,7 @@ import SMDataDefinition.SMTableglaccountsegments;
 import SMDataDefinition.SMTableglacctsegmentvalues;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
+import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -138,6 +139,8 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			+ " CONCAT(CAST(" + SMTableglfinancialstatementdata.ifiscalyear + " AS CHAR), '" 
 				+ PARAM_VALUE_DELIMITER 
 				+ "', CAST(" + SMTableglfinancialstatementdata.ifiscalperiod + " AS CHAR)) AS FISCALSELECTION"
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
 			+ " FROM " + SMTableglfinancialstatementdata.TableName
 			+ " ORDER BY " + SMTableglfinancialstatementdata.ifiscalyear + " DESC, " + SMTableglfinancialstatementdata.ifiscalperiod + " DESC"
 		;
@@ -153,7 +156,13 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			);
 			while(rsFiscalSelections.next()){
 				alValues.add(rsFiscalSelections.getString("FISCALSELECTION"));
-				alOptions.add(rsFiscalSelections.getString("FISCALSELECTION"));
+				if (rsFiscalSelections.getInt(SMTableglfinancialstatementdata.ifiscalperiod) == SMTableglfiscalsets.CLOSING_PERIOD) {
+					alOptions.add(Integer.toString(rsFiscalSelections.getInt(SMTableglfinancialstatementdata.ifiscalyear)) 
+						+ PARAM_VALUE_DELIMITER
+						+ "CLOSING PERIOD");
+				}else {
+					alOptions.add(rsFiscalSelections.getString("FISCALSELECTION"));
+				}
 			}
 			rsFiscalSelections.close();
 		} catch (Exception e1) {

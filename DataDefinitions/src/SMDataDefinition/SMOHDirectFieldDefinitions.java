@@ -2,6 +2,28 @@ package SMDataDefinition;
 
 public class SMOHDirectFieldDefinitions {
 
+	//SAMPLE REQUESTS:
+	/*
+	REQUEST QUOTES LAST MODIFIED LATER THAN 1/9/2020:
+	https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'
+	
+	REQUEST A SINGLE QUOTE BY QUOTE NUMBER STRING:
+	https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=C_QuoteNumberString%20eq%20'SQAL000008-1'
+	
+	REQUEST ALL QUOTES WITH 'PO64107' IN THE Name field:
+	https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuote?%24filter=substringof('PO64107'%2C%20C_C_Name)%20eq%20true
+	
+	REQUEST ALL THE LINES ON A SINGLE QUOTE:
+	https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuoteLine?%24filter=C_Quote%20eq%20'00bac513-b658-ea11-82fa-d2da283a32ca'
+	
+	REQUEST ALL THE QUOTE LINE DETAILS FOR A QUOTE LINE:
+	https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuoteLineDetail?%24filter=Id%20eq%20'ea51bac1-b858-ea11-82f9-98456f859bd9'	
+	
+	Useful link for syntax information: https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#_45_filter_system_query_option_filter_13
+	
+	
+	*/
+	
 	//'Endpoints':
 	public static final String ENDPOINT_QUOTE = "C_DealerQuote";
 	public static final String ENDPOINT_QUOTELINE = "C_DealerQuoteLine";

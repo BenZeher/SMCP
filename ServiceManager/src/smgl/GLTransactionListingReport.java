@@ -1040,7 +1040,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				+ "</TD>\n"
 					
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-				+  Integer.toString(iFiscalYear) + " - " + Integer.toString(iFiscalPeriod)
+				+  Integer.toString(iFiscalYear) + " - " + Integer.toString(iFiscalPeriod).replace("15", "CLOSING PERIOD")
 				+ "</TD>\n"
 				
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
@@ -1100,7 +1100,10 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
 			
 			s += "    <TD COLSPAN = 8 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-				+  "<B>Account " + sAccount + " - " + sAccountDesc + " - Net Change and Ending Balance For Fiscal Year " + Integer.toString(iFiscalYear) + ", Period " + Integer.toString(iFiscalPeriod) + ":</B>"
+				+  "<B>Account " + sAccount + " - " 
+					+ sAccountDesc + " - Net Change and Ending Balance For Fiscal Year " 
+				+ Integer.toString(iFiscalYear) + ", Period " 
+				+ Integer.toString(iFiscalPeriod).replace("15", "CLOSING PERIOD") + ":</B>"
 				+ "</TD>\n"
 								
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"

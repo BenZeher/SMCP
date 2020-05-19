@@ -179,7 +179,7 @@ public class GLTransactionListingAction extends HttpServlet {
 				+ "FROM period:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sStartingFiscalPeriod + "</B>"
+				+ "<B>" + sStartingFiscalPeriod.replace(" - 15", " - CLOSING PERIOD") + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n";
 			}
@@ -190,7 +190,7 @@ public class GLTransactionListingAction extends HttpServlet {
 			+ "FROM period:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sStartingFiscalPeriod + "</B>"
+			+ "<B>" + sStartingFiscalPeriod.replace(" - 15", " - CLOSING PERIOD") + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
@@ -200,7 +200,7 @@ public class GLTransactionListingAction extends HttpServlet {
 			+ "TO period:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sEndingFiscalPeriod + "</B>"
+			+ "<B>" + sEndingFiscalPeriod.replace(" - 15", " - CLOSING PERIOD") + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;

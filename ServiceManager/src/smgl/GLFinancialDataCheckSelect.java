@@ -29,6 +29,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	public static String PARAM_GL_ACCOUNTS = "GLACCOUNTS";
 	public static String PARAM_UPDATE_FINANCIAL_DATA = "UPDATEFINANCIALRECORDS";
 	public static String PARAM_UPDATE_FISCALSET_DATA = "UPDATEFISCALSETRECORDS";
+	public static String PARAM_INSERTMISSINGFISCALANDFINANCIAL_DATA = "INSERTMISSINGFISCALSETRECORDS";
 	public static String PARAM_CHECK_AGAINST_ACCPAC = "CHECKAGAINSTACCPAC";
 	public static String GL_SELECT_ALL_VALUE = "";
 	public static String GL_SELECT_ALL_LABEL = "** Check ALL GL Accounts **";
@@ -241,6 +242,17 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		//Provide options to UPDATE the GL data:
 		out.println("<BR><BR><I>To actually correct and UPDATE the data, choose one of the following:</I>" + "\n");
 		out.println("<TABLE BORDER = 1>" + "\n");
+		
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>"
+			+ "<LABEL>"
+			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
+			+ "\" VALUE='" + PARAM_INSERTMISSINGFISCALANDFINANCIAL_DATA + "'>"
+			+ "&nbsp;" + "Insert any missing fiscal sets and financial statement data with default (zero) values"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		);
+		out.println("  </TR>" + "\n");
 		
 		out.println("  <TR>" + "\n");
 		out.println("    <TD>"

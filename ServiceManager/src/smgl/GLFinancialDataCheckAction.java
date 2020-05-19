@@ -308,6 +308,22 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 			}
     	}
     	
+    	//If the user chose to INSERT any missing the fiscal/financial records:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.PARAM_INSERTMISSINGFISCALANDFINANCIAL_DATA) == 0){
+        	try {
+        		sResults = dc.checkMissingFiscalSets(sGLAccount, conn, sStartingFiscalYear);
+    		} catch (Exception e) {
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571427318]");
+    			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
+    			smaction.redirectAction(
+    					"", 
+    					"", 
+    		    		""
+    				);
+    				return;
+    		}	
+    	}
+    	
     	//If the user chose to UPDATE the fiscal sets from the transaction lines:
     	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.PARAM_UPDATE_FISCALSET_DATA) == 0){
         	try {

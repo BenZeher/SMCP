@@ -94,7 +94,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		//If we are UPDATING records as well as checking, then first make sure we have financial statement records that correspond to ALL the
 		//fiscal sets:
 		if (bUpdateRecords){
-			sStatusMessages += insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
+			sStatusMessages += "<BR>" + insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
 		}
 		
 		//Read the financial records for each GL account that was read:
@@ -837,27 +837,45 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		return sMessages;
 	}
-	public void checkMissingFiscalSets(		
+	public String checkMissingFiscalSets(		
 			String sGLAccount,
 			Connection conn,
 			String sStartingFiscalYear) throws Exception{
 		
+		String sResult = "";
 		try {
-			insertMissingFiscalSets(sGLAccount, conn, sStartingFiscalYear);
+			sResult = insertMissingFiscalSets(sGLAccount, conn, sStartingFiscalYear);
 		} catch (Exception e) {
 			throw new Exception("Error [202005154917] - " + e.getMessage());
 		}
 		
-		return;
+		return sResult;
 	}
-	private void insertMissingFiscalSets(
+	private String insertMissingFiscalSets(
 		String sGLAccount,
 		Connection conn,
 		String sStartingFiscalYear
 		) throws Exception{
 
 		String SQL = "";
+		String sResult = "";
 		
+		long lStartingNumberOfFiscalSets = 0L;
+		long lEndingNumberOfFiscalSets = 0L;
+		SQL = "SELECT COUNT(*) AS TOTAL FROM " + SMTableglfiscalsets.TableName;
+		ResultSet rsCount;
+		try {
+			rsCount = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsCount.next()) {
+				lStartingNumberOfFiscalSets = rsCount.getLong("TOTAL");
+			}else {
+				rsCount.close();
+				throw new Exception("Error [202005190445] - could not get count of glfiscalset records before updating.");
+			}
+			rsCount.close();
+		} catch (Exception e2) {
+			throw new Exception("Error [202005190614] - " + e2.getMessage());
+		}		
 		//If there are any fiscal sets missing for any accounts, insert those now:
 		if (sStartingFiscalYear.compareToIgnoreCase("") == 0) {
 			SQL = "SELECT"
@@ -946,6 +964,22 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			}
 		}
 		
+		SQL = "SELECT COUNT(*) AS TOTAL FROM " + SMTableglfiscalsets.TableName;
+		try {
+			rsCount = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsCount.next()) {
+				lEndingNumberOfFiscalSets = rsCount.getLong("TOTAL");
+			}else {
+				rsCount.close();
+				throw new Exception("Error [202005190446] - could not get count of glfiscalset records after updating.");
+			}
+			rsCount.close();
+		} catch (Exception e1) {
+			throw new Exception("Error [202005190659] - " + e1.getMessage());
+		}
+		
+		sResult = Long.toString((lEndingNumberOfFiscalSets - lStartingNumberOfFiscalSets)) + " NEW fiscal set records added, ";
+		
 		ArrayList<clsFiscalSet>arrFiscalSets = new ArrayList<clsFiscalSet>(0);
 		
 		//Get an array list of the selected fiscal sets:
@@ -1002,13 +1036,12 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		
 		try {
-			/* String sResult = */ 
-				insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
+			sResult += insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
 		} catch (Exception e) {
 			throw new Exception("Error [202005154425] - " + e.getMessage());
 		}
 		
-		return;
+		return sResult;
 	}
 	private static String insertMissingFinancialRecords(ArrayList<clsFiscalSet>arrFiscalSets, String sStartingFiscalYear, Connection conn) throws Exception{
 		String SQL = "";
@@ -1149,7 +1182,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				+ SQL + "'.");
 		}
 		
-		return "<BR>" + Long.toString(lEndingNumberOfRecords - lStartingNumberOfRecords) + " NEW financial statement data records were added.";
+		return Long.toString(lEndingNumberOfRecords - lStartingNumberOfRecords) + " NEW financial statement data records were added.";
 	}
 	
 	public void updateFiscalSetsForAccount(

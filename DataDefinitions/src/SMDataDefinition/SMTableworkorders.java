@@ -62,6 +62,7 @@ public class SMTableworkorders {
     public static final String dPrePostingWODiscountPercentage = "dPrePostingWODiscountPercentage";
     public static final String dPrePostingWODiscountAmount = "dPrePostingWODiscountAmount";
     public static final String sPrePostingWODiscountDesc = "sPrePostingWODiscountDesc";
+	public static final String iViewPrices = "iViewPrices";
     
 	
 	public static final int smechanicinitialsLength = 4;
@@ -102,6 +103,7 @@ public class SMTableworkorders {
 	//This string gets placed in the 'strimmedordernumber' field if it's a schedule entry that's NOT
 	//associated with any particular job:
 	public static final String DUMMY_JOB_NUMBER = "100";
+
 	
 /*	These fields will be locked after posting:
 		Work order ID

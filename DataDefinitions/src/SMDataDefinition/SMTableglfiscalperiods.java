@@ -13,7 +13,7 @@ public class SMTableglfiscalperiods {
 	public static String inumberofperiods = "inumberofperiods";
 	
 	//This will prevent the user from doing a closing:
-	public static String ipreventclosingprocess = "ilockclosing";
+	public static String ipreventclosingprocess = "ipreventclosingprocess";
 	public static String iclosed = "iclosed";
 
 	//This simply indicates whether the closing period (15) is locked or not:

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
@@ -118,7 +119,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 		String sParamString = "";
 		sParamString += "&CallingClass=" + sCallingClass;
 		
-		/* May not use all thesejust for the occasional redirect on this screen:
+		/* May not use all these just for the occasional redirect on this screen:
 		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT + "=" + sEndingAccount;
 		sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT + "=" + sStartingAccount;
 		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT_GROUP + "=" + sEndingAccountGroup;
@@ -223,12 +224,11 @@ public class GLTrialBalanceAction extends HttpServlet {
 				+ "  </TR>\n"
 			;
 
-			s += "  <TR>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 				+ "FROM period:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sNetEarningsStartingFiscalPeriod + "</B>"
+				+ "<B>" + sNetEarningsStartingFiscalPeriod.replace(" - 15", " - CLOSING PERIOD") + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;
@@ -238,7 +238,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 				+ "TO period:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sNetEarningsEndingFiscalPeriod + "</B>"
+				+ "<B>" + sNetEarningsEndingFiscalPeriod.replace(" - 15", " - CLOSING PERIOD") + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;
@@ -249,7 +249,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 				+ "Fiscal year - period:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sFiscalPeriod + "</B>"
+				+ "<B>" + sFiscalPeriod.replace(" - 15", " - CLOSING PERIOD") + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;

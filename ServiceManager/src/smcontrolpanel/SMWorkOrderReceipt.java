@@ -431,9 +431,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 			) throws Exception{
 		//TODO Add Totals Here
 		boolean bViewPrices = false;
-		if(wo.getiViewPrices().compareToIgnoreCase("0")==0) {
-			bViewPrices = false;
-		}else {
+		if(wo.getiViewPrices().compareToIgnoreCase("1")==0) {
 			bViewPrices = true;
 		}
 		

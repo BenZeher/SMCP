@@ -6,13 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import SMDataDefinition.SMTablegltransactionbatchlines;
 import SMDataDefinition.SMTablesmestimatelines;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsValidateFormFields;
-import smgl.GLAccount;
 
 public class SMEstimateLine {
 

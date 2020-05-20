@@ -306,9 +306,10 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
 		setsPrePostingWODiscountDesc(clsManageRequestParameters.get_Request_Parameter(ParamsPrePostingWODiscountDesc, req).trim().replace("&quot;", "\""));
 		
-		setiViewPrices(clsManageRequestParameters.get_Request_Parameter(ParamiViewPrices, req).trim().replace("&quot;", "\""));
-		
-		
+		m_iViewPrices = clsManageRequestParameters.get_Request_Parameter(ParamiViewPrices, req).trim().replace("&quot;", "\"");
+		if(m_iViewPrices.compareToIgnoreCase("") == 0) {
+			m_iViewPrices = "0";
+		}
 		//Read the job times:
 		if (clsManageRequestParameters.get_Request_Parameter(
 				Paramhasdattimeleftprevious, req).trim().compareToIgnoreCase("1") == 0){

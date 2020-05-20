@@ -567,6 +567,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		BigDecimal bdShippedValue = new BigDecimal("0.00");
 		BigDecimal bdTotalExtendedLaborPrice = new BigDecimal("0.00");
 		Double dWODiscountAmount= Double.valueOf(workorder.getdPrePostingWODiscountAmount());
+		BigDecimal bdWODiscountAmount = new BigDecimal(workorder.getdPrePostingWODiscountAmount());
 		for (int i = 0; i < dummyorder.get_iOrderDetailCount(); i++){
 			bdShippedValue = bdShippedValue.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
 			boolean bIsLaborItem = false;
@@ -670,7 +671,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 
 						+ "<TD align=left><FONT SIZE=2><B>Discount:&nbsp;&nbsp;"
 						+ "<FONT SIZE=2>" 
-						+ "<B>" + dWODiscountAmount + "</B></FONT>"
+						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdWODiscountAmount) + "</B></FONT>"
 						+ "</TD>"
 						+ "<TD></TD>"
 						+ "<TD></TD>"

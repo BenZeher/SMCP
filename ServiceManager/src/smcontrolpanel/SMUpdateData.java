@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1473;
+	private static final int m_CurrentDatabaseVersion = 1474;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "5/20/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15548,6 +15548,30 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE	
+			
+			//BEGIN CASE:
+			case 1473:
+				//Added by TJR 5/20/2020
+				SQL = "CREATE TABLE `smestimatelines` ("
+					+ "`lid` INT(11) NOT NULL auto_increment"
+					+ ", `lsummarylid` INT(11) default '0'"
+					+ ", `lestimatelid` INT(11) default '0'"
+					+ ", `lestimatelinenumber` INT(11) default '0'"
+					+ ", `bdquantity` DECIMAL(17, 4) NOT NULL default '0.0000'"
+					+ ", `sitemnumber` varchar(32) NOT NULL default ''"
+					+ ", `slinedescription` varchar(75) NOT NULL default ''"
+					+ ", `sunitofmeasure` varchar(10) NOT NULL default ''"
+					+ ", `bdextendedcost` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", PRIMARY KEY (`lid`)"
+					+ ", UNIQUE KEY estimatelinekey (`lestimatelid`, `lestimatelinenumber`)"
+					+ " ) ENGINE=InnoDB"
+				;
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE	
+			
 			
 			
 			//End switch:

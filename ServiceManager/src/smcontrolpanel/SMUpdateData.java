@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1471;
+	private static final int m_CurrentDatabaseVersion = 1472;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "5/19/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15472,6 +15472,37 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "ALTER TABLE `glfiscalperiods`"
 					+ " CHANGE COLUMN ilockclosing ipreventclosingprocess int(11) NOT NULL DEFAULT '0'"
 				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE	
+			
+			//BEGIN CASE:
+			case 1471:
+				//Added by TJR 5/20/2020
+				SQL = "CREATE TABLE `smestimatesummaries` ("
+					+ "`lid` INT(11) NOT NULL auto_increment"
+					+ ", `sjobname` varchar(128) NOT NULL default ''"
+					+ ", `lsalesleadid` INT(11) default '0'"
+					+ ", `itaxid` INT(11) default '0'"
+					+ ", `ilabortype` INT(11) default '0'"
+					+ ", `iordertype` INT(11) default '0'"
+					+ ", `lcreatedbyid` INT(11) default '0'"
+					+ ", `datetimecreated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'"
+					+ ", `screatedbyfullname` varchar(128) NOT NULL default ''"
+					+ ", `llastmodifiedbyid` INT(11) default '0'"
+					+ ", `datetimeslastmodifiedby` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'"
+					+ ", `slastmodifiedbyfullname` varchar(128) NOT NULL default ''"
+					+ ", `sdescription` varchar(128) NOT NULL default ''"
+					+ ", `sremarks` varchar(128) NOT NULL default ''"
+					+ ", `bdadjustedfreight` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `bdadjustedlaborunitqty` DECIMAL(17, 4) NOT NULL default '0.00'"
+					+ ", `bdadjustedlaborcostperunit` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `bdadjustedlmarkupamt` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", PRIMARY KEY (`lid`)"
+					+ " ) ENGINE=InnoDB"
+				;
+				
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	

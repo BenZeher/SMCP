@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1472;
+	private static final int m_CurrentDatabaseVersion = 1473;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "5/19/2020";
+	private static final String m_sLastRevisionDate = "5/20/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15496,7 +15496,7 @@ public class SMUpdateData extends java.lang.Object{
 					+ ", `sdescription` varchar(128) NOT NULL default ''"
 					+ ", `sremarks` varchar(128) NOT NULL default ''"
 					+ ", `bdadjustedfreight` DECIMAL(17, 2) NOT NULL default '0.00'"
-					+ ", `bdadjustedlaborunitqty` DECIMAL(17, 4) NOT NULL default '0.00'"
+					+ ", `bdadjustedlaborunitqty` DECIMAL(17, 4) NOT NULL default '0.0000'"
 					+ ", `bdadjustedlaborcostperunit` DECIMAL(17, 2) NOT NULL default '0.00'"
 					+ ", `bdadjustedlmarkupamt` DECIMAL(17, 2) NOT NULL default '0.00'"
 					+ ", PRIMARY KEY (`lid`)"
@@ -15507,6 +15507,48 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE	
+			
+			//BEGIN CASE:
+			case 1472:
+				//Added by TJR 5/20/2020
+				SQL = "CREATE TABLE `smestimates` ("
+					+ "`lid` INT(11) NOT NULL auto_increment"
+					+ ", `lsummarylid` INT(11) default '0'"
+					+ ", `lsummarylinenumber` INT(11) default '0'"
+					+ ", `sdescription` varchar(128) NOT NULL default ''"
+					+ ", `sprefixlabelitem` varchar(32) NOT NULL default ''"
+					+ ", `svendorquotenumber` varchar(32) NOT NULL default ''"
+					+ ", `ivendorquotelinenumber` INT(11) default '0'"
+					+ ", `bdquantity` DECIMAL(17, 4) NOT NULL default '0.0000'"
+					+ ", `sitemnumber` varchar(32) NOT NULL default ''"
+					+ ", `sproductdescription` varchar(75) NOT NULL default ''"
+					+ ", `sunitofmeasure` varchar(10) NOT NULL default ''"
+					+ ", `bdextendedcost` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `bdfreight` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `bdlaborquantity` DECIMAL(17, 4) NOT NULL default '0.0000'"
+					+ ", `bdlaborcostperunit` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `sadditionalpretaxcostlabel` varchar(32) NOT NULL default ''"
+					+ ", `bdadditionalpretaxcostamount` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `bdmarkupamount` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `sadditionalposttaxcostlabel` varchar(32) NOT NULL default ''"
+					+ ", `bdadditionalposttaxcostamount` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `bdlaborsellpriceperunit` DECIMAL(17, 2) NOT NULL default '0.00'"
+					+ ", `lcreatedbyid` INT(11) default '0'"
+					+ ", `datetimecreated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'"
+					+ ", `screatedbyfullname` varchar(128) NOT NULL default ''"
+					+ ", `llastmodifiedbyid` INT(11) default '0'"
+					+ ", `datetimeslastmodifiedby` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'"
+					+ ", `slastmodifiedbyfullname` varchar(128) NOT NULL default ''"
+					+ ", PRIMARY KEY (`lid`)"
+					+ ", UNIQUE KEY summarylinekey (`lsummarylid`, `lsummarylinenumber`)"
+					+ " ) ENGINE=InnoDB"
+				;
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE	
+			
 			
 			//End switch:
 		}

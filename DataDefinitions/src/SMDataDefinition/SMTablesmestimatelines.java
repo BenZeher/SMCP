@@ -1,6 +1,6 @@
 package SMDataDefinition;
 
-public class smestimatelines {
+public class SMTablesmestimatelines {
 
 	public static String TableName = "smestimatelines";
 

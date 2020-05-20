@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMOption;
+import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMTableicitems;
@@ -18,6 +19,8 @@ import SMDataDefinition.SMTablesmoptions;
 import SMDataDefinition.SMTableworkorderdetails;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsEmailInlineHTML;
+import ServletUtilities.clsManageBigDecimals;
+import smic.ICItem;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 
@@ -128,7 +131,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 		//create a FORM to hold the object.
 		s += printHeader(wo, order, sUserName, sUserID, sDBID, conn, context);
 		
-		s += printItemsAndWorkPerformedSection(wo, conn);
+		s += printItemsAndWorkPerformedSection(wo, conn,context,sDBID,sUserID,sUserName);
 		
 		s += printMechanicInformation(wo);
 		
@@ -418,7 +421,21 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 		return s;
 	}
 
-	private String printItemsAndWorkPerformedSection(SMWorkOrderHeader wo, Connection conn) throws Exception{
+	private String printItemsAndWorkPerformedSection(
+			SMWorkOrderHeader wo,
+			Connection conn,
+			ServletContext context,
+			String sDBID,
+			String sUserID,
+			String sUserName
+			) throws Exception{
+		//TODO Add Totals Here
+		boolean bViewPrices = false;
+		if(wo.getiViewPrices().compareToIgnoreCase("0")==0) {
+			bViewPrices = false;
+		}else {
+			bViewPrices = true;
+		}
 		
 		String sSQL = "SELECT * FROM" +
 						" " + SMTableworkorders.TableName + "," + 
@@ -509,7 +526,206 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 		}
 		s += "</TR>";
 		rsworkord.close();
-		s += "</TABLE>";
+
+		if(bViewPrices) {
+			//TODO
+			SMOrderHeader orderheader = new SMOrderHeader();
+			orderheader.setM_strimmedordernumber(wo.getstrimmedordernumber());
+			if (wo.getstrimmedordernumber().compareToIgnoreCase("") != 0){
+				if (!orderheader.load(context, sDBID, sUserID, sUserName)){
+					throw new Exception("Could not load order header '" + wo.getstrimmedordernumber()
+					+ "' - " + orderheader.getErrorMessages());
+				}
+			}
+
+			//IF we need to show prices, we are going to load the order into a new object, to be used ONLY for calculating prices and totals:
+			SMOrderHeader dummyorder = new SMOrderHeader();
+			dummyorder.setM_strimmedordernumber(orderheader.getM_strimmedordernumber());
+			if (orderheader.getM_strimmedordernumber().compareToIgnoreCase("") != 0){
+				if (!dummyorder.load(context, sDBID, sUserID, sDBID)){
+					throw new Exception("Error loading order to calculate prices - " + dummyorder.getErrorMessages() + ".");
+				}
+			}
+			//First, remove all the lines on the dummy order so we can use it to recalculate only the items on the work order:
+			dummyorder.getM_arrOrderDetails().clear();
+
+			for (int i = 0; i < wo.getDetailCount(); i++){
+				//IF it's an item, not a work performed code:
+				if (wo.getDetailByIndex(i).getsdetailtype().compareToIgnoreCase(
+						Integer.toString(SMTableworkorderdetails.WORK_ORDER_DETAIL_TYPE_ITEM)) == 0){
+
+					//We need to add a dummy line to the dummy order, so we can calculate prices and totals:
+					SMOrderDetail dummydetail = new SMOrderDetail();
+					dummydetail.setM_dQtyOrdered(wo.getDetailByIndex(i).getsbdquantity().replace(",",""));
+					dummydetail.setM_dQtyShipped(wo.getDetailByIndex(i).getsbdquantity().replace(",",""));
+					dummydetail.setM_dUniqueOrderID(orderheader.getM_siID());
+					dummydetail.setM_strimmedordernumber(orderheader.getM_strimmedordernumber());
+					dummydetail.setM_sItemNumber(wo.getDetailByIndex(i).getsitemnumber());
+					//IF it's a 'configured' line that already exists on the order, we need to use the UNIT PRICE
+					//from that line on the order, not necessarily the calculated price for the item:
+					int iDetailNumber = 0;
+					try {
+						iDetailNumber = Integer.parseInt(wo.getDetailByIndex(i).getsorderdetailnumber());
+					} catch (Exception e2) {
+						throw new Exception("Error [1430769480] parsing detail number '" + wo.getDetailByIndex(i).getsorderdetailnumber() + "' - " + e2.getMessage());
+					}
+
+					BigDecimal bdQtyAssigned = new BigDecimal("0.0000");
+					if (wo.getDetailByIndex(i).getsbdqtyassigned().compareToIgnoreCase("") == 0){
+						wo.getDetailByIndex(i).setsbdqtyassigned("0.0000");
+					}
+					try {
+						bdQtyAssigned = new BigDecimal(wo.getDetailByIndex(i).getsbdqtyassigned().replace(",", ""));
+					} catch (Exception e1) {
+						throw new Exception("Error [1430769481] parsing qty assigned '" + wo.getDetailByIndex(i).getsbdqtyassigned() + "' - " + e1.getMessage());
+					}
+					//Get the actual order detail that corresponds to this work order detail:
+					SMOrderDetail actualorderdetail = new SMOrderDetail();
+					if (iDetailNumber > 0){
+						actualorderdetail = orderheader.getOrderDetailByDetailNumber(wo.getDetailByIndex(i).getsorderdetailnumber());
+					}else{
+						actualorderdetail = null;
+					}
+					//Try to figure out if it's taxable from the item master:
+					String sTaxable = "1";
+					ICItem item = new ICItem(wo.getDetailByIndex(i).getsitemnumber());
+					if (item.load(context, sDBID)){
+						sTaxable = item.getTaxable();
+						//If we can't load the item, then check the order detail, if there is one:
+					}else{
+						if (actualorderdetail != null){
+							sTaxable = actualorderdetail.getM_iTaxable();
+						}
+					}
+					dummydetail.setM_iTaxable(sTaxable);
+					//Try to set the correct unit price here:
+					//If the order detail is a configured item, and if it corresponds to an actual order line:
+					if ((actualorderdetail != null) && (bdQtyAssigned.compareTo(BigDecimal.ZERO)) > 0){
+						try {
+							//Set the unit price to match the unit price on the order for this line:
+							dummydetail.setM_dOrderUnitPrice(actualorderdetail.getM_dOrderUnitPrice());
+							//extend the unit price times the qty:
+							orderheader.calculateExtendedPrice(dummydetail);
+						} catch (Exception e) {
+							throw new SQLException(e.getMessage() + ".");
+						}
+					}else{
+						//Don't bother with calculating an item on a work order if it has not order associated with it:
+						if (
+								(orderheader.getM_strimmedordernumber().compareToIgnoreCase("") != 0)
+								&& (orderheader.getM_strimmedordernumber() != null)
+								){
+							//Otherwise, just calculate the price for this item and this qty, disregarding the unit price on the order:
+							try {
+								dummyorder.updateLinePrice(dummydetail, sDBID, sUserName, context);
+							} catch (Exception e) {
+								throw new Exception ("Error [1431442449] updating price for item '" + dummydetail.getM_sItemNumber() + "' - " + e.getMessage());
+							}
+						}
+					}
+					String sExtendedPrice = dummydetail.getM_dExtendedOrderPrice();
+					if(wo.getDetailByIndex(i).getssetpricetozero().compareToIgnoreCase("1") == 0) {
+						//Set the work order detail price to 0.00 so the display price is 0.00
+						sExtendedPrice = "0.00";
+						//Set the dummy order detail to 0.00 so totals are calculated correctly on the work order
+						dummydetail.setM_dExtendedOrderPrice("0.00");
+					}
+
+					wo.getDetailByIndex(i).setsbdextendedprice(sExtendedPrice);
+					dummyorder.addNewDetail(dummydetail);
+				}
+			}
+
+			//TODO
+			BigDecimal bdShippedValue = new BigDecimal("0.00");
+			BigDecimal bdTotalExtendedLaborPrice = new BigDecimal("0.00");
+			Double dWODiscountAmount= Double.valueOf(wo.getdPrePostingWODiscountAmount());
+			BigDecimal bdWODiscountAmount = new BigDecimal(wo.getdPrePostingWODiscountAmount());
+			for (int i = 0; i < dummyorder.get_iOrderDetailCount(); i++){
+				bdShippedValue = bdShippedValue.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
+				boolean bIsLaborItem = false;
+				ICItem item = new ICItem(dummyorder.getOrderDetail(i).getM_sItemNumber());
+				if(!item.load(context, sDBID)){
+					//TJR - 1/12/2015 - we are assuming that if we can't read this item, it's NOT a labor item:
+					//System.out.println(" [1421078747] Cannot find item '" + dummyorder.getOrderDetail(i).getM_sItemNumber()
+					//	+ "' to calculate material and labor totals.");
+				}else{
+					bIsLaborItem = item.getLaborItem().compareToIgnoreCase("1") == 0;
+				}
+				if (bIsLaborItem){
+					bdTotalExtendedLaborPrice = bdTotalExtendedLaborPrice.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
+				}
+			}
+
+			s += "<HR><TR><TD COLSPAN=4 ALIGN=LEFT style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>TOTALS:</B></TD>";
+			//Add a row for the tax:
+			String sTaxAmount;
+			try {
+				sTaxAmount = dummyorder.getTaxAmount(sDBID, sUserName, context);
+			} catch (Exception e) {
+				sTaxAmount = e.getMessage();
+			}
+			if((dWODiscountAmount != 0) || (sTaxAmount.compareToIgnoreCase("0.00")!=0)) {
+			s += "<TR>"
+
+					+ "<TD align=left><FONT SIZE=1><B>Subtotal:&nbsp;&nbsp;&nbsp;"
+					+ "<FONT SIZE=1>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue) + "</B></FONT>"
+					+ "</TD>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "</TR>"
+					;
+			if(dWODiscountAmount != 0	) {
+				s += "<TR>"
+
+						+ "<TD align=left><FONT SIZE=1><B>Discount:&nbsp;&nbsp;"
+						+ "<FONT SIZE=1>" 
+						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdWODiscountAmount) + "</B></FONT>"
+						+ "</TD>"
+						+ "<TD></TD>"
+						+ "<TD></TD>"
+						+ "<TD></TD>"
+						+ "</TR>"
+						;
+			}
+			//Set Discount to the WO discount amount, rather than the whole Order
+			dummyorder.setM_dPrePostingInvoiceDiscountAmount(wo.getdPrePostingWODiscountAmount());
+
+
+			if(sTaxAmount.compareToIgnoreCase("0.00")!=0) {
+				s += "<TR>"
+
+					+ "<TD align=left><FONT SIZE=1><B>Tax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+					+ "" + sTaxAmount + "</B></FONT>"
+					+ "</TD>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "</TR>"
+					;
+			}
+			}
+			//Add a row for total INCLUDING tax:
+			String sTotalWithTax = "";
+			try {
+				sTotalWithTax = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(BigDecimal.valueOf(dWODiscountAmount)).add(new BigDecimal(sTaxAmount.replace(",", ""))));
+			} catch (Exception e) {
+				s += "Error [1390339789] calculating Total With Tax - " + e.getMessage();
+			}
+			s += "<TR>"
+					+ "<TD align=left><FONT SIZE=1><B>Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+					+ "" + sTotalWithTax + "</B></FONT>"
+					+ "</TD>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "</TR>"
+					;
+
+		}
+		s += "</TABLE><HR>";
 		return s;
 	}
 	private String printMechanicInformation(SMWorkOrderHeader wo) throws Exception{

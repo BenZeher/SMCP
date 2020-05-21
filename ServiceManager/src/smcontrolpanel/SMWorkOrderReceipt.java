@@ -246,7 +246,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 			SMOrderHeader order,
 			Connection conn) throws Exception{		
 		String s = "";
-		s += "<TABLE style= \" width:100%; border-style:none; font-family: Arial; font-size: small;\" >";
+		s += "<TABLE style= \" width:100%; border-style:hidden; font-family: Arial; font-size: small;\" >";
 		s += "<TR>";
 		s += "<TD style= \"width:45%; text-align: left;\" >"
 				+ wo_header.getmdbaaddress()

@@ -31,7 +31,7 @@ public class SMEstimateLine {
 	public void save_without_data_transaction (Connection conn, String sUserName, boolean bBatchIsBeingPosted) throws Exception{
 
 		try {
-			validate_fields(conn, bBatchIsBeingPosted);
+			validate_fields(conn);
 		} catch (Exception e1) {
 			throw new Exception(e1.getMessage());
 		}
@@ -104,7 +104,7 @@ public class SMEstimateLine {
 		}
 		return;
 	}
-	public void validate_fields(Connection conn, boolean bBatchIsBeingPosted) throws Exception{
+	public void validate_fields(Connection conn) throws Exception{
 		
 		String sResult = "";
 		try {

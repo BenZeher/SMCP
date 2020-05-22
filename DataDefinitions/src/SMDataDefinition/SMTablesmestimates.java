@@ -29,7 +29,7 @@ public class SMTablesmestimates {
 	public static String datetimecreated = "datetimecreated";
 	public static String screatedbyfullname = "screatedbyfullname";
 	public static String llastmodifiedbyid = "llastmodifiedbyid";
-	public static String datetimeslastmodifiedby = "datetimeslastmodifiedby";
+	public static String datetimelastmodifiedby = "datetimelastmodified";
 	public static String slastmodifiedbyfullname = "slastmodifiedbyfullname";
 	
 	//String lengths:
@@ -41,7 +41,7 @@ public class SMTablesmestimates {
 	public static int sunitofmeasureLength = 10;
 	public static int sadditionalpretaxcostlabelLength = 32;
 	public static int sadditionalposttaxcostlabelLength = 32;
-	public static int sscreatedbyfullnameLength = 128;
+	public static int screatedbyfullnameLength = 128;
 	public static int slastmodifiedbyfullnameLength = 128;
 	
 	//Scales:

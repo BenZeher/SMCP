@@ -28,7 +28,7 @@ public class SMEstimateLine {
 		initializeVariables();
 	}
 	
-	public void save_without_data_transaction (Connection conn, String sUserName, boolean bBatchIsBeingPosted) throws Exception{
+	public void save_without_data_transaction (Connection conn, String sUserName) throws Exception{
 
 		try {
 			validate_fields(conn);

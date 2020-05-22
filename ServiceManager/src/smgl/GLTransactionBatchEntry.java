@@ -679,9 +679,11 @@ public class GLTransactionBatchEntry {
 		try {
 			load(conn);
 		} catch (Exception e) {
+			clsDatabaseFunctions.freeConnection(context, conn, "[1555337051]");
 			throw new Exception("Error [1555337050] loading - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn, "[1555337051]");
+		clsDatabaseFunctions.freeConnection(context, conn, "[1555337251]");
+		return;
 	}
 	
 	public void load(Connection conn) throws Exception{

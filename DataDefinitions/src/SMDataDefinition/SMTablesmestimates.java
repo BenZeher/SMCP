@@ -29,7 +29,7 @@ public class SMTablesmestimates {
 	public static String datetimecreated = "datetimecreated";
 	public static String screatedbyfullname = "screatedbyfullname";
 	public static String llastmodifiedbyid = "llastmodifiedbyid";
-	public static String datetimelastmodifiedby = "datetimelastmodified";
+	public static String datetimelastmodified = "datetimelastmodified";
 	public static String slastmodifiedbyfullname = "slastmodifiedbyfullname";
 	
 	//String lengths:

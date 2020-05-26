@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicvendors;
+import SMDataDefinition.SMTablelabortypes;
+import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
@@ -206,10 +208,66 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		//Labor type:
+		ArrayList<String> arrLaborTypes = new ArrayList<String>(0);
+		ArrayList<String> arrLaborTypeDescriptionsDescriptions = new ArrayList<String>(0);
+		String SQL = "SELECT"
+			+ " " + SMTablelabortypes.sID
+			+ ", " + SMTablelabortypes.sLaborName
+			+ " FROM " + SMTablelabortypes.TableName
+			+ " ORDER BY " + SMTablelabortypes.sLaborName
+		;
+		//First, add a blank item so we can be sure the user chose one:
+		arrLaborTypes.add("");
+		arrLaborTypeDescriptionsDescriptions.add("*** Select labor type ***");
+		
+		try {
+			ResultSet rsLaborTypes = clsDatabaseFunctions.openResultSet(SQL, getServletContext(),
+					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
+					+ ".getEditHTML - user: "
+					+ sm.getUserID()
+					+ " - "
+					+ sm.getFullUserName()
+					);
+			while (rsLaborTypes.next()) {
+				arrLaborTypes.add(Long.toString(rsLaborTypes.getLong(SMTablelabortypes.sID)));
+				arrLaborTypeDescriptionsDescriptions.add(rsLaborTypes.getString(SMTablelabortypes.sLaborName));
+			}
+			rsLaborTypes.close();
+		} catch (SQLException e) {
+			s += "<B>Error [1590535453] reading labor types - " + e.getMessage() + "</B><BR>";
+		}
+
+		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.ilabortype + "\""
+				+ " onchange=\"flagDirty();\""
+				 + " >\n"
+			;
+			for (int i = 0; i < arrLaborTypes.size(); i++){
+				sControlHTML += "<OPTION";
+				if (arrLaborTypes.get(i).toString().compareTo(summary.getsilabortype()) == 0){
+					sControlHTML += " selected=yes";
+				}
+				sControlHTML += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" 
+					+ arrLaborTypeDescriptionsDescriptions.get(i).toString() + "\n";
+			}
+		sControlHTML += "</SELECT>"
+		;
+			
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "<B>Labor type:</B>"
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ sControlHTML
+				+ "</TD>" + "\n"
+			;
+		
+		s += "  </TR>" + "\n";
+		
+		s += "  <TR>" + "\n";
 		//Tax Type:
 		ArrayList<String> arrTaxes = new ArrayList<String>(0);
 		ArrayList<String> arrTaxDescriptions = new ArrayList<String>(0);
-		String SQL = "SELECT"
+		SQL = "SELECT"
 			+ " " + SMTabletax.lid
 			+ ", " + SMTabletax.staxjurisdiction
 			+ ", " + SMTabletax.staxtype
@@ -274,11 +332,93 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ sControlHTML
 				+ "</TD>" + "\n"
 			;
+		
+		//Order type:
+		//First, add a blank item so we can be sure the user chose one:
+		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.iordertype + "\""
+			+ " onchange=\"flagDirty();\""
+			+ " >\n"
+		;
+		
+		sControlHTML += "<OPTION";
+		sControlHTML += " VALUE=\"" + "" + "\">" 
+			+ "*** Select order type ***" + "\n";
+		
+		sControlHTML += "<OPTION";
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE).compareTo(summary.getsiordertype()) == 0){
+			sControlHTML += " selected=yes";
+		}
+		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\">" 
+			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\n";
+		
+		sControlHTML += "<OPTION";
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE).compareTo(summary.getsiordertype()) == 0){
+			sControlHTML += " selected=yes";
+		}
+		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE) + "\">" 
+			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_FUTURE) + "\n";
+		
+		sControlHTML += "<OPTION";
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE).compareTo(summary.getsiordertype()) == 0){
+			sControlHTML += " selected=yes";
+		}
+		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE) + "\">" 
+			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) + "\n";
 
+		sControlHTML += "<OPTION";
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING).compareTo(summary.getsiordertype()) == 0){
+			sControlHTML += " selected=yes";
+		}
+		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING) + "\">" 
+			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) + "\n";
+		
+		sControlHTML += "</SELECT>"
+		;
+			
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "<B>Order type:</B>"
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ sControlHTML
+				+ "</TD>" + "\n"
+			;
+
+		
 		s += "  </TR>" + "\n";
 		
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Description:"
+			+ "</TD>" + "\n"
+			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
+				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimatesummaries.sdescription + "\""
+			+ " ID=\"" + SMTablesmestimatesummaries.sdescription + "\""
+			+ " VALUE=\"" + summary.getsdescription() + "\""
+			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sdescriptionLength)
+			+ " STYLE=\"width: 7in; height: 0.25in\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
 		
-		
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Remarks:"
+			+ "</TD>" + "\n"
+			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
+				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimatesummaries.sremarks + "\""
+			+ " ID=\"" + SMTablesmestimatesummaries.sremarks + "\""
+			+ " VALUE=\"" + summary.getsremarks() + "\""
+			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sremarksLength)
+			+ " STYLE=\"width: 7in; height: 0.25in\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
 		

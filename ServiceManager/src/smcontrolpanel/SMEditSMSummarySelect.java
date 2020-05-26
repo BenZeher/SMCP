@@ -9,10 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsServletUtilities;
-import smap.APVendor;
 
 public class SMEditSMSummarySelect extends HttpServlet {
 
@@ -41,7 +39,6 @@ public class SMEditSMSummarySelect extends HttpServlet {
 		}
 		
 		smeditselect.printHeaderTable();
-		
 		smeditselect.getPrintWriter().println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smeditselect.getsDBID() 
 				+ "\">Return to user login</A><BR>");

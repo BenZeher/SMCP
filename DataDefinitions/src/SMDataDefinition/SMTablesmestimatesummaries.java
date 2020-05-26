@@ -14,7 +14,7 @@ public class SMTablesmestimatesummaries {
 	public static String datetimecreated = "datetimecreated";
 	public static String screatedbyfullname = "screatedbyfullname";
 	public static String llastmodifiedbyid = "llastmodifiedbyid";
-	public static String datetimeslastmodifiedby = "datetimeslastmodifiedby";
+	public static String datetimelastmodified = "datetimelastmodified";
 	public static String slastmodifiedbyfullname = "slastmodifiedbyfullname";
 	public static String sdescription = "sdescription";
 	public static String sremarks = "sremarks";

@@ -100,14 +100,17 @@ public class SMEstimate {
 		m_bdlaborsellpriceperunit = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.bdlaborsellpriceperunit, req).replace("&quot;", "\"");
 		m_lcreatedbyid = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.lcreatedbyid, req).replace("&quot;", "\"");
 
-		m_datetimecreated = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.lcreatedbyid, req).replace("&quot;", "\"");
+		m_datetimecreated = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.datetimecreated, req).replace("&quot;", "\"");
 		if(m_datetimecreated.compareToIgnoreCase("") == 0){
 			m_datetimecreated = SMUtilities.EMPTY_DATETIME_VALUE;
 		}
 		
 		m_screatedbyfullname = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.screatedbyfullname, req).replace("&quot;", "\"");
 		m_llastmodifiedbyid = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.llastmodifiedbyid, req).replace("&quot;", "\"");
-
+		if(m_llastmodifiedbyid.compareToIgnoreCase("") == 0){
+			m_llastmodifiedbyid = "-1";
+		}
+		
 		m_datetimelastmodified = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.datetimelastmodified, req).replace("&quot;", "\"");
 		if(m_datetimelastmodified.compareToIgnoreCase("") == 0){
 			m_datetimelastmodified = SMUtilities.EMPTY_DATETIME_VALUE;

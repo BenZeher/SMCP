@@ -291,8 +291,8 @@ public class SMEstimate {
 			+ ", " + m_bdlaborsellpriceperunit.replace(",", "")
 			+ ", " + m_bdmarkupamount.replace(",", "")
 			+ ", " + m_bdquantity.replace(",", "")
-			+ ", '" + getsdatetimecreatedInSQLFormat() + "'"
-			+ ", '" + getsdatetimelastmodifiedbyInSQLFormat() + "'"
+			+ ", NOW()"
+			+ ", NOW()"
 			+ ", " + m_ivendorquotelinenumber
 			+ ", " + sUserID
 			+ ", " + sUserID
@@ -321,7 +321,7 @@ public class SMEstimate {
 			+ ", " + SMTablesmestimates.bdquantity + " = " + m_bdquantity.replace(",", "")
 			
 			+ ", " + SMTablesmestimates.datetimecreated + " = '" + getsdatetimecreatedInSQLFormat() + "'"
-			+ ", " + SMTablesmestimates.datetimelastmodified + " = '" + getsdatetimelastmodifiedbyInSQLFormat() + "'"
+			+ ", " + SMTablesmestimates.datetimelastmodified + " = NOW()"
 			
 			+ ", " + SMTablesmestimates.ivendorquotelinenumber + " = " + m_ivendorquotelinenumber
 			+ ", " + SMTablesmestimates.llastmodifiedbyid + " = " + sUserID

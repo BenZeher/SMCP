@@ -2,21 +2,21 @@ package smcontrolpanel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smcontrolpanel.SMMasterEditEntry;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablesmestimatesummaries;
+import SMDataDefinition.SMTabletax;
+import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smap.APVendor;
 
@@ -83,7 +83,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    	}
 	    }
 	    smedit.printHeaderTable();
-	    
+	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    try {
 	    	createEditPage(getEditHTML(smedit, summary), 
 	    		FORM_NAME,
@@ -134,6 +134,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 
 	
 	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary) throws SQLException{
+		
+		String sControlHTML = "";
+		
 		String s = sCommandScripts(summary, sm);
 		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\""
@@ -166,7 +169,114 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " on " + summary.getsdatetimeslastmodified()
 		;
 		
-		s += "<TABLE BORDER=1>" + "\n";
+		//Header table:
+		int iNumberOfColumns = 4;
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
+		
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Project:"
+			+ "</TD>" + "\n"
+			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
+				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimatesummaries.sjobname + "\""
+			+ " ID=\"" + SMTablesmestimatesummaries.sjobname + "\""
+			+ " VALUE=\"" + summary.getsjobname() + "\""
+			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sjobnameLength)
+			+ " STYLE=\"width: 7in; height: 0.25in\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+		
+		s += "  <TR>" + "\n";
+		//Sales Lead
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "<B>Sales Lead ID:</B>"
+			+ "</TD>" + "\n"
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimatesummaries.lsalesleadid + "\""
+			+ " ID=\"" + SMTablesmestimatesummaries.lsalesleadid + "\""
+			+ " VALUE=\"" + summary.getslsalesleadid() + "\""
+			+ " MAXLENGTH=" + "15"
+			+ " STYLE=\"width: 1in; height: 0.25in\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		
+		//Tax Type:
+		ArrayList<String> arrTaxes = new ArrayList<String>(0);
+		ArrayList<String> arrTaxDescriptions = new ArrayList<String>(0);
+		String SQL = "SELECT"
+			+ " " + SMTabletax.lid
+			+ ", " + SMTabletax.staxjurisdiction
+			+ ", " + SMTabletax.staxtype
+			+ " FROM " + SMTabletax.TableName
+			+ " WHERE ("
+				+ "(" + SMTabletax.iactive + " = 1)"
+				+ " AND (" + SMTabletax.ishowinorderentry + " = 1)"
+			+ ")"
+			+ " ORDER BY " + SMTabletax.staxjurisdiction + ", " + SMTabletax.staxtype
+		;
+		//First, add a blank item so we can be sure the user chose one:
+		arrTaxes.add("");
+		arrTaxDescriptions.add("*** Select tax ***");
+		
+		try {
+			ResultSet rsTaxes = clsDatabaseFunctions.openResultSet(SQL, getServletContext(),
+					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
+					+ ".getEditHTML - user: "
+					+ sm.getUserID()
+					+ " - "
+					+ sm.getFullUserName()
+					);
+			while (rsTaxes.next()) {
+				arrTaxes.add(Long.toString(rsTaxes.getLong(SMTabletax.lid)));
+				arrTaxDescriptions.add(
+						rsTaxes.getString(SMTabletax.staxjurisdiction)
+					+ " - "
+					+ rsTaxes.getString(SMTabletax.staxtype)
+				);
+			}
+			rsTaxes.close();
+		} catch (SQLException e) {
+			s += "<B>Error [1590530698] reading tax info - " + e.getMessage() + "</B><BR>";
+		}
+
+		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.itaxid + "\""
+				+ " onchange=\"flagDirty();\""
+				 + " >\n"
+			;
+		String sTempBuffer = "";
+		int TAX_BUFFER_SIZE = 100;
+			for (int i = 0; i < arrTaxes.size(); i++){
+				sTempBuffer += "<OPTION";
+				if (arrTaxes.get(i).toString().compareTo(summary.getsitaxid()) == 0){
+					sTempBuffer += " selected=yes";
+				}
+				sTempBuffer += " VALUE=\"" + arrTaxes.get(i).toString() + "\">" + arrTaxDescriptions.get(i).toString() + "\n";
+				if ((i % TAX_BUFFER_SIZE) == 0) {
+					sControlHTML += sTempBuffer;
+					sTempBuffer = "";
+				}
+			}
+		//Get any remaining items from the buffer:
+		sControlHTML += sTempBuffer;
+		sControlHTML += "</SELECT>"
+		;
+			
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "<B>Tax type:</B>"
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ sControlHTML
+				+ "</TD>" + "\n"
+			;
+
+		s += "  </TR>" + "\n";
+		
 		
 		
 		

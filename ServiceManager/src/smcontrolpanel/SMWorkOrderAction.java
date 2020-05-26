@@ -420,6 +420,34 @@ public class SMWorkOrderAction extends HttpServlet{
 				return;
 	    	}
     	}
+    	//If it's a request to view pricing AND is posted:
+    	if ((sCommandValue.compareToIgnoreCase(
+    		    SMWorkOrderEdit.VIEW_PRICING_COMMAND_VALUE) == 0) && (workorder.isWorkOrderPosted())){
+			smaction.getCurrentSession().setAttribute(SMTableworkorders.ObjectName, workorder);
+			smaction.redirectAction(
+				"", 
+				"",
+				SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+					+ "&" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "=Y"
+					+ "&" + SMWorkOrderEdit.VIEW_TOTALS_AFTER_POSTING + "=Y"
+			);
+			return;
+		}
+    	//If it's a request to remove pricing:
+    	if ((sCommandValue.compareToIgnoreCase(
+    		    SMWorkOrderEdit.REMOVE_PRICING_COMMAND_VALUE) == 0) && (workorder.isWorkOrderPosted())){
+			smaction.getCurrentSession().setAttribute(SMTableworkorders.ObjectName, workorder);
+			smaction.redirectAction(
+				"", 
+				"",
+				SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+					+ "&" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "="
+			);
+			return;
+		}
+    	
     	//If it's a request to view pricing:
     	if (sCommandValue.compareToIgnoreCase(
     		    SMWorkOrderEdit.VIEW_PRICING_COMMAND_VALUE) == 0){

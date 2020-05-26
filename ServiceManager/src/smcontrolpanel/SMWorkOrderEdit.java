@@ -95,7 +95,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	public static final String DISCOUNTCHANGE_FLAG = "DISCOUNTCHANGEFLAG";
 	public static final String DISCOUNTCHANGED_VALUE = "DISCOUNTCHANGED";
 	public static final String DISCOUNT_TOTAL = "DISCOUNTTOTAL";
-	
+	public static final String VIEW_TOTALS_AFTER_POSTING = "VIEWTOTALSAFTERPOSTING";
 	
 
 	//This controls if the signature box should be displayed or not.
@@ -132,7 +132,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			smedit.getPWOut().println("Error [1391791199] loading work order from request: " + e2.getMessage());
 			return;
 		}
-
 		//If this is a 'resubmit', meaning it's being called by the Action class, then
 		//the session will have a work order object in it, and that's what we'll pick up.
 		HttpSession currentSession = smedit.getCurrentSession();
@@ -151,7 +150,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			smedit.getPWOut().println("Error [1415807186] getting session attribute - " + e1.getMessage());
 			return;
 		}
-		if (currentSession.getAttribute(SMTableworkorders.ObjectName) != null){
+		if (currentSession.getAttribute(SMTableworkorders.ObjectName) != null && wohead.isWorkOrderPosted()){
 
 			wohead = (SMWorkOrderHeader) currentSession.getAttribute(SMTableworkorders.ObjectName);
 			currentSession.removeAttribute(SMTableworkorders.ObjectName);
@@ -167,7 +166,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "') and work order ID from session object ('" + sWOIDFromSession + "') do not match.");
 				return;
 			}
-			
 			//But if it's NOT a 'resubmit', meaning this class was called for the first time to 
 			//edit, we'll pick up the ID or key from the request and try to load the entry:
 		}else{
@@ -238,6 +236,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			smedit.getPWOut().println("<script type='text/javascript' src='scripts/gen_validatorv31.js'></script>\n"
 				+ "<script type='text/javascript' src='scripts/PopupWindow.js'></script>\n"
 			);
+			String sViewAfterPosting = clsManageRequestParameters.get_Request_Parameter(VIEW_TOTALS_AFTER_POSTING, smedit.getRequest());
+			if (sViewAfterPosting.compareToIgnoreCase("") != 0){
+				smedit.getPWOut().println("<script>alert(\"Note the prices show are based on the CURRENT prices, not the ones when the Work Order was Posted\")</script>");
+			}		
 			createEditPage(
 				getEditHTML(smedit, wohead, SMTableworkorders.ObjectName, bUseGoogleDrivePicker),
 				SMWorkOrderHeader.FORM_NAME,
@@ -341,10 +343,15 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += sStyleScripts();
 
 		//Store whether or not the record has been changed this includes ANY change, including approval:
+		if(!wo_entry.isWorkOrderPosted()) {
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\" VALUE=\"" + clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
 			+ " id=\"" + RECORDWASCHANGED_FLAG + "\""
 			+ ">";
-		
+		}else {
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\" VALUE=\"N\""
+					+ " id=\"" + RECORDWASCHANGED_FLAG + "\""
+					+ ">";
+		}
 		//Store which command button the user has chosen:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\" VALUE=\"" + "" + "\""
 		+ " id=\"" + COMMAND_FLAG + "\""
@@ -412,10 +419,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//If the 'show pricing' flag has been set AND if we are in 'Edit' mode, then show the prices for the items:
 		boolean bShowPrices = (clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()).compareToIgnoreCase("") != 0);
 		
-		//ONLY allow the user to show prices until the work order is posted:
-		if (wo_entry.isWorkOrderPosted()){
-			bShowPrices = false;
-		}
 		boolean bAllowItemViewing =
 				SMSystemFunctions.isFunctionPermitted(
 					SMSystemFunctions.ICDisplayItemInformation, 
@@ -433,8 +436,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 		);
 		
-		//TODO to prevent saving bad stuff
-		if(bShowPrices==false) {
+		//To prevent discounts from being removed when saved w/o viewing prices
+		if(bShowPrices==false || wo_entry.isWorkOrderPosted()) {
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\" VALUE=\"" 
 					+ wo_entry.getdPrePostingWODiscountAmount()+ "\">";
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\" VALUE=\"" 
@@ -602,7 +605,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 						getServletContext(), 
 						sDBID,
 						sLicenseModuleLevel))
-				&& (!wo_order.isWorkOrderPosted())
+				
 		){
 			if (SMSystemFunctions.isFunctionPermitted(
 						SMSystemFunctions.SMZeroWorkOrderItemPrices, 
@@ -831,7 +834,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		//If the work order is posted, then we build the posted work order layout:
 		if (workorder.isWorkOrderPosted()){
-			s += displayItemsOnPostedWorkOrder(workorder, order, sm, bShowItemInformationLink);
+			s += displayItemsOnPostedWorkOrder(workorder, order, dummyorder, sm, bShowPrices, bShowItemInformationLink);
 		}else{
 			//If it's not posted, then if it's the 'EDIT' view, we build the 'edit' layout:
 			s += displayItemsForEditing(workorder, order, dummyorder, sm, bShowPrices, bAllowZeroWorkOrderItemPrices, bShowItemInformationLink);
@@ -839,7 +842,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//Close the table:
 		s += "</TABLE style = \" title:ItemsTable; \">\n";
 		
-		if (bShowPrices){
+		if (bShowPrices && !workorder.isWorkOrderPosted()){
 			s += "<TABLE class = \" innermost \" style=\" title:ItemTotalsTable; background-color: "
 					+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \" >\n";
 			//Show the totals table here:
@@ -917,7 +920,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 						;*/
 			}
 
-			//TODO Add Text Boxes for Discounts			
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNT_TOTAL + "\" VALUE=" 
 					+ sWODiscountTotal  + ""
 					+ " id=\"" + DISCOUNT_TOTAL + "\""
@@ -1020,6 +1022,175 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			}
 			
 			s += "</TABLE style = \" title:ItemTotalsTable; \">\n";
+		}else if(bShowPrices){
+
+			s += "<TABLE class = \" innermost \" style=\" title:ItemTotalsTable; background-color: "
+					+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \" >\n";
+			s +="<TR>"
+					+ "<TD COLSPAN=100%><HR></TD>"
+					+ "</TR>";
+			//Show the totals table here:
+			BigDecimal bdShippedValue = new BigDecimal("0.00");
+			BigDecimal bdTotalExtendedMaterialPrice = new BigDecimal("0.00");
+			BigDecimal bdTotalExtendedLaborPrice = new BigDecimal("0.00");
+			BigDecimal bdWODiscountAmount = new BigDecimal("0.00");
+			bdWODiscountAmount= BigDecimal.valueOf(Double.valueOf(workorder.getdPrePostingWODiscountAmount()));
+			for (int i = 0; i < dummyorder.get_iOrderDetailCount(); i++){
+				bdShippedValue = bdShippedValue.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
+				boolean bIsLaborItem = false;
+				ICItem item = new ICItem(dummyorder.getOrderDetail(i).getM_sItemNumber());
+				if(!item.load(getServletContext(), sm.getsDBID())){
+					//TJR - 1/12/2015 - we are assuming that if we can't read this item, it's NOT a labor item:
+					//System.out.println(" [1421078747] Cannot find item '" + dummyorder.getOrderDetail(i).getM_sItemNumber()
+					//	+ "' to calculate material and labor totals.");
+				}else{
+					bIsLaborItem = item.getLaborItem().compareToIgnoreCase("1") == 0;
+				}
+				if (bIsLaborItem){
+					bdTotalExtendedLaborPrice = bdTotalExtendedLaborPrice.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
+				}
+			}
+			String sWODiscountTotal =  clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue);
+			bdTotalExtendedMaterialPrice = bdShippedValue.subtract(bdTotalExtendedLaborPrice);
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Material total:</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalExtendedMaterialPrice) + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Labor total:</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalExtendedLaborPrice) + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Extended price total:</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue) + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					; 
+
+
+			//Add a row for the total discounted amount and percentage:
+			BigDecimal bdDiscountedAmount = new BigDecimal(dummyorder.getM_dPrePostingInvoiceDiscountAmount().replace(",",""));
+			if (bdDiscountedAmount.compareTo(BigDecimal.ZERO) != 0){
+				s += "<TR>"
+						+ "<TD align=left><FONT SIZE=2><B>" 
+						+ " Discount Percentage  on Order:&nbsp;(" 
+						+ dummyorder.getM_dPrePostingInvoiceDiscountPercentage() + "%)" 
+						+ "<B></FONT>"
+						;
+
+				s+= "<TD></TD>"
+						+"<TD></TD>"
+						+ "</TR>";
+				//Add a row for the sub total after discount:
+				/*s +=  "<TD align=right><FONT SIZE=2><B>Subtotal after order discount:</B></FONT></TD>"
+						+ "<TD align=right>"
+						+ "<FONT SIZE=2>" 
+						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdDiscountedAmount)) + "</B></FONT>"
+						+ "</TD>"
+						+ "</TR>"
+						;*/
+			}
+
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNT_TOTAL + "\" VALUE=" 
+					+ sWODiscountTotal  + ""
+					+ " id=\"" + DISCOUNT_TOTAL + "\""
+					+ ">";
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + DISCOUNTCHANGE_FLAG + "\" VALUE=\"" 
+					+ DISCOUNTCHANGED_VALUE  + "\""
+					+ " id=\"" + DISCOUNTCHANGE_FLAG + "\""
+					+ ">";
+
+			s += "<TR>"
+					+ "<TD align=left ><FONT SIZE=2><B> " ;
+			s+= "<I>Discount</I> Percentage: ("
+					+ "" + workorder.getdPrePostingWODiscountPercentage() + ""
+					+ "%)";			
+			s+= " Amount: "
+					+ "" + workorder.getdPrePostingWODiscountAmount() + ""
+					+ "";
+			s+= " Description: "
+					+  "" +  workorder.getsPrePostingWODiscountDesc().replace("\"", "&quot;")+ ""
+					+ "<TD align=right><FONT SIZE=2><B>Calculated discount amount: ";
+			s+= "</B></FONT></TD>"
+					+ "</TD>"
+					+ "<TD align=right><FONT SIZE=2><B>"
+					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(workorder.getdPrePostingWODiscountAmount()))) + ""
+					+ "</FONT></B></TD>"
+					+ "</TR>"
+					;
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Subtotal after calculated discount:</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdWODiscountAmount)) + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+
+			//Set Discount to the WO discount amount, rather than the whole Order
+			dummyorder.setM_dPrePostingInvoiceDiscountAmount(workorder.getdPrePostingWODiscountAmount());
+
+			//Add a row for the tax:
+			String sTaxAmount;
+			try {
+				sTaxAmount = dummyorder.getTaxAmount(sm.getsDBID(), sm.getUserName(), getServletContext());
+			} catch (Exception e) {
+				sTaxAmount = e.getMessage();
+			}
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Tax (calculated only on TAXABLE items):</B></FONT></TD>"
+					+ "<TD align=right>"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + sTaxAmount + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+
+			//Add a row for total INCLUDING tax:
+			String sTotalWithTax = "";
+			try {
+				sTotalWithTax = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdShippedValue.subtract(bdWODiscountAmount).add(new BigDecimal(sTaxAmount.replace(",", ""))));
+			} catch (Exception e) {
+				s += "Error [1390339789] calculating Total With Tax - " + e.getMessage();
+			}
+			s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD align=right><FONT SIZE=2><B>Extended price total INCLUDING discount and tax:</B></FONT></TD>"
+					+ "<TD align=right >"
+					+ "<FONT SIZE=2>" 
+					+ "<B>" + sTotalWithTax + "</B></FONT>"
+					+ "</TD>"
+					+ "</TR>"
+					;
+
+			//If we can set prices to to 0.00 then create a button to recalculate total
+			if(bAllowZeroWorkOrderItemPrices){
+				s += "<TR>"
+					+ "<TD></TD>"
+					+ "<TD></TD>"
+					+ "<TD align=right >"
+					+ "<BR>"
+					+ "</TD>"
+					+ "</TR>"
+				;
+			}
+			
+			s += "</TABLE style = \" title:ItemTotalsTable; \">\n";
 		}
 		return s;
 	}
@@ -1036,6 +1207,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		String s = "";
 		//Headings:
 		s += "<TR>";
+		s += "<TD class=\" fieldleftheading \">Qty used:&nbsp;</TD>";
 		s += "<TD class=\" fieldleftheading \">Qty used:&nbsp;</TD>";
 		s += "<TD class=\" fieldrightheading \">Qty assigned:&nbsp;</TD>";
 		s += "<TD class=\" fieldleftheading \">Item #:&nbsp;</TD>";
@@ -1200,55 +1372,146 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	private String displayItemsOnPostedWorkOrder(
 			SMWorkOrderHeader workorder,
 			SMOrderHeader order,
+			SMOrderHeader dummyorder,
 			SMMasterEditEntry sm,
-			boolean bShowItemInformationLink
+			boolean bShowPrices,
+			boolean bAllowItemViewing
 			) throws Exception{
 		String s = "";
 		//Headings:
-		
-		s += "<TR><TD ><B><U>ITEMS/LABOR USED:</U></B></TD></TR>";
 		s += "<TR>";
-		s += "<TD class=\" fieldrightheading \">Qty used&nbsp;</TD>";
-		s += "<TD class=\" fieldrightheading \">Qty assigned&nbsp;</TD>";
-		s += "<TD class=\" fieldleftheading \">Item #&nbsp;</TD>";
-		s += "<TD class=\" fieldleftheading \">Description&nbsp;</TD>";
+		s += "<TD class=\" fieldleftheading \">ITEMS/LABOR USED:&nbsp;</TD>";
+		s += "<TR></TR>";
+		s += "<TD class=\" fieldleftheading \">Qty used:&nbsp;</TD>";
+		s += "<TD class=\" fieldrightheading \">Qty assigned:&nbsp;</TD>";
+		s += "<TD class=\" fieldleftheading \">Item #:&nbsp;</TD>";
+		s += "<TD class=\" fieldleftheading \">Description:&nbsp;</TD>";
 		if(SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMEditLocationOnWorkOrderDetail, 
 				sm.getUserID(), 
 				getServletContext(), 
 				sm.getsDBID(),
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-		s += "<TD class=\" fieldleftheading \">Location&nbsp;</TD>";
+			s += "<TD class=\" fieldleftheading \">Location:&nbsp;</TD>";
 		}
-		s += "<TD class=\" fieldleftheading \">UOM&nbsp;</TD>";
-
-		s += "</TR>"
+		s += "<TD class=\" fieldleftheading \">UOM:&nbsp;</TD>";
 		;
+		if (bShowPrices){
 
+			s += "<TD class=\" fieldrightheading \">Set&nbsp;to<BR>zero?:</TD>";
+
+			s += "<TD class=\" fieldrightheading \">Extended<BR>price:&nbsp;</TD>";
+		}
+		s += "</TR>"
+				;
+		
 		//Display each of the items on the order:
 		int iNumberOfItemLines = 0;
+		
+		//Display all the items on the work order:
 		for (int i = 0; i < workorder.getDetailCount(); i++){
 			//IF it's an item, not a work performed code:
 			if (workorder.getDetailByIndex(i).getsdetailtype().compareToIgnoreCase(
 					Integer.toString(SMTableworkorderdetails.WORK_ORDER_DETAIL_TYPE_ITEM)) == 0){
-
-				iNumberOfItemLines++; //This will be one-based, rather than zero-based
-
+				
+				//We need to add a dummy line to the dummy order, so we can calculate prices and totals:
+				SMOrderDetail dummydetail = new SMOrderDetail();
+				dummydetail.setM_dQtyOrdered(workorder.getDetailByIndex(i).getsbdquantity().replace(",",""));
+				dummydetail.setM_dQtyShipped(workorder.getDetailByIndex(i).getsbdquantity().replace(",",""));
+				dummydetail.setM_dUniqueOrderID(order.getM_siID());
+				dummydetail.setM_strimmedordernumber(order.getM_strimmedordernumber());
+				dummydetail.setM_sItemNumber(workorder.getDetailByIndex(i).getsitemnumber());
+				//IF it's a 'configured' line that already exists on the order, we need to use the UNIT PRICE
+				//from that line on the order, not necessarily the calculated price for the item:
+				int iDetailNumber = 0;
+				try {
+					iDetailNumber = Integer.parseInt(workorder.getDetailByIndex(i).getsorderdetailnumber());
+				} catch (Exception e2) {
+					throw new Exception("Error [1430769480] parsing detail number '" + workorder.getDetailByIndex(i).getsorderdetailnumber() + "' - " + e2.getMessage());
+				}
+				
+				BigDecimal bdQtyAssigned = new BigDecimal("0.0000");
+				if (workorder.getDetailByIndex(i).getsbdqtyassigned().compareToIgnoreCase("") == 0){
+					workorder.getDetailByIndex(i).setsbdqtyassigned("0.0000");
+				}
+				try {
+					bdQtyAssigned = new BigDecimal(workorder.getDetailByIndex(i).getsbdqtyassigned().replace(",", ""));
+				} catch (Exception e1) {
+					throw new Exception("Error [1430769481] parsing qty assigned '" + workorder.getDetailByIndex(i).getsbdqtyassigned() + "' - " + e1.getMessage());
+				}
+				//Get the actual order detail that corresponds to this work order detail:
+				SMOrderDetail actualorderdetail = new SMOrderDetail();
+				if (iDetailNumber > 0){
+					actualorderdetail = order.getOrderDetailByDetailNumber(workorder.getDetailByIndex(i).getsorderdetailnumber());
+				}else{
+					actualorderdetail = null;
+				}
+				//Try to figure out if it's taxable from the item master:
+				String sTaxable = "1";
+				ICItem item = new ICItem(workorder.getDetailByIndex(i).getsitemnumber());
+				if (item.load(getServletContext(), sm.getsDBID())){
+					sTaxable = item.getTaxable();
+				//If we can't load the item, then check the order detail, if there is one:
+				}else{
+					if (actualorderdetail != null){
+						sTaxable = actualorderdetail.getM_iTaxable();
+					}
+				}
+				dummydetail.setM_iTaxable(sTaxable);
+				//Try to set the correct unit price here:
+				//If the order detail is a configured item, and if it corresponds to an actual order line:
+				if ((actualorderdetail != null) && (bdQtyAssigned.compareTo(BigDecimal.ZERO)) > 0){
+					try {
+						//Set the unit price to match the unit price on the order for this line:
+						dummydetail.setM_dOrderUnitPrice(actualorderdetail.getM_dOrderUnitPrice());
+						//extend the unit price times the qty:
+						order.calculateExtendedPrice(dummydetail);
+					} catch (Exception e) {
+						throw new SQLException(e.getMessage() + ".");
+					}
+				}else{
+					//Don't bother with calculating an item on a work order if it has not order associated with it:
+					if (
+						(order.getM_strimmedordernumber().compareToIgnoreCase("") != 0)
+						&& (order.getM_strimmedordernumber() != null)
+					){
+						//Otherwise, just calculate the price for this item and this qty, disregarding the unit price on the order:
+						try {
+							dummyorder.updateLinePrice(dummydetail, sm.getsDBID(), sm.getUserName(), getServletContext());
+						} catch (Exception e) {
+							throw new Exception ("Error [1431442449] updating price for item '" + dummydetail.getM_sItemNumber() + "' - " + e.getMessage());
+						}
+					}
+				}
+				String sExtendedPrice = dummydetail.getM_dExtendedOrderPrice();
+				if(workorder.getDetailByIndex(i).getssetpricetozero().compareToIgnoreCase("1") == 0) {
+					//Set the work order detail price to 0.00 so the display price is 0.00
+					sExtendedPrice = "0.00";
+					//Set the dummy order detail to 0.00 so totals are calculated correctly on the work order
+					dummydetail.setM_dExtendedOrderPrice("0.00");
+				}
+				
+				workorder.getDetailByIndex(i).setsbdextendedprice(sExtendedPrice);
+				dummyorder.addNewDetail(dummydetail);
+				iNumberOfItemLines++;
 				s += buildItemLineForPostedWorkOrder(
-					bShowItemInformationLink,
+					bShowPrices,
+					bAllowItemViewing,
 					workorder.getDetailByIndex(i),
 					order,
 					iNumberOfItemLines,
-					sm,
-					sm.getsDBID()
+					sm
 				);
 			}
 		}
-				
+	
+		
 		//Record the number of item lines in total:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.NUMBER_OF_ITEM_LINES_USED + "\" VALUE=\"" + Integer.toString(iNumberOfItemLines) + "\"" + ">";
-		return s;
-	}
+
+
+			return s;		
+		}
 	
 	private String buildItemLineForEditing(
 		boolean bShowPrices,
@@ -1717,159 +1980,178 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	}
 
 	private String buildItemLineForPostedWorkOrder(
-			boolean bShowItemInformationLink,
+			boolean bShowPrices,
+			boolean bAllowItemViewing,
 			SMWorkOrderDetail wodetail,
 			SMOrderHeader order,
 			int iLineNumber,
-			SMMasterEditEntry sm,
-			String sDBID
+			SMMasterEditEntry sm
 			) throws Exception{
 			String s = "";
+
 			s += "<TR>";
 			int iColumnCount = 0;
 			//QTY
-			s += "<TD class=\"readonlyrightfield\">" + wodetail.getsbdquantity() + "</TD>" + "\n";
+			String sQty = wodetail.getsbdquantity();
+			BigDecimal bdQty;
+			try {
+				bdQty = new BigDecimal(wodetail.getsbdquantity().replace(",", ""));
+				if (bdQty.compareTo(BigDecimal.ZERO) == 0){
+					sQty = "";
+				}
+			} catch (Exception e1) {
+				//Do nothing here - we just carry the value on...
+			}
+			s += "<TD class=\" fieldcontrol \" >"
+			+ " " + clsStringFunctions.filter(sQty) + ""
+			+ "</TD>"
+			+ "\n"
+			;
 			iColumnCount++;
-			s += "<INPUT TYPE=HIDDEN NAME=\"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Parambdquantity + "\""
-				+ " id = \"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Parambdquantity + "\""
-				+ "\""
-				+ " VALUE=\"" + clsStringFunctions.filter(wodetail.getsbdquantity()) + "\""
-				+ ">" + "\n";
-			
-			//QTY Assigned
+			//QTY ASSIGNED:
 			s += "<TD class=\"readonlyrightfield\">" + wodetail.getsbdqtyassigned() + "</TD>" + "\n";
 			iColumnCount++;
 			s += " <INPUT TYPE=HIDDEN NAME=\"" 
 				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
 				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
 				+  SMWorkOrderDetail.Parambdqtyassigned + "\""
-				+ " id = \"" 
+			+ " id = \"" 
 				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
 				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
 				+  SMWorkOrderDetail.Parambdqtyassigned + "\""
-				+ "\""
-				+ " VALUE=\"" + wodetail.getsbdqtyassigned().replace(",","") + "\""
-				+ ">" + "\n"
+			+ "\""
+			+ " VALUE=\"" + wodetail.getsbdqtyassigned().replace(",","") + "\""
+			+ ">" + "\n"
 			;
 			
-			String sItemNumberLink = wodetail.getsitemnumber();
-			if (bShowItemInformationLink){
-				sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-				+ "smic.ICDisplayItemInformation?ItemNumber=" 
-				+ wodetail.getsitemnumber()
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">" + wodetail.getsitemnumber() + "</A>";
-			}
+			//ITEM:
 			
-			s += "<TD class=\"readonlyleftfield\">" + sItemNumberLink + "</TD>";
-			s += " <INPUT TYPE=HIDDEN NAME=\"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Paramsitemnumber + "\""
+				//Need a link to the item information here:
+				String sItemNumberLink = wodetail.getsitemnumber();
+				if (bAllowItemViewing){
+					sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+					+ "smic.ICDisplayItemInformation?ItemNumber=" 
+					+ wodetail.getsitemnumber()
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() 
+					+ "\">" + wodetail.getsitemnumber() + "</A>";
+				}
+				
+				s += "<TD class=\"readonlyleftfield\">" + sItemNumberLink
+					+ " <INPUT TYPE=HIDDEN NAME=\"" 
+						+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
+						+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
+						+  SMWorkOrderDetail.Paramsitemnumber + "\""
+					+ " id = \"" 
+						+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
+						+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
+						+  SMWorkOrderDetail.Paramsitemnumber + "\""
+					+ "\""
+					+ " VALUE=\"" + clsStringFunctions.filter(wodetail.getsitemnumber()) + "\""
+					+ ">"
+				+ "</TD>" + "\n"
+				;
+				iColumnCount++;
+			
+			
+			//Item description COLUMN
+			//If there is no line id, then this line is not saved and it has to be editable:
+				s += "<TD class=\"readonlyleftfield\">" + wodetail.getsitemdesc()
+					+ " <INPUT TYPE=HIDDEN NAME=\"" 
+					+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
+					+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
+					+  SMWorkOrderDetail.Paramsitemdesc+ "\""
 				+ " id = \"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Paramsitemnumber + "\""
-				+ "\""
-				+ " VALUE=\"" + clsStringFunctions.filter(wodetail.getsitemnumber()) + "\""
-				+ ">" + "\n"
-			;
-			iColumnCount++;
-
-			//DESCRIPTION
-			s += "<TD class=\"readonlyleftfield\">" + wodetail.getsitemdesc() + "</TD>" + "\n";
-			iColumnCount++;
-			s += " <INPUT TYPE=HIDDEN NAME=\"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Paramsitemdesc+ "\""
-				+ " id = \"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Paramsitemdesc + "\""
+					+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
+					+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
+					+  SMWorkOrderDetail.Paramsitemdesc + "\""
 				+ "\""
 				+ " VALUE=\"" + clsStringFunctions.filter(wodetail.getsitemdesc()) + "\""
-				+ ">" + "\n"
-			;
+				+ ">"
+				+ "</TD>" + "\n"
+				;
+				iColumnCount++;
 			
-			//LOCATION
 			if(SMSystemFunctions.isFunctionPermitted(
 					SMSystemFunctions.SMEditLocationOnWorkOrderDetail, 
 					sm.getUserID(), 
 					getServletContext(), 
 					sm.getsDBID(),
 					(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-			s += "<TD class=\"readonlyleftfield\">" + wodetail.getslocationcode()  + "</TD>" + "\n";
-			iColumnCount++;
-			}
-			s += " <INPUT TYPE=HIDDEN NAME=\"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Paramslocationcode+ "\""
-				+ " id = \"" 
-				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
-				+  SMWorkOrderDetail.Paramslocationcode + "\""
-				+ "\""
-				+ " VALUE=\"" + clsStringFunctions.filter(wodetail.getslocationcode()) + "\""
-				+ ">" + "\n"
-			;
+				
+				//Location drop down selection:
+				s += "<TD class=\" fieldcontrol \">";
+				s += wodetail.getslocationcode();
+				s += "</TD>";
 			
-			//UOM
-			s += "<TD class=\"readonlyleftfield\">" + wodetail.getsuom() + "</TD>" + "\n";
+			}else{
+				s += "<TD class=\" fieldcontrol \">"
+				+ "" + wodetail.getslocationcode() + ""+ "";
+				s += "</TD>";
+			}
 			iColumnCount++;
+			
+			//Unit of measure COLUMN
+			if (wodetail.getslid().compareToIgnoreCase("-1") == 0){
+				s += "<TD class=\"readonlyleftfield\">" + "&nbsp;" + "</TD>" + "\n";
+				iColumnCount++;
+			}else{
+				s += "<TD class=\"readonlyleftfield\">" + wodetail.getsuom() + "</TD>" + "\n";
+				iColumnCount++;
+			}
+			
+			//In any case, store the UOM:
 			s += " <INPUT TYPE=HIDDEN NAME=\"" 
 				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
 				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
 				+  SMWorkOrderDetail.Paramsunitofmeasure+ "\""
-				+ " id = \"" 
+			+ " id = \"" 
 				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
 				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
 				+  SMWorkOrderDetail.Paramsunitofmeasure + "\""
-				+ "\""
-				+ " VALUE=\"" + clsStringFunctions.filter(wodetail.getsuom()) + "\""
-				+ ">" + "\n";
+			+ "\""
+			+ " VALUE=\"" + clsStringFunctions.filter(wodetail.getsuom()) + "\""
+			+ ">"
+			+ "\n"
+			;
 
-			//PRICE
 			//IF we are supposed to show prices, add a column for that here:
-			//Set to zero column
-			//String sSetToZeroCheckboxFieldname = SMWorkOrderHeader.SET_TO_ZERO_CHECKBOX_MARKER 
-			//	+ SMUtilities.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER)
-			//	+  SMWorkOrderDetail.Paramllsetpricetozero;
-			//if (bShowPrices){
-			//	if (bActivateSetToZeroFunction){
-			//		s += "<TD class=\"readonlyrightfield\" style = \"vertical-align:top;\" ><INPUT TYPE=CHECKBOX";
-			//		if (wodetail.getssetpricetozero().compareToIgnoreCase("1") == 0){
-			//			s += SMUtilities.CHECKBOX_CHECKED_STRING;
-			//		}
-			//		s += " NAME=\"" + sSetToZeroCheckboxFieldname + "\""
-			//			+ " ID = \"" + sSetToZeroCheckboxFieldname + "\""
-			//			+ " disabled " //Can't change this on posted orders
-			//			+ " width=0.25>"
-			//			+ "</TD>"
-			//		;
-			//	
-			//		//Extended price COLUMN
-			//		s += "<TD class=\"readonlyrightfield\">" + wodetail.getsbdextendedprice() + "</TD>" + "\n";
-			//	}
-			//	iColumnCount++;
-			//}else{
-			//	//Set to zero column
-			//	//Since this is normally a 'checkbox' field, we'll only include it if the value is 'checked':
-			//	if (wodetail.getssetpricetozero().compareToIgnoreCase("1") == 0){
-			//	s += " <INPUT TYPE=HIDDEN NAME=\"" + sSetToZeroCheckboxFieldname + "\""
-			//		+ " id = \"" + sSetToZeroCheckboxFieldname + "\""
-			//		+ " VALUE=\"" + "yes" + "\""
-			//		+ ">" + "\n"
-			//		;
-			//	}
-			//}
+			if (bShowPrices){
+				//Set to zero column
+				String sSetToZeroCheckboxFieldname = SMWorkOrderHeader.SET_TO_ZERO_CHECKBOX_MARKER 
+					+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER)
+					+  SMWorkOrderDetail.Paramllsetpricetozero;
+				if (Integer.parseInt(wodetail.getsorderdetailnumber()) < 0){
+					s += "<TD class=\"readonlyrightfield\" style = \"vertical-align:top;\" ><INPUT TYPE=CHECKBOX disabled=\"disabled\"";
+					if (wodetail.getssetpricetozero().compareToIgnoreCase("1") == 0){
+						s += clsServletUtilities.CHECKBOX_CHECKED_STRING;
+					}
+					s += " NAME=\"" + sSetToZeroCheckboxFieldname + "\""
+						+ " ID = \"" + sSetToZeroCheckboxFieldname + "\""
+						+ " width=0.25>"
+						+ "</TD>"
+					;
+				}else {
+					s += "<TD></TD>";
+				}
+				iColumnCount++;
+				//Extended price COLUMN
+				s += "<TD class=\"readonlyrightfield\">" + wodetail.getsbdextendedprice() + "</TD>" + "\n";
+				iColumnCount++;
+			}else{
+				//Set to zero column
+				//Since this is normally a 'checkbox' field, we'll only include it if the value is 'checked':
+				String sSetToZeroCheckboxFieldname = SMWorkOrderHeader.SET_TO_ZERO_CHECKBOX_MARKER 
+						+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER)
+						+  SMWorkOrderDetail.Paramllsetpricetozero;
+				if (wodetail.getssetpricetozero().compareToIgnoreCase("1") == 0){
+					s += " <INPUT TYPE=HIDDEN NAME=\"" + sSetToZeroCheckboxFieldname + "\""
+						+ " id = \"" + sSetToZeroCheckboxFieldname + "\""
+						+ " VALUE=\"" + "yes" + "\""
+						+ ">" + "\n"
+						;
+				}
+			}
+			
 			//Store the rest of the values for the lines in hidden variables here:
 			//Extended price:
 			s += " <INPUT TYPE=HIDDEN NAME=\"" 
@@ -1970,10 +2252,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ ">"
 				+ "\n"
 			;
-			
+		
 			s += "</TR>"
 			;
-
+			
 			//If there is a work order detail comment on this order line, display it:
 			SMOrderDetail orddetail = order.getOrderDetailByDetailNumber(wodetail.getsorderdetailnumber());
 			if (orddetail != null){
@@ -2025,7 +2307,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			} catch (Exception e) {
 				throw new Exception("Error [1395172604] reading work order comments for item - " + e.getMessage());
 			}
-			
 			return s;
 		}
 	private String buildblankItemLine(
@@ -2468,11 +2749,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "<TABLE class = \" innermost \" style=\" title:MechanicInfoTable; background-color: "
 				+ SMWorkOrderHeader.COMMENTS_TABLE_BG_COLOR + "; \" width=100% >\n";
 
-		//TODO
 		//Work order comments:
 		s += "<TR>";
 		s += "<TD><U><B>Description of work performed:</B></U></TD>";
-		
 		//Set the date:
 		s += "<TD class=\" fieldlabel \">Date of work:&nbsp;</TD>";
 		if (workorder.isWorkOrderPosted()){

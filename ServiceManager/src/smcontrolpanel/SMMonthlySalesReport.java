@@ -66,6 +66,7 @@ public class SMMonthlySalesReport extends java.lang.Object{
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyShippedToDate + "\n"
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dOrderUnitPrice + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + "\n"
+	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dExtendedOrderPrice + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dTotalAmountItems + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSpecialWageRate + "\n"
 	    + ", IF(ISNULL(" + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + "), '(N/A)'," 
@@ -139,62 +140,63 @@ public class SMMonthlySalesReport extends java.lang.Object{
 	    		}
 	    		SQL = SQL + ")" + "\n";
 		    }
-		SQL += ")" //End the 'WHERE' clause
-    
-		//Now include all the records of the orders that were canceled in this period:
-	    + " UNION ALL " + "\n"
-	    + "SELECT" + "\n"
-	    + " " + "'Monthly Sales Report' AS REPORTNAME" + "\n"
-	    + ", '" + sUserID + "' AS USERID" + "\n"
-	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber + " As ORDERNUMBER" + "\n"
-	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " As SALEDATE" + "\n"
-	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName + "\n"
-	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName + "\n"
-	    
+		    SQL += ")" //End the 'WHERE' clause
+
+		    		//Now include all the records of the orders that were canceled in this period:
+		    		+ " UNION ALL " + "\n"
+		    		+ "SELECT" + "\n"
+		    		+ " " + "'Monthly Sales Report' AS REPORTNAME" + "\n"
+		    		+ ", '" + sUserID + "' AS USERID" + "\n"
+		    		+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber + " As ORDERNUMBER" + "\n"
+		    		+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " As SALEDATE" + "\n"
+		    		+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName + "\n"
+		    		+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName + "\n"
+
 	    + ", IF(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson + " = '', "
-		+ "'" + SMOrderHeader.UNLISTEDSALESPERSON_MARKER + "', " 
-		+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
-		+ ") AS SALESPERSON" + "\n"
-	    
+	    + "'" + SMOrderHeader.UNLISTEDSALESPERSON_MARKER + "', " 
+	    + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
+	    + ") AS SALESPERSON" + "\n"
+
 		+ ", CONCAT(" + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName + ",' '," 
-			+ SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName + ") AS SALESPERSONNAME" + "\n"
-		
+		+ SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName + ") AS SALESPERSONNAME" + "\n"
+
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription + " As SALETYPE" + "\n"
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyOrdered + "\n"
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyShippedToDate + "\n"
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dOrderUnitPrice + " * -1 AS " 
-	    	+ SMTableorderdetails.dOrderUnitPrice + "\n"
+	    + SMTableorderdetails.dOrderUnitPrice + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + "\n"
+	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dExtendedOrderPrice + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dTotalAmountItems + " * -1 AS " 
-	    	+ SMTableorderheaders.dTotalAmountItems + "\n"
+	    + SMTableorderheaders.dTotalAmountItems + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSpecialWageRate + "\n"
 	    + ", IF(ISNULL(" + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + "), '(N/A)'," 
-	    	+ SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + ") AS SALESGROUP" + "\n"
+	    + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + ") AS SALESGROUP" + "\n"
 
 	    //Add an aliased field to keep these records distinct from the 'NOT canceled' records:
 	    + ", 'Y' As CANCELED" + "\n"
-	    
+
 	    + " FROM " + "\n"
-	    
+
 		+ SMTableorderdetails.TableName + " LEFT JOIN " + SMTableorderheaders.TableName + " ON " 
 		+ SMTableorderdetails.TableName + "." + SMTableorderdetails.strimmedordernumber + " = "
 		+ SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber + "\n"
-	    
+
 	    + " LEFT JOIN " + SMTablesalesgroups.TableName + " ON " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.iSalesGroupId
 	    + " = " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup + "\n"
 
 	    //Link salesperson table:
 	    + " LEFT JOIN " + SMTablesalesperson.TableName + " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
-	    	+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode + "\n"
+	    + " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode + "\n"
 
 	    //Date range:
 	    + " WHERE (" + "\n"
-    	    + "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " >= '" + sStartingDate + " 00:00:00')" + "\n"
-			+ " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " <= '" + sEndingDate + " 23:59:59')" + "\n"
-				
+	    + "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " >= '" + sStartingDate + " 00:00:00')" + "\n"
+	    + " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " <= '" + sEndingDate + " 23:59:59')" + "\n"
+
 		    + " AND ((" + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyOrdered + " + " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyShippedToDate + ") <> 0)" + "\n"
-		
+
 			//NO QUOTES!
 			+ " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.iOrderType + " != "
 			+ SMTableorderheaders.ORDERTYPE_QUOTE + ")" + "\n"
@@ -244,7 +246,7 @@ public class SMMonthlySalesReport extends java.lang.Object{
 		
 SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\n"
 	    ;
-	   // System.out.println("[1376426113] In " + this.toString() + ".processReport - main SQL = " + SQL);
+	  // System.out.println("[1376426113] In " + this.toString() + ".processReport - main SQL = " + SQL);
 		
 	    String sCurrentSalesGroup = "";
 		String sCurrentSalesType = "";
@@ -447,6 +449,8 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 				sCurrentShipToName = rs.getString(SMTableorderheaders.sShipToName);
 				datSaleDate = rs.getDate("SALEDATE");
 				sCurrentWageScale = rs.getString(SMTableorderheaders.sSpecialWageRate);
+				BigDecimal bdUnitPrice = rs.getBigDecimal(SMTableorderdetails.dOrderUnitPrice);
+				BigDecimal bdExtendedPrice = rs.getBigDecimal(SMTableorderdetails.dExtendedOrderPrice);
 				
 				BigDecimal bdTotalLineQtyOrdered = BigDecimal.ZERO;
 				if (rs.getString("CANCELED").compareToIgnoreCase("N") == 0){
@@ -457,7 +461,12 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 						rs.getBigDecimal(SMTableorderdetails.dQtyOrdered);
 				}
 				BigDecimal bdLineAmount = 
-					bdTotalLineQtyOrdered.multiply(rs.getBigDecimal(SMTableorderdetails.dOrderUnitPrice)).setScale(2, BigDecimal.ROUND_HALF_UP);
+					bdTotalLineQtyOrdered.multiply(bdUnitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
+				
+				if(bdExtendedPrice != BigDecimal.ZERO) {
+					bdLineAmount = bdExtendedPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
+				}
+				
 				bdCurrentOrderTotal = bdCurrentOrderTotal.add(bdLineAmount);
 			
 				//Calculate the sale type totals:

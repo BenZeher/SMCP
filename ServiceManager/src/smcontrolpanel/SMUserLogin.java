@@ -627,6 +627,9 @@ public class SMUserLogin extends HttpServlet {
 
 		//Sales Lead To-Do List
 		arMenu.add(SMSystemFunctions.SMPendingBidsReport);
+		
+		//Estimator
+		arMenu.add(SMSystemFunctions.SMEditSMEstimates);
 
 		if (bMobileView){
 			SMUtilities.buildMobileMenuTable(

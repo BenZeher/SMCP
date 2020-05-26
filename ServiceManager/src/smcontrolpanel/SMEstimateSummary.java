@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
@@ -21,6 +22,7 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
+import smap.APVendor;
 
 public class SMEstimateSummary {
 
@@ -770,7 +772,35 @@ public class SMEstimateSummary {
 		
 		return s;
 	}
-	
+	public static String getFindSummaryLink(
+			String sSearchingClassName, 
+			String sReturnField, 
+			String sParameterString, 
+			ServletContext context,
+			String sDBID){
+			
+			String m_sParameterString = sParameterString;
+			
+			if (m_sParameterString.startsWith("*")){
+				m_sParameterString = m_sParameterString.substring(1);
+			}
+			
+			return  
+				SMUtilities.getURLLinkBase(context) + "SMClasses.ObjectFinder"
+				+ "?"+ "&ObjectName=" + SMEstimateSummary.OBJECT_NAME
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&ResultClass=FinderResults"
+				+ "&SearchingClass=" + sSearchingClassName
+				+ "&ReturnField=" + sReturnField
+				+ "&SearchField1=" + SMTablesmestimatesummaries.sjobname
+				+ "&SearchFieldAlias1=Job%20Name"
+				+ "&SearchField2=" + SMTablesmestimatesummaries.lsalesleadid
+				+ "&SearchFieldAlias2=Sales%20Lead%20ID"
+				+ "&SearchField3=" + SMTablesmestimatesummaries.sdescription
+				+ "&SearchFieldAlias3=Description"
+				+ "&ParameterString=*" + m_sParameterString
+				;
+		}
 	private void initializeVariables(){
 		
 		m_lid = "-1";

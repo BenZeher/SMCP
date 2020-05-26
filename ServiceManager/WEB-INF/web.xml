@@ -1719,6 +1719,21 @@
         <servlet-name>SMEditSMOptions</servlet-name>
         <servlet-class>smcontrolpanel.SMEditSMOptions</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditSMSummaryAction</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditSMSummaryAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditSMSummaryEdit</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditSMSummaryEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditSMSummarySelect</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditSMSummarySelect</servlet-class>
+    </servlet>
 
     <servlet>
         <servlet-name>SMEditTaxCertificatesAction</servlet-name>
@@ -5036,6 +5051,21 @@
     <servlet-mapping>
         <servlet-name>SMEditSMOptions</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditSMOptions</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SMEditSMSummaryAction</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditSMSummaryAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMEditSMSummaryEdit</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditSMSummaryEdit</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMEditSMSummarySelect</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditSMSummarySelect</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

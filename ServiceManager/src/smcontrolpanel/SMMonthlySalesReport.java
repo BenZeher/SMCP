@@ -461,12 +461,11 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 						rs.getBigDecimal(SMTableorderdetails.dQtyOrdered);
 				}
 				BigDecimal bdLineAmount = 
-					bdTotalLineQtyOrdered.multiply(bdUnitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
-				
-				if(bdExtendedPrice != BigDecimal.ZERO) {
-					bdLineAmount = bdExtendedPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
+					bdTotalLineQtyOrdered.multiply(bdUnitPrice).setScale(SMTableorderdetails.dOrderUnitPriceScale, BigDecimal.ROUND_HALF_UP);
+
+				if(bdExtendedPrice.compareTo(BigDecimal.ZERO)!=0) {
+					bdLineAmount = bdExtendedPrice.setScale(SMTableorderdetails.dExtendedOrderPriceScale, BigDecimal.ROUND_HALF_UP);
 				}
-				
 				bdCurrentOrderTotal = bdCurrentOrderTotal.add(bdLineAmount);
 			
 				//Calculate the sale type totals:

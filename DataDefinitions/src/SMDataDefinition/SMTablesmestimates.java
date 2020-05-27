@@ -7,7 +7,7 @@ public class SMTablesmestimates {
 	public static String lid = "lid";
 	public static String lsummarylid = "lsummarylid";
 	public static String lsummarylinenumber = "lsummarylinenumber";
-	public static String sdescription = "description";
+	public static String sdescription = "sdescription";
 	public static String sprefixlabelitem = "sprefixlabelitem";
 	public static String svendorquotenumber = "svendorquotenumber";
 	public static String ivendorquotelinenumber = "ivendorquotelinenumber";

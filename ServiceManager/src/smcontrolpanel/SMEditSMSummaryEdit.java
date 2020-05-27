@@ -81,6 +81,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY ";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
+	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
+	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
@@ -475,7 +477,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
 		s += "    <TD>" + "\n";
-		s += buildEstimateTable(conn);
+		s += buildEstimateTable(conn, summary);
 		
 		s += buildTotalsTable(summary);
 		
@@ -1224,7 +1226,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		*/
 		return s;
 	}
-	private String buildEstimateTable(Connection conn) throws Exception{
+	private String buildEstimateTable(Connection conn, SMEstimateSummary summary) throws Exception{
 		
 		String s = "";
 		int iNumberOfColumns = 5;
@@ -1280,6 +1282,44 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		;		
 		
 		s += "  </TR>" + "\n";
+		
+		//Get all the estimates:
+		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
+			s += "  <TR>" + "\n";
+			
+			//Estimate ID:
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
+					+ summary.getEstimateArray().get(i).getslid()
+					+ "</TD>" + "\n"
+				;		
+			
+			//Remove button:
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\" >"
+					+ buildRemoveEstimateButton(summary.getEstimateArray().get(i).getslid())
+					+ "</TD>" + "\n"
+				;
+			
+			//Quantity:
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
+					+ summary.getEstimateArray().get(i).getsbdquantity()
+					+ "</TD>" + "\n"
+				;
+			
+			//Product description:
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+					+ summary.getEstimateArray().get(i).getsproductdescription()
+					+ "</TD>" + "\n"
+				;
+			
+			//Price:
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
+					+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(summary.getEstimateArray().get(i).getTotalPrice(conn))
+					+ "</TD>" + "\n"
+				;
+			
+			s += "  </TR>" + "\n";
+		}
+		
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns) + " >"
@@ -1346,7 +1386,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ "0.00"
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -1505,7 +1545,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + FIELD_ADJUSTED_TOTAL_FREIGHT + "\""
 			+ " ID = \"" + FIELD_ADJUSTED_TOTAL_FREIGHT + "\""
 			+ " style = \" text-align:right; width:100px;\""
-			+ " VALUE = 0.00"
+			+ " VALUE = \"" + summary.getsbdadjustedfreight() + "\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1525,7 +1565,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + FIELD_ADJUSTED_LABOR_UNITS + "\""
 			+ " ID = \"" + FIELD_ADJUSTED_LABOR_UNITS + "\""
 			+ " style = \" text-align:right; width:100px;\""
-			+ " VALUE = 0.00"
+			+ " VALUE = \"" + summary.getsbdadjustedlaborunitqty() + "\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1543,7 +1583,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " NAME = \"" + FIELD_ADJUSTED_COST_PER_LABOR_UNIT + "\""
 				+ " ID = \"" + FIELD_ADJUSTED_COST_PER_LABOR_UNIT + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = 0.00"
+				+ " VALUE = \"" + summary.getsbdadjustedlaborcostperunit() + "\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1557,14 +1597,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 				+ ">"
-				+ "<INPUT TYPE=TEXT"
+				+ "<LABEL"
 				+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
 				+ " ID = \"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
-				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = 0.00"
 				+ ">"
-				+ "</INPUT>"
-				
+				+ "0.00"  // TODO - fill in this value with javascript
+				+ "</LABEL>"
 				+ "</TD>" + "\n"
 			;
 		s += "  </TR>" + "\n";
@@ -1633,7 +1671,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " NAME = \"" + FIELD_ADJUSTED_TOTAL_MARKUP + "\""
 				+ " ID = \"" + FIELD_ADJUSTED_TOTAL_MARKUP + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = 0.00"
+				+ " VALUE = \"" + summary.getsbdadjustedlmarkupamt() + "\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1707,6 +1745,21 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		return s;
 		
+	}
+	
+	private String buildRemoveEstimateButton(String sEstimateNumber) {
+		String s = "";
+		s += "<button type=\"button\""
+			+ " value=\"" + BUTTON_REMOVE_ESTIMATE_CAPTION + "\""
+			+ " name=\"" + BUTTON_REMOVE_ESTIMATE_BASE + "\""
+			+ " id=\"" + BUTTON_REMOVE_ESTIMATE_BASE + "\""
+			//TODO - involve the estimate number in the removal:
+			+ " onClick=\"removestimate();\">"
+			+ BUTTON_REMOVE_ESTIMATE_CAPTION
+			+ "</button>\n"
+		;
+
+		return s;
 	}
 	
 	private String buildEstimateButtons() {

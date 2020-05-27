@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMTax;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import ServletUtilities.clsDatabaseFunctions;
@@ -1009,6 +1010,67 @@ public class SMEstimate {
 
 	public ArrayList<SMEstimateLine> getLineArray(){
 		return arrEstimateLines;
+	}
+	
+	public BigDecimal getTotalPrice(Connection conn) throws Exception{
+		BigDecimal bdTotalPrice = new BigDecimal("0.00");
+		
+		try {
+			bdTotalPrice = bdTotalPrice.add(new BigDecimal(m_bdextendedcost.replace(",", "")));
+			
+			//TODO - add estimate line amts:
+			
+			bdTotalPrice = bdTotalPrice.add(new BigDecimal(m_bdfreight.replace(",", "")));
+			BigDecimal bdLaborUnits = new BigDecimal(m_bdlaborquantity.replace(",", ""));
+			BigDecimal bdLaborCostPerUnit = new BigDecimal(m_bdlaborcostperunit.replace(",", ""));
+			bdTotalPrice = bdTotalPrice.add(bdLaborUnits.multiply(bdLaborCostPerUnit));
+			bdTotalPrice = bdTotalPrice.add(new BigDecimal(m_bdadditionalpretaxcostamount.replace(",", "")));
+			bdTotalPrice = bdTotalPrice.add(new BigDecimal(m_bdmarkupamount.replace(",", "")));
+			bdTotalPrice = bdTotalPrice.add(getTotalTaxOnMaterial(conn));
+			bdTotalPrice = bdTotalPrice.add(new BigDecimal(m_bdadditionalposttaxcostamount.replace(",", "")));
+		} catch (Exception e) {
+			throw new Exception("Error [202005270912] - calculating total price - " + e.getMessage());
+		}
+		
+		return bdTotalPrice;
+	}
+	public BigDecimal getTotalTaxOnMaterial(Connection conn) throws Exception{
+		
+		BigDecimal bdTaxOnMaterial = new BigDecimal("0.00");
+		SMEstimateSummary summary = new SMEstimateSummary();
+		summary.setslid(m_lsummarylid);
+		try {
+			summary.load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202005270035] - could not load summary number '" + m_lsummarylid + "' - " + e.getMessage());
+		}
+		
+		SMTax tax = new SMTax();
+		tax.set_slid(summary.getsitaxid());
+		try {
+			tax.load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202005270128] - could not load tax with ID '" + summary.getsitaxid() + "' - " + e.getMessage());
+		}
+		
+		bdTaxOnMaterial = getTotalMaterialCost(conn).multiply(new BigDecimal(tax.get_bdtaxrate().replace(",", "")));
+		
+		return bdTaxOnMaterial;
+	}
+	
+	public BigDecimal getTotalMaterialCost(Connection conn) throws Exception{
+		BigDecimal bdTotalMaterialCost = new BigDecimal("0.00");
+		
+		bdTotalMaterialCost = bdTotalMaterialCost.add(new BigDecimal(m_bdextendedcost.replace(",", "")));
+		
+		//TODO - add in the estimate line costs:
+		for (int i = 0; i < arrEstimateLines.size(); i++) {
+			bdTotalMaterialCost.add(new BigDecimal(arrEstimateLines.get(i).getsbdextendedcost().replace(",", "")));
+		}
+		
+		bdTotalMaterialCost = bdTotalMaterialCost.add(new BigDecimal(m_bdadditionalpretaxcostamount.replace(",", "")));
+		
+		return bdTotalMaterialCost;
 	}
 	
 	private void saveLines(Connection conn, String sUser) throws Exception{

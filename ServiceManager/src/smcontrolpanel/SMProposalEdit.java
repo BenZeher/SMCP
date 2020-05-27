@@ -442,8 +442,8 @@ public class SMProposalEdit  extends HttpServlet {
 		
 		s +=
 			"\n<form name=cpform>\n"
-			+ "<B>Show proposal phrases<B>\n"
 			+ "<input type=\"checkbox\" id=\"cbChoices\" onclick=\"exposeProposalPhraseGroupChoices()\">"
+			+ "<B>Show proposal phrases<B>\n"
 			+ "<div id= \"CPINSERTLABEL\" style=\"display:none;\">"
 		;
 		//Get all the proposal groups:
@@ -459,7 +459,7 @@ public class SMProposalEdit  extends HttpServlet {
 		);
 		while (rs.next()){
 			String sProposalGroupID = Integer.toString(rs.getInt(SMTableproposalphrasegroups.sid));
-			s += "&nbsp;" + rs.getString(SMTableproposalphrasegroups.sgroupname)
+			s += "&nbsp;" 
 			+ "<input type=radio"
 			+ " onclick=\"exposeProposalPhraseList(" + sProposalGroupID + ")\""
 			+ " value=\"" + PROPOSALGROUP_PREFIX + rs.getString(SMTableproposalphrasegroups.sgroupname) + "\""
@@ -467,6 +467,7 @@ public class SMProposalEdit  extends HttpServlet {
 			+ " name=\"" + INSERTCPS_GROUP + "\""
 			+ " id=\"" + PROPOSALGROUP_PREFIX + sProposalGroupID + "\""
 			+ ">"
+			+ "&nbsp;" + rs.getString(SMTableproposalphrasegroups.sgroupname)
 			;
 		}
 		rs.close();

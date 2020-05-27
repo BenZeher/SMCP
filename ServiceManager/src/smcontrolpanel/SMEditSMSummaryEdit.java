@@ -471,11 +471,18 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "</TABLE>" + "\n";
 		
+		//Include an outer table:
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
+		s += "  <TR>" + "\n";
+		s += "    <TD>" + "\n";
 		s += buildEstimateTable(conn);
 		
-		s += buildEstimateButtons();
-		
 		s += buildTotalsTable(summary);
+		
+		//Close the outer table:
+		s += "    </TD>" + "\n";
+		s += "  </TR>" + "\n";
+		s += "</TABLE>" + "\n";
 		
 /*
 			s += "<TR><TD ALIGN=RIGHT><B>Date last edited</B>:</TD>"
@@ -1222,7 +1229,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		String s = "";
 		int iNumberOfColumns = 5;
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
@@ -1234,9 +1241,52 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "  </TR>" + "\n";
 		
+		//Headings:
+		s += "  <TR>" + "\n";
+		
+		//Estimate number:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Estimate #"
+			+ "</TD>" + "\n"
+		;
+		
+		//Remove?:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Remove?"
+			+ "</TD>" + "\n"
+		;
+		
+		//Qty:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Quantity"
+			+ "</TD>" + "\n"
+		;
+		
+		//Desc:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Product Description"
+			+ "</TD>" + "\n"
+		;
+		
 		//For each estimate, show the totals:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Price"
+			+ "</TD>" + "\n"
+		;		
 		
+		s += "  </TR>" + "\n";
 		
+		s += "  <TR>" + "\n";
+		s += "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns) + " >"
+			+ buildEstimateButtons()
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
 		
@@ -1249,7 +1299,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		String s = "";
 		int iNumberOfColumns = 6;
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >" + "\n";
+		s += "<BR>";
+		
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
@@ -1324,7 +1376,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
 			+ LABEL_CALCULATED_TOTAL_LABOR_COST_CAPTION
 			+ "</TD>" + "\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""

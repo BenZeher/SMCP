@@ -67,6 +67,7 @@ public class SMMonthlySalesReport extends java.lang.Object{
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dOrderUnitPrice + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + "\n"
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dExtendedOrderPrice + "\n"
+	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.iLineNumber + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dTotalAmountItems + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSpecialWageRate + "\n"
 	    + ", IF(ISNULL(" + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + "), '(N/A)'," 
@@ -168,6 +169,7 @@ public class SMMonthlySalesReport extends java.lang.Object{
 	    + SMTableorderdetails.dOrderUnitPrice + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + "\n"
 	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dExtendedOrderPrice + "\n"
+	    + ", " + SMTableorderdetails.TableName + "." + SMTableorderdetails.iLineNumber + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dTotalAmountItems + " * -1 AS " 
 	    + SMTableorderheaders.dTotalAmountItems + "\n"
 	    + ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSpecialWageRate + "\n"
@@ -244,9 +246,9 @@ public class SMMonthlySalesReport extends java.lang.Object{
 		    }
 		SQL += ")";
 		
-SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\n"
+		SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\n"
 	    ;
-	  // System.out.println("[1376426113] In " + this.toString() + ".processReport - main SQL = " + SQL);
+		//System.out.println("[1376426113] In " + this.toString() + ".processReport - main SQL = " + SQL);
 		
 	    String sCurrentSalesGroup = "";
 		String sCurrentSalesType = "";
@@ -460,12 +462,28 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 					bdTotalLineQtyOrdered = 
 						rs.getBigDecimal(SMTableorderdetails.dQtyOrdered);
 				}
+				
+				//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
+				//	System.out.println("[202005281630] - bdUnitPrice = " + bdUnitPrice);
+				//	System.out.println("[202005281649] - bdTotalLineQtyOrdered = " + bdTotalLineQtyOrdered);
+				//}
 				BigDecimal bdLineAmount = 
 					bdTotalLineQtyOrdered.multiply(bdUnitPrice).setScale(SMTableorderdetails.dOrderUnitPriceScale, BigDecimal.ROUND_HALF_UP);
 
+				//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
+				//	System.out.println("[202005282932] - bdExtendedPrice = " + bdExtendedPrice);
+				//}
+				
 				if(bdExtendedPrice.compareTo(BigDecimal.ZERO)!=0) {
+					//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
+					//	System.out.println("[202005281723] - bdExtendedPrice.compareTo(BigDecimal.ZERO)!=0");
+					//}
 					bdLineAmount = bdExtendedPrice.setScale(SMTableorderdetails.dExtendedOrderPriceScale, BigDecimal.ROUND_HALF_UP);
 				}
+				//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
+				//	System.out.println("[202005283359] - check....");
+				//	System.out.println("[202005281749] - bdLineAmount = " + bdLineAmount);
+				//}
 				bdCurrentOrderTotal = bdCurrentOrderTotal.add(bdLineAmount);
 			
 				//Calculate the sale type totals:

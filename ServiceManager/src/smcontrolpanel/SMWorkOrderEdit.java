@@ -150,8 +150,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			smedit.getPWOut().println("Error [1415807186] getting session attribute - " + e1.getMessage());
 			return;
 		}
-		if (currentSession.getAttribute(SMTableworkorders.ObjectName) != null && wohead.isWorkOrderPosted()){
-
+		if (currentSession.getAttribute(SMTableworkorders.ObjectName) != null){
+			
 			wohead = (SMWorkOrderHeader) currentSession.getAttribute(SMTableworkorders.ObjectName);
 			currentSession.removeAttribute(SMTableworkorders.ObjectName);
 
@@ -3210,9 +3210,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		//Close the table:
 		s += "</TABLE style = \" title:OrderHeaderTable2; \">\n";
-		if(workorder.getiViewPrices().compareToIgnoreCase("1")==0) {
-			s+=" <B>Customer has viewed prices</B>";
-		}
 		return s;
 	}
 

@@ -423,7 +423,6 @@ public class SMWorkOrderAction extends HttpServlet{
     	//If it's a request to view pricing AND is posted:
     	if ((sCommandValue.compareToIgnoreCase(
     		    SMWorkOrderEdit.VIEW_PRICING_COMMAND_VALUE) == 0) && (workorder.isWorkOrderPosted())){
-			smaction.getCurrentSession().setAttribute(SMTableworkorders.ObjectName, workorder);
 			smaction.redirectAction(
 				"", 
 				"",

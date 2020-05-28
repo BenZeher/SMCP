@@ -3210,6 +3210,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		//Close the table:
 		s += "</TABLE style = \" title:OrderHeaderTable2; \">\n";
+		if(workorder.getiViewPrices().compareToIgnoreCase("1")==0) {
+			s+=" <B>Customer has viewed prices</B>";
+		}
 		return s;
 	}
 

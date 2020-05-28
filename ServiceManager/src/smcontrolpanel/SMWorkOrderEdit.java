@@ -617,7 +617,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				//No need to show the button unless it's turned off currently:
 				if (sViewFlag.compareToIgnoreCase("") == 0){
 					s += createViewPricingButton();
-					s+=" <B>*Customer price viewing is currently</B>";
+					s+=" <B>*Customer price viewing is </B>";
 					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
 						s+=" <B><U>ON</U>*</B>";
 					}else {
@@ -626,7 +626,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 				}else{
 					s += createHidePricingButton();
-					s+=" <B>*Customer price viewing is currently</B>";
+					s+=" <B>*Customer price viewing is </B>";
 					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
 						s+=" <B><U>ON</U>*</B>";
 					}else {
@@ -637,7 +637,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				//No need to show the button unless it's turned off currently:
 				if (sViewFlag.compareToIgnoreCase("") == 0){
 					s += createViewPricingButton();
-					s+=" <B>*Customer price viewing is currently</B>";
+					s+=" <B>*Customer price viewing is </B>";
 					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
 						s+=" <B><U>ON</U>*</B>";
 					}else {
@@ -645,7 +645,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					}
 				}else{
 					s += createHidePricingButton();
-					s+=" <B>*Customer price viewing is currently</B>";
+					s+=" <B>*Customer price viewing is </B>";
 					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
 						s+=" <B><U>ON</U>*</B>";
 					}else {

@@ -617,15 +617,40 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				//No need to show the button unless it's turned off currently:
 				if (sViewFlag.compareToIgnoreCase("") == 0){
 					s += createViewPricingButton();
+					s+=" <B>*Customer price viewing is currently</B>";
+					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
+						s+=" <B><U>ON</U>*</B>";
+					}else {
+						s+=" <B><U>OFF</U>*</B>";
+					}
+
 				}else{
 					s += createHidePricingButton();
+					s+=" <B>*Customer price viewing is currently</B>";
+					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
+						s+=" <B><U>ON</U>*</B>";
+					}else {
+						s+=" <B><U>OFF</U>*</B>";
+					}
 				}
 			}else{
 				//No need to show the button unless it's turned off currently:
 				if (sViewFlag.compareToIgnoreCase("") == 0){
 					s += createViewPricingButton();
+					s+=" <B>*Customer price viewing is currently</B>";
+					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
+						s+=" <B><U>ON</U>*</B>";
+					}else {
+						s+=" <B><U>OFF</U>*</B>";
+					}
 				}else{
 					s += createHidePricingButton();
+					s+=" <B>*Customer price viewing is currently</B>";
+					if(wo_order.getiViewPrices().compareToIgnoreCase("1")==0) {
+						s+=" <B><U>ON</U>*</B>";
+					}else {
+						s+=" <B><U>OFF</U>*</B>";
+					}
 				}
 			}
 		}
@@ -3210,13 +3235,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		//Close the table:
 		s += "</TABLE style = \" title:OrderHeaderTable2; \">\n";
-		s+=" <B>*Customer price viewing is currently</B>";
-		if(workorder.getiViewPrices().compareToIgnoreCase("1")==0) {
-			s+=" <B><U>ON</U>*</B>";
-		}else {
-			s+=" <B><U>OFF</U>*</B>";
-		}
-
 		return s;
 	}
 

@@ -436,7 +436,6 @@ public class SMWorkOrderAction extends HttpServlet{
     	//If it's a request to remove pricing:
     	if ((sCommandValue.compareToIgnoreCase(
     		    SMWorkOrderEdit.REMOVE_PRICING_COMMAND_VALUE) == 0) && (workorder.isWorkOrderPosted())){
-			smaction.getCurrentSession().setAttribute(SMTableworkorders.ObjectName, workorder);
 			smaction.redirectAction(
 				"", 
 				"",

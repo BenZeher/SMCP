@@ -463,27 +463,12 @@ public class SMMonthlySalesReport extends java.lang.Object{
 						rs.getBigDecimal(SMTableorderdetails.dQtyOrdered);
 				}
 				
-				//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
-				//	System.out.println("[202005281630] - bdUnitPrice = " + bdUnitPrice);
-				//	System.out.println("[202005281649] - bdTotalLineQtyOrdered = " + bdTotalLineQtyOrdered);
-				//}
 				BigDecimal bdLineAmount = 
 					bdTotalLineQtyOrdered.multiply(bdUnitPrice).setScale(SMTableorderdetails.dOrderUnitPriceScale, BigDecimal.ROUND_HALF_UP);
-
-				//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
-				//	System.out.println("[202005282932] - bdExtendedPrice = " + bdExtendedPrice);
-				//}
 				
 				if(bdExtendedPrice.compareTo(BigDecimal.ZERO)!=0) {
-					//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
-					//	System.out.println("[202005281723] - bdExtendedPrice.compareTo(BigDecimal.ZERO)!=0");
-					//}
 					bdLineAmount = bdExtendedPrice.setScale(SMTableorderdetails.dExtendedOrderPriceScale, BigDecimal.ROUND_HALF_UP);
 				}
-				//if (sCurrentOrderNumber.trim().compareToIgnoreCase("141719") == 0) {
-				//	System.out.println("[202005283359] - check....");
-				//	System.out.println("[202005281749] - bdLineAmount = " + bdLineAmount);
-				//}
 				bdCurrentOrderTotal = bdCurrentOrderTotal.add(bdLineAmount);
 			
 				//Calculate the sale type totals:

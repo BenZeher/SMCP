@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelabortypes;
@@ -56,33 +55,36 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL = "LABELCALCULATEDTOTALTAX";
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION = "TOTAL TAX ON MATERIAL:";
 	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY = "LABELCALCULATEDTOTALFORSUMMARY";
-	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY_CAPTION = "CALCULATED TOTAL FOR ESTIMATE SUMMARY ";
+	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY_CAPTION = "CALCULATED TOTAL FOR ESTIMATE SUMMARY #";
 	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_COST = "LABELADJUSTEDTOTALMATERIALCOST";
 	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
-	public static final String FIELD_ADJUSTED_TOTAL_FREIGHT = "FIELDADJUSTEDTOTALFREIGHT";
+	//public static final String FIELD_ADJUSTED_TOTAL_FREIGHT = "FIELDADJUSTEDTOTALFREIGHT";
 	public static final String FIELD_ADJUSTED_TOTAL_FREIGHT_CAPTION = "TOTAL FREIGHT:";
-	public static final String FIELD_ADJUSTED_LABOR_UNITS = "FIELDADJUSTEDLABORUNITS";
+	//public static final String FIELD_ADJUSTED_LABOR_UNITS = "FIELDADJUSTEDLABORUNITS";
 	public static final String FIELD_ADJUSTED_LABOR_UNITS_CAPTION = "LABOR UNITS:";
-	public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT = "FIELDADJUSTEDCOSTPERLABORUNIT";
+	//public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT = "FIELDADJUSTEDCOSTPERLABORUNIT";
 	public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT_CAPTION = "LABOR COST/UNIT:";
 	public static final String LABEL_ADJUSTED_TOTAL_LABOR_COST = "LABELADJUSTEDTOTALLABORCOST";
 	public static final String LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION = "TOTAL LABOR COST:";
-	public static final String FIELD_ADJUSTED_MU_PER_LABOR_UNIT = "FIELDADJUSTEDMUPERLABORUNIT";
+	public static final String LABEL_ADJUSTED_MU_PER_LABOR_UNIT = "LABELADJUSTEDMUPERLABORUNIT";
 	public static final String FIELD_ADJUSTED_MU_PER_LABOR_UNIT_CAPTION = "MU PER LABOR UNIT:";
-	public static final String FIELD_ADJUSTED_MU_PERCENTAGE = "FIELDADJUSTEDMUPERCENTAGE";
+	public static final String LABEL_ADJUSTED_MU_PERCENTAGE = "LABELADJUSTEDMUPERCENTAGE";
 	public static final String FIELD_ADJUSTED_MU_PERCENTAGE_CAPTION = "MU PERCENTAGE:";
-	public static final String FIELD_ADJUSTED_GP_PERCENTAGE = "FIELDADJUSTEDGPPERCENTAGE";
+	public static final String LABEL_ADJUSTED_GP_PERCENTAGE = "LABELADJUSTEDGPPERCENTAGE";
 	public static final String FIELD_ADJUSTED_GP_PERCENTAGE_CAPTION = "GP PERCENTAGE:";
-	public static final String FIELD_ADJUSTED_TOTAL_MARKUP = "FIELDADJUSTEDTOTALMARKUP";
+	//public static final String FIELD_ADJUSTED_TOTAL_MARKUP = "FIELDADJUSTEDTOTALMARKUP";
 	public static final String LABEL_ADJUSTED_TOTAL_MARKUP_CAPTION = "TOTAL MARK-UP:";
 	public static final String LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL = "LABELADJUSTEDTOTALTAXONMATERIAL";
 	public static final String LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL_CAPTION = "TOTAL TAX ON MATERIAL:";
 	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY = "LABELADJUSTEDTOTALFORSUMMARY";
-	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY ";
+	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY #";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
 	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
+	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
+	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
+	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
@@ -99,7 +101,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				getServletContext(),
 				SMEstimateSummary.OBJECT_NAME,
 				SMUtilities.getFullClassName(this.toString()),
-				"smcontrolpanel.SMEditSMSummaryEdit",
+				"smcontrolpanel.SMEditSMSummaryAction",
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
 				SMSystemFunctions.SMEditSMEstimates
@@ -134,8 +136,26 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				}
 	    	}
 	    }
+	    
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
+	    
+	    if (currentSession.getAttribute(WARNING_OBJECT) != null) {
+	    	String sWarning = (String)currentSession.getAttribute(WARNING_OBJECT);
+	    	currentSession.removeAttribute(WARNING_OBJECT);
+	    	if (sWarning.compareToIgnoreCase("") != 0) {
+	    		smedit.getPWOut().println("<BR><FONT COLOR=RED><B>WARNING: " + sWarning + "</B></FONT><BR>");
+	    	}
+	    }
+	    
+	    if (currentSession.getAttribute(RESULT_STATUS_OBJECT) != null) {
+	    	String sStatus = (String)currentSession.getAttribute(RESULT_STATUS_OBJECT);
+	    	currentSession.removeAttribute(RESULT_STATUS_OBJECT);
+	    	if (sStatus.compareToIgnoreCase("") != 0) {
+	    		smedit.getPWOut().println("<BR><FONT COLOR=GREEN><B>WARNING: " + sStatus + "</B></FONT><BR>");
+	    	}
+	    }
+	    
 	    try {
 	    	createEditPage(getEditHTML(smedit, summary), 
 	    		FORM_NAME,
@@ -214,13 +234,15 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		String sLid = summary.getslid();
 		if (sm.getAddingNewEntryFlag()){
-			sLid = "(NEW)";
+			sLid = UNSAVED_SUMMARY_LABEL;
 		}
 
 		s += "<B>Summary ID</B>: " + sLid + "\n" 
-			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimatesummaries.lid + "\""
-			+ " VALUE=\"" + summary.getslid()
-			+ " ID=\"" + summary.getslid() + "\">"
+			+ "<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + SMTablesmestimatesummaries.lid + "\""
+			+ " VALUE=\"" + summary.getslid() + "\""
+			+ " ID=\"" + summary.getslid() + "\""
+			+ ">"
 			+ "\n"
 		;
 			
@@ -486,744 +508,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		s += "</TABLE>" + "\n";
 		
-/*
-			s += "<TR><TD ALIGN=RIGHT><B>Date last edited</B>:</TD>"
-				+ "<TD>" 
-				+ "<B>" + summary.getsdatelastmaintained() + "</B>" 
-				+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendor.Paramdatlastmaintained + "\" VALUE=\"" 
-					+ summary.getsdatelastmaintained() + "\">"
-				+ "</TD>"
-				+ "<TD>&nbsp;</TD>"
-				+ "</TR>"
-			;
 
-			s += "<TR><TD ALIGN=RIGHT><B>Last edited by</B>:</TD>"
-				+ "<TD>" 
-				+ "<B>" + summary.getslasteditedby() + "</B>" 
-				+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendor.Paramslasteditedby + "\" VALUE=\"" 
-					+ summary.getslasteditedby() + "\">"
-				+ "</TD>"
-				+ "<TD>&nbsp;</TD>"
-				+ "</TR>"
-			;
-        
-		//Vendor name
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsname,
-				summary.getsname().replace("\"", "&quot;"), 
-				SMTableicvendors.snameLength, 
-				"<B>Name: <FONT COLOR=RED>*Required*</FONT></B>",
-				"Vendor's company name",
-				"40",
-				"flagDirty();"
-		);
-		
-		//Terms:
-		ArrayList<String> arrTerms = new ArrayList<String>(0);
-		ArrayList<String> arrTermsDescriptions = new ArrayList<String>(0);
-		String SQL = "SELECT"
-			+ " " + SMTableicvendorterms.sTermsCode
-			+ ", " + SMTableicvendorterms.sDescription
-			+ " FROM " + SMTableicvendorterms.TableName
-			+ " ORDER BY LPAD(" + SMTableicvendorterms.sTermsCode + ", " 
-				+ Integer.toString(SMTableicvendorterms.sTermsCodeLength) + ", ' ')"
-		;
-		//First, add a blank item so we can be sure the user chose one:
-		arrTerms.add("");
-		arrTermsDescriptions.add("*** Select terms ***");
-		
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(),
-					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML - user: " 
-							+ sm.getUserID()
-							+ " - "
-							+ sm.getFullUserName()
-					);
-			while (rs.next()) {
-				arrTerms.add(rs.getString(SMTableicvendorterms.sTermsCode));
-				arrTermsDescriptions.add(
-					rs.getString(SMTableicvendorterms.sTermsCode)
-					+ " - "
-					+ rs.getString(SMTableicvendorterms.sDescription)
-				);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			s += "<BR><B>Error [1451600175] reading terms codes - " + e.getMessage() + ".</B><BR>";
-		}
-		
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
-				APVendor.Paramsterms, 
-			arrTerms, 
-			summary.getsterms(), 
-			arrTermsDescriptions, 
-			"Payment terms <FONT COLOR=RED>*Required*</FONT>", 
-			"",
-			"flagDirty();"
-		);
-
-		//On payment hold?
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
-			APVendor.Paramionpaymenthold, 
-			Integer.parseInt(summary.getionpaymenthold()), 
-			"On payment hold?", 
-			"Check this to prevent payments to this vendor",
-			"flagDirty();"
-			);
-		
-		//Active?
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
-			APVendor.Paramiactive, 
-			Integer.parseInt(summary.getsactive()), 
-			"Active?", 
-			"Uncheck this to make the vendor inactive",
-			"flagDirty();"
-			);
-
-		//PO confirmation required?
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
-			APVendor.Paramipoconfirmationrequired, 
-			Integer.parseInt(summary.getspoconfirmationrequired()), 
-			"PO confirmation required?", 
-			"Check this if the vendor normally sends an acknowledgment before they ship product",
-			"flagDirty();"
-			);
-
-		//Address line 1
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsaddressline1,
-				summary.getsaddressline1().replace("\"", "&quot;"), 
-				SMTableicvendors.saddressline1Length, 
-				"<B>Address line 1:</B>",
-				"First line of billing address",
-				"40",
-				"flagDirty();"
-		);
-
-		//Address line 2
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsaddressline2,
-				summary.getsaddressline2().replace("\"", "&quot;"), 
-				SMTableicvendors.saddressline2Length, 
-				"<B>Address line 2:</B>",
-				"Second line of billing address",
-				"40",
-				"flagDirty();"
-		);
-		
-		//Address line 3
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsaddressline3,
-				summary.getsaddressline3().replace("\"", "&quot;"), 
-				SMTableicvendors.saddressline3Length, 
-				"<B>Address line 3:</B>",
-				"Third line of billing address",
-				"40",
-				"flagDirty();"
-		);
-		
-		//Address line 4
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsaddressline4,
-				summary.getsaddressline4().replace("\"", "&quot;"), 
-				SMTableicvendors.saddressline4Length, 
-				"<B>Address line 4:</B>",
-				"Fourth line of billing address",
-				"40",
-				"flagDirty();"
-		);
-
-		//City
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramscity,
-				summary.getscity().replace("\"", "&quot;"), 
-				SMTableicvendors.scityLength, 
-				"<B>City:</B>",
-				"&nbsp;",
-				"40",
-				"flagDirty();"
-		);
-		
-		//State
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsstate,
-				summary.getsstate().replace("\"", "&quot;"), 
-				SMTableicvendors.sstateLength, 
-				"<B>State:</B>",
-				"&nbsp;",
-				"40",
-				"flagDirty();"
-		);
-
-		//Postal code
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramspostalcode,
-				summary.getspostalcode().replace("\"", "&quot;"), 
-				SMTableicvendors.spostalcodeLength, 
-				"<B>Zip code:</B>",
-				"(No punctuation or spaces)",
-				"40",
-				"flagDirty();"
-		);
-
-		//Country
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramscountry,
-				summary.getscountry().replace("\"", "&quot;"), 
-				SMTableicvendors.scountryLength, 
-				"<B>Country:</B>",
-				"&nbsp;",
-				"40",
-				"flagDirty();"
-		);
-
-		//Contact name
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramscontactname,
-				summary.getscontactname().replace("\"", "&quot;"), 
-				SMTableicvendors.scontactnameLength, 
-				"<B>Contact name:</B>",
-				"&nbsp;",
-				"40",
-				"flagDirty();"
-		);
-
-		//Phone number
-		if(summary.getsphonenumber().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
-			s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-					APVendor.Paramsphonenumber,
-					summary.getsphonenumber().replace("\"", "&quot;"), 
-					SMTableicvendors.sphonenumberLength, 
-					"<B>Phone number:</B>",
-					"(No punctuation)",
-					"40",
-					"flagDirty();"
-			);
-		} else {
-			s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-					APVendor.Paramsphonenumber,
-					summary.getsphonenumber().replace("\"", "&quot;"), 
-					SMTableicvendors.sphonenumberLength, 
-					"<B><A HREF=\"tel:" + summary.getsphonenumber().replace("\"", "&quot;") + "\">Phone number:</A></B>",
-					"(No punctuation)",
-					"40",
-					"flagDirty();"
-			);
-		}
-
-		
-		//Fax number
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsfaxnumber,
-				summary.getsfaxnumber().replace("\"", "&quot;"), 
-				SMTableicvendors.sfaxnumberLength, 
-				"<B>Fax number:</B>",
-				"(No punctuation)",
-				"40",
-				"flagDirty();"
-		);
-		
-		//Company account code:
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramscompanyaccountcode,
-				summary.getscompanyaccountcode().replace("\"", "&quot;"), 
-				SMTableicvendors.scompanyaccountcodeLength, 
-				"<B>Company account code:</B>",
-				"The account code this vendor uses to identify our company",
-				"40",
-				"flagDirty();"
-		);
-		
-		//Email address
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsvendoremail,
-				summary.getsvendoremail().replace("\"", "&quot;"), 
-				SMTableicvendors.svendoremailLength, 
-				"<B>Email Address:</B>",
-				"Example: someone@somewhere.com",
-				"40",
-				"flagDirty();"
-				);
-		
-		//Web address
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramswebaddress,
-				summary.getswebaddress().replace("\"", "&quot;"), 
-				SMTableicvendors.swebaddressLength, 
-				"<B>Web address:</B>",
-				"Example: www.somewebsite.com",
-				"40",
-				"flagDirty();"
-		);
-		
-		//Account Set:
-		ArrayList<String> arrAccountSetIDs = new ArrayList<String>(0);
-		ArrayList<String> arrAccountSetNames = new ArrayList<String>(0);
-		String sSQL = "SELECT"
-			+ " " + SMTableapaccountsets.lid
-			+ ", " + SMTableapaccountsets.sacctsetname
-			+ ", " + SMTableapaccountsets.sdescription				
-			+ " FROM " + SMTableapaccountsets.TableName
-			+ " ORDER BY " + SMTableapaccountsets.lid 
-		;
-		//First, add an account set item so we can be sure the user chose one:
-		arrAccountSetIDs.add("");
-		arrAccountSetNames.add("*** Select account set ***");
-		arrAccountSetIDs.add("0");
-		arrAccountSetNames.add("None");
-				
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
-				sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-				+ ".getEditHTML - user: " + sm.getUserID()
-				+ " - "
-				+ sm.getFullUserName()
-					);
-			while (rs.next()) {
-				arrAccountSetIDs.add(rs.getString(SMTableapaccountsets.lid));
-				arrAccountSetNames.add(
-					rs.getString(SMTableapaccountsets.sacctsetname)
-				);
-			}
-				rs.close();
-		} catch (SQLException e) {
-			s += "<BR><B>Error [1451600174] reading account set codes - " + e.getMessage() + ".</B><BR>";
-		}		
-			s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
-					APVendor.Paramiapaccountset, 
-					arrAccountSetIDs, 
-					summary.getiapaccountset(), 
-					arrAccountSetNames, 
-					"Account Set: <FONT COLOR=RED>*Required*</FONT>", 
-					"Set of general ledger accounts associated with this vendor's transactions.",
-					"flagDirty();"
-				);
-				
-		//Banks:
-		ArrayList<String> arrBankIDs = new ArrayList<String>(0);
-		ArrayList<String> arrBankDescriptions = new ArrayList<String>(0);
-		 sSQL = "SELECT"
-			+ " " + SMTablebkbanks.lid
-			+ ", " + SMTablebkbanks.saccountname
-			+ " FROM " + SMTablebkbanks.TableName
-			+ " ORDER BY " + SMTablebkbanks.lid 
-		;
-		//First, add a bank account so we can be sure the user chose one:
-		 arrBankIDs.add("");
-		 arrBankDescriptions.add("*** Select bank account ***");
-				
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
-					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML - user: " + sm.getUserID()
-					+ " - "
-					+ sm.getFullUserName()
-					);
-			while (rs.next()) {
-				arrBankIDs.add(rs.getString(SMTablebkbanks.lid));
-				arrBankDescriptions.add(rs.getString(SMTablebkbanks.saccountname)
-				);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			s += "<BR><B>Error [1451600173] reading bank account codes - " + e.getMessage() + ".</B><BR>";
-		}
-		
-		//In the event that there WERE no banks set up, add the option to choose 'NONE':
-		if(arrBankIDs.size() == 1) {
-		 arrBankIDs.add("0");
-		 arrBankDescriptions.add("None");
-		}
-		
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
-				APVendor.Paramibankcode, 
-				arrBankIDs, 
-				summary.getibankcode(), 
-				arrBankDescriptions, 
-				"Bank Account: <FONT COLOR=RED>*Required*</FONT>", 
-				"Bank from which checks for this vendor will be drawn.",
-				"flagDirty();"
-			);
-
-		//Vendor groups:
-		ArrayList<String> arrVendorGroupIDs = new ArrayList<String>(0);
-		ArrayList<String> arrVendorGroupDescriptions = new ArrayList<String>(0);
-		 sSQL = "SELECT"
-			+ " " + SMTableapvendorgroups.lid
-			+ ", " + SMTableapvendorgroups.sgroupid
-			+ ", " + SMTableapvendorgroups.sdescription
-			+ " FROM " + SMTableapvendorgroups.TableName
-			+ " ORDER BY " + SMTableapvendorgroups.sgroupid 
-		;
-		//First, add a Vendor Group so we can be sure the user chose one:
-		 arrVendorGroupIDs.add("");
-		 arrVendorGroupDescriptions.add("*** Select vendor group ***");
-				
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
-					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML - user: " + sm.getUserID()
-					+ " - "
-					+ sm.getFullUserName());
-			while (rs.next()) {
-				arrVendorGroupIDs.add(rs.getString(SMTableapvendorgroups.lid));
-				arrVendorGroupDescriptions.add(rs.getString(SMTableapvendorgroups.sgroupid)
-					+ " - " + rs.getString(SMTableapvendorgroups.sdescription)
-				);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			s += "<BR><B>Error [1498827736] reading bank account codes - " + e.getMessage() + ".</B><BR>";
-		}			
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
-			APVendor.Paramivendorgroupid,
-			arrVendorGroupIDs, 
-			summary.getsvendorgroupid(), 
-			arrVendorGroupDescriptions, 
-			"Vendor group: <FONT COLOR=RED>*Required*</FONT>", 
-			"",
-			"flagDirty();"
-		);		
-		
-		
-		//Backcharge memo:
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_MultilineText_Input_Row(
-				APVendor.Parammbackchargememo,
-				summary.getmbackchargememo().replace("\"", "&quot;"), 
-				"<B>Backcharge memo:</B>",
-				"Include any notes here relating to backcharging this vendor, such as hourly rates, whether they pay for travel time, etc.",
-				3,
-				80,
-				"flagDirty();"
-		);
-		
-		//Invoicing defaults:
-		s += "<TR style=\"background-color:grey; color:white; \" \"><TD COLSPAN=3>"
-			+ "<B>&nbsp;INVOICING DEFAULTS</B>"
-			+ "</TD></TR>"
-		;
-		
-		s += "<TR ><TD COLSPAN=3>"
-				+ "<I>Select a default distribution code OR a default expense account OR neither, but not both:</I>"
-				+ "</TD></TR>"
-			;
-		
-		//Default Distribution code:
-		ArrayList<String> arrDisCodes = new ArrayList<String>(0);
-		ArrayList<String> arrDistCodeDescriptions = new ArrayList<String>(0);
-		 sSQL = "SELECT * "
-			+ " FROM " + SMTableapdistributioncodes.TableName
-			+ " ORDER BY " + SMTableapdistributioncodes.sdistcodename 
-		;
-		//First, add expense account so we can be sure the user chose one:
-		 arrDisCodes.add("");
-		 arrDistCodeDescriptions.add("*** Select default distribution code ***");
-		 arrDisCodes.add("-1");
-		 arrDistCodeDescriptions.add("Not used");
-						
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
-					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML - user: " + sm.getUserID()
-					+ " - "
-					+ sm.getFullUserName()
-					);
-			while (rs.next()) {
-				arrDisCodes.add(rs.getString(SMTableapdistributioncodes.sdistcodename));
-				arrDistCodeDescriptions.add(rs.getString(SMTableapdistributioncodes.sdistcodename)
-				+ " "
-				+ rs.getString(SMTableapdistributioncodes.sdescription)
-				);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			s += "<BR><B>Error [1490827928] reading default distribution codes - " + e.getMessage() + ".</B><BR>";
-		}			
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
-				APVendor.Paramsdefaultdistributioncode, 
-				arrDisCodes, 
-				summary.getsdefaultdistributioncode(), 
-				arrDistCodeDescriptions, 
-				"Default Distribution Code:", 
-				"New invoice entries for this vendor will default to this distribution code.",
-				"setDefaultGLAccountToNotUsed(this);"
-			);
-		
-		//Default Expense Account:
-		ArrayList<String> arrGLAcctIDs = new ArrayList<String>(0);
-		ArrayList<String> arrGLAcctDescriptions = new ArrayList<String>(0);
-		 sSQL = "SELECT * "
-			+ " FROM " + SMTableglaccounts.TableName
-			+ " ORDER BY " + SMTableglaccounts.sAcctID 
-		;
-		//First, add expense account so we can be sure the user chose one:
-		 arrGLAcctIDs.add("");
-		 arrGLAcctDescriptions.add("*** Select default expense account ***");
-		 arrGLAcctIDs.add("-1");
-		 arrGLAcctDescriptions.add("Not used");
-						
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
-					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML - user: " + sm.getUserID()
-					+ " - "
-					+ sm.getFullUserName()
-					);
-			while (rs.next()) {
-				arrGLAcctIDs.add(rs.getString(SMTableglaccounts.sAcctID));
-				String sInactive = "";
-				if(rs.getLong(SMTableglaccounts.lActive) == 0){
-					sInactive = "(Inactive)";
-				}
-				arrGLAcctDescriptions.add(rs.getString(SMTableglaccounts.sFormattedAcct)
-				+ " "
-				+ rs.getString(SMTableglaccounts.sDesc)
-				+ " "
-				+ sInactive
-				);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			s += "<BR><B>Error [1451600132] reading default expense account codes - " + e.getMessage() + ".</B><BR>";
-		}			
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
-				APVendor.Paramsdefaultexpenseacct, 
-				arrGLAcctIDs, 
-				summary.getsdefaultexpenseacct(), 
-				arrGLAcctDescriptions, 
-				"Default Expense Account:", 
-				"New invoice entries for this vendor will default to this expense account.",
-				"setDefaultDistCodeToNotUsed(this);"
-			);
-		
-		//Default invoice line description:
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsdefaultinvoicelinedescription,
-				summary.getsdefaultinvoicelinedescription().replace("\"", "&quot;"), 
-				SMTableicvendors.sdefaultinvoicelinedesclength, 
-				"<B>Default Invoice Line Description:</B>",
-				"New invoice entries for this vendor will default to this line description.",
-				"40",
-				"flagDirty();"
-		);
-		
-		//Generate a separate check for each invoice:
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
-			APVendor.Paramigenerateseparatepaymentsforeachinvoice,
-			Integer.parseInt(summary.getsgenerateseparatepaymentsforeachinvoice()), 
-			"Separate check for each invoice?", 
-			"Checking this will cause each invoice to be paid with a separate check",
-			"flagDirty();"
-			);
-		
-		//Tax reporting:
-		s += "<TR style=\"background-color:grey; color:white; \" \"><TD COLSPAN=3>"
-			+ "<B>&nbsp;TAX REPORTING</B>"
-			+ "</TD></TR>"
-		;
-		
-		ArrayList<String>arrTaxReportingTypes = new ArrayList<String>(0);
-		ArrayList<String>arrTaxReportingTypeDescriptions = new ArrayList<String>(0);
-		for (int i = 0; i < SMTableicvendors.NUMBER_OF_TAX_REPORTING_TYPES; i++){
-			arrTaxReportingTypes.add(Integer.toString(i));
-			arrTaxReportingTypeDescriptions.add(SMTableicvendors.getTaxReportingTypeDescriptions(i));
-		}
-		s += "<TR>";
-		s += "<TD ALIGN=RIGHT><B>" + "Tax reporting type:" + " </B></TD>";
-		s += "<TD ALIGN=LEFT> <SELECT NAME = \"" + APVendor.Paramitaxreportingtype + "\""
-				+ " ID=\"" + APVendor.Paramitaxreportingtype + "\""
-				+ " ONCHANGE=\"" + "flagDirty();checkReportingType();" + "\">";
-		for (int i = 0; i < arrTaxReportingTypes.size(); i++){
-			s += "<OPTION";
-			if (arrTaxReportingTypes.get(i).toString().compareTo(summary.getstaxreportingtype()) == 0){
-				s += " selected=yes";
-			}
-			s += " VALUE=\"" + arrTaxReportingTypes.get(i).toString() + "\">" + arrTaxReportingTypeDescriptions.get(i).toString();
-		}
-		s += "</SELECT></TD>";
-		s += "<TD ALIGN=LEFT>" + "Select the type of tax reporting for this vendor" + "</TD>";
-		s += "</TR>";
-
-		//Start table body tag to display or hide tax reporting options based on tax reporting type selected
-		s += "<tbody id=\"taxoptions\">";
-		
-		ArrayList<String>arr1099CPRSCodeIDs = new ArrayList<String>(0);
-		ArrayList<String>arr1099CPRSCodeDescriptions = new ArrayList<String>(0);
-		arr1099CPRSCodeIDs.add("0");
-		arr1099CPRSCodeDescriptions.add("None");
-
-		 sSQL = "SELECT * "
-			+ " FROM " + SMTableap1099cprscodes.TableName
-			+ " ORDER BY " + SMTableap1099cprscodes.lid
-		;
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
-					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML.reading 1099/CPRS codes- user: " + sm.getUserID()
-					+ " - "
-					+ sm.getFullUserName()
-					);
-			while (rs.next()) {
-				arr1099CPRSCodeIDs.add(Long.toString(rs.getLong(SMTableap1099cprscodes.lid)));
-				String sInactive = "";
-				if(rs.getLong(SMTableap1099cprscodes.iactive) == 0){
-					sInactive = "(Inactive)";
-				}
-				arr1099CPRSCodeDescriptions.add(rs.getString(SMTableap1099cprscodes.sclassid)
-				+ " "
-				+ rs.getString(SMTableap1099cprscodes.sdescription)
-				+ " "
-				+ sInactive
-				);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			s += "<B>Error [1451598881] reading AP 1099/CPRS codes - " + e.getMessage() + ".</B><BR>";
-		}
-		
-		s += "<TR>";
-		s += "<TD ALIGN=RIGHT><B>" + "1099/CPRS Code:" + " </B></TD>";
-		s += "<TD ALIGN=LEFT> <SELECT NAME = \"" + APVendor.Parami1099CPRSid + "\""
-			+ " ONCHANGE=\"" + "flagDirty();" + "\""
-			+ " ID=\"" + APVendor.Parami1099CPRSid + "\">";
-		for (int i = 0; i < arr1099CPRSCodeIDs.size(); i++){
-			s += "<OPTION";
-			if (arr1099CPRSCodeIDs.get(i).toString().compareTo(summary.gets1099CPRSid()) == 0){
-				s += " selected=yes";
-			}
-			s += " VALUE=\"" + arr1099CPRSCodeIDs.get(i).toString() + "\">" + arr1099CPRSCodeDescriptions.get(i).toString();
-		}
-		s += "</SELECT></TD>";
-		s += "<TD ALIGN=LEFT>" + "Select code for tax reporting" + "</TD>";
-		s += "</TR>";
-		
-		
-		//Tax ID number:
-		s += "<TR>";
-		s += "<TD ALIGN=RIGHT>"
-			+ "<B>Tax ID:</B>"
-			+ "</TD>"
-		;
-		s += "<TD ALIGN=LEFT>";
-		s += "<INPUT TYPE=TEXT NAME=\"" + APVendor.Paramstaxidentifyingnumber + "\""
-			+ " ID=\"" + APVendor.Paramstaxidentifyingnumber + "\""
-			+ " VALUE=\"" + summary.getstaxidentifyingnumber() + "\""
-		    + "SIZE=" + "20"
-			+ " MAXLENGTH=" + Integer.toString(SMTableicvendors.staxidentifyingnumberlength)
-			+ " ONCHANGE=\"flagDirty();\""
-			+ ">"
-		;
-		//List the tax ID types:
-		s += "&nbsp;ID type:";
-		s += "<SELECT NAME = \"" + APVendor.Paramitaxidnumbertype + "\"" 
-		+ " ID=\"" + APVendor.Paramitaxidnumbertype + "\""
-		+ " ONCHANGE=\"flagDirty();\""+ ">";
-		for (int i = 0; i < SMTableicvendors.NUMBER_OF_TAX_ID_TYPES; i++){
-			String sTaxNumberTypeID = Integer.toString(i);
-			s += "<OPTION ";
-			if (summary.getstaxidnumbertype().compareToIgnoreCase(sTaxNumberTypeID) == 0){
-				s += " selected=yes";
-			}
-			s += " VALUE=\"" + sTaxNumberTypeID + "\">" + SMTableicvendors.getTaxIDTypeDescriptions(i);
-		}
-		s += "</SELECT>";
-		s += "</TD>";
-		
-		s += "<TD ALIGN=LEFT>"
-			+ " The Tax ID provided by the vendor"
-			+ "</TD>"
-		;
-		s += "</TR>";	
-		//End table body tag for hiding tax options
-		s += "</tbody>";
-		
-		
-		//Remit to locations:
-		s += "<TR style=\"background-color:grey; color:white; \"><TD COLSPAN=3>"
-			+ "<B>&nbsp;REMIT TO LOCATIONS</B>"
-			+ "</TD></TR>"
-		;
-		
-		//Primary remit to location:
-		//Default Expense Account:
-		ArrayList<String> arrRemitToCodes = new ArrayList<String>(0);
-		ArrayList<String> arrRemitToDescriptions = new ArrayList<String>(0);
-		sSQL = "SELECT * "
-			+ " FROM " + SMTableapvendorremittolocations.TableName
-			+ " WHERE (" + SMTableapvendorremittolocations.svendoracct + "='" + summary.getsvendoracct() + "')"
-			+ " ORDER BY " + SMTableapvendorremittolocations.sremittocode 
-		;
-		//First, add expense account so we can be sure the user chose one:
-		arrRemitToCodes.add("");
-		arrRemitToDescriptions.add("NONE");
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(),
-					sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML.getting remit to codes - user: " + sm.getUserID()
-					+ " - "
-					+ sm.getFullUserName()
-					);
-			while (rs.next()) {
-				arrRemitToCodes.add(rs.getString(SMTableapvendorremittolocations.sremittocode));
-				String sInactive = "";
-				if(rs.getLong(SMTableapvendorremittolocations.iactive) == 0){
-					sInactive = "(Inactive)";
-				}
-				arrRemitToDescriptions.add(rs.getString(SMTableapvendorremittolocations.sremittocode)
-				+ " "
-				+ rs.getString(SMTableapvendorremittolocations.sremittoname)
-				+ " "
-				+ sInactive
-				);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			s += "<BR><B>Error [1451596219] reading primary remit to codes - " + e.getMessage() + ".</B><BR>";
-		}			
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
-				APVendor.Paramsprimaryremittocode, 
-				arrRemitToCodes, 
-				summary.getsprimaryremittocode(), 
-				arrRemitToDescriptions, 
-				"Primary remit to location:", 
-				"This will be the default remit to location for this vendor",
-				"flagDirty();"
-			);
-		
-		//Remit to Locations
-		s += "<TR><TD ALIGN=RIGHT><B>Edit Remit To Locations</B>:</TD>";
-		s += "<TD>" + createEditRemitToLocationsButton()+ "</TD>"
-		+ "<TD>Use button to edit remit to locations</TD>"
-		+ "</TR>"
-		;
-				
-		s += "</TABLE>";
-		
-		//Add a field for Google Docs link
-				String sCreateAndUploadButton = "";
-				if (
-					SMSystemFunctions.isFunctionPermitted(
-						SMSystemFunctions.SMCreateGDriveVendorFolders, 
-						sm.getUserID(), 
-						getServletContext(), 
-						sm.getsDBID(),
-						(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
-					)
-					&& (!sm.getAddingNewEntryFlag())
-				){
-					sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
-				}
-					s += "<BR><B><FONT SIZE=3>Google Drive link:</FONT></B>" + "&nbsp;" + sCreateAndUploadButton + "<BR>"
-						+ "<INPUT TYPE=TEXT NAME=\"" + APVendor.Paramsgdoclink + "\""
-						+ " onchange=\"flagDirty();\""
-						+ " VALUE=\"" + summary.getsgdoclink().replace("\"", "&quot;") + "\""
-						+ "SIZE=" + "70"
-						+ " MAXLENGTH=" + Integer.toString(254)
-						+ "<BR><BR>"
-					;
-					
-		*/
 		return s;
 	}
 	private String buildEstimateTable(Connection conn, SMEstimateSummary summary) throws Exception{
@@ -1471,7 +756,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		//total amount for summary
-		String sSummaryID = "(NEW)";
+		String sSummaryID = UNSAVED_SUMMARY_LABEL;
 		if (
 			(summary.getslid().compareToIgnoreCase("-1") != 0)
 			&& (summary.getslid().compareToIgnoreCase("0") != 0)
@@ -1542,8 +827,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<INPUT TYPE=TEXT"
-			+ " NAME = \"" + FIELD_ADJUSTED_TOTAL_FREIGHT + "\""
-			+ " ID = \"" + FIELD_ADJUSTED_TOTAL_FREIGHT + "\""
+			+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
+			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedfreight() + "\""
 			+ ">"
@@ -1562,8 +847,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<INPUT TYPE=TEXT"
-			+ " NAME = \"" + FIELD_ADJUSTED_LABOR_UNITS + "\""
-			+ " ID = \"" + FIELD_ADJUSTED_LABOR_UNITS + "\""
+			+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
+			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedlaborunitqty() + "\""
 			+ ">"
@@ -1580,8 +865,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 				+ ">"
 				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + FIELD_ADJUSTED_COST_PER_LABOR_UNIT + "\""
-				+ " ID = \"" + FIELD_ADJUSTED_COST_PER_LABOR_UNIT + "\""
+				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
+				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedlaborcostperunit() + "\""
 				+ ">"
@@ -1617,8 +902,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				//+ ">"
 				+ "&nbsp;"
 				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
-				+ " ID = \"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
+				+ " NAME = \"" + LABEL_ADJUSTED_MU_PER_LABOR_UNIT + "\""
+				+ " ID = \"" + LABEL_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = 0.00"
 				+ ">"
@@ -1632,8 +917,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ ">"
 				+ "&nbsp;"
 				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
-				+ " ID = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
+				+ " NAME = \"" + LABEL_ADJUSTED_MU_PERCENTAGE + "\""
+				+ " ID = \"" + LABEL_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = 0.00"
 				+ ">"
@@ -1650,8 +935,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 				+ ">"
 				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\""
-				+ " ID = \"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\""
+				+ " NAME = \"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\""
+				+ " ID = \"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = 0.00"
 				+ ">"
@@ -1668,8 +953,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 				+ ">"
 				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + FIELD_ADJUSTED_TOTAL_MARKUP + "\""
-				+ " ID = \"" + FIELD_ADJUSTED_TOTAL_MARKUP + "\""
+				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "\""
+				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedlmarkupamt() + "\""
 				+ ">"
@@ -1842,7 +1127,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			;
 			
 			//Delete:
-			s += "function isdelete(){\n"
+			s += "function deletesummary(){\n"
 				+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DELETE_COMMAND_VALUE + "\";\n"
 				+ "        document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				//+ "    }\n"
@@ -1944,7 +1229,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s = "<button type=\"button\""
 		+ " value=\"" + DELETE_BUTTON_CAPTION + "\""
 		+ " name=\"" + DELETE_BUTTON_CAPTION + "\""
-		+ " onClick=\"isdelete();\">"
+		+ " onClick=\"deletesummary();\">"
 		+ DELETE_BUTTON_CAPTION
 		+ "</button>\n";
 		

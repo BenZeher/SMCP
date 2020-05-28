@@ -494,7 +494,7 @@ public class SMEstimate {
 					m_bdextendedcost, 
 				"Extended cost", 
 				SMTablesmestimates.bdextendedcostScale, 
-				new BigDecimal("0.01"), 
+				new BigDecimal("0.00"), 
 				new BigDecimal("999999999.99")
 			);
 		} catch (Exception e) {

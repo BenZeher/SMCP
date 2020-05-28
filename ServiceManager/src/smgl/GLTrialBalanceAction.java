@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;

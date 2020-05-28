@@ -20,7 +20,6 @@ public class SMEditSMSummarySelect extends HttpServlet {
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
-		SMEstimateSummary summary = new SMEstimateSummary();
 		SMMasterEditSelect smeditselect = new SMMasterEditSelect(
 				request,
 				response,

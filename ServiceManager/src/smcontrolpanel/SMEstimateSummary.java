@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
@@ -117,63 +118,74 @@ public class SMEstimateSummary {
 		//System.out.println("[1590502610] - elapsed time 10 = " + (System.currentTimeMillis() - lStarttime) + " ms");
 		
 		String SQL = "";
-		SQL = "INSERT into " + SMTablesmestimatesummaries.TableName
-			+ " (" 
-			+ SMTablesmestimatesummaries.bdadjustedfreight
-			+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit
-			+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty
-			+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt
-			+ ", " + SMTablesmestimatesummaries.datetimecreated
-			+ ", " + SMTablesmestimatesummaries.datetimelastmodified
-			+ ", " + SMTablesmestimatesummaries.ilabortype
-			+ ", " + SMTablesmestimatesummaries.iordertype
-			+ ", " + SMTablesmestimatesummaries.itaxid
-			+ ", " + SMTablesmestimatesummaries.lcreatedbyid
-			+ ", " + SMTablesmestimatesummaries.llastmodifiedbyid
-			+ ", " + SMTablesmestimatesummaries.lsalesleadid
-			+ ", " + SMTablesmestimatesummaries.screatedbyfullname
-			+ ", " + SMTablesmestimatesummaries.sdescription
-			+ ", " + SMTablesmestimatesummaries.sjobname
-			+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname
-			+ ", " + SMTablesmestimatesummaries.sremarks
-			+ ")"
-			+ " VALUES ("
-			+ m_bdadjustedfreight.replace(",", "")
-			+ ", " + m_bdadjustedlaborcostperunit.replace(",", "")
-			+ ", " + m_bdadjustedlaborunitqty.replace(",", "")
-			+ ", " + m_bdadjustedlmarkupamt.replace(",", "")
-			+ ", NOW()"
-			+ ", NOW()"
-			+ ", " + m_ilabortype
-			+ ", " + m_iordertype
-			+ ", " + m_itaxid
-			+ ", " + sUserID
-			+ ", " + sUserID
-			+ ", " + m_lsalesleadid
-			+ ", '" + sUserFullName + "'"
-			+ ", '" + m_sdescription + "'"
-			+ ", '" + m_sjobname + "'"
-			+ ", '" + sUserFullName + "'"
-			+ ", '" + m_sremarks + "'"
-			+ ")"
-					
-			+ " ON DUPLICATE KEY UPDATE"
-			+ " " + SMTablesmestimatesummaries.bdadjustedfreight + " = " + m_bdadjustedfreight.replace(",", "")
-			+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + " = " + m_bdadjustedlaborcostperunit.replace(",", "")
-			+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty + " = " + m_bdadjustedlaborunitqty.replace(",", "")
-			+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt + " = " + m_bdadjustedlmarkupamt.replace(",", "")
-			+ ", " + SMTablesmestimatesummaries.datetimelastmodified + " = NOW()"
-			+ ", " + SMTablesmestimatesummaries.ilabortype + " = " + m_ilabortype
-			+ ", " + SMTablesmestimatesummaries.iordertype + " = " + m_iordertype
-			+ ", " + SMTablesmestimatesummaries.itaxid + " = " + m_itaxid
-			+ ", " + SMTablesmestimatesummaries.llastmodifiedbyid + " = " + m_llastmodifiedbyid
-			+ ", " + SMTablesmestimatesummaries.lsalesleadid + " = " + m_lsalesleadid
-			+ ", " + SMTablesmestimatesummaries.sdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sdescription) + "'"
-			+ ", " + SMTablesmestimatesummaries.sjobname + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sjobname) + "'"
-			+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_slastmodifiedbyfullname) + "'"
-			+ ", " + SMTablesmestimatesummaries.sremarks + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sremarks) + "'"
-		;
-		
+		boolean bInsertingNewRecord = false;
+		if (
+			(m_lid.compareToIgnoreCase("") == 0)
+			|| (m_lid.compareToIgnoreCase("0") == 0)
+			|| (m_lid.compareToIgnoreCase("-1") == 0)
+		) {
+			bInsertingNewRecord = true;
+			SQL = "INSERT into " + SMTablesmestimatesummaries.TableName
+				+ " (" 
+				+ SMTablesmestimatesummaries.bdadjustedfreight
+				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit
+				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty
+				+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt
+				+ ", " + SMTablesmestimatesummaries.datetimecreated
+				+ ", " + SMTablesmestimatesummaries.datetimelastmodified
+				+ ", " + SMTablesmestimatesummaries.ilabortype
+				+ ", " + SMTablesmestimatesummaries.iordertype
+				+ ", " + SMTablesmestimatesummaries.itaxid
+				+ ", " + SMTablesmestimatesummaries.lcreatedbyid
+				+ ", " + SMTablesmestimatesummaries.llastmodifiedbyid
+				+ ", " + SMTablesmestimatesummaries.lsalesleadid
+				+ ", " + SMTablesmestimatesummaries.screatedbyfullname
+				+ ", " + SMTablesmestimatesummaries.sdescription
+				+ ", " + SMTablesmestimatesummaries.sjobname
+				+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname
+				+ ", " + SMTablesmestimatesummaries.sremarks
+				+ ")"
+				+ " VALUES ("
+				+ m_bdadjustedfreight.replace(",", "")
+				+ ", " + m_bdadjustedlaborcostperunit.replace(",", "")
+				+ ", " + m_bdadjustedlaborunitqty.replace(",", "")
+				+ ", " + m_bdadjustedlmarkupamt.replace(",", "")
+				+ ", NOW()"
+				+ ", NOW()"
+				+ ", " + m_ilabortype
+				+ ", " + m_iordertype
+				+ ", " + m_itaxid
+				+ ", " + sUserID
+				+ ", " + sUserID
+				+ ", " + m_lsalesleadid
+				+ ", '" + sUserFullName + "'"
+				+ ", '" + m_sdescription + "'"
+				+ ", '" + m_sjobname + "'"
+				+ ", '" + sUserFullName + "'"
+				+ ", '" + m_sremarks + "'"
+				+ ")"
+			;
+		}else {
+			SQL = "UPDATE " + SMTablesmestimatesummaries.TableName + " SET"
+				+ " " + SMTablesmestimatesummaries.bdadjustedfreight + " = " + m_bdadjustedfreight.replace(",", "")
+				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + " = " + m_bdadjustedlaborcostperunit.replace(",", "")
+				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty + " = " + m_bdadjustedlaborunitqty.replace(",", "")
+				+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt + " = " + m_bdadjustedlmarkupamt.replace(",", "")
+				+ ", " + SMTablesmestimatesummaries.datetimelastmodified + " = NOW()"
+				+ ", " + SMTablesmestimatesummaries.ilabortype + " = " + m_ilabortype
+				+ ", " + SMTablesmestimatesummaries.iordertype + " = " + m_iordertype
+				+ ", " + SMTablesmestimatesummaries.itaxid + " = " + m_itaxid
+				+ ", " + SMTablesmestimatesummaries.llastmodifiedbyid + " = " + m_llastmodifiedbyid
+				+ ", " + SMTablesmestimatesummaries.lsalesleadid + " = " + m_lsalesleadid
+				+ ", " + SMTablesmestimatesummaries.sdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sdescription) + "'"
+				+ ", " + SMTablesmestimatesummaries.sjobname + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sjobname) + "'"
+				+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_slastmodifiedbyfullname) + "'"
+				+ ", " + SMTablesmestimatesummaries.sremarks + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sremarks) + "'"
+				+ " WHERE ("
+					+ "(" + SMTablesmestimatesummaries.lid + " = " + m_lid + ")"
+				+ ")"
+			;
+		}
 		//System.out.println("[159050375] - SQL = '" + SQL + "'");
 		
 		Statement stmt = conn.createStatement();
@@ -184,21 +196,23 @@ public class SMEstimateSummary {
 		}
 		
 		//Update the ID:
-		String sSQL = "SELECT last_insert_id()";
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
-			if (rs.next()) {
-				m_lid = Long.toString(rs.getLong(1));
-			}else {
-				m_lid = "0";
+		if (bInsertingNewRecord) {
+			String sSQL = "SELECT last_insert_id()";
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
+				if (rs.next()) {
+					m_lid = Long.toString(rs.getLong(1));
+				}else {
+					m_lid = "0";
+				}
+				rs.close();
+			} catch (SQLException e) {
+				throw new Exception("Error [1590503758] Could not get last ID number - " + e.getMessage());
 			}
-			rs.close();
-		} catch (SQLException e) {
-			throw new Exception("Error [1590503758] Could not get last ID number - " + e.getMessage());
-		}
-		//If something went wrong, we can't get the last ID:
-		if (m_lid.compareToIgnoreCase("0") == 0){
-			throw new Exception("Error [1590503759] Could not get last ID number.");
+			//If something went wrong, we can't get the last ID:
+			if (m_lid.compareToIgnoreCase("0") == 0){
+				throw new Exception("Error [1590503759] Could not get last ID number.");
+			}
 		}
 		
 		//Finally, save the entries....
@@ -259,12 +273,8 @@ public class SMEstimateSummary {
 			sResult += "  Order type '" + m_iordertype + "' is not valid.";
 		}
 		
-		long lMinimumCreatedByID = 1L;
-		if ( (m_lid.compareToIgnoreCase("0") == 0) || (m_lid.compareToIgnoreCase("-1") == 0) ){
-			lMinimumCreatedByID = 0L;
-		}
 		try {
-			m_lcreatedbyid  = clsValidateFormFields.validateLongIntegerField(m_lcreatedbyid, "Created By ID", lMinimumCreatedByID, clsValidateFormFields.MAX_LONG_VALUE);
+			m_lcreatedbyid  = clsValidateFormFields.validateLongIntegerField(m_lcreatedbyid, "Created By ID", 0L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -350,48 +360,60 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
+		if (m_bdadjustedfreight.compareToIgnoreCase("") == 0) {
+			m_bdadjustedfreight = "0.00";
+		}
 		try {
 			m_bdadjustedfreight = clsValidateFormFields.validateBigdecimalField(
 				m_bdadjustedfreight, 
 				"Adjusted freight", 
 				SMTablesmestimatesummaries.bdadjustedfreightScale, 
-				new BigDecimal("0.01"), 
+				new BigDecimal("0.00"), 
 				new BigDecimal("999999999.99")
 			);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdadjustedlaborunitqty.compareToIgnoreCase("") == 0) {
+			m_bdadjustedlaborunitqty = "0.0000";
+		}
 		try {
 			m_bdadjustedlaborunitqty = clsValidateFormFields.validateBigdecimalField(
 				m_bdadjustedlaborunitqty, 
 				"Adjusted labor unit qty", 
 				SMTablesmestimatesummaries.bdadjustedlaborunitqtyScale, 
-				new BigDecimal("0.0001"), 
+				new BigDecimal("0.0000"), 
 				new BigDecimal("999999999.9999")
 			);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdadjustedlaborcostperunit.compareToIgnoreCase("") == 0) {
+			m_bdadjustedlaborcostperunit = "0.0000";
+		}
 		try {
 			m_bdadjustedlaborcostperunit = clsValidateFormFields.validateBigdecimalField(
 				m_bdadjustedlaborcostperunit, 
 				"Adjusted labor cost per unit", 
 				SMTablesmestimatesummaries.bdadjustedlaborcostperunitScale, 
-				new BigDecimal("0.01"), 
+				new BigDecimal("0.00"), 
 				new BigDecimal("999999999.99")
 			);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdadjustedlmarkupamt.compareToIgnoreCase("") == 0) {
+			m_bdadjustedlmarkupamt = "0.0000";
+		}
 		try {
 			m_bdadjustedlmarkupamt = clsValidateFormFields.validateBigdecimalField(
 				m_bdadjustedlmarkupamt, 
 				"Adjusted mark-up amount", 
 				SMTablesmestimatesummaries.bdadjustedlmarkupamtScale, 
-				new BigDecimal("0.01"), 
+				new BigDecimal("0.00"), 
 				new BigDecimal("999999999.99")
 			);
 		} catch (Exception e) {
@@ -511,6 +533,68 @@ public class SMEstimateSummary {
 			rs.close();
 			throw new Exception("Error [1590510109] loading Estimates - " + e.getMessage());
 		}
+	}
+	
+	public void deleteSummary(Connection conn) throws Exception{
+		
+		if (
+			(m_lid.compareToIgnoreCase("-1") == 0)
+			|| (m_lid.compareToIgnoreCase("0") == 0)
+			|| (m_lid.compareToIgnoreCase("") == 0)
+		) {
+			throw new Exception("Error [202005285522] - Cannot delete estimate summary with ID '" + m_lid + "'");
+		}
+		
+		try {
+			clsDatabaseFunctions.start_data_transaction_with_exception(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [202005280225] - could not start data transaction to delete estimate summary - " + e1.getMessage());
+		}
+		
+		String SQL = "DELETE FROM " + SMTablesmestimatesummaries.TableName
+			+ " WHERE ("
+				+ "(" + SMTablesmestimatesummaries.lid + " = " + m_lid + ")"
+			+ ")"
+		;
+		try {
+			clsDatabaseFunctions.executeSQLWithException(SQL, conn);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [202005285757] - Error deleting estimate summary with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		SQL = "DELETE FROM " + SMTablesmestimates.TableName
+			+ " WHERE ("
+				+ "(" + SMTablesmestimates.lsummarylid + " = " + m_lid + ")"
+			+ ")"
+		;
+		try {
+			clsDatabaseFunctions.executeSQLWithException(SQL, conn);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [202005285758] - Error deleting estimates with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		SQL = "DELETE FROM " + SMTablesmestimatelines.TableName
+			+ " WHERE ("
+				+ "(" + SMTablesmestimatelines.lsummarylid + " = " + m_lid + ")"
+			+ ")"
+		;
+		try {
+			clsDatabaseFunctions.executeSQLWithException(SQL, conn);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [202005285759] - Error deleting estimates with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		try {
+			clsDatabaseFunctions.commit_data_transaction_with_exception(conn);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [202005280354] - committing data transaction - " + e.getMessage());
+		}
+		
+		return;
 	}
 	
 	public String getsdatetimecreatedInSQLFormat() throws Exception{

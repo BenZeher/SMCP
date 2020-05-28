@@ -38,7 +38,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		//String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 
 		/*******************************************************/

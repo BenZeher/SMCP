@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelabortypes;
@@ -31,10 +32,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";
 	public static final String DELETE_BUTTON_CAPTION = "Delete " + SMEstimateSummary.OBJECT_NAME;
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
-	public static final String CONFIRM_DELETE_CHECKBOX = "CONFIRMDELETE";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
+	public static final String REMOVE_ESTIMATE_COMMAND = "REMOVEESTIMATE";
+	public static final String PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED = "REMOVEESTIMATELINENUMBER";
 	public static final String BUTTON_ADD_MANUAL_ESTIMATE_CAPTION = "Add estimate manually";
 	public static final String BUTTON_ADD_MANUAL_ESTIMATE = "ADDMANUALESTIMATE";
 	public static final String BUTTON_ADD_VENDOR_QUOTE_CAPTION = "Add vendor quote number:";
@@ -85,6 +87,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
+	
+	//Calculation fields:
+	public static final String PARAM_TOTAL_ESTIMATE_MATERIAL_COST = "TOTALESTIMATEMATERIALCOST";
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
@@ -193,6 +198,22 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sm.getsDBID() + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" 
 				+ SMUtilities.getFullClassName(this.toString()) + "\">");
+				
+		//Keep track of hidden variables here:
+		pwOut.println("<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED + "\""
+			+ " ID=\"" + PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED + "\""
+			+ " VALUE=\"" + "" + "\""
+			+ ">"
+			);
+		pwOut.println("<INPUT TYPE=HIDDEN"
+				+ " NAME=\"" + PARAM_TOTAL_ESTIMATE_MATERIAL_COST + "\""
+				+ " ID=\"" + PARAM_TOTAL_ESTIMATE_MATERIAL_COST + "\""
+				+ " VALUE=\"" + "" + "\""
+				+ ">"
+				);
+		
+		
 		//Create HTML Fields
 		try {
 			pwOut.println(sEditHTML);
@@ -580,7 +601,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 			//Remove button:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\" >"
-					+ buildRemoveEstimateButton(summary.getEstimateArray().get(i).getslid())
+					+ buildRemoveEstimateButton(summary.getEstimateArray().get(i).getslsummarylinenumber())
 					+ "</TD>" + "\n"
 				;
 			
@@ -1032,14 +1053,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 	}
 	
-	private String buildRemoveEstimateButton(String sEstimateNumber) {
+	private String buildRemoveEstimateButton(String sSummaryLineNumber) {
 		String s = "";
 		s += "<button type=\"button\""
 			+ " value=\"" + BUTTON_REMOVE_ESTIMATE_CAPTION + "\""
 			+ " name=\"" + BUTTON_REMOVE_ESTIMATE_BASE + "\""
 			+ " id=\"" + BUTTON_REMOVE_ESTIMATE_BASE + "\""
-			//TODO - involve the estimate number in the removal:
-			+ " onClick=\"removestimate();\">"
+			+ " onClick=\"removeestimate('" + sSummaryLineNumber + "');\">"
 			+ BUTTON_REMOVE_ESTIMATE_CAPTION
 			+ "</button>\n"
 		;
@@ -1094,6 +1114,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		return s;
 	}
+
 	private String sCommandScripts(
 			SMEstimateSummary summary, 
 			SMMasterEditEntry smmaster
@@ -1112,7 +1133,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Prompt to save:
 			s += "window.onbeforeunload = promptToSave;\n";
 			
-			s += "window.onload = checkReportingType;\n";
+			//s += "window.onload = checkReportingType;\n";
 
 			s += "function promptToSave(){\n"		
 				
@@ -1128,8 +1149,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 			//Delete:
 			s += "function deletesummary(){\n"
-				+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DELETE_COMMAND_VALUE + "\";\n"
-				+ "        document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    if (confirm(\"Are you sure you want to delete this estimate summary?\")){\n"
+					+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DELETE_COMMAND_VALUE + "\";\n"
+					+ "        document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    }\n"
 				//+ "    }\n"
 				+ "}\n"
 			;
@@ -1139,6 +1162,17 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
+			
+			//Remove/delete an estimate:
+			//TODO - test
+			s += "function removeestimate(sSummaryLineNumber){\n"
+				+ "    if (confirm(\"Are you sure you want to delete the estimate on line number \" + sSummaryLineNumber + \"?\")){\n"
+				+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REMOVE_ESTIMATE_COMMAND + "\";\n"
+				+ "        document.getElementById(\"" + PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED + "\").value = sSummaryLineNumber;\n"
+				+ "        document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "    }\n"
+				+ "}\n"
+			;			
 			
 			
 			//Edit Locations
@@ -1160,13 +1194,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			*/
 			//Check Reporting type
 			s += "function checkReportingType(){\n"
-				+ "	 if(document.getElementById(\"" + APVendor.Paramitaxreportingtype + "\").value == \"" + Integer.toString(SMTableicvendors.TAX_REPORTING_TYPE_NONE) + "\"){\n"
-					//Hide tax options if reporting type is none
-				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"none\" ;\n"
-				+ "	 }else{\n"
-					//Otherwise, show tax options
-				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"table-row-group\" ;\n"
-				+ "  }\n"
+//				+ "	 if(document.getElementById(\"" + APVendor.Paramitaxreportingtype + "\").value == \"" + Integer.toString(SMTableicvendors.TAX_REPORTING_TYPE_NONE) + "\"){\n"
+//					//Hide tax options if reporting type is none
+//				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"none\" ;\n"
+//				+ "	 }else{\n"
+//					//Otherwise, show tax options
+//				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"table-row-group\" ;\n"
+//				+ "  }\n"
 				+ "}\n"
 			;
 			
@@ -1233,8 +1267,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		+ DELETE_BUTTON_CAPTION
 		+ "</button>\n";
 		
-		s += "<INPUT TYPE='CHECKBOX' NAME='" + CONFIRM_DELETE_CHECKBOX 
-				+ "' VALUE='" + CONFIRM_DELETE_CHECKBOX + "' > Check to confirm before deleting";
+		//s += "<INPUT TYPE='CHECKBOX' NAME='" + CONFIRM_DELETE_CHECKBOX 
+		//		+ "' VALUE='" + CONFIRM_DELETE_CHECKBOX + "' > Check to confirm before deleting";
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

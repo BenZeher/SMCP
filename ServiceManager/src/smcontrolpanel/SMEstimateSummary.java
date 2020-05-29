@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMTax;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
@@ -45,6 +46,13 @@ public class SMEstimateSummary {
 	private String m_bdadjustedlmarkupamt;
 	
 	private ArrayList<SMEstimate>arrEstimates;
+	
+	private BigDecimal m_bdtotalmaterialcostonestimates;
+	private BigDecimal m_bdtotalfreightonestimates;
+	private BigDecimal m_bdtotallaborunitsonestimates;
+	private BigDecimal m_bdtotallaborcostonestimates;
+	private BigDecimal m_bdtotaltaxonmaterial;
+	private BigDecimal m_bdtaxrateaswholenumber;
 
 	public static final int LINE_NUMBER_PADDING_LENGTH = 6;
 	public static final String LINE_NUMBER_PARAMETER = "LINENOPARAM";
@@ -779,6 +787,63 @@ public class SMEstimateSummary {
 		
 	}
 
+	public void deleteEstimateByLineNumber(Connection conn, String sLineNumber, String sSummaryID, String sUserID, String sUserFullName) throws Exception{
+		
+		setslid(sSummaryID);
+		try {
+			load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202005292247] - could not load summary to delete estimate - " + e.getMessage());
+		}
+
+		try {
+			removeEstimateByLineNumber(sLineNumber);
+		} catch (Exception e) {
+			throw new Exception("Error [202005292458] - " + e.getMessage());
+		}
+		
+		try {
+			save_without_data_transaction(conn, sUserID, sUserFullName);
+		} catch (Exception e) {
+			throw new Exception("Error [202005292556] - could not save summary after removing estimate on line number " + sLineNumber + " - " + e.getMessage());
+		}
+		return;
+	}
+	
+	private void loadCalculatedValues(Connection conn) throws Exception{
+		
+		//Total material cost from estimates:
+		m_bdtotalmaterialcostonestimates = new BigDecimal("0.00");
+		m_bdtotalfreightonestimates = new BigDecimal("0.00");
+		m_bdtotallaborunitsonestimates = new BigDecimal("0.00");;
+		m_bdtotallaborcostonestimates = new BigDecimal("0.00");;
+		
+		for (int i = 0; i < arrEstimates.size(); i++) {
+			m_bdtotalmaterialcostonestimates = m_bdtotalmaterialcostonestimates.add(arrEstimates.get(i).getTotalMaterialCost(conn));
+			m_bdtotalfreightonestimates = m_bdtotalfreightonestimates.add(new BigDecimal(arrEstimates.get(i).getsbdfreight().replace(",", "")));
+			m_bdtotallaborunitsonestimates = m_bdtotallaborunitsonestimates.add(new BigDecimal(arrEstimates.get(i).getsbdlaborquantity().replace(",", "")));
+			BigDecimal bdLaborCostPerUnit = new BigDecimal(arrEstimates.get(i).getsbdlaborcostperunit().replace(",", ""));
+			BigDecimal bdLaborUnitQty = new BigDecimal(arrEstimates.get(i).getsbdlaborquantity().replace(",", ""));
+			m_bdtotallaborcostonestimates = m_bdtotallaborcostonestimates.add(bdLaborCostPerUnit.multiply(bdLaborUnitQty));
+		}
+		
+		m_bdtaxrateaswholenumber = new BigDecimal("0.00");
+		try {
+			m_bdtaxrateaswholenumber = SMTax.Get_Tax_Rate(m_itaxid, conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202005292551] - could not get tax rate for tax ID '" + m_itaxid + " - " + e.getMessage());
+		}
+
+		if (m_bdtaxrateaswholenumber.compareTo(BigDecimal.ZERO) < 0) {
+			throw new Exception("Error [202005292551] - could not get tax rate for tax ID '" + m_itaxid + " - " + "no record found.");
+		}
+		BigDecimal bdTaxRateAsFraction = m_bdtaxrateaswholenumber.setScale(4, BigDecimal.ROUND_HALF_UP).divide(new BigDecimal("100.00"));
+		m_bdtotaltaxonmaterial = m_bdtotalmaterialcostonestimates.multiply(bdTaxRateAsFraction);
+		
+		return;
+		
+	}
+	
 	public void removeEstimateByLineNumber(String sLineNumber) throws Exception{
     	//System.out.println("[1489528400] - sEntryNumber = " + sEntryNumber);
 		

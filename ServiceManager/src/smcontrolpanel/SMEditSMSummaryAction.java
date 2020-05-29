@@ -56,25 +56,12 @@ public class SMEditSMSummaryAction extends HttpServlet{
 		
 		//If DELETE button, process that:
 		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.DELETE_COMMAND_VALUE) == 0){
-			if (clsManageRequestParameters.get_Request_Parameter(SMEditSMSummaryEdit.CONFIRM_DELETE_CHECKBOX, request)
-			    	.compareToIgnoreCase(SMEditSMSummaryEdit.CONFIRM_DELETE_CHECKBOX) == 0) {
-				try {
-					summary.deleteSummary(conn);
-				} catch (Exception e) {
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689958]");
-					smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
-					smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
-			    	smaction.redirectAction(
-				    		"", 
-				    		"", 
-				    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-				    		);
-					return;
-				}
-			}else {
+			try {
+				summary.deleteSummary(conn);
+			} catch (Exception e) {
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689958]");
 				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
-				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, "You chose to delete without checking the confirm before deleting checkbox.");
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
 		    	smaction.redirectAction(
 			    		"", 
 			    		"", 
@@ -85,6 +72,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			
 			//If it deletes successfully:
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689571]");
+			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
 			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Estimate Summary #" + summary.getslid() + " deleted successfully");
 	    	smaction.redirectAction(
 		    		"", 
@@ -110,7 +98,36 @@ public class SMEditSMSummaryAction extends HttpServlet{
 				return;
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689771]");
+			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
 			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Estimate Summary #" + summary.getslid() + " saved successfully");
+	    	smaction.redirectAction(
+		    		"", 
+		    		"", 
+		    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+		    		);
+			return;
+		}
+		
+		//If REMOVE ESTIMATE, then:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.REMOVE_ESTIMATE_COMMAND) == 0){
+			String sSummaryLineNumber = clsManageRequestParameters.get_Request_Parameter(
+				SMEditSMSummaryEdit.PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED, request);
+			try {
+				summary.deleteEstimateByLineNumber(conn, sSummaryLineNumber, summary.getslid(), smaction.getUserID(), smaction.getFullUserName());
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773159]");
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			    		);
+				return;
+			}
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689771]");
+			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
+			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Estimate on Summary line number " + sSummaryLineNumber + " removed successfully");
 	    	smaction.redirectAction(
 		    		"", 
 		    		"", 

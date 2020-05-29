@@ -23,12 +23,11 @@ public class OHDirectFinderResults extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String FINDER_ENDPOINT_NAME_PARAM = "EndpointName";
-	public static final String FINDER_RETURN_CLASS_PARAM = "ReturnClass";
+	public static final String FINDER_SEARCHING_CLASS_PARAM = "SearchingClass";
 	public static final String FINDER_RETURN_FIELD_PARAM = "ReturnField";
 	public static final String FINDER_RETURN_PARAM = "ReturnParams";
 	public static final String RESULT_LIST_FIELD = "ResultListField";
 	public static final String RESULT_LIST_HEADING = "ResultHeading";
-	public static final String RESULT_FIELD_ALIAS = "ResultFieldAlias";
 
 	//This is used to give the finder box a special title, e.g.: 'List of AP Transactions for vendor number OHD02'
 	public static final String FINDER_BOX_TITLE = "FINDERBOXTITLE";
@@ -61,7 +60,7 @@ public class OHDirectFinderResults extends HttpServlet {
 		//Get the parameters:
 		String sEndPointName = clsManageRequestParameters.get_Request_Parameter(FINDER_ENDPOINT_NAME_PARAM, request);
 		String sReturnField = clsManageRequestParameters.get_Request_Parameter(FINDER_RETURN_FIELD_PARAM, request);
-		String sReturnClass = clsManageRequestParameters.get_Request_Parameter(FINDER_RETURN_CLASS_PARAM, request);
+		String sSearchingClass = clsManageRequestParameters.get_Request_Parameter(FINDER_SEARCHING_CLASS_PARAM, request);
 		String sAdditionalReturnParams= "";
 		if (request.getParameter(FINDER_RETURN_PARAM) != null){
 			sAdditionalReturnParams = (String) request.getParameter(FINDER_RETURN_PARAM);
@@ -132,7 +131,7 @@ public class OHDirectFinderResults extends HttpServlet {
 				out.println(printQuoteRows(
 						arrResultListFields, 
 						sAPIQueryString,
-						sReturnClass,
+						sSearchingClass,
 						sReturnField,
 						sAdditionalReturnParams,
 						sDBID,
@@ -180,7 +179,7 @@ public class OHDirectFinderResults extends HttpServlet {
 	private String printQuoteRows(
 			ArrayList<String> arrResultListFields, 
 			String sAPIRequest, 
-			String sReturnClass,
+			String sSearchingClass,
 			String sReturnField,
 			String sAdditionalReturnParams,
 			String sDBID, 
@@ -210,7 +209,7 @@ public class OHDirectFinderResults extends HttpServlet {
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteList ql = new SMOHDirectQuoteList();
 		
-		//For now, we're just hardwiring in this request85
+		//For now, we're just hard wiring in this request
 		//String sRequest = "C_DealerQuote?%24filter="
 		//	+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20gt%20'2020-01-09'"
 		//	+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
@@ -235,7 +234,7 @@ public class OHDirectFinderResults extends HttpServlet {
 				String sQuoteNumberLink = ql.getQuoteNumbers().get(i);
 				if (bAllowQuoteDisplay) {
 					sQuoteNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-						+ sReturnClass
+						+ sSearchingClass
 						+ "?" + sReturnField + "=" + sQuoteNumberLink 
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())

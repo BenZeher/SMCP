@@ -1054,6 +1054,16 @@
         <servlet-class>SMClasses.ObjectFinder</servlet-class>
     </servlet>
     
+    <servlet>
+        <servlet-name>OHDirectFinderResults</servlet-name>
+        <servlet-class>SMClasses.OHDirectFinderResults</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OHDirectFinder</servlet-name>
+        <servlet-class>SMClasses.OHDirectFinder</servlet-class>
+    </servlet>
+    
     <!-- smcontrolpanel package classes: -->
     <servlet>
         <servlet-name>CustomerCallLogEntry</servlet-name>
@@ -4385,6 +4395,16 @@
     <servlet-mapping>
         <servlet-name>ObjectFinder</servlet-name>
         <url-pattern>/SMClasses.ObjectFinder</url-pattern>
+    </servlet-mapping>
+    
+     <servlet-mapping>
+        <servlet-name>OHDirectFinderResults</servlet-name>
+        <url-pattern>/SMClasses.OHDirectFinderResults</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OHDirectFinder</servlet-name>
+        <url-pattern>/SMClasses.OHDirectFinder</url-pattern>
     </servlet-mapping>
 
     <!-- smcontrolpanel package mappings: -->

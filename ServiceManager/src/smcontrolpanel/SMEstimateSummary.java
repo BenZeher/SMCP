@@ -53,6 +53,8 @@ public class SMEstimateSummary {
 	private BigDecimal m_bdtotallaborcostonestimates;
 	private BigDecimal m_bdtotaltaxonmaterial;
 	private BigDecimal m_bdtaxrateaswholenumber;
+	private BigDecimal m_bdcalculatedtotalprice;
+	private BigDecimal m_bdtotalmarkuponestimates;
 
 	public static final int LINE_NUMBER_PADDING_LENGTH = 6;
 	public static final String LINE_NUMBER_PARAMETER = "LINENOPARAM";
@@ -541,6 +543,12 @@ public class SMEstimateSummary {
 			rs.close();
 			throw new Exception("Error [1590510109] loading Estimates - " + e.getMessage());
 		}
+		
+		try {
+			loadCalculatedValues(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202005302642] - could not calculate totals for summary - " + e.getMessage());
+		}
 	}
 	
 	public void deleteSummary(Connection conn) throws Exception{
@@ -746,6 +754,32 @@ public class SMEstimateSummary {
 		m_bdadjustedlmarkupamt = sbdadjustedlmarkupamt;
 	}
 	
+	//Calculated values - these aren't valid until the summary is loaded:
+	public BigDecimal getbdtotalmaterialcostonestimates() {
+		return m_bdtotalmaterialcostonestimates;
+	}
+	public BigDecimal getbdtotalfreightonestimates() {
+		return m_bdtotalfreightonestimates;
+	}
+	public BigDecimal getbdtotallaborunitsonestimates() {
+		return m_bdtotallaborunitsonestimates;
+	}
+	public BigDecimal getbdtotallaborcostonestimates() {
+		return m_bdtotallaborcostonestimates;
+	}
+	public BigDecimal getbdtotaltaxonmaterial() {
+		return m_bdtotaltaxonmaterial;
+	}
+	public BigDecimal getbdtaxrateaswholenumber() {
+		return m_bdtaxrateaswholenumber;
+	}
+	public BigDecimal getbdcalculatedtotalprice() {
+		return m_bdcalculatedtotalprice;
+	}
+	public BigDecimal getbdtotalmarkuponestimates() {
+		return m_bdtotalmarkuponestimates;
+	}
+	
 	public void addEstimate(SMEstimate estimate){
 		arrEstimates.add(estimate);
 	}
@@ -815,13 +849,18 @@ public class SMEstimateSummary {
 		//Total material cost from estimates:
 		m_bdtotalmaterialcostonestimates = new BigDecimal("0.00");
 		m_bdtotalfreightonestimates = new BigDecimal("0.00");
-		m_bdtotallaborunitsonestimates = new BigDecimal("0.00");;
-		m_bdtotallaborcostonestimates = new BigDecimal("0.00");;
+		m_bdtotallaborunitsonestimates = new BigDecimal("0.00");
+		m_bdtotallaborcostonestimates = new BigDecimal("0.00");
+		m_bdtaxrateaswholenumber = new BigDecimal("0.00");
+		m_bdtotaltaxonmaterial = new BigDecimal("0.00");
+		m_bdtotalmarkuponestimates = new BigDecimal("0.00");
+		m_bdcalculatedtotalprice = new BigDecimal("0.00");
 		
 		for (int i = 0; i < arrEstimates.size(); i++) {
 			m_bdtotalmaterialcostonestimates = m_bdtotalmaterialcostonestimates.add(arrEstimates.get(i).getTotalMaterialCost(conn));
 			m_bdtotalfreightonestimates = m_bdtotalfreightonestimates.add(new BigDecimal(arrEstimates.get(i).getsbdfreight().replace(",", "")));
 			m_bdtotallaborunitsonestimates = m_bdtotallaborunitsonestimates.add(new BigDecimal(arrEstimates.get(i).getsbdlaborquantity().replace(",", "")));
+			m_bdtotalmarkuponestimates = m_bdtotalmarkuponestimates.add(new BigDecimal(arrEstimates.get(i).getsbdmarkupamount().replace(",", "")));
 			BigDecimal bdLaborCostPerUnit = new BigDecimal(arrEstimates.get(i).getsbdlaborcostperunit().replace(",", ""));
 			BigDecimal bdLaborUnitQty = new BigDecimal(arrEstimates.get(i).getsbdlaborquantity().replace(",", ""));
 			m_bdtotallaborcostonestimates = m_bdtotallaborcostonestimates.add(bdLaborCostPerUnit.multiply(bdLaborUnitQty));
@@ -840,8 +879,14 @@ public class SMEstimateSummary {
 		BigDecimal bdTaxRateAsFraction = m_bdtaxrateaswholenumber.setScale(4, BigDecimal.ROUND_HALF_UP).divide(new BigDecimal("100.00"));
 		m_bdtotaltaxonmaterial = m_bdtotalmaterialcostonestimates.multiply(bdTaxRateAsFraction);
 		
-		return;
+		m_bdcalculatedtotalprice = 
+			m_bdtotalmaterialcostonestimates.add(
+				m_bdtotalfreightonestimates).add(
+					m_bdtotallaborcostonestimates).add(
+						m_bdtotalmarkuponestimates).add(
+							m_bdtotaltaxonmaterial);
 		
+		return;
 	}
 	
 	public void removeEstimateByLineNumber(String sLineNumber) throws Exception{

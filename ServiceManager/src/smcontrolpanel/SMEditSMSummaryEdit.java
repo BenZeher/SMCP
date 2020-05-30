@@ -22,6 +22,7 @@ import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import smap.APVendor;
 
@@ -206,13 +207,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + "" + "\""
 			+ ">"
 			);
-		pwOut.println("<INPUT TYPE=HIDDEN"
-				+ " NAME=\"" + PARAM_TOTAL_ESTIMATE_MATERIAL_COST + "\""
-				+ " ID=\"" + PARAM_TOTAL_ESTIMATE_MATERIAL_COST + "\""
-				+ " VALUE=\"" + "" + "\""
-				+ ">"
-				);
-		
 		
 		//Create HTML Fields
 		try {
@@ -672,7 +666,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -692,7 +686,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ ">"
-			+ "0.00"
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdfreightScale, summary.getbdtotalfreightonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -712,7 +706,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborquantityScale, summary.getbdtotallaborunitsonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -728,7 +722,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborcostperunitScale, summary.getbdtotallaborcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -749,7 +743,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdmarkupamountScale, summary.getbdtotalmarkuponestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -769,7 +763,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdtotaltaxonmaterial())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -798,7 +792,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdcalculatedtotalprice())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"

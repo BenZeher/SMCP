@@ -145,7 +145,7 @@ public class SMEstimateLine {
 		
 		try {
 			m_sbdquantity = clsValidateFormFields.validateBigdecimalField(
-				m_sbdquantity, 
+				m_sbdquantity.replace(",", ""), 
 				"Line quantity", 
 				SMTablesmestimatelines.bdquantityScale,
 				new BigDecimal("-999999999.9999"),
@@ -190,7 +190,7 @@ public class SMEstimateLine {
 		
 		try {
 			m_sbdextendedcost = clsValidateFormFields.validateBigdecimalField(
-				m_sbdextendedcost, 
+				m_sbdextendedcost.replace(",", ""), 
 				"Line quantity", 
 				SMTablesmestimatelines.bdextendedcostScale,
 				new BigDecimal("-999999999.99"),

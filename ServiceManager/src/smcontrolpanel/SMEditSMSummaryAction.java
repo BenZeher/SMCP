@@ -32,6 +32,20 @@ public class SMEditSMSummaryAction extends HttpServlet{
 	    //Read the entry fields from the request object:
 		SMEstimateSummary summary = new SMEstimateSummary(request);
 		
+		//Make sure to load the estimates as well:
+		try {
+			summary.loadEstimates(summary.getslid(), smaction.getsDBID(), getServletContext(), smaction.getFullUserName());
+		} catch (Exception e1) {
+			smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e1.getMessage());
+	    	smaction.redirectAction(
+		    		"", 
+		    		"", 
+		    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+		    		);
+			return;
+		}
+		
 		//Get the command value from the request.
 		String sCommandValue = clsManageRequestParameters.get_Request_Parameter(SMEditSMSummaryEdit.COMMAND_FLAG, request);
 

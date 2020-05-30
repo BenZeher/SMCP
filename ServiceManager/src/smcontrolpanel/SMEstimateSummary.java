@@ -63,7 +63,7 @@ public class SMEstimateSummary {
 	{
 		initializeVariables();
 	}
-	public SMEstimateSummary(HttpServletRequest req){
+	public SMEstimateSummary(HttpServletRequest req) {
 		//Read the batch fields from a servlet request:
 		initializeVariables();
 		
@@ -430,7 +430,8 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
-		//Validate the entries:
+		//Validate the Estimates:
+		/*
 		for (int i = 0; i < arrEstimates.size(); i++){
 			SMEstimate estimate = arrEstimates.get(i);
 			estimate.setslsummarylid(m_lid);
@@ -442,7 +443,7 @@ public class SMEstimateSummary {
 				sResult += "  In estimate " + estimate.getslid() + " - " + e.getMessage() + ".";
 			}
 		}
-		
+		*/
 		if (sResult.compareToIgnoreCase("") != 0){
 			throw new Exception(sResult);
 		}
@@ -520,16 +521,45 @@ public class SMEstimateSummary {
 			throw new Exception("Error [1590509860] - loading " + OBJECT_NAME + " with ID " + m_lid + " - " + e.getMessage());
 		}
 		
-		//Load the lines:
+		//Load the estimates:
+		try {
+			loadEstimates(conn, m_lid);
+		} catch (Exception e) {
+			throw new Exception("Error [202005303623] - Could not load estimates for summary - " + e.getMessage());
+		}
+		return;
+	}
+	
+	public void loadEstimates(String sSummaryID, String sDBID, ServletContext context, String sUserFullName) throws Exception{
+		
+		Connection conn = null;
+		try {
+			conn = clsDatabaseFunctions.getConnectionWithException(context, sDBID, "MySQL", this.toString() + ".loadEstimates - user: " + sUserFullName);
+		} catch (Exception e) {
+			throw new Exception("Error [202005300917] - error loading estimates - " + e.getMessage());
+		}
+		
+		try {
+			loadEstimates(conn, sSummaryID);
+		} catch (Exception e) {
+			throw new Exception("Error [202005300943] - " + e.getMessage());
+		}
+		
+		clsDatabaseFunctions.freeConnection(context, conn, "[1590862137]");
+		return;
+	}
+	public void loadEstimates(Connection conn, String sSummaryID) throws Exception{
+		
 		arrEstimates.clear();
-		SQL = "SELECT"
+		String SQL = "SELECT"
 			+ " " + SMTablesmestimates.lid
 			+ " FROM " + SMTablesmestimates.TableName 
 			+ " WHERE ("
 				+ "(" + SMTablesmestimates.lsummarylid + " = " + m_lid + ")"
 			+ ") ORDER BY " + SMTablesmestimates.lsummarylinenumber
 		;
-		rs = null;
+		ResultSet rs = null;
+		System.out.println("[202005301821] - 1");
 		try {
 			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rs.next()){
@@ -541,14 +571,16 @@ public class SMEstimateSummary {
 			rs.close();
 		} catch (Exception e) {
 			rs.close();
-			throw new Exception("Error [1590510109] loading Estimates - " + e.getMessage());
+			throw new Exception("Error [1590510209] loading Estimates - " + e.getMessage());
 		}
-		
+		System.out.println("[202005301826] - 2");
 		try {
 			loadCalculatedValues(conn);
 		} catch (Exception e) {
-			throw new Exception("Error [202005302642] - could not calculate totals for summary - " + e.getMessage());
+			throw new Exception("Error [202005302742] - could not calculate totals for summary - " + e.getMessage());
 		}
+		
+		return;
 	}
 	
 	public void deleteSummary(Connection conn) throws Exception{
@@ -789,6 +821,7 @@ public class SMEstimateSummary {
 	}
 	
 	private void saveEstimates(Connection conn, String sUserID, String sUserFullName) throws Exception{
+		
 		for (int i = 0; i < arrEstimates.size(); i++){
 			SMEstimate estimate = arrEstimates.get(i);
 			estimate.setslsummarylid(m_lid);
@@ -802,6 +835,7 @@ public class SMEstimateSummary {
 				);
 			}
 		}
+		
 		//We also have to delete any EXTRA estimates that might be left that are higher than our current highest line number:
 		//This can happen if we removed an estimate and we now have fewer lines than we previously had:
 		String SQL = "DELETE FROM " + SMTablesmestimates.TableName
@@ -816,9 +850,8 @@ public class SMEstimateSummary {
 		} catch (Exception e) {
 			throw new Exception("Error [1590511234] deleting leftover Estimates - " + e.getMessage());
 		}
-		
-		//Now delete any orphaned 
-		
+
+		return;
 	}
 
 	public void deleteEstimateByLineNumber(Connection conn, String sLineNumber, String sSummaryID, String sUserID, String sUserFullName) throws Exception{
@@ -869,6 +902,7 @@ public class SMEstimateSummary {
 		m_bdtaxrateaswholenumber = new BigDecimal("0.00");
 		try {
 			m_bdtaxrateaswholenumber = SMTax.Get_Tax_Rate(m_itaxid, conn);
+			//System.out.println("[202005302956] - SMTax.Get_Tax_Rate(m_itaxid, conn) = " + m_bdtaxrateaswholenumber + ", m_itaxid = " + m_itaxid);
 		} catch (Exception e) {
 			throw new Exception("Error [202005292551] - could not get tax rate for tax ID '" + m_itaxid + " - " + e.getMessage());
 		}
@@ -877,6 +911,7 @@ public class SMEstimateSummary {
 			throw new Exception("Error [202005292551] - could not get tax rate for tax ID '" + m_itaxid + " - " + "no record found.");
 		}
 		BigDecimal bdTaxRateAsFraction = m_bdtaxrateaswholenumber.setScale(4, BigDecimal.ROUND_HALF_UP).divide(new BigDecimal("100.00"));
+		System.out.println("[202005304649] - bdTaxRateAsFraction = " + bdTaxRateAsFraction);
 		m_bdtotaltaxonmaterial = m_bdtotalmaterialcostonestimates.multiply(bdTaxRateAsFraction);
 		
 		m_bdcalculatedtotalprice = 

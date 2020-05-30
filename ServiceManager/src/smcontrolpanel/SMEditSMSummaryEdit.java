@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -99,8 +100,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				HttpServletResponse response)
 				throws ServletException, IOException {
 		
-
-		SMEstimateSummary summary = new SMEstimateSummary(request);
 		SMMasterEditEntry smedit = new SMMasterEditEntry(
 				request,
 				response,
@@ -111,12 +110,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
 				SMSystemFunctions.SMEditSMEstimates
-		);    
+		);   
 		
 		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMEditSMEstimates, request)){
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
 		}
+		
+		SMEstimateSummary summary = new SMEstimateSummary(request);
 		
 		//If this is a 'resubmit', meaning it's being called by the Action class, then
 		//the session will have a job cost entry object in it, and that's what we'll pick up.
@@ -125,6 +126,19 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    if (currentSession.getAttribute(SMEstimateSummary.OBJECT_NAME) != null){
 	    	summary = (SMEstimateSummary) currentSession.getAttribute(SMEstimateSummary.OBJECT_NAME);
 	    	currentSession.removeAttribute(SMEstimateSummary.OBJECT_NAME);
+			
+	    	try {
+	    		summary.loadEstimates(summary.getslid(), smedit.getsDBID(), getServletContext(), smedit.getFullUserName());
+			} catch (Exception e) {
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+						+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+						+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+					);
+					return;
+			}
+	    	
 	    //But if it's NOT a 'resubmit', meaning this class was called for the first time to 
 	    //edit, we'll pick up the ID or key from the request and try to load the entry:
 	    }else{
@@ -178,6 +192,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			);
 				return;
 		}
+	    
 	    return;
 }
 	
@@ -529,7 +544,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	private String buildEstimateTable(Connection conn, SMEstimateSummary summary) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 5;
+		int iNumberOfColumns = 6;
 		
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
 		
@@ -545,6 +560,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		//Headings:
 		s += "  <TR>" + "\n";
+		
+		//Line number:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Line #"
+			+ "</TD>" + "\n"
+		;
 		
 		//Estimate number:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
@@ -586,6 +608,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		//Get all the estimates:
 		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
 			s += "  <TR>" + "\n";
+			
+			//Line #:
+			//Estimate ID:
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
+					+ summary.getEstimateArray().get(i).getslsummarylinenumber()
+					+ "</TD>" + "\n"
+				;
 			
 			//Estimate ID:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
@@ -825,7 +854,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"

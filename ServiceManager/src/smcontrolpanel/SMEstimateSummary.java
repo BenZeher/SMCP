@@ -229,7 +229,7 @@ public class SMEstimateSummary {
 		try {
 			saveEstimates(conn, sUserID, sUserFullName);
 		} catch (Exception e) {
-			throw new Exception("Error [1590503760] saving entry lines - " + e.getMessage() + ".");
+			throw new Exception("Error [1590503760] saving estimates - " + e.getMessage() + ".");
 		}
 		
 		return;

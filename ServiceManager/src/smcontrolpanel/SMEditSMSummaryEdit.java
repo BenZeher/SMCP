@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTableapbatchentries;
+import SMDataDefinition.SMTableapbatchentrylines;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
@@ -25,6 +27,7 @@ import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import smap.APBatchEntry;
 import smap.APVendor;
 
 
@@ -68,11 +71,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String FIELD_ADJUSTED_LABOR_UNITS_CAPTION = "LABOR UNITS:";
 	//public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT = "FIELDADJUSTEDCOSTPERLABORUNIT";
 	public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT_CAPTION = "LABOR COST/UNIT:";
-	public static final String LABEL_ADJUSTED_TOTAL_LABOR_COST = "LABELADJUSTEDTOTALLABORCOST";
+	public final String LABEL_ADJUSTED_TOTAL_LABOR_COST = "LABELADJUSTEDTOTALLABORCOST";
 	public static final String LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION = "TOTAL LABOR COST:";
 	public static final String LABEL_ADJUSTED_MU_PER_LABOR_UNIT = "LABELADJUSTEDMUPERLABORUNIT";
 	public static final String FIELD_ADJUSTED_MU_PER_LABOR_UNIT_CAPTION = "MU PER LABOR UNIT:";
-	public static final String LABEL_ADJUSTED_MU_PERCENTAGE = "LABELADJUSTEDMUPERCENTAGE";
+	public static final String FIELD_ADJUSTED_MU_PERCENTAGE = "LABELADJUSTEDMUPERCENTAGE";
 	public static final String FIELD_ADJUSTED_MU_PERCENTAGE_CAPTION = "MU PERCENTAGE:";
 	public static final String LABEL_ADJUSTED_GP_PERCENTAGE = "LABELADJUSTEDGPPERCENTAGE";
 	public static final String FIELD_ADJUSTED_GP_PERCENTAGE_CAPTION = "GP PERCENTAGE:";
@@ -875,6 +878,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedfreight() + "\""
+			+ " onchange=\"recalculatelivetotals();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -895,6 +899,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedlaborunitqty() + "\""
+			+ " onchange=\"recalculatelivetotals();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -913,6 +918,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedlaborcostperunit() + "\""
+				+ " onchange=\"recalculatelivetotals();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -961,10 +967,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ ">"
 				+ "&nbsp;"
 				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + LABEL_ADJUSTED_MU_PERCENTAGE + "\""
-				+ " ID = \"" + LABEL_ADJUSTED_MU_PERCENTAGE + "\""
+				+ " NAME = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
+				+ " ID = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = 0.00"
+				+ " VALUE = \"0.00\""
+				+ " onchange=\"calculateMUusingMUpercentage();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -982,7 +989,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " NAME = \"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " ID = \"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = 0.00"
+				+ " VALUE = \"0.00\""
+				+ " onchange=\"calculateMUusinggppercentage();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1001,6 +1009,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedlmarkupamt() + "\""
+				+ " onchange=\"recalculatelivetotals();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1197,6 +1206,127 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "}\n"
 			;			
 			
+			s += "function flagDirty() {\n"
+					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
+					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
+				+ "}\n";
+			
+			//Recalculate live totals:
+			s += "function recalculatelivetotals(){\n"
+				//+ "    alert('Recalculating');\n"
+				//+ "    //Turn off the line amt warning by default:\n"
+				//+ "    document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.display= \"none\"\n"
+				+ "    var adjustedlabortotalcost = parseFloat(\"0.00\")\n;"
+				+ "    var adjustedlaborunits = parseFloat(\"0.00\");\n"
+				+ "    var adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
+				
+				//parseFloat(document.getElementById(amtid4).innerHTML).toFixed(2);
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedlaborunits = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        adjustedlaborunits = parseFloat(temp)\n;"
+				+ "    }\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        adjustedlaborcostperunit = parseFloat(temp);\n"
+				+ "    }\n"
+				
+				+ "    adjustedlabortotalcost = adjustedlaborunits * adjustedlaborcostperunit;\n"
+				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").innerText=adjustedlabortotalcost.toFixed(2);\n"
+				
+				/*
+				+ "    var entryamt = getFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + SMTableapbatchentries.bdentryamount + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        entryamt = getFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        entryamt = getFloat(temp);\n"
+				+ "    }\n"
+				
+				+ "    // For each of the lines on the entry, add the amount:\n"
+				+ "	   for (i=0; i<document.forms[\"MAINFORM\"].elements.length; i++){\n"
+				+ "        //Get the name of the control:\n"
+	   			+ "	       var testName = document.forms[\"MAINFORM\"].elements[i].name;\n"
+				+ "        //If the control name starts with '" + APBatchEntry.LINE_NUMBER_PARAMETER + "', then pick off the rest of it:\n"
+	   			+ "        if (testName.substring(0, " + Integer.toString(APBatchEntry.LINE_NUMBER_PARAMETER.length()) + "	) == \"" + APBatchEntry.LINE_NUMBER_PARAMETER + "\"){\n"
+	   			+ "            //If the string ENDS with the field name '" + SMTableapbatchentrylines.bdamount + "', then it's a line amount:\n"
+	   			+ "            if (testName.endsWith(\"" + SMTableapbatchentrylines.bdamount + "\") == true){\n"
+	   			+ "                //Add it to the line total:\n"
+	   			+ "                temp = document.getElementById(testName).value.replace(',','');\n"
+	   			+ "                if (temp != ''){\n"
+	   			+ "                    if(!isNaN(temp)){\n"
+	   			+ "                        linetotal = linetotal + getFloat(temp);\n"
+	   			+ "                    }\n"
+	   			+ "                }\n"
+	   			+ "            }\n"
+	   			+ "        }\n"
+	   			+ "    }\n"
+	   			*/
+	   			
+	   			;
+			/*
+			//Calculate and display the line totals:
+			s += "    if (!floatsAreEqual(linetotal, entryamt)){\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD + "\").innerText=linetotal.toFixed(2);\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.color= \"red\"\n"
+	   			+ "    }else{\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD + "\").innerText=linetotal.toFixed(2);\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.color= \"black\"\n"
+	   			+ "    }\n"
+	   		;
+			*/
+				
+			s += "}\n"
+	   		;
+			
+			//Recalculate MU using MU percentage:
+			s += "function calculateMUusingMUpercentage(){\n"
+				+ "    var adjustedtotalmarkup = parseFloat(\"0.00\")\n;"
+				+ "    var adjustedMUpercentage = parseFloat(\"0.00\");\n"
+				
+				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedMUpercentage = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        adjustedMUpercentage = parseFloat(temp)\n;"
+				+ "    }\n"
+				
+				+ "    //Get the total cost before mark-up:"
+				+ "    var materialcost = parseFloat(\"0.00\")\n;"
+				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        materialcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        materialcost = parseFloat(temp);\n"
+				+ "    }\n"
+
+				+ "    var adjustedfreightcost = parseFloat(\"0.00\")\n;"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedfreightcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        adjustedfreightcost = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    var adjustedlaborcost = parseFloat(\"0.00\")\n;"
+				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedlaborcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        adjustedlaborcost = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    var adjustedpremarkupcost = materialcost + adjustedfreightcost + adjustedlaborcost;\n"
+				
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "\").innerText=(adjustedpremarkupcost * adjustedMUpercentage).toFixed(2);\n"
+				+ "    recalculatelivetotals();\n"
+				
+	   			;
+			s += "}\n"
+	   		;
 			
 			//Edit Locations
 			/*

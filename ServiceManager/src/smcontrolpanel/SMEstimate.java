@@ -352,23 +352,28 @@ public class SMEstimate {
 		}
 		
 		//Update the ID:
-		String sSQL = "SELECT last_insert_id()";
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
-			if (rs.next()) {
-				m_lid = Long.toString(rs.getLong(1));
-			}else {
-				m_lid = "0";
+		if (
+			(m_lid.compareToIgnoreCase("") == 0)
+			|| (m_lid.compareToIgnoreCase("0") == 0)
+			|| (m_lid.compareToIgnoreCase("-1") == 0)
+		) {
+			String sSQL = "SELECT last_insert_id()";
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
+				if (rs.next()) {
+					m_lid = Long.toString(rs.getLong(1));
+				}else {
+					m_lid = "0";
+				}
+				rs.close();
+			} catch (SQLException e) {
+				throw new Exception("Error [1590163604] Could not get last ID number - " + e.getMessage());
 			}
-			rs.close();
-		} catch (SQLException e) {
-			throw new Exception("Error [1590163604] Could not get last ID number - " + e.getMessage());
+			//If something went wrong, we can't get the last ID:
+			if (m_lid.compareToIgnoreCase("0") == 0){
+				throw new Exception("Error [1590163605] Could not get last ID number.");
+			}
 		}
-		//If something went wrong, we can't get the last ID:
-		if (m_lid.compareToIgnoreCase("0") == 0){
-			throw new Exception("Error [1590163605] Could not get last ID number.");
-		}
-		
 		//Finally, save the lines....
 		try {
 			saveLines(conn, sUserID);

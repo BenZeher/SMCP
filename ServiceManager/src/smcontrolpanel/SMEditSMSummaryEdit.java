@@ -2,23 +2,19 @@ package smcontrolpanel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTableapbatchentries;
-import SMDataDefinition.SMTableapbatchentrylines;
-import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimates;
@@ -27,7 +23,6 @@ import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
-import smap.APBatchEntry;
 import smap.APVendor;
 
 
@@ -87,6 +82,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY #";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
+	public static final String PARAM_RETAIL_SALES_TAX_RATE = "RETAIL_SALES_TAX_RATE";
 	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
 	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
 	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
@@ -225,6 +221,15 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + "" + "\""
 			+ ">"
 			);
+		
+		//This is used to store the on-the-fly retail sales tax rate in case the user changes the tax drop down
+		pwOut.println("<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + PARAM_RETAIL_SALES_TAX_RATE + "\""
+			+ " ID=\"" + PARAM_RETAIL_SALES_TAX_RATE + "\""
+			+ " VALUE=\"" + "" + "\""
+			+ ">"
+			);
+		
 		
 		//Create HTML Fields
 		try {
@@ -409,8 +414,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			s += "<B>Error [1590530698] reading tax info - " + e.getMessage() + "</B><BR>";
 		}
 
-		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.itaxid + "\""
-				+ " onchange=\"flagDirty();\""
+		sControlHTML = "\n<SELECT"
+				+ " NAME = \"" + SMTablesmestimatesummaries.itaxid + "\""
+				+ " ID = \"" + SMTablesmestimatesummaries.itaxid + "\""
+				+ " onchange=\"recalculatelivetotals();\""
 				 + " >\n"
 			;
 		String sTempBuffer = "";
@@ -441,7 +448,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		//Order type:
 		//First, add a blank item so we can be sure the user chose one:
-		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.iordertype + "\""
+		sControlHTML = "\n<SELECT"
+			+ " NAME = \"" + SMTablesmestimatesummaries.iordertype + "\""
+			+ " ID = \"" + SMTablesmestimatesummaries.iordertype + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " >\n"
 		;
@@ -1030,7 +1039,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdtotaltaxonmaterial())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -1063,7 +1072,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			//+ " style = \" font-size: large; \""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION + " " + sSummaryID + ":"
+			+ LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
@@ -1165,8 +1174,70 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Prompt to save:
 			s += "window.onbeforeunload = promptToSave;\n";
 			
-			//s += "window.onload = checkReportingType;\n";
+			s += "window.onload = recalculatelivetotals;\n";
 
+			//Build an array of taxes and rates to do the 'adjusted retail sales tax' calc on the fly:
+			int iCounter = 0;
+			String sretailtaxrates = "";
+			
+			String SQL = "SELECT"
+				+ " " + SMTabletax.lid
+				+ ", " + SMTabletax.bdtaxrate
+				+ ", " + SMTabletax.icalculateonpurchaseorsale
+				+ ", " + SMTabletax.icalculatetaxoncustomerinvoice
+				+ " FROM " + SMTabletax.TableName
+				+ " ORDER BY " + SMTabletax.lid
+				;
+
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					getServletContext(), 
+					smmaster.getsDBID(), 
+					"MySQL", 
+					this.toString() + " [1591042478] SQL: " + SQL 
+				);
+				BigDecimal bdTaxRateAsPercentage = new BigDecimal("0.00");
+				while (rs.next()){
+					iCounter++;
+					if (
+						(rs.getInt(SMTabletax.icalculateonpurchaseorsale) == SMTabletax.TAX_CALCULATION_BASED_ON_SELLING_PRICE)
+						&& (rs.getInt(SMTabletax.icalculatetaxoncustomerinvoice) == 1)
+							
+					) {
+						bdTaxRateAsPercentage = rs.getBigDecimal(SMTabletax.bdtaxrate);
+					}else {
+						bdTaxRateAsPercentage = BigDecimal.ZERO;
+					}
+					sretailtaxrates += "sretailtaxrates[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
+						+ "\"] = \"" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTabletax.bdtaxratescale, bdTaxRateAsPercentage) + "\";\n";
+				}
+				rs.close();
+			} catch (SQLException e) {
+				throw new SQLException("Error reading ship-to locations for javascript - " + e.getMessage());
+			}
+			
+			//Create the arrays, if there are any:
+			if (iCounter > 0){
+				s += "var sretailtaxrates = new Array(" + Integer.toString(iCounter) + ")\n";
+				s += sretailtaxrates + "\n";
+			}
+			
+			s += "\n";
+			
+			s += "function taxChange(selectObj) {\n" 
+					// get the index of the selected option 
+					+ "    var idx = selectObj.selectedIndex;\n"
+					// get the value of the selected option 
+					+ "    var which = selectObj.options[idx].value;\n"
+					//+ "alert(selectObj.options[idx].value);\n"
+					// use the selected option value to retrieve the ship to fields from the ship to arrays:
+					+ "    if (which != ''){\n"
+					+ "        document.forms[\"MAINFORM\"].elements[\"" + PARAM_RETAIL_SALES_TAX_RATE + "\"].value = sretailtaxrates[which];\n"
+					+ "    }\n"
+					//+ "    alert('PARAM_RETAIL_SALES_TAX_RATE = ' + document.getElementById(\"" + PARAM_RETAIL_SALES_TAX_RATE + "\").value); \n"
+					+ "}\n\n"; 
+			
 			s += "function promptToSave(){\n"		
 				
 				+ "    if (document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value == \"" 
@@ -1214,14 +1285,26 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Recalculate live totals:
 			s += "function recalculatelivetotals(){\n"
 				//+ "    alert('Recalculating');\n"
+					
+				+ "    //Set the retail sales tax rate, based on the current index of the tax drop down: \n"
+				+ "    taxChange(document.getElementById(\"" + SMTablesmestimatesummaries.itaxid + "\")); \n"
+				+ "\n"
+				
 				//+ "    //Turn off the line amt warning by default:\n"
 				//+ "    document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.display= \"none\"\n"
-				+ "    var adjustedlabortotalcost = parseFloat(\"0.00\")\n;"
+				+ "    var adjustedlabortotalcost = parseFloat(\"0.00\");\n"
 				+ "    var adjustedlaborunits = parseFloat(\"0.00\");\n"
 				+ "    var adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
+				+ "    var adjustedtotalforsummary = parseFloat(\"0.00\");\n"
+				+ "    var materialcosttotal = parseFloat(\"0.00\");\n"
+				+ "    var adjustedtfreighttotal = parseFloat(\"0.00\");\n"
+				+ "    var adjustedtmarkuptotal = parseFloat(\"0.00\");\n"
+				+ "    var taxonmaterial = parseFloat(\"0.00\");\n"
+				+ "    var retailsalestaxrateaspercent = parseFloat(\"0.00\");\n"
+				+ "    var retailsalestaxrateasdecimal = parseFloat(\"0.00\");\n"
+				+ "    var adjustedretailsalestax = parseFloat(\"0.00\");\n"
 				
-				//parseFloat(document.getElementById(amtid4).innerHTML).toFixed(2);
-				
+				+ "    //Calculate the total adjusted labor cost: \n"
 				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\").value).replace(',','');\n"
 				+ "    if (temp == ''){\n"
 				+ "        adjustedlaborunits = parseFloat(\"0.00\")\n;"
@@ -1237,7 +1320,66 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    }\n"
 				
 				+ "    adjustedlabortotalcost = adjustedlaborunits * adjustedlaborcostperunit;\n"
-				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").innerText=adjustedlabortotalcost.toFixed(2);\n"
+				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").innerText=formatNumber(adjustedlabortotalcost);\n"
+				+ "    \n"
+				
+				+ "    //Calculate the total adjusted sell price: \n"
+				+ "    //Should equal totalmaterialcost + totalfreight + totallabor + totalmarkup + totalmaterialtax \n"
+				+ "    \n"
+				
+				+ "    //Get the material total: \n"
+				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\").innerText).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        materialcosttotal = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        materialcosttotal = parseFloat(temp)\n;"
+				+ "    }\n"
+				+ "    \n"
+				
+				+ "    //Get the adjusted freight amount: \n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedtfreighttotal = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        adjustedtfreighttotal = parseFloat(temp)\n;"
+				+ "    }\n"
+				+ "    \n"
+				
+				+ "    //Get the adjusted markup amount: \n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedtmarkuptotal = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        adjustedtmarkuptotal = parseFloat(temp)\n;"
+				+ "    }\n"
+				+ "    \n"
+				
+				+ "    //Get the tax on material: \n"
+				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\").innerText).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        taxonmaterial = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        taxonmaterial = parseFloat(temp)\n;"
+				+ "    }\n"
+				+ "    \n"
+				
+				+ "    adjustedtotalforsummary = materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost + adjustedtmarkuptotal + taxonmaterial; \n"
+				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\").innerText=formatNumber(adjustedtotalforsummary);\n"
+				+ "    \n"
+				
+				+ "    //Get any retail sales tax (tax on the sell price): \n"
+				+ "    //Retail sales tax = taxrateaspercentage/100 * totalsellprice \n"
+				+ "    var temp = (document.getElementById(\"" + PARAM_RETAIL_SALES_TAX_RATE + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        retailsalestaxrateaspercent = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        retailsalestaxrateaspercent = parseFloat(temp)\n;"
+				+ "    }\n"
+				+ "    retailsalestaxrateasdecimal = retailsalestaxrateaspercent / 100; \n"
+				
+				+ "    document.getElementById(\"" + LABEL_ADJUSTED_RETAIL_SALES_TAX + "\").innerText=formatNumber(retailsalestaxrateasdecimal * adjustedtotalforsummary);\n"
+				+ "    \n"
+				
 				
 				/*
 				+ "    var entryamt = getFloat(\"0.00\");\n"
@@ -1283,6 +1425,36 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				
 			s += "}\n"
 	   		;
+			
+			//Format numbers to have commas as needed:
+			s += "function formatNumber(num) {\n"
+				+ "    return num.toFixed(2).replace(/(\\d)(?=(\\d{3})+(?!\\d))/g, '$1,') \n"
+				+ "}"
+			;
+			
+			//Validate number fields:
+			/*
+			s += "    var sestimatedhours = document.getElementById(\"" 
+				+ SMOrderHeader.ParamdEstimatedHour + "\").value;\n"
+			+ "    if (isNumeric(sestimatedhours) == false){\n"
+			+ "        alert(\"Estimated hours '\" + sestimatedhours + \"' are invalid.\");\n"
+			+ "        document.getElementById(\"" + SMOrderHeader.ParamdEstimatedHour + "\").focus();\n"
+			+ "        document.getElementById(\"" + SMOrderHeader.ParamdEstimatedHour + "\").select();\n"
+			+ "        return false;\n"
+			+ "    }\n"
+			;
+			*/
+			
+			s += "\n"
+				+ "function isNumeric(value) {\n"
+				+ "    if ((value == null) || (value == '')) return false;\n"
+				+ "    var strippedstring = value.replace(/,/g, '');\n"
+				//+ "    alert(strippedstring);\n"
+				+ "    if (!strippedstring.toString().match(/^[-]?\\d*\\.?\\d*$/)) return false;\n"
+				+ "    return true\n"
+				+ "    }\n"
+				+ "\n"
+			;
 			
 			//Recalculate MU using MU percentage:
 			s += "function calculateMUusingMUpercentage(){\n"

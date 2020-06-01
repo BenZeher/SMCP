@@ -159,7 +159,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteList ql = new SMOHDirectQuoteList();
 		
-		//For now, we're just hardwiring in this request85
+		//For now, we're just hardwiring in this request
 		//String sRequest = "C_DealerQuote?%24filter="
 		//	+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20gt%20'2020-01-09'"
 		//	+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"

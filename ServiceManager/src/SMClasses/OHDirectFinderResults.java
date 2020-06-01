@@ -61,11 +61,14 @@ public class OHDirectFinderResults extends HttpServlet {
 		String sEndPointName = clsManageRequestParameters.get_Request_Parameter(FINDER_ENDPOINT_NAME_PARAM, request);
 		String sReturnField = clsManageRequestParameters.get_Request_Parameter(FINDER_RETURN_FIELD_PARAM, request);
 		String sSearchingClass = clsManageRequestParameters.get_Request_Parameter(FINDER_SEARCHING_CLASS_PARAM, request);
-		String sAdditionalReturnParams= "";
-		if (request.getParameter(FINDER_RETURN_PARAM) != null){
-			sAdditionalReturnParams = (String) request.getParameter(FINDER_RETURN_PARAM);
-		}
+		String sAdditionalReturnParams= clsManageRequestParameters.get_Request_Parameter(FINDER_RETURN_PARAM, request);	
+		String sSearchLastModifiedStartDate= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.LAST_MODIFIED_START_DATE_PARAM, request);
+		String sSearchLastModifiedEndDate= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.LAST_MODIFIED_END_DATE_PARAM, request);
+		String sSearchCreatedStartDate= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.CREATED_START_DATE_PARAM, request);
+		String sSearchCreatedEndDate= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.CREATED_END_DATE_PARAM, request);
+		String sSearchJobText= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.SEARCH_JOB_TEXT_PARAM, request);		
 
+		//Create page
 		String title = sEndPointName + " search results.";
 		String subtitle = "";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -111,19 +114,18 @@ public class OHDirectFinderResults extends HttpServlet {
 		out.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CELLSPACING=2 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">\n");
 		out.println(printResultHeadings(arrDisplayHeadings));
 		
-		String sSearchLastModifiedDateRange = request.getParameter("sSearchLastModifiedDate");
-		String sSearchCreatedDateRange = request.getParameter("sSearchCreatedDate");
-		String sSearchText = request.getParameter("sSearchTextString");
+		
 		String sAPIQueryString = "";
-		
-		
 		//Build query string
 		if (sEndPointName.equalsIgnoreCase(SMOHDirectFieldDefinitions.ENDPOINT_QUOTE)){
 			
 			sAPIQueryString = buildQuoteAPIQueryString(
-					sSearchLastModifiedDateRange,
-					sSearchCreatedDateRange,
-					sSearchText
+					sEndPointName,
+					sSearchLastModifiedStartDate,
+					sSearchLastModifiedEndDate,
+					sSearchCreatedStartDate,
+					sSearchCreatedEndDate,
+					sSearchJobText
 			);
 			
 			//Get the quote list and print it
@@ -151,13 +153,19 @@ public class OHDirectFinderResults extends HttpServlet {
 	}
 
 	private String buildQuoteAPIQueryString(
-			String sSearchLastModifiedDateRange,
-			String sSearchCreatedDateRange,
-			String sSearchText) {
+			String sEndPointName,
+			String sSearchLastModifiedStartDate,
+			String sSearchLastModifiedEndDate,
+			String sSearchCreatedStartDate,
+			String sSearchCreatedEndDate,
+			String sSearchJobText) {
 		
 		//TODO build request API string with given parameters
-		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTE
-				+ "?%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc";
+		String sRequest = "C_DealerQuote?%24filter="
+					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20gt%20'2020-01-09'"
+					+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
+				;
+		//String sRequest = sEndPointName + "?%24filter= ?%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc";
 			
 		return sRequest;
 	}
@@ -208,12 +216,6 @@ public class OHDirectFinderResults extends HttpServlet {
 		
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteList ql = new SMOHDirectQuoteList();
-		
-		//For now, we're just hard wiring in this request
-		//String sRequest = "C_DealerQuote?%24filter="
-		//	+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20gt%20'2020-01-09'"
-		//	+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
-		//;
 
 		try {
 			ql.getQuoteList(sAPIRequest, conn, sDBID, sUserID);
@@ -222,15 +224,22 @@ public class OHDirectFinderResults extends HttpServlet {
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590160635]");
 		
+		System.out.println("quote array size = " + ql.getQuoteNumbers().size());
+		System.out.println("Result fields array size = " + arrResultListFields.size());
+		
 		for(int i = 0; i < ql.getQuoteNumbers().size(); i++) {
-			//Print a row:
-			//if ((i % 2) == 0) {
-			//	s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + "\" >" + "\n";
-			//}else {
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\" >" + "\n";
-			//}
+			System.out.println("Printing quote row " + i);
 			
-			if(arrResultListFields.get(i).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER) == 0) {
+			//Print a row:
+			if ((i % 2) == 0) {
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\" >" + "\n";
+			}else {
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\" >" + "\n";
+			}
+			
+		  for(int j = 0; j < arrResultListFields.size(); j++) {
+			  System.out.println("Printing column " + j + " in row " + i);
+			  if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER) == 0) {
 				String sQuoteNumberLink = ql.getQuoteNumbers().get(i);
 				if (bAllowQuoteDisplay) {
 					sQuoteNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
@@ -248,45 +257,45 @@ public class OHDirectFinderResults extends HttpServlet {
 					;
 			}
 			
-			if(arrResultListFields.get(i).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE) == 0) {
+			if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE) == 0) {
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 						+ ql.getCreatedDates().get(i)
 						+ "</TD>" + "\n"
 					;	
 			}
 			
-			if(arrResultListFields.get(i).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDBY) == 0) {
+			if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDBY) == 0) {
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 						+ ql.getCreatedBys().get(i)
 						+ "</TD>" + "\n"
 					;
 			}
 			
-			if(arrResultListFields.get(i).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE) == 0) {
+			if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE) == 0) {
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 						+ ql.getLastModifiedDates().get(i)
 						+ "</TD>" + "\n"
 					;
 			}
 			
-			if(arrResultListFields.get(i).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDBY) == 0) {
+			if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDBY) == 0) {
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 						+ ql.getLastModifiedBys().get(i)
 						+ "</TD>" + "\n"
 					;
 			}
 			
-			if(arrResultListFields.get(i).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME) == 0) {
+			if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME) == 0) {
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 						+ ql.getQuoteNames().get(i)
 						+ "</TD>" + "\n"
 					;
 			}
-			
+		  }
 			//TODO add the rest of the field names
 			s += "  </TR>" + "\n";
 		}
-		
+		System.out.println(s);
 		return s;
 	}
 /*	

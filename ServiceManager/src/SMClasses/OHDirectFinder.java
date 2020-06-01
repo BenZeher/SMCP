@@ -2,9 +2,7 @@ package SMClasses;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +21,13 @@ public class OHDirectFinder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final int MAX_NUMBER_OF_RESULT_FIELDS = 20;
 	public static final int MAX_NUMBER_OF_SEARCH_FIELDS = 20;
+	public static final String CREATED_START_DATE_PARAM = "datStartCreated";
+	public static final String CREATED_END_DATE_PARAM = "datEndCreated";
+	public static final String LAST_MODIFIED_START_DATE_PARAM = "datEndLastModified";
+	public static final String LAST_MODIFIED_END_DATE_PARAM = "datStartLastModified";
+	public static final String SEARCH_JOB_TEXT_PARAM = "sSeachJobText";
+	
+	
 	private static final boolean bDebugMode = true;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -62,7 +67,7 @@ public class OHDirectFinder extends HttpServlet {
 			in the list of results
 		 
 		 local test link
-		 http://localhost:8080/sm/SMClasses.OHDirectFinder?EndpointName=C_DealerQuote&SearchingClass=smcontrolpanel.SMEditSMSummaryEdit&ReturnField=VENDORQUOTENUMBER&ResultListField1=C_QuoteNumberString&ResultHeading1=Quote%20Number
+		 http://localhost:8080/sm/SMClasses.OHDirectFinder?EndpointName=C_DealerQuote&SearchingClass=smcontrolpanel.SMEditSMSummaryEdit&ReturnField=VENDORQUOTENUMBER&ResultListField1=C_QuoteNumberString&ResultListField2=C_CreatedDate&ResultHeading1=Quote%20Number&ResultHeading2=Created%20Date
 		 */
 		
 		if (!SMAuthenticate.authenticateSMCPCredentials(
@@ -136,23 +141,23 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += "<TR><TD ALIGN=RIGHT><B>Created date range:</B></TD>";
 	    sOutPut += "<TD>";
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
-				"datStartCreated", 
+	    		CREATED_START_DATE_PARAM, 
 				"1/1/2000", 
 				10, 
 				10, 
 				""
 				) 
-				+ SMUtilities.getDatePickerString("datStartCreated", getServletContext())
+				+ SMUtilities.getDatePickerString(CREATED_START_DATE_PARAM, getServletContext())
 				;
 	    sOutPut += "&nbsp;&nbsp;To&nbsp;&nbsp;";
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
-    			"datEndCreated", 
+	    		CREATED_END_DATE_PARAM, 
     			clsDateAndTimeConversions.now("M/d/yyyy"), 
     			10, 
     			10, 
     			""
     			) 
-    			+ SMUtilities.getDatePickerString("datEndCreated", getServletContext())
+    			+ SMUtilities.getDatePickerString(CREATED_END_DATE_PARAM, getServletContext())
     			;
 	    sOutPut += "</TD><TD>Input as (mm/dd/yyyy)</TD></TR>";
 	    
@@ -160,29 +165,29 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += "<TR><TD ALIGN=RIGHT><B>Last modified date range:</B></TD>";
 	    sOutPut += "<TD>";
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
-				"datStartLastModified", 
+	    		LAST_MODIFIED_START_DATE_PARAM, 
 				"1/1/2000", 
 				10, 
 				10, 
 				""
 				) 
-				+ SMUtilities.getDatePickerString("datStartLastModified", getServletContext())
+				+ SMUtilities.getDatePickerString(LAST_MODIFIED_START_DATE_PARAM, getServletContext())
 				;
 	    sOutPut += "&nbsp;&nbsp;To&nbsp;&nbsp;";
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
-    			"datEndLastModified", 
+	    		LAST_MODIFIED_END_DATE_PARAM, 
     			clsDateAndTimeConversions.now("M/d/yyyy"), 
     			10, 
     			10, 
     			""
     			) 
-    			+ SMUtilities.getDatePickerString("datEndLastModified", getServletContext())
+    			+ SMUtilities.getDatePickerString(LAST_MODIFIED_END_DATE_PARAM, getServletContext())
     			;
 	    sOutPut += "</TD><TD>Input as (mm/dd/yyyy)</TD></TR>";
 	    
 	    //Job search text:
 	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-	    		"sSearchString", 
+	    		SEARCH_JOB_TEXT_PARAM, 
 	    		"", 
 	    		50, 
 	    		"Search Job Name:", 

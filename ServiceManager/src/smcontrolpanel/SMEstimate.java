@@ -309,6 +309,7 @@ public class SMEstimate {
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sproductdescription) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sunitofmeasure) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquotenumber) + "'"
+			+ ")"
 					
 			+ " ON DUPLICATE KEY UPDATE"
 			+ " " + SMTablesmestimates.bdadditionalposttaxcostamount + " = " + m_bdadditionalposttaxcostamount.replace(",", "")
@@ -351,23 +352,28 @@ public class SMEstimate {
 		}
 		
 		//Update the ID:
-		String sSQL = "SELECT last_insert_id()";
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
-			if (rs.next()) {
-				m_lid = Long.toString(rs.getLong(1));
-			}else {
-				m_lid = "0";
+		if (
+			(m_lid.compareToIgnoreCase("") == 0)
+			|| (m_lid.compareToIgnoreCase("0") == 0)
+			|| (m_lid.compareToIgnoreCase("-1") == 0)
+		) {
+			String sSQL = "SELECT last_insert_id()";
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
+				if (rs.next()) {
+					m_lid = Long.toString(rs.getLong(1));
+				}else {
+					m_lid = "0";
+				}
+				rs.close();
+			} catch (SQLException e) {
+				throw new Exception("Error [1590163604] Could not get last ID number - " + e.getMessage());
 			}
-			rs.close();
-		} catch (SQLException e) {
-			throw new Exception("Error [1590163604] Could not get last ID number - " + e.getMessage());
+			//If something went wrong, we can't get the last ID:
+			if (m_lid.compareToIgnoreCase("0") == 0){
+				throw new Exception("Error [1590163605] Could not get last ID number.");
+			}
 		}
-		//If something went wrong, we can't get the last ID:
-		if (m_lid.compareToIgnoreCase("0") == 0){
-			throw new Exception("Error [1590163605] Could not get last ID number.");
-		}
-		
 		//Finally, save the lines....
 		try {
 			saveLines(conn, sUserID);
@@ -446,7 +452,7 @@ public class SMEstimate {
 		
 		try {
 			m_bdquantity = clsValidateFormFields.validateBigdecimalField(
-				m_bdquantity, 
+				m_bdquantity.replace(",", ""), 
 				"Quantity", 
 				SMTablesmestimates.bdquantityScale, 
 				new BigDecimal("0.0001"), 
@@ -491,7 +497,7 @@ public class SMEstimate {
 
 		try {
 			m_bdextendedcost = clsValidateFormFields.validateBigdecimalField(
-					m_bdextendedcost, 
+				m_bdextendedcost.replace(",", ""), 
 				"Extended cost", 
 				SMTablesmestimates.bdextendedcostScale, 
 				new BigDecimal("0.00"), 
@@ -503,7 +509,7 @@ public class SMEstimate {
 
 		try {
 			m_bdfreight = clsValidateFormFields.validateBigdecimalField(
-				m_bdfreight, 
+				m_bdfreight.replace(",", ""), 
 				"Freight", 
 				SMTablesmestimates.bdfreightScale, 
 				new BigDecimal("0.00"), 
@@ -515,7 +521,7 @@ public class SMEstimate {
 
 		try {
 			m_bdlaborquantity = clsValidateFormFields.validateBigdecimalField(
-				m_bdlaborquantity, 
+				m_bdlaborquantity.replace(",", ""), 
 				"Labor quantity", 
 				SMTablesmestimates.bdlaborquantityScale, 
 				new BigDecimal("0.0000"), 
@@ -527,7 +533,7 @@ public class SMEstimate {
 		
 		try {
 			m_bdlaborcostperunit = clsValidateFormFields.validateBigdecimalField(
-				m_bdlaborcostperunit, 
+				m_bdlaborcostperunit.replace(",", ""), 
 				"Labor cost per unit", 
 				SMTablesmestimates.bdlaborcostperunitScale, 
 				new BigDecimal("0.00"), 
@@ -550,7 +556,7 @@ public class SMEstimate {
 		
 		try {
 			m_bdadditionalpretaxcostamount = clsValidateFormFields.validateBigdecimalField(
-					m_bdadditionalpretaxcostamount, 
+					m_bdadditionalpretaxcostamount.replace(",", ""), 
 				"Additional pre tax cost amount", 
 				SMTablesmestimates.bdadditionalpretaxcostamountScale, 
 				new BigDecimal("0.00"), 
@@ -562,7 +568,7 @@ public class SMEstimate {
 
 		try {
 			m_bdmarkupamount = clsValidateFormFields.validateBigdecimalField(
-				m_bdmarkupamount, 
+				m_bdmarkupamount.replace(",", ""), 
 				"Mark-up amount", 
 				SMTablesmestimates.bdmarkupamountScale, 
 				new BigDecimal("0.00"), 
@@ -585,7 +591,7 @@ public class SMEstimate {
 		
 		try {
 			m_bdadditionalposttaxcostamount = clsValidateFormFields.validateBigdecimalField(
-				m_bdadditionalposttaxcostamount, 
+				m_bdadditionalposttaxcostamount.replace(",", ""), 
 				"Additional post tax cost amount", 
 				SMTablesmestimates.bdadditionalposttaxcostamountScale, 
 				new BigDecimal("0.00"), 
@@ -597,7 +603,7 @@ public class SMEstimate {
 		
 		try {
 			m_bdlaborsellpriceperunit = clsValidateFormFields.validateBigdecimalField(
-				m_bdlaborsellpriceperunit, 
+				m_bdlaborsellpriceperunit.replace(",", ""), 
 				"Labor sell prioce per unit", 
 				SMTablesmestimates.bdlaborsellpriceperunitScale, 
 				new BigDecimal("0.00"), 

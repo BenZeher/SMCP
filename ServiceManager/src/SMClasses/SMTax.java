@@ -448,10 +448,12 @@ public class SMTax extends java.lang.Object{
 				+ "(" + SMTabletax.lid + " = " + iTaxID + ")"
 			+ ")"
 		;
+		//System.out.println("[202005303159] - SQL = '" + SQL + "'");
 		try{
 			ResultSet rsTax = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rsTax.next()){
 				bdRate = rsTax.getBigDecimal(SMTabletax.bdtaxrate);
+				//System.out.println("[202005303215] - bdRate = " + bdRate);
 			}else{
 				bdRate = new BigDecimal("-1.0000");
 			}

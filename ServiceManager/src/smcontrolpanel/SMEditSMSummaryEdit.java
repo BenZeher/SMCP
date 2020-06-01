@@ -7,13 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTableapbatchentries;
+import SMDataDefinition.SMTableapbatchentrylines;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
@@ -21,7 +25,9 @@ import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import smap.APBatchEntry;
 import smap.APVendor;
 
 
@@ -31,10 +37,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";
 	public static final String DELETE_BUTTON_CAPTION = "Delete " + SMEstimateSummary.OBJECT_NAME;
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
-	public static final String CONFIRM_DELETE_CHECKBOX = "CONFIRMDELETE";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
+	public static final String REMOVE_ESTIMATE_COMMAND = "REMOVEESTIMATE";
+	public static final String PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED = "REMOVEESTIMATELINENUMBER";
 	public static final String BUTTON_ADD_MANUAL_ESTIMATE_CAPTION = "Add estimate manually";
 	public static final String BUTTON_ADD_MANUAL_ESTIMATE = "ADDMANUALESTIMATE";
 	public static final String BUTTON_ADD_VENDOR_QUOTE_CAPTION = "Add vendor quote number:";
@@ -64,11 +71,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String FIELD_ADJUSTED_LABOR_UNITS_CAPTION = "LABOR UNITS:";
 	//public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT = "FIELDADJUSTEDCOSTPERLABORUNIT";
 	public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT_CAPTION = "LABOR COST/UNIT:";
-	public static final String LABEL_ADJUSTED_TOTAL_LABOR_COST = "LABELADJUSTEDTOTALLABORCOST";
+	public final String LABEL_ADJUSTED_TOTAL_LABOR_COST = "LABELADJUSTEDTOTALLABORCOST";
 	public static final String LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION = "TOTAL LABOR COST:";
 	public static final String LABEL_ADJUSTED_MU_PER_LABOR_UNIT = "LABELADJUSTEDMUPERLABORUNIT";
 	public static final String FIELD_ADJUSTED_MU_PER_LABOR_UNIT_CAPTION = "MU PER LABOR UNIT:";
-	public static final String LABEL_ADJUSTED_MU_PERCENTAGE = "LABELADJUSTEDMUPERCENTAGE";
+	public static final String FIELD_ADJUSTED_MU_PERCENTAGE = "LABELADJUSTEDMUPERCENTAGE";
 	public static final String FIELD_ADJUSTED_MU_PERCENTAGE_CAPTION = "MU PERCENTAGE:";
 	public static final String LABEL_ADJUSTED_GP_PERCENTAGE = "LABELADJUSTEDGPPERCENTAGE";
 	public static final String FIELD_ADJUSTED_GP_PERCENTAGE_CAPTION = "GP PERCENTAGE:";
@@ -86,6 +93,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
 	
+	//Calculation fields:
+	public static final String PARAM_TOTAL_ESTIMATE_MATERIAL_COST = "TOTALESTIMATEMATERIALCOST";
+	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
 	
@@ -93,8 +103,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				HttpServletResponse response)
 				throws ServletException, IOException {
 		
-
-		SMEstimateSummary summary = new SMEstimateSummary(request);
 		SMMasterEditEntry smedit = new SMMasterEditEntry(
 				request,
 				response,
@@ -105,12 +113,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
 				SMSystemFunctions.SMEditSMEstimates
-		);    
+		);   
 		
 		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMEditSMEstimates, request)){
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
 		}
+		
+		SMEstimateSummary summary = new SMEstimateSummary(request);
 		
 		//If this is a 'resubmit', meaning it's being called by the Action class, then
 		//the session will have a job cost entry object in it, and that's what we'll pick up.
@@ -119,6 +129,19 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    if (currentSession.getAttribute(SMEstimateSummary.OBJECT_NAME) != null){
 	    	summary = (SMEstimateSummary) currentSession.getAttribute(SMEstimateSummary.OBJECT_NAME);
 	    	currentSession.removeAttribute(SMEstimateSummary.OBJECT_NAME);
+			
+	    	try {
+	    		summary.loadEstimates(summary.getslid(), smedit.getsDBID(), getServletContext(), smedit.getFullUserName());
+			} catch (Exception e) {
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+						+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+						+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+					);
+					return;
+			}
+	    	
 	    //But if it's NOT a 'resubmit', meaning this class was called for the first time to 
 	    //edit, we'll pick up the ID or key from the request and try to load the entry:
 	    }else{
@@ -172,6 +195,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			);
 				return;
 		}
+	    
 	    return;
 }
 	
@@ -193,6 +217,15 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sm.getsDBID() + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" 
 				+ SMUtilities.getFullClassName(this.toString()) + "\">");
+				
+		//Keep track of hidden variables here:
+		pwOut.println("<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED + "\""
+			+ " ID=\"" + PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED + "\""
+			+ " VALUE=\"" + "" + "\""
+			+ ">"
+			);
+		
 		//Create HTML Fields
 		try {
 			pwOut.println(sEditHTML);
@@ -514,7 +547,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	private String buildEstimateTable(Connection conn, SMEstimateSummary summary) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 5;
+		int iNumberOfColumns = 6;
 		
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
 		
@@ -530,6 +563,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		//Headings:
 		s += "  <TR>" + "\n";
+		
+		//Line number:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Line #"
+			+ "</TD>" + "\n"
+		;
 		
 		//Estimate number:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
@@ -572,6 +612,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
 			s += "  <TR>" + "\n";
 			
+			//Line #:
+			//Estimate ID:
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
+					+ summary.getEstimateArray().get(i).getslsummarylinenumber()
+					+ "</TD>" + "\n"
+				;
+			
 			//Estimate ID:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
 					+ summary.getEstimateArray().get(i).getslid()
@@ -580,7 +627,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 			//Remove button:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\" >"
-					+ buildRemoveEstimateButton(summary.getEstimateArray().get(i).getslid())
+					+ buildRemoveEstimateButton(summary.getEstimateArray().get(i).getslsummarylinenumber())
 					+ "</TD>" + "\n"
 				;
 			
@@ -651,7 +698,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -671,7 +718,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ ">"
-			+ "0.00"
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdfreightScale, summary.getbdtotalfreightonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -691,7 +738,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborquantityScale, summary.getbdtotallaborunitsonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -707,7 +754,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborcostperunitScale, summary.getbdtotallaborcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -728,7 +775,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdmarkupamountScale, summary.getbdtotalmarkuponestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -748,7 +795,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdtotaltaxonmaterial())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -777,7 +824,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdcalculatedtotalprice())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -810,7 +857,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -831,6 +878,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedfreight() + "\""
+			+ " onchange=\"recalculatelivetotals();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -851,6 +899,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedlaborunitqty() + "\""
+			+ " onchange=\"recalculatelivetotals();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -869,6 +918,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedlaborcostperunit() + "\""
+				+ " onchange=\"recalculatelivetotals();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -917,10 +967,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ ">"
 				+ "&nbsp;"
 				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + LABEL_ADJUSTED_MU_PERCENTAGE + "\""
-				+ " ID = \"" + LABEL_ADJUSTED_MU_PERCENTAGE + "\""
+				+ " NAME = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
+				+ " ID = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = 0.00"
+				+ " VALUE = \"0.00\""
+				+ " onchange=\"calculateMUusingMUpercentage();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -938,7 +989,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " NAME = \"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " ID = \"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = 0.00"
+				+ " VALUE = \"0.00\""
+				+ " onchange=\"calculateMUusinggppercentage();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -957,6 +1009,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedlmarkupamt() + "\""
+				+ " onchange=\"recalculatelivetotals();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1032,14 +1085,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 	}
 	
-	private String buildRemoveEstimateButton(String sEstimateNumber) {
+	private String buildRemoveEstimateButton(String sSummaryLineNumber) {
 		String s = "";
 		s += "<button type=\"button\""
 			+ " value=\"" + BUTTON_REMOVE_ESTIMATE_CAPTION + "\""
 			+ " name=\"" + BUTTON_REMOVE_ESTIMATE_BASE + "\""
 			+ " id=\"" + BUTTON_REMOVE_ESTIMATE_BASE + "\""
-			//TODO - involve the estimate number in the removal:
-			+ " onClick=\"removestimate();\">"
+			+ " onClick=\"removeestimate('" + sSummaryLineNumber + "');\">"
 			+ BUTTON_REMOVE_ESTIMATE_CAPTION
 			+ "</button>\n"
 		;
@@ -1094,6 +1146,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		return s;
 	}
+
 	private String sCommandScripts(
 			SMEstimateSummary summary, 
 			SMMasterEditEntry smmaster
@@ -1112,7 +1165,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Prompt to save:
 			s += "window.onbeforeunload = promptToSave;\n";
 			
-			s += "window.onload = checkReportingType;\n";
+			//s += "window.onload = checkReportingType;\n";
 
 			s += "function promptToSave(){\n"		
 				
@@ -1128,8 +1181,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 			//Delete:
 			s += "function deletesummary(){\n"
-				+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DELETE_COMMAND_VALUE + "\";\n"
-				+ "        document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    if (confirm(\"Are you sure you want to delete this estimate summary?\")){\n"
+					+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DELETE_COMMAND_VALUE + "\";\n"
+					+ "        document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    }\n"
 				//+ "    }\n"
 				+ "}\n"
 			;
@@ -1140,6 +1195,138 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "}\n"
 			;
 			
+			//Remove/delete an estimate:
+			//TODO - test
+			s += "function removeestimate(sSummaryLineNumber){\n"
+				+ "    if (confirm(\"Are you sure you want to delete the estimate on line number \" + sSummaryLineNumber + \"?\")){\n"
+				+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REMOVE_ESTIMATE_COMMAND + "\";\n"
+				+ "        document.getElementById(\"" + PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED + "\").value = sSummaryLineNumber;\n"
+				+ "        document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "    }\n"
+				+ "}\n"
+			;			
+			
+			s += "function flagDirty() {\n"
+					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
+					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
+				+ "}\n";
+			
+			//Recalculate live totals:
+			s += "function recalculatelivetotals(){\n"
+				//+ "    alert('Recalculating');\n"
+				//+ "    //Turn off the line amt warning by default:\n"
+				//+ "    document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.display= \"none\"\n"
+				+ "    var adjustedlabortotalcost = parseFloat(\"0.00\")\n;"
+				+ "    var adjustedlaborunits = parseFloat(\"0.00\");\n"
+				+ "    var adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
+				
+				//parseFloat(document.getElementById(amtid4).innerHTML).toFixed(2);
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedlaborunits = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        adjustedlaborunits = parseFloat(temp)\n;"
+				+ "    }\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        adjustedlaborcostperunit = parseFloat(temp);\n"
+				+ "    }\n"
+				
+				+ "    adjustedlabortotalcost = adjustedlaborunits * adjustedlaborcostperunit;\n"
+				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").innerText=adjustedlabortotalcost.toFixed(2);\n"
+				
+				/*
+				+ "    var entryamt = getFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + SMTableapbatchentries.bdentryamount + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        entryamt = getFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        entryamt = getFloat(temp);\n"
+				+ "    }\n"
+				
+				+ "    // For each of the lines on the entry, add the amount:\n"
+				+ "	   for (i=0; i<document.forms[\"MAINFORM\"].elements.length; i++){\n"
+				+ "        //Get the name of the control:\n"
+	   			+ "	       var testName = document.forms[\"MAINFORM\"].elements[i].name;\n"
+				+ "        //If the control name starts with '" + APBatchEntry.LINE_NUMBER_PARAMETER + "', then pick off the rest of it:\n"
+	   			+ "        if (testName.substring(0, " + Integer.toString(APBatchEntry.LINE_NUMBER_PARAMETER.length()) + "	) == \"" + APBatchEntry.LINE_NUMBER_PARAMETER + "\"){\n"
+	   			+ "            //If the string ENDS with the field name '" + SMTableapbatchentrylines.bdamount + "', then it's a line amount:\n"
+	   			+ "            if (testName.endsWith(\"" + SMTableapbatchentrylines.bdamount + "\") == true){\n"
+	   			+ "                //Add it to the line total:\n"
+	   			+ "                temp = document.getElementById(testName).value.replace(',','');\n"
+	   			+ "                if (temp != ''){\n"
+	   			+ "                    if(!isNaN(temp)){\n"
+	   			+ "                        linetotal = linetotal + getFloat(temp);\n"
+	   			+ "                    }\n"
+	   			+ "                }\n"
+	   			+ "            }\n"
+	   			+ "        }\n"
+	   			+ "    }\n"
+	   			*/
+	   			
+	   			;
+			/*
+			//Calculate and display the line totals:
+			s += "    if (!floatsAreEqual(linetotal, entryamt)){\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD + "\").innerText=linetotal.toFixed(2);\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.color= \"red\"\n"
+	   			+ "    }else{\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD + "\").innerText=linetotal.toFixed(2);\n"
+	   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.color= \"black\"\n"
+	   			+ "    }\n"
+	   		;
+			*/
+				
+			s += "}\n"
+	   		;
+			
+			//Recalculate MU using MU percentage:
+			s += "function calculateMUusingMUpercentage(){\n"
+				+ "    var adjustedtotalmarkup = parseFloat(\"0.00\")\n;"
+				+ "    var adjustedMUpercentage = parseFloat(\"0.00\");\n"
+				
+				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_GP_PERCENTAGE + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedMUpercentage = parseFloat(\"0.00\")\n;"
+				+ "    }else{\n"
+				+ "        adjustedMUpercentage = parseFloat(temp)\n;"
+				+ "    }\n"
+				
+				+ "    //Get the total cost before mark-up:"
+				+ "    var materialcost = parseFloat(\"0.00\")\n;"
+				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        materialcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        materialcost = parseFloat(temp);\n"
+				+ "    }\n"
+
+				+ "    var adjustedfreightcost = parseFloat(\"0.00\")\n;"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedfreightcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        adjustedfreightcost = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    var adjustedlaborcost = parseFloat(\"0.00\")\n;"
+				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        adjustedlaborcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        adjustedlaborcost = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    var adjustedpremarkupcost = materialcost + adjustedfreightcost + adjustedlaborcost;\n"
+				
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "\").innerText=(adjustedpremarkupcost * adjustedMUpercentage).toFixed(2);\n"
+				+ "    recalculatelivetotals();\n"
+				
+	   			;
+			s += "}\n"
+	   		;
 			
 			//Edit Locations
 			/*
@@ -1160,13 +1347,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			*/
 			//Check Reporting type
 			s += "function checkReportingType(){\n"
-				+ "	 if(document.getElementById(\"" + APVendor.Paramitaxreportingtype + "\").value == \"" + Integer.toString(SMTableicvendors.TAX_REPORTING_TYPE_NONE) + "\"){\n"
-					//Hide tax options if reporting type is none
-				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"none\" ;\n"
-				+ "	 }else{\n"
-					//Otherwise, show tax options
-				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"table-row-group\" ;\n"
-				+ "  }\n"
+//				+ "	 if(document.getElementById(\"" + APVendor.Paramitaxreportingtype + "\").value == \"" + Integer.toString(SMTableicvendors.TAX_REPORTING_TYPE_NONE) + "\"){\n"
+//					//Hide tax options if reporting type is none
+//				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"none\" ;\n"
+//				+ "	 }else{\n"
+//					//Otherwise, show tax options
+//				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"table-row-group\" ;\n"
+//				+ "  }\n"
 				+ "}\n"
 			;
 			
@@ -1233,8 +1420,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		+ DELETE_BUTTON_CAPTION
 		+ "</button>\n";
 		
-		s += "<INPUT TYPE='CHECKBOX' NAME='" + CONFIRM_DELETE_CHECKBOX 
-				+ "' VALUE='" + CONFIRM_DELETE_CHECKBOX + "' > Check to confirm before deleting";
+		//s += "<INPUT TYPE='CHECKBOX' NAME='" + CONFIRM_DELETE_CHECKBOX 
+		//		+ "' VALUE='" + CONFIRM_DELETE_CHECKBOX + "' > Check to confirm before deleting";
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

@@ -4,14 +4,18 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsCreateHTMLTableFormFields;
+import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMUtilities;
 
@@ -19,7 +23,7 @@ public class OHDirectFinder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final int MAX_NUMBER_OF_RESULT_FIELDS = 20;
 	public static final int MAX_NUMBER_OF_SEARCH_FIELDS = 20;
-	private static final boolean bDebugMode = false;
+	private static final boolean bDebugMode = true;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -28,7 +32,7 @@ public class OHDirectFinder extends HttpServlet {
 		How to link to the finder class:
 		Add a link to your page that looks like this: 
 		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.OHDirectFinder"
-			+ "?EndPointName=SMOHDirectFieldDefinitions.ENDPOINT_QUOTE"
+			+ "?EndpointName=SMOHDirectFieldDefinitions.ENDPOINT_QUOTE"
 			+ "&SearchingClass=smcontrolpanel.SMEditSMSummaryEdit"
 			+ "&ReturnField=VENDORQUOTENUMBER"
 			+ "&ParameterString=Batchnumber=1&EntryNumber=3
@@ -56,6 +60,9 @@ public class OHDirectFinder extends HttpServlet {
 			list of results.
 		ResultHeading1	(,2,3 . . . . up to 10) - the headings for each of the corresponding data fields displayed
 			in the list of results
+		 
+		 local test link
+		 http://localhost:8080/sm/SMClasses.OHDirectFinder?EndpointName=C_DealerQuote&SearchingClass=smcontrolpanel.SMEditSMSummaryEdit&ReturnField=VENDORQUOTENUMBER&ResultListField1=C_QuoteNumberString&ResultHeading1=Quote%20Number
 		 */
 		
 		if (!SMAuthenticate.authenticateSMCPCredentials(
@@ -90,7 +97,7 @@ public class OHDirectFinder extends HttpServlet {
 	    String title = "Find " + sEndPointName + ".";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
-
+	    out.println(clsServletUtilities.getDatePickerIncludeString(getServletContext()));
 	    out.println("<FORM NAME='MAINFORM' ACTION='" 
 	    		+ SMUtilities.getURLLinkBase(getServletContext()) 
 	    		+ "SMClasses.OHDirectFinderResults" + "' METHOD='POST'>");
@@ -121,77 +128,66 @@ public class OHDirectFinder extends HttpServlet {
 	    				+ request.getParameter(OHDirectFinderResults.RESULT_LIST_HEADING + Integer.toString(i)) + "\">");
 	    	}
 	    }
+	    
 	    String sOutPut = "";
 	    sOutPut = "<TABLE BORDER=12 CELLSPACING=2>";
 
-	    //First, set up the search fields:
-	    ArrayList<String> sSearchFields = new ArrayList<String>();
-	    
-	    for (int i = 1; i<=MAX_NUMBER_OF_SEARCH_FIELDS; i++){
-	    	if (request.getParameter("SearchField" + Integer.toString(i)) != null){
-	    		sSearchFields.add((String) request.getParameter("SearchField" + Integer.toString(i)));
-	    	}
-	    }
-
-	    //Set up the search field aliases:
-	    ArrayList<String> sSearchFieldAliases = new ArrayList<String>();
-	    
-	    for (int i = 1; i<=MAX_NUMBER_OF_SEARCH_FIELDS; i++){
-	    	if (request.getParameter("SearchFieldAlias" + Integer.toString(i)) != null){
-	    		sSearchFieldAliases.add((String) request.getParameter("SearchFieldAlias" + Integer.toString(i)));
-	    	}
-	    }
-	    
-	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_RadioButton_Row(
-	    		"sSearchField", 
-	    		sSearchFields, 
-	    		//Default to the first value:
-	    		(String) sSearchFields.get(0), 
-	    		sSearchFieldAliases, 
-	    		"Search in:", 
-	    		"Choose field to use for search"
-	    		);
-	    
-	    
-	    //Next, set up the types of search:
-	    ArrayList<String> sSearchTypes = new ArrayList<String>();
-	    
-	    sSearchTypes.add((String) "Beginning with");
-	    sSearchTypes.add((String) "Containing");
-	    sSearchTypes.add((String) "Exactly matching");
-
-	    ArrayList<String> sSearchTypeDescriptions = new ArrayList<String>();
-	    
-	    sSearchTypeDescriptions.add((String) "Beginning with");
-	    sSearchTypeDescriptions.add((String) "Containing");
-	    sSearchTypeDescriptions.add((String) "Exactly matching");
-
-
 	    //Created date range
-	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Date_Input_Row(
-	    		"datCreatedParamName",
-				"",
-				"Date Created",
-				"Date range created",
-				getServletContext()
-	    		);
+	    sOutPut += "<TR><TD ALIGN=RIGHT><B>Created date range:</B></TD>";
+	    sOutPut += "<TD>";
+	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
+				"datStartCreated", 
+				"1/1/2000", 
+				10, 
+				10, 
+				""
+				) 
+				+ SMUtilities.getDatePickerString("datStartCreated", getServletContext())
+				;
+	    sOutPut += "&nbsp;&nbsp;To&nbsp;&nbsp;";
+	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
+    			"datEndCreated", 
+    			clsDateAndTimeConversions.now("M/d/yyyy"), 
+    			10, 
+    			10, 
+    			""
+    			) 
+    			+ SMUtilities.getDatePickerString("datEndCreated", getServletContext())
+    			;
+	    sOutPut += "</TD><TD>Input as (mm/dd/yyyy)</TD></TR>";
 	    
-	  //Created date range
-	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Date_Input_Row(
-	    		"datLastModifiedParamName",
-				"",
-				"Date Last Modified",
-				"Date range last modified",
-				getServletContext()
-	    		);
-
+	    //Last modified date range
+	    sOutPut += "<TR><TD ALIGN=RIGHT><B>Last modified date range:</B></TD>";
+	    sOutPut += "<TD>";
+	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
+				"datStartLastModified", 
+				"1/1/2000", 
+				10, 
+				10, 
+				""
+				) 
+				+ SMUtilities.getDatePickerString("datStartLastModified", getServletContext())
+				;
+	    sOutPut += "&nbsp;&nbsp;To&nbsp;&nbsp;";
+	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
+    			"datEndLastModified", 
+    			clsDateAndTimeConversions.now("M/d/yyyy"), 
+    			10, 
+    			10, 
+    			""
+    			) 
+    			+ SMUtilities.getDatePickerString("datEndLastModified", getServletContext())
+    			;
+	    sOutPut += "</TD><TD>Input as (mm/dd/yyyy)</TD></TR>";
+	    
 	    //Job search text:
 	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	    		"sSearchString", 
 	    		"", 
 	    		50, 
-	    		"Job Name:", 
-	    		"Enter the search string here"
+	    		"Search Job Name:", 
+	    		"Enter the job name search string here",
+	    		"40"
 	    		);
 	    
 	    sOutPut += "</TABLE><BR>";

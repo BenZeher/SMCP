@@ -82,7 +82,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY #";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
-	public static final String PARAM_RETAIL_SALES_TAX_RATE = "RETAIL_SALES_TAX_RATE";
+	public static final String PARAM_RETAIL_SALES_TAX_RATE = "RETAILSALESTAXRATE";
+	public static final String PARAM_USE_TAX_RATE = "USETAXRATE";
 	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
 	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
 	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
@@ -226,6 +227,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + PARAM_RETAIL_SALES_TAX_RATE + "\""
 			+ " ID=\"" + PARAM_RETAIL_SALES_TAX_RATE + "\""
+			+ " VALUE=\"" + "" + "\""
+			+ ">"
+			);
+		
+		//This is used to store the on-the-fly tax rate
+		pwOut.println("<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + PARAM_USE_TAX_RATE + "\""
+			+ " ID=\"" + PARAM_USE_TAX_RATE + "\""
 			+ " VALUE=\"" + "" + "\""
 			+ ">"
 			);
@@ -1178,7 +1187,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 
 			//Build an array of taxes and rates to do the 'adjusted retail sales tax' calc on the fly:
 			int iCounter = 0;
-			String sretailtaxrates = "";
+			String staxrates = "";
+			String scalculateonpurchaseorsale = "";
+			String scalculatetaxoncustomerinvoice = "";
 			
 			String SQL = "SELECT"
 				+ " " + SMTabletax.lid
@@ -1200,27 +1211,29 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				BigDecimal bdTaxRateAsPercentage = new BigDecimal("0.00");
 				while (rs.next()){
 					iCounter++;
-					if (
-						(rs.getInt(SMTabletax.icalculateonpurchaseorsale) == SMTabletax.TAX_CALCULATION_BASED_ON_SELLING_PRICE)
-						&& (rs.getInt(SMTabletax.icalculatetaxoncustomerinvoice) == 1)
-							
-					) {
-						bdTaxRateAsPercentage = rs.getBigDecimal(SMTabletax.bdtaxrate);
-					}else {
-						bdTaxRateAsPercentage = BigDecimal.ZERO;
-					}
-					sretailtaxrates += "sretailtaxrates[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
+					bdTaxRateAsPercentage = rs.getBigDecimal(SMTabletax.bdtaxrate);
+					staxrates += "staxrates[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
 						+ "\"] = \"" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTabletax.bdtaxratescale, bdTaxRateAsPercentage) + "\";\n";
+					
+					scalculateonpurchaseorsale += "scalculateonpurchaseorsale[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
+					+ "\"] = \"" + Integer.toString(rs.getInt(SMTabletax.icalculateonpurchaseorsale)) + "\";\n";
+					
+					scalculatetaxoncustomerinvoice += "scalculatetaxoncustomerinvoice[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
+					+ "\"] = \"" + Integer.toString(rs.getInt(SMTabletax.icalculatetaxoncustomerinvoice)) + "\";\n";
 				}
 				rs.close();
 			} catch (SQLException e) {
-				throw new SQLException("Error reading ship-to locations for javascript - " + e.getMessage());
+				throw new SQLException("Error [1591112142] reading taxes for javascript - " + e.getMessage());
 			}
 			
 			//Create the arrays, if there are any:
 			if (iCounter > 0){
-				s += "var sretailtaxrates = new Array(" + Integer.toString(iCounter) + ")\n";
-				s += sretailtaxrates + "\n";
+				s += "var staxrates = new Array(" + Integer.toString(iCounter) + ")\n";
+				s += staxrates + "\n";
+				s += "var scalculateonpurchaseorsale = new Array(" + Integer.toString(iCounter) + ")\n";
+				s += scalculateonpurchaseorsale + "\n";
+				s += "var scalculatetaxoncustomerinvoice = new Array(" + Integer.toString(iCounter) + ")\n";
+				s += scalculatetaxoncustomerinvoice + "\n";
 			}
 			
 			s += "\n";

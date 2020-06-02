@@ -44,6 +44,7 @@ public class SMEstimateSummary {
 	private String m_bdadjustedlaborunitqty;
 	private String m_bdadjustedlaborcostperunit;
 	private String m_bdadjustedlmarkupamt;
+	private String m_bdtaxrate;
 	
 	private ArrayList<SMEstimate>arrEstimates;
 	
@@ -112,6 +113,7 @@ public class SMEstimateSummary {
 		m_bdadjustedlaborunitqty = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborunitqty, req).replace("&quot;", "\"");
 		m_bdadjustedlaborcostperunit = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborcostperunit, req).replace("&quot;", "\"");
 		m_bdadjustedlmarkupamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlmarkupamt, req).replace("&quot;", "\"");
+		m_bdtaxrate = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlmarkupamt, req).replace("&quot;", "\"");
 		
 	}
 
@@ -141,6 +143,7 @@ public class SMEstimateSummary {
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt
+				+ ", " + SMTablesmestimatesummaries.bdtaxrate
 				+ ", " + SMTablesmestimatesummaries.datetimecreated
 				+ ", " + SMTablesmestimatesummaries.datetimelastmodified
 				+ ", " + SMTablesmestimatesummaries.ilabortype
@@ -160,6 +163,7 @@ public class SMEstimateSummary {
 				+ ", " + m_bdadjustedlaborcostperunit.replace(",", "")
 				+ ", " + m_bdadjustedlaborunitqty.replace(",", "")
 				+ ", " + m_bdadjustedlmarkupamt.replace(",", "")
+				+ ", " + m_bdtaxrate.replace(",", "")
 				+ ", NOW()"
 				+ ", NOW()"
 				+ ", " + m_ilabortype
@@ -181,6 +185,7 @@ public class SMEstimateSummary {
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + " = " + m_bdadjustedlaborcostperunit.replace(",", "")
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty + " = " + m_bdadjustedlaborunitqty.replace(",", "")
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt + " = " + m_bdadjustedlmarkupamt.replace(",", "")
+				+ ", " + SMTablesmestimatesummaries.bdtaxrate + " = " + m_bdtaxrate.replace(",", "")
 				+ ", " + SMTablesmestimatesummaries.datetimelastmodified + " = NOW()"
 				+ ", " + SMTablesmestimatesummaries.ilabortype + " = " + m_ilabortype
 				+ ", " + SMTablesmestimatesummaries.iordertype + " = " + m_iordertype
@@ -430,6 +435,21 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdtaxrate.compareToIgnoreCase("") == 0) {
+			m_bdtaxrate = "0.00";
+		}
+		try {
+			m_bdtaxrate = clsValidateFormFields.validateBigdecimalField(
+				m_bdtaxrate, 
+				"Tax rate", 
+				SMTablesmestimatesummaries.bdtaxrateScale, 
+				new BigDecimal("0.0000"), 
+				new BigDecimal("999.0000")
+			);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
 		//Validate the Estimates:
 		/*
 		for (int i = 0; i < arrEstimates.size(); i++){
@@ -511,7 +531,8 @@ public class SMEstimateSummary {
 				m_bdadjustedlaborunitqty = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedlaborunitqtyScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedlaborunitqty));
 				m_bdadjustedlaborcostperunit = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedlaborcostperunitScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedlaborcostperunit));
 				m_bdadjustedlmarkupamt = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedlmarkupamtScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedlmarkupamt));
-				}else{
+				m_bdtaxrate = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdtaxrateScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdtaxrate));
+			}else{
 				rs.close();
 				throw new Exception("Error [1590509859] - No Estimate Summary found with lid = " + m_lid + ".");
 			}
@@ -786,6 +807,13 @@ public class SMEstimateSummary {
 		m_bdadjustedlmarkupamt = sbdadjustedlmarkupamt;
 	}
 	
+	public String getsbdtaxrate(){
+		return m_bdtaxrate;
+	}
+	public void setsbdtaxrate(String sbdtaxrate){
+		m_bdtaxrate = sbdtaxrate;
+	}
+	
 	//Calculated values - these aren't valid until the summary is loaded:
 	public BigDecimal getbdtotalmaterialcostonestimates() {
 		return m_bdtotalmaterialcostonestimates;
@@ -885,7 +913,7 @@ public class SMEstimateSummary {
 		m_bdtotallaborunitsonestimates = new BigDecimal("0.00");
 		m_bdtotallaborcostonestimates = new BigDecimal("0.00");
 		m_bdtaxrateaswholenumber = new BigDecimal("0.00");
-		m_bdtotaltaxonmaterial = new BigDecimal("0.00");
+		//m_bdtotaltaxonmaterial = new BigDecimal("0.00");
 		m_bdtotalmarkuponestimates = new BigDecimal("0.00");
 		m_bdcalculatedtotalprice = new BigDecimal("0.00");
 		
@@ -911,7 +939,7 @@ public class SMEstimateSummary {
 			throw new Exception("Error [202005292551] - could not get tax rate for tax ID '" + m_itaxid + " - " + "no record found.");
 		}
 		BigDecimal bdTaxRateAsFraction = m_bdtaxrateaswholenumber.setScale(4, BigDecimal.ROUND_HALF_UP).divide(new BigDecimal("100.00"));
-		System.out.println("[202005304649] - bdTaxRateAsFraction = " + bdTaxRateAsFraction);
+		//System.out.println("[202005304649] - bdTaxRateAsFraction = " + bdTaxRateAsFraction);
 		m_bdtotaltaxonmaterial = m_bdtotalmaterialcostonestimates.multiply(bdTaxRateAsFraction);
 		
 		m_bdcalculatedtotalprice = 
@@ -962,6 +990,7 @@ public class SMEstimateSummary {
 		sQueryString += "&" + SMTablesmestimatesummaries.sjobname + "=" + clsServletUtilities.URLEncode(getsjobname());
 		sQueryString += "&" + SMTablesmestimatesummaries.slastmodifiedbyfullname + "=" + clsServletUtilities.URLEncode(getslastmodifiedbyfullname());
 		sQueryString += "&" + SMTablesmestimatesummaries.sremarks + "=" + clsServletUtilities.URLEncode(getsremarks());
+		sQueryString += "&" + SMTablesmestimatesummaries.bdtaxrate + "=" + clsServletUtilities.URLEncode(getsbdtaxrate());
 		
 		return sQueryString;
 	}
@@ -987,7 +1016,7 @@ public class SMEstimateSummary {
 		s += "&" + "Job Name: " + getsjobname();
 		s += "&" + "Last modified by full name: " + getslastmodifiedbyfullname();
 		s += "&" + "Remarks: " + getsremarks();
-		
+		s += "&" + "Tax rate: " + getsbdtaxrate();
 		s += "  -- Number of estimates: " + arrEstimates.size() + "\n";
 		
 		for (int i = 0; i < arrEstimates.size(); i++){
@@ -1046,6 +1075,7 @@ public class SMEstimateSummary {
 		m_bdadjustedlaborunitqty = "0.0000";
 		m_bdadjustedlaborcostperunit = "0.00";
 		m_bdadjustedlmarkupamt = "0.00";
+		m_bdtaxrate = "0.0000";
 		arrEstimates = new ArrayList<SMEstimate>(0);
 	}
 }

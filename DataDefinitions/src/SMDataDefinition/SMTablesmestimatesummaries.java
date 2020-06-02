@@ -22,6 +22,7 @@ public class SMTablesmestimatesummaries {
 	public static String bdadjustedlaborunitqty = "bdadjustedlaborunitqty";
 	public static String bdadjustedlaborcostperunit = "bdadjustedlaborcostperunit";
 	public static String bdadjustedlmarkupamt = "bdadjustedlmarkupamt";
+	public static String bdtaxrate = "bdtaxrate";
 	
 	public static int sjobnameLength = 128;
 	public static int sscreatedbyfullnameLength = 128;
@@ -32,5 +33,6 @@ public class SMTablesmestimatesummaries {
 	public static int bdadjustedlaborunitqtyScale = 4;
 	public static int bdadjustedlaborcostperunitScale = 2;
 	public static int bdadjustedlmarkupamtScale = 2;
+	public static int bdtaxrateScale = 4;
 	
 }

@@ -23,6 +23,8 @@ public class SMTablesmestimatesummaries {
 	public static String bdadjustedlaborcostperunit = "bdadjustedlaborcostperunit";
 	public static String bdadjustedlmarkupamt = "bdadjustedlmarkupamt";
 	public static String bdtaxrate = "bdtaxrate";
+	public static String icalculatetaxonpurchaseorsale = "icalculatetaxonpurchaseorsale";
+	public static String icalculatetaxoncustomerinvoice = "icalculatetaxoncustomerinvoice";
 	
 	public static int sjobnameLength = 128;
 	public static int sscreatedbyfullnameLength = 128;

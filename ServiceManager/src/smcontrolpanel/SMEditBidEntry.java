@@ -789,13 +789,14 @@ public class SMEditBidEntry  extends HttpServlet {
 		s += "</TD></TR>";
 		
 		//Email:
-		s += "<TR>";
+		s += "<TR>"
+				+"<TD class=\" fieldlabel \">";
 				if(entry.getemailaddress().replace("\"", "&quot;").compareToIgnoreCase("") == 0) {
 					s += "&nbsp;<B>Email:</B>";
 				}else {
 					s += "&nbsp;<B><A HREF=\"mailto:" +entry.getemailaddress() +"\">Email:</A></B>";
 				}
-			s += "<TD class=\" fieldcontrol \">"
+			s += "</TD><TD class=\" fieldcontrol \">"
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramemailaddress + "\""
 				+ " VALUE=\"" + entry.getemailaddress().replace("\"", "&quot;") + "\""
 				+ " id = \"" + SMBidEntry.Paramemailaddress + "\""

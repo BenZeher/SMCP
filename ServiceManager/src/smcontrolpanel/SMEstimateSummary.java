@@ -43,8 +43,10 @@ public class SMEstimateSummary {
 	private String m_bdadjustedfreight;
 	private String m_bdadjustedlaborunitqty;
 	private String m_bdadjustedlaborcostperunit;
-	private String m_bdadjustedlmarkupamt;
+	private String m_bdadjustedmarkupamt;
 	private String m_bdtaxrate;
+	private String m_icalculatetaxonpurchaseorsale;
+	private String m_icalculatetaxoncustomerinvoice;
 	
 	private ArrayList<SMEstimate>arrEstimates;
 	
@@ -112,9 +114,10 @@ public class SMEstimateSummary {
 		m_bdadjustedfreight = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedfreight, req).replace("&quot;", "\"");
 		m_bdadjustedlaborunitqty = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborunitqty, req).replace("&quot;", "\"");
 		m_bdadjustedlaborcostperunit = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborcostperunit, req).replace("&quot;", "\"");
-		m_bdadjustedlmarkupamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlmarkupamt, req).replace("&quot;", "\"");
-		m_bdtaxrate = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlmarkupamt, req).replace("&quot;", "\"");
-		
+		m_bdadjustedmarkupamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedmarkupamt, req).replace("&quot;", "\"");
+		m_bdtaxrate = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdtaxrate, req).replace("&quot;", "\"");
+		m_icalculatetaxonpurchaseorsale = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale, req).replace("&quot;", "\"");
+		m_icalculatetaxoncustomerinvoice = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice, req).replace("&quot;", "\"");
 	}
 
 	public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
@@ -142,10 +145,12 @@ public class SMEstimateSummary {
 				+ SMTablesmestimatesummaries.bdadjustedfreight
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty
-				+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt
+				+ ", " + SMTablesmestimatesummaries.bdadjustedmarkupamt
 				+ ", " + SMTablesmestimatesummaries.bdtaxrate
 				+ ", " + SMTablesmestimatesummaries.datetimecreated
 				+ ", " + SMTablesmestimatesummaries.datetimelastmodified
+				+ ", " + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice
+				+ ", " + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale
 				+ ", " + SMTablesmestimatesummaries.ilabortype
 				+ ", " + SMTablesmestimatesummaries.iordertype
 				+ ", " + SMTablesmestimatesummaries.itaxid
@@ -162,10 +167,12 @@ public class SMEstimateSummary {
 				+ m_bdadjustedfreight.replace(",", "")
 				+ ", " + m_bdadjustedlaborcostperunit.replace(",", "")
 				+ ", " + m_bdadjustedlaborunitqty.replace(",", "")
-				+ ", " + m_bdadjustedlmarkupamt.replace(",", "")
+				+ ", " + m_bdadjustedmarkupamt.replace(",", "")
 				+ ", " + m_bdtaxrate.replace(",", "")
 				+ ", NOW()"
 				+ ", NOW()"
+				+ ", " + m_icalculatetaxoncustomerinvoice
+				+ ", " + m_icalculatetaxonpurchaseorsale
 				+ ", " + m_ilabortype
 				+ ", " + m_iordertype
 				+ ", " + m_itaxid
@@ -184,9 +191,11 @@ public class SMEstimateSummary {
 				+ " " + SMTablesmestimatesummaries.bdadjustedfreight + " = " + m_bdadjustedfreight.replace(",", "")
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + " = " + m_bdadjustedlaborcostperunit.replace(",", "")
 				+ ", " + SMTablesmestimatesummaries.bdadjustedlaborunitqty + " = " + m_bdadjustedlaborunitqty.replace(",", "")
-				+ ", " + SMTablesmestimatesummaries.bdadjustedlmarkupamt + " = " + m_bdadjustedlmarkupamt.replace(",", "")
+				+ ", " + SMTablesmestimatesummaries.bdadjustedmarkupamt + " = " + m_bdadjustedmarkupamt.replace(",", "")
 				+ ", " + SMTablesmestimatesummaries.bdtaxrate + " = " + m_bdtaxrate.replace(",", "")
 				+ ", " + SMTablesmestimatesummaries.datetimelastmodified + " = NOW()"
+				+ ", " + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + " = " + m_icalculatetaxoncustomerinvoice
+				+ ", " + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + " = " + m_icalculatetaxonpurchaseorsale
 				+ ", " + SMTablesmestimatesummaries.ilabortype + " = " + m_ilabortype
 				+ ", " + SMTablesmestimatesummaries.iordertype + " = " + m_iordertype
 				+ ", " + SMTablesmestimatesummaries.itaxid + " = " + m_itaxid
@@ -275,6 +284,20 @@ public class SMEstimateSummary {
 
 		try {
 			m_ilabortype  = clsValidateFormFields.validateLongIntegerField(m_ilabortype, "Labor type", 1L, clsValidateFormFields.MAX_INT_VALUE);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
+			m_icalculatetaxoncustomerinvoice  = clsValidateFormFields.validateIntegerField(
+				m_icalculatetaxoncustomerinvoice, "Calculate tax on customer invoice", 0, 1);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
+			m_icalculatetaxonpurchaseorsale  = clsValidateFormFields.validateIntegerField(
+					m_icalculatetaxonpurchaseorsale, "Calculate tax on purchase or sale", 0, 1);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -420,12 +443,12 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
-		if (m_bdadjustedlmarkupamt.compareToIgnoreCase("") == 0) {
-			m_bdadjustedlmarkupamt = "0.0000";
+		if (m_bdadjustedmarkupamt.compareToIgnoreCase("") == 0) {
+			m_bdadjustedmarkupamt = "0.0000";
 		}
 		try {
-			m_bdadjustedlmarkupamt = clsValidateFormFields.validateBigdecimalField(
-				m_bdadjustedlmarkupamt, 
+			m_bdadjustedmarkupamt = clsValidateFormFields.validateBigdecimalField(
+				m_bdadjustedmarkupamt, 
 				"Adjusted mark-up amount", 
 				SMTablesmestimatesummaries.bdadjustedlmarkupamtScale, 
 				new BigDecimal("0.00"), 
@@ -530,8 +553,11 @@ public class SMEstimateSummary {
 				m_bdadjustedfreight = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedfreightScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedfreight));
 				m_bdadjustedlaborunitqty = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedlaborunitqtyScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedlaborunitqty));
 				m_bdadjustedlaborcostperunit = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedlaborcostperunitScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedlaborcostperunit));
-				m_bdadjustedlmarkupamt = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedlmarkupamtScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedlmarkupamt));
+				m_bdadjustedmarkupamt = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdadjustedlmarkupamtScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadjustedmarkupamt));
 				m_bdtaxrate = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatesummaries.bdtaxrateScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdtaxrate));
+				m_icalculatetaxoncustomerinvoice = Integer.toString(rs.getInt(SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice));
+				m_icalculatetaxonpurchaseorsale = Integer.toString(rs.getInt(SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale));
+				
 			}else{
 				rs.close();
 				throw new Exception("Error [1590509859] - No Estimate Summary found with lid = " + m_lid + ".");
@@ -800,11 +826,11 @@ public class SMEstimateSummary {
 		m_bdadjustedlaborcostperunit = sbdadjustedlaborcostperunit;
 	}
 	
-	public String getsbdadjustedlmarkupamt(){
-		return m_bdadjustedlmarkupamt;
+	public String getsbdadjustedmarkupamt(){
+		return m_bdadjustedmarkupamt;
 	}
-	public void setsbdadjustedlmarkupamt(String sbdadjustedlmarkupamt){
-		m_bdadjustedlmarkupamt = sbdadjustedlmarkupamt;
+	public void setsbdadjustedmarkupamt(String sbdadjustedmarkupamt){
+		m_bdadjustedmarkupamt = sbdadjustedmarkupamt;
 	}
 	
 	public String getsbdtaxrate(){
@@ -812,6 +838,20 @@ public class SMEstimateSummary {
 	}
 	public void setsbdtaxrate(String sbdtaxrate){
 		m_bdtaxrate = sbdtaxrate;
+	}
+	
+	public String getsicalculatetaxoncustomerinvoice(){
+		return m_icalculatetaxoncustomerinvoice;
+	}
+	public void setsicalculatetaxoncustomerinvoice(String sicalculatetaxoncustomerinvoice){
+		m_icalculatetaxoncustomerinvoice = sicalculatetaxoncustomerinvoice;
+	}
+	
+	public String getsicalculatetaxonpurchaseorsale(){
+		return m_icalculatetaxonpurchaseorsale;
+	}
+	public void setsicalculatetaxonpurchaseorsale(String sicalculatetaxonpurchaseorsale){
+		m_icalculatetaxonpurchaseorsale = sicalculatetaxonpurchaseorsale;
 	}
 	
 	//Calculated values - these aren't valid until the summary is loaded:
@@ -975,7 +1015,7 @@ public class SMEstimateSummary {
 		sQueryString += SMTablesmestimatesummaries.bdadjustedfreight + "=" + clsServletUtilities.URLEncode(getsbdadjustedfreight());
 		sQueryString += "&" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "=" + clsServletUtilities.URLEncode(getsbdadjustedlaborcostperunit());
 		sQueryString += "&" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "=" + clsServletUtilities.URLEncode(getsbdadjustedlaborunitqty());
-		sQueryString += "&" + SMTablesmestimatesummaries.bdadjustedlmarkupamt + "=" + clsServletUtilities.URLEncode(getsbdadjustedlmarkupamt());
+		sQueryString += "&" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "=" + clsServletUtilities.URLEncode(getsbdadjustedmarkupamt());
 		sQueryString += "&" + SMTablesmestimatesummaries.datetimecreated + "=" + clsServletUtilities.URLEncode(getsdatetimecreated());
 		sQueryString += "&" + SMTablesmestimatesummaries.datetimelastmodified + "=" + clsServletUtilities.URLEncode(getsdatetimeslastmodified());
 		sQueryString += "&" + SMTablesmestimatesummaries.ilabortype + "=" + clsServletUtilities.URLEncode(getsilabortype());
@@ -991,7 +1031,8 @@ public class SMEstimateSummary {
 		sQueryString += "&" + SMTablesmestimatesummaries.slastmodifiedbyfullname + "=" + clsServletUtilities.URLEncode(getslastmodifiedbyfullname());
 		sQueryString += "&" + SMTablesmestimatesummaries.sremarks + "=" + clsServletUtilities.URLEncode(getsremarks());
 		sQueryString += "&" + SMTablesmestimatesummaries.bdtaxrate + "=" + clsServletUtilities.URLEncode(getsbdtaxrate());
-		
+		sQueryString += "&" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "=" + clsServletUtilities.URLEncode(getsicalculatetaxoncustomerinvoice());
+		sQueryString += "&" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "=" + clsServletUtilities.URLEncode(getsicalculatetaxonpurchaseorsale());
 		return sQueryString;
 	}
 	
@@ -1001,7 +1042,7 @@ public class SMEstimateSummary {
 		s += "Adjusted freight: " + getsbdadjustedfreight();
 		s += "&" + "Adjusted labor cost per unit: " + getsbdadjustedlaborcostperunit();
 		s += "&" + "Adjusted labor unit qty: " + getsbdadjustedlaborunitqty();
-		s += "&" + "Adjusted mark-up amount: " + getsbdadjustedlmarkupamt();
+		s += "&" + "Adjusted mark-up amount: " + getsbdadjustedmarkupamt();
 		s += "&" + "Date created: " + getsdatetimecreated();
 		s += "&" + "Date last modified: " + getsdatetimeslastmodified();
 		s += "&" + "Labor type: " + getsilabortype();
@@ -1017,6 +1058,9 @@ public class SMEstimateSummary {
 		s += "&" + "Last modified by full name: " + getslastmodifiedbyfullname();
 		s += "&" + "Remarks: " + getsremarks();
 		s += "&" + "Tax rate: " + getsbdtaxrate();
+		s += "&" + "Calculate tax on customer invoice: " + getsicalculatetaxoncustomerinvoice();
+		s += "&" + "Calculate tax on purchase or sale: " + getsicalculatetaxonpurchaseorsale();
+		
 		s += "  -- Number of estimates: " + arrEstimates.size() + "\n";
 		
 		for (int i = 0; i < arrEstimates.size(); i++){
@@ -1074,8 +1118,10 @@ public class SMEstimateSummary {
 		m_bdadjustedfreight = "0.00";
 		m_bdadjustedlaborunitqty = "0.0000";
 		m_bdadjustedlaborcostperunit = "0.00";
-		m_bdadjustedlmarkupamt = "0.00";
+		m_bdadjustedmarkupamt = "0.00";
 		m_bdtaxrate = "0.0000";
+		m_icalculatetaxoncustomerinvoice = "0";
+		m_icalculatetaxonpurchaseorsale = "0";
 		arrEstimates = new ArrayList<SMEstimate>(0);
 	}
 }

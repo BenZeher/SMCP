@@ -789,8 +789,12 @@ public class SMEditBidEntry  extends HttpServlet {
 		s += "</TD></TR>";
 		
 		//Email:
-		s += "<TR>"
-				+ "<TD class=\" fieldlabel \"><B>Email:</B>&nbsp;</TD>";
+		s += "<TR>";
+				if(entry.getemailaddress().replace("\"", "&quot;").compareToIgnoreCase("") == 0) {
+					s += "&nbsp;<B>Email:</B>";
+				}else {
+					s += "&nbsp;<B><A HREF=\"mailto:" +entry.getemailaddress() +"\">Email:</A></B>";
+				}
 			s += "<TD class=\" fieldcontrol \">"
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramemailaddress + "\""
 				+ " VALUE=\"" + entry.getemailaddress().replace("\"", "&quot;") + "\""

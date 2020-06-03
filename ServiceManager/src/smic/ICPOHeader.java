@@ -227,31 +227,31 @@ public class ICPOHeader extends clsMasterEntry{
 		m_mpaymentonholdreason = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Parammpaymentonholdreason, req).trim();
 		m_mpaymentonholdvendorcomment = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Parammpaymentonholdvendorcomment, req).trim();
 		
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss:SS");  
-		   LocalDateTime now = LocalDateTime.now();  
+		//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss:SS");  
+		//   LocalDateTime now = LocalDateTime.now();  
 		
 		if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
-			System.out.println("[202005125257] - " 
-					+ dtf.format(now) 
-					+ " - req.getParameter(ICPOHeader.Paramipaymentonhold) = '" + req.getParameter(ICPOHeader.Paramipaymentonhold) + "'."
-					+ ", QueryString = '" + this.getQueryString() + "'."
-				);
+			//System.out.println("[202005125257] - " 
+			//		+ dtf.format(now) 
+			//		+ " - req.getParameter(ICPOHeader.Paramipaymentonhold) = '" + req.getParameter(ICPOHeader.Paramipaymentonhold) + "'."
+			//		+ ", QueryString = '" + this.getQueryString() + "'."
+			//	);
 			
-			System.out.println(
-				"[202003241030-1]"
-				+ " " + dtf.format(now)
-				+ " - ONHOLDCHECK - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
-				+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'."
-				+ ", QueryString = '" + this.getQueryString() + "'."
-			);
+			//System.out.println(
+			//	"[202003241030-1]"
+			//	+ " " + dtf.format(now)
+			//	+ " - ONHOLDCHECK - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
+			//	+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'."
+			//	+ ", QueryString = '" + this.getQueryString() + "'."
+			//);
 		}
 		if (req.getParameter(ICPOHeader.Paramipaymentonhold) == null) {
 			if ((m_slid.compareToIgnoreCase("") == 0) || (m_slid.compareToIgnoreCase("-1") == 0)) {
-				System.out.println("[202003271548-1]"
-					+ " " + dtf.format(now)
-					+ " - ONHOLDCHECK - req.getParameter(ICPOHeader.Paramipaymentonhold) == null"
-					+ ", QueryString = '" + this.getQueryString() + "'."
-				);
+				//System.out.println("[202003271548-1]"
+				//	+ " " + dtf.format(now)
+				//	+ " - ONHOLDCHECK - req.getParameter(ICPOHeader.Paramipaymentonhold) == null"
+				//	+ ", QueryString = '" + this.getQueryString() + "'."
+				//);
 			}
 			m_ipaymentonhold = "0";
 		}else {

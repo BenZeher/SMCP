@@ -135,10 +135,10 @@ public class FAEditLocationEdit extends HttpServlet {
 	    //String sOutPut = "";
 	  
 		pwOut.println("<TABLE BORDER=12 CELLSPACING=2>");
-        
+        String sSQL = "";
 		try{
 			//Get the record to edit:
-	        String sSQL = "SELECT * FROM" +
+	        sSQL = "SELECT * FROM" +
 	        				" " + SMTablefalocations.TableName + 
 	        			  " WHERE" +
 	        				" " + SMTablefalocations.sLocLocation + " = '" + sCode + "'";
@@ -161,7 +161,7 @@ public class FAEditLocationEdit extends HttpServlet {
 
 		rs.close();
 		}catch (SQLException ex){
-	    	System.out.println("[1579189463] Error in " + this.toString()+ " class!!");
+	    	System.out.println("[1579189463] Error in " + this.toString()+ " class with SQL: '" + sSQL + "'");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

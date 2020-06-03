@@ -170,7 +170,7 @@ public class FAAssetList extends java.lang.Object{
 				SMTablefamaster.TableName + "." + SMTablefamaster.datAcquisitionDate +
 				", " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber;
 		
-		System.out.println("[1551287752] - SQL = '" + SQL + "'");
+		//System.out.println("[1551287752] - SQL = '" + SQL + "'");
 		
 		BigDecimal bdYTDPurch = BigDecimal.ZERO;
 		BigDecimal bdYTDDisp = BigDecimal.ZERO;

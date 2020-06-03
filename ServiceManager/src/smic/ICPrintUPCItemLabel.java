@@ -344,7 +344,7 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 					}
 	
 					sBarcodeImageURLPath = ".." + WebContextParameters.getsmtempfolder(context);
-					System.out.println("[202011427520] " + "sBarcodeImageURLPath = '" + sBarcodeImageURLPath + "'.");
+					//System.out.println("[202011427520] " + "sBarcodeImageURLPath = '" + sBarcodeImageURLPath + "'.");
 				}
 				if (bPrintTwoPerRow){
 					sOutPut +=

@@ -590,7 +590,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			boolean bRemitAsNotDefault,
 			String sChoice
 			) throws Exception{
-		System.out.println("[2019255121523] Chose?: " + bRemitAsNotDefault + " Choice?: " + sChoice );
+		//System.out.println("[2019255121523] Chose?: " + bRemitAsNotDefault + " Choice?: " + sChoice );
 		//REMIT TO:
 		//Begin the REMIT TO table:
 		pwOut.println("<B>REMIT TO:</B><BR><BR>");

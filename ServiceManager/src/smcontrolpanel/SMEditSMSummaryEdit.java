@@ -24,7 +24,6 @@ import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
-import smap.APVendor;
 
 
 public class SMEditSMSummaryEdit extends HttpServlet {
@@ -45,6 +44,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String FIELD_VENDOR_QUOTE = "VENDORQUOTENUMBER";
 	public static final String BUTTON_FIND_VENDOR_QUOTE_CAPTION = "Find vendor quote:";
 	public static final String BUTTON_FIND_VENDOR_QUOTE = "FINDVENDORQUOTE";
+	public static final String FIND_VENDOR_QUOTE_COMMAND_VALUE = "FINDVENDORQUOTECOMMAND";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_COST = "LABELCALCULATEDTOTALMATERIALCOST";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
 	public static final String LABEL_CALCULATED_TOTAL_FREIGHT = "LABELCALCULATEDTOTALFREIGHT";
@@ -181,7 +181,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    }
 	    
 	    try {
-	    	createEditPage(getEditHTML(smedit, summary), 
+	    	createEditPage(
+	    		getEditHTML(
+	    			smedit, 
+	    			summary, 
+	    			ServletUtilities.clsManageRequestParameters.get_Request_Parameter(FIELD_VENDOR_QUOTE, request)
+	    		), 
 	    		FORM_NAME,
 				smedit.getPWOut(),
 				smedit,
@@ -265,8 +270,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		pwOut.println("</FORM>");
 	}
 
-	
-	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary) throws Exception{
+	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary, String sFoundVendorQuote) throws Exception{
 		
 		String sControlHTML = "";
 		
@@ -564,7 +568,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
 		s += "    <TD>" + "\n";
-		s += buildEstimateTable(conn, summary);
+		s += buildEstimateTable(conn, summary, sFoundVendorQuote);
 		
 		s += buildTotalsTable(summary);
 		
@@ -595,7 +599,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		;
 		return s;
 	}
-	private String buildEstimateTable(Connection conn, SMEstimateSummary summary) throws Exception{
+	private String buildEstimateTable(Connection conn, SMEstimateSummary summary, String sFoundVendorQuote) throws Exception{
 		
 		String s = "";
 		int iNumberOfColumns = 6;
@@ -706,7 +710,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns) + " >"
-			+ buildEstimateButtons()
+			+ buildEstimateButtons(sFoundVendorQuote)
 			+ "</TD>" + "\n"
 		;
 		s += "  </TR>" + "\n";
@@ -1182,7 +1186,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		;
 		return s;
 	}
-	private String buildEstimateButtons() {
+	private String buildEstimateButtons(String sFoundVendorQuote) {
 		String s = "";
 		
 		//Button for adding a manual quote:
@@ -1209,7 +1213,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "<INPUT TYPE=TEXT NAME=\"" + FIELD_VENDOR_QUOTE + "\""
 				+ " ID=\"" + FIELD_VENDOR_QUOTE + "\""
-				+ " VALUE=\"" + "" + "\""
+				+ " VALUE=\"" + sFoundVendorQuote + "\""
 			    + " SIZE=" + "18"
 				+ " MAXLENGTH=" + Integer.toString(SMTablesmestimates.svendorquotenumberLength)
 				//+ " ONCHANGE=\"flagDirty();\""
@@ -1218,7 +1222,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "&nbsp;";
 		
-		s += "<button type=\"button\""
+		s += "\n<button type=\"button\""
 				+ " value=\"" + BUTTON_FIND_VENDOR_QUOTE_CAPTION + "\""
 				+ " name=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
 				+ " id=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
@@ -1366,6 +1370,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "        }\n"
 				+ "    }\n"
 				+ "}\n\n"
+			;
+			
+			//Find vendor quote:
+			s += "function findvendorquote(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_VENDOR_QUOTE_COMMAND_VALUE + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
 			;
 			
 			//Delete:
@@ -1790,69 +1801,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	   			;
 			s += "}\n"
 	   		;
-			
-			
-			//Edit Locations
-			/*
-			s += "function editlocations(){\n"
-				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + EDIT_LOCATIONS_COMMAND_VALUE + "\";\n"
-				+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
-				+ "}\n"
-			;
-			*/
-			
-			//Create folder and/or upload files:
-			/*
-			s += "function createanduploadfolder(){\n"
-				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + CREATE_UPLOAD_FOLDER_COMMAND_VALUE + "\";\n"
-				+ "    document.forms[\"MAINFORM\"].submit();\n"
-				+ "}\n"
-				;
-			*/
-			//Check Reporting type
-			s += "function checkReportingType(){\n"
-//				+ "	 if(document.getElementById(\"" + APVendor.Paramitaxreportingtype + "\").value == \"" + Integer.toString(SMTableicvendors.TAX_REPORTING_TYPE_NONE) + "\"){\n"
-//					//Hide tax options if reporting type is none
-//				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"none\" ;\n"
-//				+ "	 }else{\n"
-//					//Otherwise, show tax options
-//				+ "    document.getElementById(\"" + "taxoptions" + "\").style.display =\"table-row-group\" ;\n"
-//				+ "  }\n"
-				+ "}\n"
-			;
-			
-			//Toggle the default distribution code and default GL account on and off:
-			s += "function setDefaultGLAccountToNotUsed(objControl){\n"
-				+ "    var idx = objControl.selectedIndex;\n"
-				+ "    selectedvalue = objControl.options[idx].value;\n"
-				+ "    if (selectedvalue == ''){\n"
-				+ "        return; \n"
-				+ "    }\n"
-				+ "    if (selectedvalue == '-1'){\n"
-				+ "        return; \n"
-				+ "    }\n"
-				+ "    document.getElementById(\"" + APVendor.Paramsdefaultexpenseacct + "\").value = \"" + "-1" + "\";\n"
-				+ "    flagDirty();"
-				//+ "    document.forms[\"MAINFORM\"].submit();\n"
-				+ "}\n"
-			;
-			
-			//Toggle the default distribution code and default GL account on and off:
-			s += "function setDefaultDistCodeToNotUsed(objControl){\n"
-				+ "    var idx = objControl.selectedIndex;\n"
-				+ "    selectedvalue = objControl.options[idx].value;\n"
-				+ "    if (selectedvalue == ''){\n"
-				+ "        return; \n"
-				+ "    }\n"
-				+ "    if (selectedvalue == '-1'){\n"
-				+ "        return; \n"
-				+ "    }\n"
-				+ "    document.getElementById(\"" + APVendor.Paramsdefaultdistributioncode + "\").value = \"" + "-1" + "\";\n"
-				+ "    flagDirty();"
-				//+ "    document.forms[\"MAINFORM\"].submit();\n"
-				+ "}\n"
-			;
-			
+
 			//Flag page dirty:
 			s += "function flagDirty() {\n"
 					+ "    flagRecordChanged();\n"

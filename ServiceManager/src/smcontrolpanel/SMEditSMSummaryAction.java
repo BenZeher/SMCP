@@ -7,7 +7,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import SMClasses.FinderResults;
+import SMClasses.OHDirectFinderResults;
+import SMClasses.SMFinderFunctions;
+import SMClasses.SMWorkOrderDetail;
+import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMOHDirectFieldDefinitions;
+import SMDataDefinition.SMTableicitems;
+import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTablesmestimatesummaries;
+import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;
@@ -149,8 +159,55 @@ public class SMEditSMSummaryAction extends HttpServlet{
 		    		);
 			return;
 		}
+		
+		//If FIND VENDOR QUOTE, process that:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.FIND_VENDOR_QUOTE_COMMAND_VALUE) == 0){
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773659]");
+    		String sRedirectString = 
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.OHDirectFinder"
+				+ "?" + "EndpointName=" + SMOHDirectFieldDefinitions.ENDPOINT_QUOTE
+				+ "&SearchingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
+				+ "&ReturnField=" + SMEditSMSummaryEdit.FIELD_VENDOR_QUOTE
+				+ "&ResultListField1=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER
+				+ "&ResultListField2=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME
+				+ "&ResultListField3=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE
+				+ "&ResultListField4=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE
+				+ "&ResultHeading1=Quote%20Number"
+				+ "&ResultHeading2=Job%20Name"
+				+ "&ResultHeading3=Created%20Date"
+				+ "&ResultHeading4=Last%20Modified%20Date"
+				+ "&" + OHDirectFinderResults.FINDER_RETURN_PARAM + "="
+					+ SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+					+ "&TESTPARAM=TRUE"
+    		;
+	    				
+			try {
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			    		);
+				return;
+			}
+			return;
+		}
+		
 	}
-	
+	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{
+		try {
+			res.sendRedirect(sRedirectString);
+		} catch (IOException e1) {
+			throw new Exception("Error [1395236124] in " + this.toString() + ".redirectAction - IOException error redirecting with string: "
+					+ sRedirectString + " - " + e1.getMessage());
+		} catch (IllegalStateException e1) {
+			throw new Exception("Error [1395236125] in " + this.toString() + ".redirectAction - IllegalStateException error redirecting with string: "
+					+ sRedirectString + " - " + e1.getMessage());
+		}
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

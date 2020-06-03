@@ -87,10 +87,7 @@ public class OHDirectFinder extends HttpServlet {
 	    String sEndPointName = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_ENDPOINT_NAME_PARAM, request);
 	    String sSearchingClass = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_SEARCHING_CLASS_PARAM, request);
 	    String sReturnField = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM, request);
-	    String sParameterString = "";
-	    if (request.getParameter(OHDirectFinderResults.FINDER_RETURN_PARAM) != null){
-	    	sParameterString = request.getParameter(OHDirectFinderResults.FINDER_RETURN_PARAM);
-	    }
+	    String sParameterString = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_PARAM, request);
 	    
 	    String sDBID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request);
 	    //The DBID should always be passed in by the request, so there's no conflict with an existing session.

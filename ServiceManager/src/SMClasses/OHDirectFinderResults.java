@@ -2,6 +2,7 @@ package SMClasses;
 
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 
 import java.io.IOException;
@@ -136,6 +137,7 @@ public class OHDirectFinderResults extends HttpServlet {
 						sSearchingClass,
 						sReturnField,
 						sAdditionalReturnParams,
+						sSearchJobText,
 						sDBID,
 						sUserID,
 						sUserFullName,
@@ -160,13 +162,26 @@ public class OHDirectFinderResults extends HttpServlet {
 			String sSearchCreatedEndDate,
 			String sSearchJobText) {
 		
+		sSearchLastModifiedStartDate = clsDateAndTimeConversions.stdDateStringToSQLDateString(sSearchLastModifiedStartDate);
+		sSearchLastModifiedEndDate = clsDateAndTimeConversions.stdDateStringToSQLDateString(sSearchLastModifiedEndDate);
+		sSearchCreatedStartDate = clsDateAndTimeConversions.stdDateStringToSQLDateString(sSearchCreatedStartDate);
+		sSearchCreatedEndDate = clsDateAndTimeConversions.stdDateStringToSQLDateString(sSearchCreatedEndDate);
+		
 		//TODO build request API string with given parameters
-		String sRequest = "C_DealerQuote?%24filter="
-					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20gt%20'2020-01-09'"
+		String sRequest = sEndPointName + "?%24filter="
+					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20ge%20'" +sSearchLastModifiedStartDate + "'"
+					+ "%20and%20"
+					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20le%20'" +sSearchLastModifiedEndDate + "'"
+					+ "%20and%20"
+					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20ge%20'" + sSearchCreatedStartDate + "'"
+					+ "%20and%20"
+					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20le%20'" + sSearchCreatedEndDate + "'"
+					+ "%20and%20"
+					+ "substringof('" + sSearchJobText +  "'%2C%20" + SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME + ")%20eq%20true"
 					+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
 				;
-		//String sRequest = sEndPointName + "?%24filter= ?%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc";
-			
+		//sRequest = clsServletUtilities.URLEncode(sRequest);
+        System.out.println(sRequest);
 		return sRequest;
 	}
 	
@@ -190,6 +205,7 @@ public class OHDirectFinderResults extends HttpServlet {
 			String sSearchingClass,
 			String sReturnField,
 			String sAdditionalReturnParams,
+			String sSearchJobText,
 			String sDBID, 
 			String sUserID,
 			String sUserFullname,
@@ -205,7 +221,7 @@ public class OHDirectFinderResults extends HttpServlet {
 					this.toString() + ".doGet - UserID: " + sUserID
 			);
 		} catch (Exception e1) {
-			throw new Exception("Error [1590160633] - getting connection - " + e1.getMessage());
+			throw new Exception("Error [1591191993] - getting connection - " + e1.getMessage());
 		}
 		
 		boolean bAllowQuoteDisplay = SMSystemFunctions.isFunctionPermitted(
@@ -220,15 +236,11 @@ public class OHDirectFinderResults extends HttpServlet {
 		try {
 			ql.getQuoteList(sAPIRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
-			throw new Exception("Error [1590160634] - " + e4.getMessage());
+			throw new Exception("Error [1591191994] - " + e4.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590160635]");
-		
-		System.out.println("quote array size = " + ql.getQuoteNumbers().size());
-		System.out.println("Result fields array size = " + arrResultListFields.size());
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591191995]");
 		
 		for(int i = 0; i < ql.getQuoteNumbers().size(); i++) {
-			System.out.println("Printing quote row " + i);
 			
 			//Print a row:
 			if ((i % 2) == 0) {
@@ -238,7 +250,7 @@ public class OHDirectFinderResults extends HttpServlet {
 			}
 			
 		  for(int j = 0; j < arrResultListFields.size(); j++) {
-			  System.out.println("Printing column " + j + " in row " + i);
+
 			  if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER) == 0) {
 				String sQuoteNumberLink = ql.getQuoteNumbers().get(i);
 				if (bAllowQuoteDisplay) {
@@ -287,7 +299,7 @@ public class OHDirectFinderResults extends HttpServlet {
 			
 			if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME) == 0) {
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-						+ ql.getQuoteNames().get(i)
+						+ highlightResult(ql.getQuoteNames().get(i), sSearchJobText)
 						+ "</TD>" + "\n"
 					;
 			}
@@ -295,10 +307,9 @@ public class OHDirectFinderResults extends HttpServlet {
 			//TODO add the rest of the field names
 			s += "  </TR>" + "\n";
 		}
-		System.out.println(s);
 		return s;
 	}
-/*	
+	
 	private String highlightResult(String sResult, String sSearchString){
 		String s = "";
 		int iFirstPosition = sResult.toUpperCase().indexOf(sSearchString.toUpperCase());
@@ -309,10 +320,9 @@ public class OHDirectFinderResults extends HttpServlet {
 			+ sResult.substring(iFirstPosition + sSearchString.length(), sResult.length())
 			;
 		}
-		
 		return s;
 	}
-*/
+
 	private String sCommandScripts(){
 		String s = "";
 		s += "<NOSCRIPT>\n"

@@ -21,7 +21,7 @@ public class SMTablesmestimatesummaries {
 	public static String bdadjustedfreight = "bdadjustedfreight";
 	public static String bdadjustedlaborunitqty = "bdadjustedlaborunitqty";
 	public static String bdadjustedlaborcostperunit = "bdadjustedlaborcostperunit";
-	public static String bdadjustedmarkupamt = "bdadjustedlmarkupamt";
+	public static String bdadjustedmarkupamt = "bdadjustedmarkupamt";  //TODO - fix this name
 	public static String bdtaxrate = "bdtaxrate";
 	public static String icalculatetaxonpurchaseorsale = "icalculatetaxonpurchaseorsale";
 	public static String icalculatetaxoncustomerinvoice = "icalculatetaxoncustomerinvoice";

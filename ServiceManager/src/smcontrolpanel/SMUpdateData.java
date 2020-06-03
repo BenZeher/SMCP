@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1478;
+	private static final int m_CurrentDatabaseVersion = 1479;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "6/2/2020";
+	private static final String m_sLastRevisionDate = "6/3/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15616,6 +15616,18 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE
+			
+			//BEGIN CASE:
+			case 1478:
+				//Added by TJR 6/3/2020
+				SQL = "ALTER TABLE `smestimatesummaries`"
+					+ " CHANGE COLUMN bdadjustedlmarkupamt bdadjustedmarkupamt DECIMAL(17, 2) NOT NULL default '0.00'"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
 			
 			
 			//End switch:

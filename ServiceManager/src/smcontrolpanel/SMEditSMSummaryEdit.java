@@ -85,6 +85,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY #";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
+	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
+	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "Process";
+	public static final String BUTTON_BACK_INTO_PRICE = "Process";
 	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
 	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
 	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
@@ -565,12 +568,31 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += buildTotalsTable(summary);
 		
+		s += printBackIntoControls();
+		
 		//Close the outer table:
 		s += "    </TD>" + "\n";
 		s += "  </TR>" + "\n";
 		s += "</TABLE>" + "\n";
 		
 
+		return s;
+	}
+	private String printBackIntoControls() {
+		String s = "";
+		
+		s += "<BR><B>'Back Into' price:</B> Adjust mark-up to bring total adjusted selling price to: "
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + FIELD_BACK_INTO_DESIRED_PRICE + "\""
+			+ " ID=\"" + FIELD_BACK_INTO_DESIRED_PRICE + "\""
+			+ " VALUE=\"" + "" + "\""
+			+ " MAXLENGTH=" + 15
+			+ " STYLE=\"width: 1.5in; height: 0.25in\""
+			+ ">"
+			+ "&nbsp;"
+			+ createBackIntoButton()
+			+ "<BR>"
+		;
 		return s;
 	}
 	private String buildEstimateTable(Connection conn, SMEstimateSummary summary) throws Exception{
@@ -1148,6 +1170,18 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		return s;
 	}
 	
+	private String createBackIntoButton() {
+		String s = "";
+		s += "<button type=\"button\""
+			+ " value=\"" + BUTTON_BACK_INTO_PRICE_CAPTION + "\""
+			+ " name=\"" + BUTTON_BACK_INTO_PRICE + "\""
+			+ " id=\"" + BUTTON_BACK_INTO_PRICE + "\""
+			+ " onClick=\"backintoprice();\">"
+			+ BUTTON_BACK_INTO_PRICE_CAPTION
+			+ "</button>\n"
+		;
+		return s;
+	}
 	private String buildEstimateButtons() {
 		String s = "";
 		
@@ -1351,7 +1385,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			;
 			
 			//Remove/delete an estimate:
-			//TODO - test
 			s += "function removeestimate(sSummaryLineNumber){\n"
 				+ "    if (confirm(\"Are you sure you want to delete the estimate on line number \" + sSummaryLineNumber + \"?\")){\n"
 				+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REMOVE_ESTIMATE_COMMAND + "\";\n"
@@ -1360,6 +1393,48 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    }\n"
 				+ "}\n"
 			;			
+			
+			s += "function backintoprice(){\n"
+					
+				//+ "    alert('Back into'); \n"	
+				+ "    var currentadjustedtotalprice = parseFloat(\"0.00\");\n"
+				+ "    var desiredadjustedtotalprice = parseFloat(\"0.00\");\n"
+				+ "    var currentadjustedmarkup = parseFloat(\"0.00\");\n"
+				+ "    var requiredadjustedmarkup = parseFloat(\"0.00\");\n"
+				+ "    var desireddifference = parseFloat(\"0.00\");\n"
+				
+				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\").innerText).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        currentadjustedtotalprice = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        currentadjustedtotalprice = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    \n"
+				
+				+ "    var temp = (document.getElementById(\"" + FIELD_BACK_INTO_DESIRED_PRICE + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        desiredadjustedtotalprice = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        desiredadjustedtotalprice = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    \n"
+				
+				+ "    desireddifference = desiredadjustedtotalprice - currentadjustedtotalprice; \n"
+
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        currentadjustedmarkup = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        currentadjustedmarkup = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    \n"
+				
+				+ "    requiredadjustedmarkup = currentadjustedmarkup + desireddifference; \n"
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=formatNumber(requiredadjustedmarkup);\n"
+				+ "    recalculatelivetotals(); \n"
+				+ "    document.getElementById(\"" + FIELD_BACK_INTO_DESIRED_PRICE + "\").value = \"\"; \n"
+				+ "}\n"
+			;
 			
 			s += "function flagDirty() {\n"
 					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
@@ -1587,19 +1662,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "}\n\n"
 			;
 			
-			//Validate number fields:
-			/*
-			s += "    var sestimatedhours = document.getElementById(\"" 
-				+ SMOrderHeader.ParamdEstimatedHour + "\").value;\n"
-			+ "    if (isNumeric(sestimatedhours) == false){\n"
-			+ "        alert(\"Estimated hours '\" + sestimatedhours + \"' are invalid.\");\n"
-			+ "        document.getElementById(\"" + SMOrderHeader.ParamdEstimatedHour + "\").focus();\n"
-			+ "        document.getElementById(\"" + SMOrderHeader.ParamdEstimatedHour + "\").select();\n"
-			+ "        return false;\n"
-			+ "    }\n"
-			;
-			*/
-			
 			s += "\n"
 				+ "function isNumeric(value) {\n"
 				+ "    if ((value == null) || (value == '')) return false;\n"
@@ -1683,15 +1745,17 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 			//Recalculate MU using GP percentage:
 			s += "function calculateMUusingGPpercentage(){\n"
+				+ "    // adjustedtotalmarkup = (adjustedpremarkupcost / (1 - (adjustedGPpercentage/100))) - adjustedpremarkupcost \n"
 				+ "    var adjustedtotalmarkup = parseFloat(\"0.00\");\n"
 				+ "    var adjustedGPpercentage = parseFloat(\"0.00\");\n"
+				+ "    var adjustedGPpercentageAsFraction = parseFloat(\"0.00\");\n"
 				+ "    var temp = (document.getElementById(\"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\").value).replace(',','');\n"
 				+ "    if (temp == ''){\n"
 				+ "        adjustedGPpercentage = parseFloat(\"0.00\")\n;"
 				+ "    }else{\n"
 				+ "        adjustedGPpercentage = parseFloat(temp);\n"
 				+ "    }\n"
-				+ "    adjustedGPpercentage = adjustedGPpercentage / 100; \n"
+				+ "    adjustedGPpercentageAsFraction = adjustedGPpercentage / 100; \n"
 				
 				+ "    //Get the total cost before mark-up:\n"
 				+ "    var materialcost = parseFloat(\"0.00\");\n"
@@ -1718,7 +1782,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    }\n"
 				+ "    var adjustedpremarkupcost = materialcost + adjustedfreightcost + adjustedlaborcost;\n"
 				
-				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=(adjustedpremarkupcost * adjustedMUpercentage).toFixed(2);\n"
+				+ "    adjustedtotalmarkup = (adjustedpremarkupcost / (1 - (adjustedGPpercentageAsFraction))) - adjustedpremarkupcost; \n"
+				
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=adjustedtotalmarkup.toFixed(2);\n"
 				+ "    recalculatelivetotals();\n"
 				
 	   			;

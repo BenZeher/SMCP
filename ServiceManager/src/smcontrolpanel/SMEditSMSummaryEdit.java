@@ -39,6 +39,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED = "REMOVEESTIMATELINENUMBER";
 	public static final String BUTTON_ADD_MANUAL_ESTIMATE_CAPTION = "Add estimate manually";
 	public static final String BUTTON_ADD_MANUAL_ESTIMATE = "ADDMANUALESTIMATE";
+	public static final String ADD_MANUAL_ESTIMATE_COMMAND = "ADDMANUALESTIMATECOMMAND";
 	public static final String BUTTON_ADD_VENDOR_QUOTE_CAPTION = "Add vendor quote number:";
 	public static final String BUTTON_ADD_VENDOR_QUOTE = "ADDVENDORQUOTE";
 	public static final String FIELD_VENDOR_QUOTE = "VENDORQUOTENUMBER";
@@ -1404,6 +1405,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    }\n"
 				+ "}\n"
 			;			
+			
+			//Add a manual estimate:
+			s += "function addmanualestimate(sSummaryLineNumber){\n"
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + ADD_MANUAL_ESTIMATE_COMMAND + "\";\n"
+				+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
 			
 			s += "function backintoprice(){\n"
 					

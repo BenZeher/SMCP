@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,9 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.SMTax;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
@@ -24,6 +20,7 @@ import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import smic.ICPhysicalInventoryEntry;
 
 
 public class SMEditSMEstimateEdit extends HttpServlet {
@@ -90,7 +87,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String BUTTON_BACK_INTO_PRICE = "Process";
 	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
 	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
-	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
+	public static final String UNSAVED_ESTIMATE_LABEL = "(UNSAVED)";
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
 	
@@ -110,7 +107,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				getServletContext(),
 				SMEstimateSummary.OBJECT_NAME,
 				SMUtilities.getFullClassName(this.toString()),
-				"smcontrolpanel.SMEditSMSummaryAction",
+				"smcontrolpanel.SMEditSMEstimateAction",
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
 				SMSystemFunctions.SMEditSMEstimates
@@ -121,26 +118,28 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			return;
 		}
 		
-		SMEstimateSummary summary = new SMEstimateSummary(request);
+		SMEstimate estimate = new SMEstimate(request);
+		estimate.setslsummarylid(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.lsummarylid, request));
 		
 		//If this is a 'resubmit', meaning it's being called by the Action class, then
-		//the session will have a job cost entry object in it, and that's what we'll pick up.
+		//the session will have an estimate object in it, and that's what we'll pick up.
 		HttpSession currentSession = smedit.getCurrentSession();
 		
-	    if (currentSession.getAttribute(SMEstimateSummary.OBJECT_NAME) != null){
-	    	summary = (SMEstimateSummary) currentSession.getAttribute(SMEstimateSummary.OBJECT_NAME);
-	    	currentSession.removeAttribute(SMEstimateSummary.OBJECT_NAME);
+	    if (currentSession.getAttribute(SMEstimate.OBJECT_NAME) != null){
+	    	estimate = (SMEstimate) currentSession.getAttribute(SMEstimate.OBJECT_NAME);
+	    	currentSession.removeAttribute(SMEstimate.OBJECT_NAME);
 			
 	    	try {
-	    		summary.loadEstimates(summary.getslid(), smedit.getsDBID(), getServletContext(), smedit.getFullUserName());
+	    		estimate.load(getServletContext(), smedit.getsDBID(), smedit.getUserID());
 			} catch (Exception e) {
+				System.out.println("[202006040606] - could not load estimate - " + e.getMessage());
 				response.sendRedirect(
-						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-						+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-						+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
-					);
-					return;
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+					+ "?" + SMTablesmestimatesummaries.lid + "=" + estimate.getslid()
+					+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+				);
+				return;
 			}
 	    	
 	    //But if it's NOT a 'resubmit', meaning this class was called for the first time to 
@@ -148,15 +147,16 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    }else{
 	    	if (!smedit.getAddingNewEntryFlag()){
 		    	try {
-					summary.load(getServletContext(), smedit.getsDBID(), smedit.getUserID());
+					estimate.load(getServletContext(), smedit.getsDBID(), smedit.getUserID());
 				} catch (Exception e) {
+					//System.out.println("[202006042606] - e = '" + e.getMessage() + "'");
 					response.sendRedirect(
-							"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-							+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-							+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
-						);
-						return;
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+						+ "?" + SMTablesmestimatesummaries.lid + "=" + estimate.getslsummarylid()
+						+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+					);
+					return;
 				}
 	    	}
 	    }
@@ -184,20 +184,20 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    	createEditPage(
 	    		getEditHTML(
 	    			smedit, 
-	    			summary, 
-	    			ServletUtilities.clsManageRequestParameters.get_Request_Parameter(FIELD_VENDOR_QUOTE, request)
+	    			estimate
 	    		), 
 	    		FORM_NAME,
 				smedit.getPWOut(),
 				smedit,
-				summary
+				estimate
 			);
 		} catch (Exception e) {
     		String sError = "Could not create edit page - " + e.getMessage();
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-				+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-				+ "&Warning=Could not load Summary ID: " + summary.getslid() + " - " + SMUtilities.URLEncode(sError)
+				+ "?" + SMTablesmestimatesummaries.lid + "=" + estimate.getslsummarylid()
+				+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+				+ "&Warning=Could not load estimate ID: " + estimate.getslid() + " - " + SMUtilities.URLEncode(sError)
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
 			);
 				return;
@@ -211,7 +211,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			String sFormClassName,
 			PrintWriter pwOut,
 			SMMasterEditEntry sm,
-			SMEstimateSummary summary
+			SMEstimate estimate
 	) throws Exception{
 		//Create HTML Form
 		String sFormString = "<FORM ID='" + sFormClassName + "' NAME='" + sFormClassName + "' ACTION='" 
@@ -234,11 +234,15 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ ">"
 			);
 		
+		//Keep track of hidden variables here:
+		
+		/*
+		
 		//This is used to store the on-the-fly retail sales tax rate in case the user changes the tax drop down
 		pwOut.println("<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + SMTablesmestimatesummaries.bdtaxrate + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.bdtaxrate + "\""
-			+ " VALUE=\"" + summary.getsbdtaxrate() + "\""
+			+ " VALUE=\"" + estimate.getsbdtaxrate() + "\""
 			+ ">"
 			);
 		
@@ -246,7 +250,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\""
-			+ " VALUE=\"" + summary.getsicalculatetaxoncustomerinvoice() + "\""
+			+ " VALUE=\"" + estimate.getsicalculatetaxoncustomerinvoice() + "\""
 			+ ">"
 			);
 		
@@ -254,10 +258,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\""
-			+ " VALUE=\"" + summary.getsicalculatetaxonpurchaseorsale() + "\""
+			+ " VALUE=\"" + estimate.getsicalculatetaxonpurchaseorsale() + "\""
 			+ ">"
 			);
-		
+		*/
 		
 		//Create HTML Fields
 		try {
@@ -270,11 +274,11 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		pwOut.println("</FORM>");
 	}
 
-	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary, String sFoundVendorQuote) throws Exception{
+	private String getEditHTML(SMMasterEditEntry sm, SMEstimate estimate) throws Exception{
 		
 		String sControlHTML = "";
 		
-		String s = sCommandScripts(summary, sm);
+		String s = sCommandScripts(estimate, sm);
 		
 		Connection conn;
 		try {
@@ -297,28 +301,48 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + "" + "\""+ " "
 				+ " ID=\"" + COMMAND_FLAG + "\""+ "\">" + "\n";
 		
-		String sLid = summary.getslid();
+		//Include an outer table:
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
+		s += "  <TR>" + "\n";
+		s += "    <TD>" + "\n";
+		s += buildSummaryHeaderTable(conn, estimate);
+		
+		s += buildEstimateHeaderTable(conn, estimate, sm);
+		
+		s += buildTotalsTable(estimate);
+		
+		//s += printBackIntoControls();
+		
+		//Close the outer table:
+		s += "    </TD>" + "\n";
+		s += "  </TR>" + "\n";
+		s += "</TABLE>" + "\n";
+		
+		
+		/*
+		
+		String sLid = estimate.getslid();
 		if (sm.getAddingNewEntryFlag()){
-			sLid = UNSAVED_SUMMARY_LABEL;
+			sLid = UNSAVED_ESTIMATE_LABEL;
 		}
 
-		s += "<B>Summary ID</B>: " + sLid + "\n" 
+		s += "<B>Estimate ID</B>: " + sLid + "\n" 
 			+ "<INPUT TYPE=HIDDEN"
-			+ " NAME=\"" + SMTablesmestimatesummaries.lid + "\""
-			+ " VALUE=\"" + summary.getslid() + "\""
-			+ " ID=\"" + summary.getslid() + "\""
+			+ " NAME=\"" + SMTablesmestimates.lid + "\""
+			+ " VALUE=\"" + estimate.getslid() + "\""
+			+ " ID=\"" + estimate.getslid() + "\""
 			+ ">"
 			+ "\n"
 		;
 			
 		s += "&nbsp;<B>Created by: </B>" 
-			+ summary.getscreatedbyfullname()
-			+ " on " + summary.getsdatetimecreated()
+			+ estimate.getscreatedbyfullname()
+			+ " on " + estimate.getsdatetimecreated()
 		;
 		
 		s += "&nbsp;<B>Last modified by: </B>" 
-			+ summary.getslastmodifiedbyfullname()
-			+ " on " + summary.getsdatetimeslastmodified()
+			+ estimate.getslastmodifiedbyfullname()
+			+ " on " + estimate.getsdatetimeslastmodified()
 		;
 		
 		//Header table:
@@ -334,7 +358,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimatesummaries.sjobname + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.sjobname + "\""
-			+ " VALUE=\"" + summary.getsjobname() + "\""
+			+ " VALUE=\"" + estimate.getsjobname() + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sjobnameLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
 			+ ">"
@@ -351,7 +375,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimatesummaries.lsalesleadid + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.lsalesleadid + "\""
-			+ " VALUE=\"" + summary.getslsalesleadid() + "\""
+			+ " VALUE=\"" + estimate.getslsalesleadid() + "\""
 			+ " MAXLENGTH=" + "15"
 			+ " STYLE=\"width: 1in; height: 0.25in\""
 			+ ">"
@@ -388,7 +412,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			;
 			for (int i = 0; i < arrLaborTypes.size(); i++){
 				sControlHTML += "<OPTION";
-				if (arrLaborTypes.get(i).toString().compareTo(summary.getsilabortype()) == 0){
+				if (arrLaborTypes.get(i).toString().compareTo(estimate.getsilabortype()) == 0){
 					sControlHTML += " selected=yes";
 				}
 				sControlHTML += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" 
@@ -451,7 +475,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		int TAX_BUFFER_SIZE = 100;
 			for (int i = 0; i < arrTaxes.size(); i++){
 				sTempBuffer += "<OPTION";
-				if (arrTaxes.get(i).toString().compareTo(summary.getsitaxid()) == 0){
+				if (arrTaxes.get(i).toString().compareTo(estimate.getsitaxid()) == 0){
 					sTempBuffer += " selected=yes";
 				}
 				sTempBuffer += " VALUE=\"" + arrTaxes.get(i).toString() + "\">" + arrTaxDescriptions.get(i).toString() + "\n";
@@ -487,28 +511,28 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "*** Select order type ***" + "\n";
 		
 		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE).compareTo(summary.getsiordertype()) == 0){
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE).compareTo(estimate.getsiordertype()) == 0){
 			sControlHTML += " selected=yes";
 		}
 		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\">" 
 			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\n";
 		
 		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE).compareTo(summary.getsiordertype()) == 0){
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE).compareTo(estimate.getsiordertype()) == 0){
 			sControlHTML += " selected=yes";
 		}
 		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE) + "\">" 
 			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_FUTURE) + "\n";
 		
 		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE).compareTo(summary.getsiordertype()) == 0){
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE).compareTo(estimate.getsiordertype()) == 0){
 			sControlHTML += " selected=yes";
 		}
 		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE) + "\">" 
 			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) + "\n";
 
 		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING).compareTo(summary.getsiordertype()) == 0){
+		if (Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING).compareTo(estimate.getsiordertype()) == 0){
 			sControlHTML += " selected=yes";
 		}
 		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING) + "\">" 
@@ -537,7 +561,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimatesummaries.sdescription + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.sdescription + "\""
-			+ " VALUE=\"" + summary.getsdescription() + "\""
+			+ " VALUE=\"" + estimate.getsdescription() + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sdescriptionLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
 			+ ">"
@@ -554,34 +578,25 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimatesummaries.sremarks + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.sremarks + "\""
-			+ " VALUE=\"" + summary.getsremarks() + "\""
+			+ " VALUE=\"" + estimate.getsremarks() + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sremarksLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
+		
+		
+		
 		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
 		
-		//Include an outer table:
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
-		s += "  <TR>" + "\n";
-		s += "    <TD>" + "\n";
-		s += buildEstimateTable(conn, summary, sFoundVendorQuote);
+		*/
 		
-		s += buildTotalsTable(summary);
-		
-		s += printBackIntoControls();
-		
-		//Close the outer table:
-		s += "    </TD>" + "\n";
-		s += "  </TR>" + "\n";
-		s += "</TABLE>" + "\n";
-		
-
 		return s;
 	}
+	
+	/*
 	private String printBackIntoControls() {
 		String s = "";
 		
@@ -599,23 +614,300 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		return s;
 	}
-	private String buildEstimateTable(Connection conn, SMEstimateSummary summary, String sFoundVendorQuote) throws Exception{
+	*/
+	private String buildEstimateHeaderTable(
+		Connection conn, 
+		SMEstimate estimate,
+		SMMasterEditEntry sm
+		) throws Exception{
+		String s = "";
+		int iNumberOfColumns = 4;
+		
+		String sEstimateID = UNSAVED_ESTIMATE_LABEL;
+		if (
+			(estimate.getslid().compareToIgnoreCase("-1") != 0)
+			&& (estimate.getslid().compareToIgnoreCase("0") != 0)
+			&& (estimate.getslid().compareToIgnoreCase("") != 0)
+				
+		) {
+			sEstimateID = estimate.getslid();
+		}
+		
+		s += "<BR>";
+		
+		s += "Estimate ID:&nbsp;" + sEstimateID
+			+ "&nbsp;&nbsp;"
+			+ "Created " + estimate.getsdatetimecreated() + " by " + estimate.getscreatedbyfullname() 
+			+ "&nbsp;&nbsp;"
+			+ "Last modified " + estimate.getsdatetimelastmodified() + " by " + estimate.getslastmodifiedbyfullname()
+		;
+		
+		s += "<BR>";
+		
+		s += "Insert as prefix label using item #:&nbsp;" 
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME = \"" + SMTablesmestimates.sprefixlabelitem + "\""
+			+ " ID = \"" + SMTablesmestimates.sprefixlabelitem + "\""
+			+ " style = \" text-align:left; width:100px;\""
+			+ " VALUE = \"" + estimate.getsprefixlabelitem() + "\""
+			+ " onchange=\"flagdirty();\""
+			+ ">"
+			+ "</INPUT>"
+			+ "&nbsp;&nbsp;"
+			+ "Estimate description:&nbsp;" 
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME = \"" + SMTablesmestimates.sdescription + "\""
+			+ " ID = \"" + SMTablesmestimates.sdescription + "\""
+			+ " style = \" text-align:left; width:600px;\""
+			+ " VALUE = \"" + estimate.getsdescription() + "\""
+			+ " onchange=\"flagdirty();\""
+			+ ">"
+			+ "</INPUT>"
+			+ estimate.getsdescription()
+		;
+		
+		s += "<BR>";
+		
+		String sVendorQuoteLink = estimate.getsvendorquotenumber();
+		if (SMSystemFunctions.isFunctionPermitted(
+			SMSystemFunctions.SMOHDirectQuoteList,
+			sm.getUserID(), 
+			conn, 
+			sm.getLicenseModuleLevel())) {
+			
+			//Create a link to the vendor's quote:
+			sVendorQuoteLink = 
+		    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICPrintPhysicalInventoryVarianceReport"
+		    		+ "?CallingClass=" + "smcontrolpanel.SMDisplayOHDirectQuote"
+		    		+ "&" + "C_QuoteNumberString=" + sVendorQuoteLink
+		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+		    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
+		    		+ "\">" + sVendorQuoteLink + "</A>"
+			;
+			// http://localhost:8080/sm/smcontrolpanel.SMDisplayOHDirectQuote?C_QuoteNumberString=SQAL000008-1&db=servmgr1&CallingClass=smcontrolpanel.SMOHDirectQuoteListing
+			
+		}
+		
+		s += "Vendor quote #:&nbsp;" + sVendorQuoteLink
+			+ ", line #"
+			+ estimate.getsivendorquotelinenumber()
+		;
+		
+		/*
+		
+		// + "Vendor quote #:&nbsp;" + estimate.getsvendorquotenumber()
+		
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" style = \" width:100%; \" >" + "\n";
+		
+		s += "  <TR>" + "\n";
+		
+		//Summary ID:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Estimate Summary #:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getslid()
+			+ "</TD>" + "\n"
+		;
+		
+		//Project:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Project:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getsjobname()
+			+ "</TD>" + "\n"
+		;
+
+		s += "  <TR>" + "\n";
+		
+		//Sales lead
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "Sales lead #:"
+				+ "</TD>" + "\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ summary.getslsalesleadid()
+				+ "</TD>" + "\n"
+			;
+		
+		// Labor type
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "Labor type:"
+				+ "</TD>" + "\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ summary.getslabortypedescription(conn)
+				+ "</TD>" + "\n"
+			;
+		s += "  </TR>" + "\n";
+		
+		s += "  <TR>" + "\n";
+		
+		//Tax type:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Tax type:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getstaxdescription(conn)
+			+ "</TD>" + "\n"
+		;
+		
+		//Order type:
+		String sOrderTypeDescription = SMTableorderheaders.getOrderTypeDescriptions(Integer.parseInt(summary.getsiordertype()));
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Order type:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ sOrderTypeDescription
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+
+		//Description:
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1)
+			+ "\" >"
+			+ "Description:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getsdescription()
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+		
+		//Remarks:
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1)
+			+ "\" >"
+			+ "Remarks:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getsremarks()
+			+ "</TD>" + "\n"
+		;
+		
+		s += "  </TR>" + "\n";
+
+		
+		
+		s += "</TABLE>" + "\n";
+		*/
+		return s;
+	}
+	private String buildSummaryHeaderTable(Connection conn, SMEstimate estimate) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 6;
+		int iNumberOfColumns = 4;
+		
+		//Get the summary:
+		SMEstimateSummary summary = new SMEstimateSummary();
+		summary.setslid(estimate.getslsummarylid());
+		try {
+			summary.load(conn);
+		}catch (Exception e) {
+			throw new Exception("Error [202006040000] - loading summary with ID '" + summary.getslid() + " - " + e.getMessage());
+		}
 		
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
 		
 		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
-			+ " style = \" font-weight:bold; font-style:underline; \""
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns) + ">"
-			+ "ESTIMATES"
-			+ "    </TD>" + "\n"
+		
+		//Summary ID:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Estimate Summary #:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getslid()
+			
+			+ "<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + SMTablesmestimates.lsummarylid + "\""
+			+ " ID=\"" + SMTablesmestimates.lsummarylid + "\""
+			+ " VALUE=\"" + estimate.getslsummarylid() + "\""
+			+ ">"
+			
+			+ "</TD>" + "\n"
 		;
 		
+		//Project:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Project:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getsjobname()
+			+ "</TD>" + "\n"
+		;
+
+		s += "  <TR>" + "\n";
+		
+		//Sales lead
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "Sales lead #:"
+				+ "</TD>" + "\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ summary.getslsalesleadid()
+				+ "</TD>" + "\n"
+			;
+		
+		// Labor type
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "Labor type:"
+				+ "</TD>" + "\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ summary.getslabortypedescription(conn)
+				+ "</TD>" + "\n"
+			;
 		s += "  </TR>" + "\n";
 		
+		s += "  <TR>" + "\n";
+		
+		//Tax type:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Tax type:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getstaxdescription(conn)
+			+ "</TD>" + "\n"
+		;
+		
+		//Order type:
+		String sOrderTypeDescription = SMTableorderheaders.getOrderTypeDescriptions(Integer.parseInt(summary.getsiordertype()));
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Order type:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ sOrderTypeDescription
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+
+		//Description:
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1)
+			+ "\" >"
+			+ "Description:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getsdescription()
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+		
+		//Remarks:
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1)
+			+ "\" >"
+			+ "Remarks:"
+			+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+			+ summary.getsremarks()
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+		
+		/*
 		//Headings:
 		s += "  <TR>" + "\n";
 		
@@ -664,43 +956,43 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		//Get all the estimates:
-		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
+		for (int i = 0; i < estimate.getEstimateArray().size(); i++) {
 			s += "  <TR>" + "\n";
 			
 			//Line #:
 			//Estimate ID:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
-					+ summary.getEstimateArray().get(i).getslsummarylinenumber()
+					+ estimate.getEstimateArray().get(i).getslsummarylinenumber()
 					+ "</TD>" + "\n"
 				;
 			
 			//Estimate ID:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
-					+ summary.getEstimateArray().get(i).getslid()
+					+ estimate.getEstimateArray().get(i).getslid()
 					+ "</TD>" + "\n"
 				;		
 			
 			//Remove button:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\" >"
-					+ buildRemoveEstimateButton(summary.getEstimateArray().get(i).getslsummarylinenumber())
+					+ buildRemoveEstimateButton(estimate.getEstimateArray().get(i).getslsummarylinenumber())
 					+ "</TD>" + "\n"
 				;
 			
 			//Quantity:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
-					+ summary.getEstimateArray().get(i).getsbdquantity()
+					+ estimate.getEstimateArray().get(i).getsbdquantity()
 					+ "</TD>" + "\n"
 				;
 			
 			//Product description:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-					+ summary.getEstimateArray().get(i).getsproductdescription()
+					+ estimate.getEstimateArray().get(i).getsproductdescription()
 					+ "</TD>" + "\n"
 				;
 			
 			//Price:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
-					+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(summary.getEstimateArray().get(i).getTotalPrice(conn))
+					+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(estimate.getEstimateArray().get(i).getTotalPrice(conn))
 					+ "</TD>" + "\n"
 				;
 			
@@ -715,16 +1007,20 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		s += "  </TR>" + "\n";
 		
+		*/
+		
 		s += "</TABLE>" + "\n";
 		
 		return s;
 		
 	}
 	
-	private String buildTotalsTable(SMEstimateSummary summary) throws Exception{
+	private String buildTotalsTable(SMEstimate estimate) throws Exception{
 		
 		String s = "";
 		int iNumberOfColumns = 6;
+		
+		/*
 		
 		s += "<BR>";
 		
@@ -740,6 +1036,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		s += "  </TR>" + "\n";
 		
+		
+		
 		//total material cost:
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
@@ -753,7 +1051,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, estimate.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -773,7 +1071,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdfreightScale, summary.getbdtotalfreightonestimates())
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdfreightScale, estimate.getbdtotalfreightonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -793,7 +1091,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborquantityScale, summary.getbdtotallaborunitsonestimates())
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborquantityScale, estimate.getbdtotallaborunitsonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -809,7 +1107,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborcostperunitScale, summary.getbdtotallaborcostonestimates())
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborcostperunitScale, estimate.getbdtotallaborcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -830,7 +1128,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
 			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdmarkupamountScale, summary.getbdtotalmarkuponestimates())
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdmarkupamountScale, estimate.getbdtotalmarkuponestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -858,13 +1156,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		//total amount for summary
-		String sSummaryID = UNSAVED_SUMMARY_LABEL;
+		String sSummaryID = UNSAVED_ESTIMATE_LABEL;
 		if (
-			(summary.getslid().compareToIgnoreCase("-1") != 0)
-			&& (summary.getslid().compareToIgnoreCase("0") != 0)
-			&& (summary.getslid().compareToIgnoreCase("") != 0)			
+			(estimate.getslid().compareToIgnoreCase("-1") != 0)
+			&& (estimate.getslid().compareToIgnoreCase("0") != 0)
+			&& (estimate.getslid().compareToIgnoreCase("") != 0)			
 		) {
-			sSummaryID = summary.getslid();
+			sSummaryID = estimate.getslid();
 		}
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
@@ -879,7 +1177,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdcalculatedtotalprice())
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, estimate.getbdcalculatedtotalprice())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -931,7 +1229,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, estimate.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -951,7 +1249,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
 			+ " style = \" text-align:right; width:100px;\""
-			+ " VALUE = \"" + summary.getsbdadjustedfreight() + "\""
+			+ " VALUE = \"" + estimate.getsbdadjustedfreight() + "\""
 			+ " onchange=\"recalculatelivetotals();\""
 			+ ">"
 			+ "</INPUT>"
@@ -972,7 +1270,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
 			+ " style = \" text-align:right; width:100px;\""
-			+ " VALUE = \"" + summary.getsbdadjustedlaborunitqty() + "\""
+			+ " VALUE = \"" + estimate.getsbdadjustedlaborunitqty() + "\""
 			+ " onchange=\"recalculatelivetotals();\""
 			+ ">"
 			+ "</INPUT>"
@@ -991,7 +1289,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = \"" + summary.getsbdadjustedlaborcostperunit() + "\""
+				+ " VALUE = \"" + estimate.getsbdadjustedlaborcostperunit() + "\""
 				+ " onchange=\"recalculatelivetotals();\""
 				+ ">"
 				+ "</INPUT>"
@@ -1083,7 +1381,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = \"" + summary.getsbdadjustedmarkupamt() + "\""
+				+ " VALUE = \"" + estimate.getsbdadjustedmarkupamt() + "\""
 				+ " onchange=\"recalculatelivetotals();\""
 				+ ">"
 				+ "</INPUT>"
@@ -1155,6 +1453,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
+		
+		*/
 		
 		return s;
 		
@@ -1235,7 +1535,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	}
 
 	private String sCommandScripts(
-			SMEstimateSummary summary, 
+			SMEstimate estimate, 
 			SMMasterEditEntry smedit
 			) throws Exception{
 			String s = "";
@@ -1306,37 +1606,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			}
 			
 			s += "\n";
-			
-		    //If this is an existing summary, and if the selected tax was re-configured since the summary was last saved,
-		    //notify the user that the tax has changed, and they may have to click again in the tax to reset the tax values:
-			String sTaxCheckAlert = "";
-		    if (!smedit.getAddingNewEntryFlag()) {
-			    SMTax tax = new SMTax();
-			    tax.set_slid(summary.getsitaxid());
-			    try {
-					tax.load(smedit.getsDBID(), getServletContext(), smedit.getFullUserName());
-					if (
-						(tax.get_bdtaxrate().compareToIgnoreCase(summary.getsbdtaxrate()) != 0)
-						|| (tax.get_scalculatetaxoncustomerinvoice().compareToIgnoreCase(summary.getsicalculatetaxoncustomerinvoice()) != 0)
-						|| (tax.get_scalculateonpurchaseorsale().compareToIgnoreCase(summary.getsicalculatetaxonpurchaseorsale()) != 0)
-					) {
-						sTaxCheckAlert = "alert('The selected tax has been updated in the system, so the tax calculation may no longer be accurate.  '  \n" 
-								+ "       + 'To update the tax information, click on the Tax drop down list, select a different tax, then select' \n" 
-								+ " 	  + ' this tax again to trigger an update.')"
-								+ "\n"
-							;
-					}
-				} catch (Exception e) {
-					throw new Exception("Error [202006021627] - Could not check tax with ID: '" + summary.getsitaxid() + "' - " + e.getMessage());
-				}
-		    }
-			
-			s += "function checkfortaxupdates(){\n"	
-					+ "    //This function has nothing in it unless the selected tax has been updated.\n"
-					+ "    //In that case it will warn the user that the tax on the summary is not up to date.\n"
-					+ "    " + sTaxCheckAlert
-					+ "}\n\n"
-				;
 			
 			s += "function triggerinitiation(){\n"		
 				+ "    recalculatelivetotals();\n"

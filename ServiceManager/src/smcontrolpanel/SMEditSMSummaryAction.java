@@ -16,6 +16,7 @@ import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelocations;
+import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
@@ -178,9 +179,35 @@ public class SMEditSMSummaryAction extends HttpServlet{
 				+ "&ResultHeading4=Last%20Modified%20Date"
 				+ "&" + OHDirectFinderResults.FINDER_RETURN_PARAM + "="
 					+ SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-					+ "&TESTPARAM=TRUE"
     		;
 	    				
+			try {
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			    		);
+				return;
+			}
+			return;
+		}
+		
+		//If ADD NEW ESTIMATE, then:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.ADD_MANUAL_ESTIMATE_COMMAND) == 0){
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773619]");
+    		String sRedirectString = 
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSMEstimateEdit"
+				+ "?" + SMTablesmestimates.lid + "=-1"
+				+ "&" + SMTablesmestimates.lsummarylid + "=" + summary.getslid()
+				+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y"
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&" + "CallingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
+				;
+	    	System.out.println("[202006044427] - sRedirectString = '" + sRedirectString + "'");			
 			try {
 				redirectProcess(sRedirectString, response);
 			} catch (Exception e) {

@@ -11,10 +11,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMTax;
+import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
+import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -606,7 +608,7 @@ public class SMEstimateSummary {
 			+ ") ORDER BY " + SMTablesmestimates.lsummarylinenumber
 		;
 		ResultSet rs = null;
-		System.out.println("[202005301821] - 1");
+		//System.out.println("[202005301821] - 1");
 		try {
 			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rs.next()){
@@ -620,7 +622,7 @@ public class SMEstimateSummary {
 			rs.close();
 			throw new Exception("Error [1590510209] loading Estimates - " + e.getMessage());
 		}
-		System.out.println("[202005301826] - 2");
+		//System.out.println("[202005301826] - 2");
 		try {
 			loadCalculatedValues(conn);
 		} catch (Exception e) {
@@ -888,6 +890,58 @@ public class SMEstimateSummary {
 		return arrEstimates;
 	}
 	
+	public String getslabortypedescription(Connection conn) throws Exception{
+		
+		String s = "";
+		String SQL = "SELECT"
+			+ " " + SMTablelabortypes.sLaborName
+			+ " FROM " + SMTablelabortypes.TableName
+			+ " WHERE ("
+				+ "(" + SMTablelabortypes.sID + "=" + m_ilabortype + ")"
+			+ ")"
+		;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()) {
+				s = rs.getString(SMTablelabortypes.sLaborName);
+				rs.close();
+			}else {
+				rs.close();
+				throw new Exception("Error [202006045155] - no labor type found with ID '" + m_ilabortype + "'.");
+			}
+		} catch (Exception e) {
+			throw new Exception("Error [202006045259] - error loading labor type with SQL: '" + SQL + "'.");
+		}
+		
+		return s;
+	}
+	public String getstaxdescription(Connection conn) throws Exception{
+		
+		String s = "";
+		String SQL = "SELECT"
+			+ " " + SMTabletax.staxjurisdiction
+			+ ", " + SMTabletax.staxtype
+			+ " FROM " + SMTabletax.TableName
+			+ " WHERE ("
+				+ "(" + SMTabletax.lid + "=" + m_itaxid + ")"
+			+ ")"
+		;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()) {
+				s = rs.getString(SMTabletax.staxjurisdiction) + " " 
+					+ rs.getString(SMTabletax.staxtype);
+				rs.close();
+			}else {
+				rs.close();
+				throw new Exception("Error [202006045643] - no tax type found with ID '" + m_itaxid + "'.");
+			}
+		} catch (Exception e) {
+			throw new Exception("Error [202006045260] - error loading tax type with SQL: '" + SQL + "'.");
+		}
+		
+		return s;
+	}
 	private void saveEstimates(Connection conn, String sUserID, String sUserFullName) throws Exception{
 		
 		for (int i = 0; i < arrEstimates.size(); i++){

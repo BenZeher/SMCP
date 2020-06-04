@@ -37,6 +37,9 @@ public class SMEditSMSummarySelect extends HttpServlet {
 			return;
 		}
 		
+		//Remove any leftover summary objects from the session:
+		smeditselect.getSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
+		
 		smeditselect.printHeaderTable();
 		smeditselect.getPrintWriter().println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smeditselect.getsDBID() 

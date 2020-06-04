@@ -18,16 +18,14 @@ import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
-import smic.ICPhysicalInventoryEntry;
 
 
 public class SMEditSMEstimateEdit extends HttpServlet {
 	
-	public static final String SAVE_BUTTON_CAPTION = "Save " + SMEstimateSummary.OBJECT_NAME;
+	public static final String SAVE_BUTTON_CAPTION = "Save " + SMEstimate.OBJECT_NAME;
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";
-	public static final String DELETE_BUTTON_CAPTION = "Delete " + SMEstimateSummary.OBJECT_NAME;
+	public static final String DELETE_BUTTON_CAPTION = "Delete " + SMEstimate.OBJECT_NAME;
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
@@ -60,11 +58,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_COST = "LABELADJUSTEDTOTALMATERIALCOST";
 	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
-	//public static final String FIELD_ADJUSTED_TOTAL_FREIGHT = "FIELDADJUSTEDTOTALFREIGHT";
 	public static final String FIELD_ADJUSTED_TOTAL_FREIGHT_CAPTION = "TOTAL FREIGHT:";
-	//public static final String FIELD_ADJUSTED_LABOR_UNITS = "FIELDADJUSTEDLABORUNITS";
 	public static final String FIELD_ADJUSTED_LABOR_UNITS_CAPTION = "LABOR UNITS:";
-	//public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT = "FIELDADJUSTEDCOSTPERLABORUNIT";
 	public static final String FIELD_ADJUSTED_COST_PER_LABOR_UNIT_CAPTION = "LABOR COST/UNIT:";
 	public final String LABEL_ADJUSTED_TOTAL_LABOR_COST = "LABELADJUSTEDTOTALLABORCOST";
 	public static final String LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION = "TOTAL LABOR COST:";
@@ -74,7 +69,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String FIELD_ADJUSTED_MU_PERCENTAGE_CAPTION = "MU PERCENTAGE:";
 	public static final String FIELD_ADJUSTED_GP_PERCENTAGE = "LABELADJUSTEDGPPERCENTAGE";
 	public static final String FIELD_ADJUSTED_GP_PERCENTAGE_CAPTION = "GP PERCENTAGE:";
-	//public static final String FIELD_ADJUSTED_TOTAL_MARKUP = "FIELDADJUSTEDTOTALMARKUP";
 	public static final String LABEL_ADJUSTED_TOTAL_MARKUP_CAPTION = "TOTAL MARK-UP:";
 	public static final String LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL = "LABELADJUSTEDTOTALTAXONMATERIAL";
 	public static final String LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL_CAPTION = "TOTAL TAX ON MATERIAL:";
@@ -83,11 +77,20 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
-	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "Process";
-	public static final String BUTTON_BACK_INTO_PRICE = "Process";
+	public static final String REPLACE_VENDOR_QUOTE_BUTTON_CAPTION = "Replace vendor quote";
+	public static final String REPLACE_VENDOR_QUOTE_BUTTON = "REPLACEVENDORQUOTEBUTTON";
+	public static final String REPLACE_VENDOR_QUOTE_COMMAND = "REPLACEVENDORQUOTECOMMAND";
+	public static final String REFRESH_VENDOR_QUOTE_BUTTON_CAPTION = "Refresh vendor quote";
+	public static final String REFRESH_VENDOR_QUOTE_BUTTON = "REFRESHVENDORQUOTEBUTTON";
+	public static final String REFRESH_VENDOR_QUOTE_COMMAND = "REFRESHVENDORQUOTECOMMAND";
 	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
 	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
 	public static final String UNSAVED_ESTIMATE_LABEL = "(UNSAVED)";
+	public static final String EMPTY_VENDOR_QUOTE_LABEL = "(NONE)";
+	public static final String FIELD_REPLACE_QUOTE_WITH_NUMBER = "PARAMREPLACEQUOTEWITHNUMBER";
+	public static final String FIELD_REPLACE_QUOTE_LINE = "PARAMREPLACEQUOTELINE";
+	
+	
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
 	
@@ -105,7 +108,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				request,
 				response,
 				getServletContext(),
-				SMEstimateSummary.OBJECT_NAME,
+				SMEstimate.OBJECT_NAME,
 				SMUtilities.getFullClassName(this.toString()),
 				"smcontrolpanel.SMEditSMEstimateAction",
 				"smcontrolpanel.SMUserLogin",
@@ -276,8 +279,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 
 	private String getEditHTML(SMMasterEditEntry sm, SMEstimate estimate) throws Exception{
 		
-		String sControlHTML = "";
-		
 		String s = sCommandScripts(estimate, sm);
 		
 		Connection conn;
@@ -308,6 +309,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += buildSummaryHeaderTable(conn, estimate);
 		
 		s += buildEstimateHeaderTable(conn, estimate, sm);
+		
+		s += buildEstimateLinesTable(conn, estimate, sm);
 		
 		s += buildTotalsTable(estimate);
 		
@@ -615,13 +618,130 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		return s;
 	}
 	*/
+	private String buildEstimateLinesTable(
+		Connection conn, 
+		SMEstimate estimate,
+		SMMasterEditEntry sm
+		) throws Exception{
+		
+		String s = "";
+		int iNumberOfColumns = 6;
+		
+		s += "<BR>";
+		
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
+		
+		s += "  <TR>" + "\n";
+		
+		//Qty:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Quantity"
+			+ "</TD>" + "\n"
+		;
+		
+		//Item number:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Item #"
+			+ "</TD>" + "\n"
+		;
+		
+		//Product description:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Product description"
+			+ "</TD>" + "\n"
+		;
+		
+		//U/M:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "U/M"
+			+ "</TD>" + "\n"
+		;
+		
+		//Extended price:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Extended cost"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "  </TR>\n";
+		
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
+			+ ">"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimates.bdquantity + "\""
+			+ " ID=\"" + SMTablesmestimates.bdquantity + "\""
+			+ " VALUE=\"" + estimate.getsbdquantity() + "\""
+			+ " MAXLENGTH=15"
+			+ " style = \" text-align:right; width:100px;\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
+			+ ">"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimates.sitemnumber + "\""
+			+ " ID=\"" + SMTablesmestimates.sitemnumber + "\""
+			+ " VALUE=\"" + estimate.getsitemnumber() + "\""
+			+ " MAXLENGTH=32"
+			+ " style = \" width:100px;\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
+			+ ">"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimates.sproductdescription + "\""
+			+ " ID=\"" + SMTablesmestimates.sproductdescription + "\""
+			+ " VALUE=\"" + estimate.getsproductdescription() + "\""
+			+ " MAXLENGTH=32"
+			+ " style = \" width:500px;\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
+			+ ">"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimates.sunitofmeasure + "\""
+			+ " ID=\"" + SMTablesmestimates.sunitofmeasure + "\""
+			+ " VALUE=\"" + estimate.getsunitofmeasure() + "\""
+			+ " MAXLENGTH=32"
+			+ " style = \" width:50px;\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+			+ ">"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + SMTablesmestimates.bdextendedcost + "\""
+			+ " ID=\"" + SMTablesmestimates.bdextendedcost + "\""
+			+ " VALUE=\"" + estimate.getsbdextendedcost() + "\""
+			+ " MAXLENGTH=32"
+			+ " style = \" text-align:right; width:120px;\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "  </TR>" + "\n";
+		
+		s += "</TABLE>" + "\n";
+		
+		return s;
+	}
 	private String buildEstimateHeaderTable(
 		Connection conn, 
 		SMEstimate estimate,
 		SMMasterEditEntry sm
 		) throws Exception{
 		String s = "";
-		int iNumberOfColumns = 4;
 		
 		String sEstimateID = UNSAVED_ESTIMATE_LABEL;
 		if (
@@ -633,16 +753,17 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			sEstimateID = estimate.getslid();
 		}
 		
-		s += "<BR>";
+		s += "<BR>" + "\n";
 		
 		s += "Estimate ID:&nbsp;" + sEstimateID
 			+ "&nbsp;&nbsp;"
 			+ "Created " + estimate.getsdatetimecreated() + " by " + estimate.getscreatedbyfullname() 
 			+ "&nbsp;&nbsp;"
 			+ "Last modified " + estimate.getsdatetimelastmodified() + " by " + estimate.getslastmodifiedbyfullname()
+			 + "\n"
 		;
 		
-		s += "<BR>";
+		s += "<BR>" + "\n";
 		
 		s += "Insert as prefix label using item #:&nbsp;" 
 			+ "<INPUT TYPE=TEXT"
@@ -653,6 +774,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " onchange=\"flagdirty();\""
 			+ ">"
 			+ "</INPUT>"
+			 + "\n"
 			+ "&nbsp;&nbsp;"
 			+ "Estimate description:&nbsp;" 
 			+ "<INPUT TYPE=TEXT"
@@ -663,39 +785,70 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " onchange=\"flagdirty();\""
 			+ ">"
 			+ "</INPUT>"
+			+ "\n"
 			+ estimate.getsdescription()
 		;
 		
-		s += "<BR>";
+		s += "<BR>" + "\n";
 		
 		String sVendorQuoteLink = estimate.getsvendorquotenumber();
-		if (SMSystemFunctions.isFunctionPermitted(
-			SMSystemFunctions.SMOHDirectQuoteList,
-			sm.getUserID(), 
-			conn, 
-			sm.getLicenseModuleLevel())) {
-			
-			//Create a link to the vendor's quote:
-			sVendorQuoteLink = 
-		    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICPrintPhysicalInventoryVarianceReport"
-		    		+ "?CallingClass=" + "smcontrolpanel.SMDisplayOHDirectQuote"
-		    		+ "&" + "C_QuoteNumberString=" + sVendorQuoteLink
-		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
-		    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
-		    		+ "\">" + sVendorQuoteLink + "</A>"
-			;
-			// http://localhost:8080/sm/smcontrolpanel.SMDisplayOHDirectQuote?C_QuoteNumberString=SQAL000008-1&db=servmgr1&CallingClass=smcontrolpanel.SMOHDirectQuoteListing
-			
+		if (sVendorQuoteLink.compareToIgnoreCase("") != 0) {
+			if (SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMOHDirectQuoteList,
+				sm.getUserID(), 
+				conn, 
+				sm.getLicenseModuleLevel())) {
+				
+				//Create a link to the vendor's quote:
+				//TODO
+				sVendorQuoteLink = 
+			    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOHDirectQuote"
+			    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+			    		+ "&" + "C_QuoteNumberString=" + sVendorQuoteLink
+			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+			    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
+			    		+ "\">" + sVendorQuoteLink + "</A>"
+			    		+ ", line #" + estimate.getsivendorquotelinenumber()
+				;
+				// http://localhost:8080/sm/smcontrolpanel.SMDisplayOHDirectQuote?C_QuoteNumberString=SQAL000008-1&db=servmgr1&CallingClass=smcontrolpanel.SMOHDirectQuoteListing
+				
+			}
+		}else {
+			sVendorQuoteLink = EMPTY_VENDOR_QUOTE_LABEL;
 		}
 		
-		s += "Vendor quote #:&nbsp;" + sVendorQuoteLink
-			+ ", line #"
-			+ estimate.getsivendorquotelinenumber()
+		s += "Vendor quote #:&nbsp;" + sVendorQuoteLink + "\n"
 		;
 		
+		s += "<BR>" + "\n";
+		
+		s += createRefreshVendorQuoteLineButton()
+			+ "&nbsp;&nbsp;"
+			+ createReplaceVendorQuoteLineButton()
+			+ " with vendor quote #:&nbsp;"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME = \"" + FIELD_REPLACE_QUOTE_WITH_NUMBER + "\""
+			+ " ID = \"" + FIELD_REPLACE_QUOTE_WITH_NUMBER + "\""
+			+ " style = \" text-align:left; width:150px;\""
+			+ " VALUE = \"" + "" + "\""
+			//+ " onchange=\"flagdirty();\""
+			+ ">"
+			+ "</INPUT>" + "\n"
+			+ "&nbsp;, line number:&nbsp;"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
+			+ " ID = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
+			+ " style = \" text-align:left; width:60px;\""
+			+ " VALUE = \"" + "" + "\""
+			//+ " onchange=\"flagdirty();\""
+			+ ">"
+			+ "</INPUT>" + "\n"
+		;
+		
+		s += "<BR>" + "\n";
+		;
 		/*
 		
-		// + "Vendor quote #:&nbsp;" + estimate.getsvendorquotenumber()
 		
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" style = \" width:100%; \" >" + "\n";
 		
@@ -909,42 +1062,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		/*
 		//Headings:
-		s += "  <TR>" + "\n";
-		
-		//Line number:
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
-			+ " style = \" font-weight:bold; font-style:underline; \" >"
-			+ "Line #"
-			+ "</TD>" + "\n"
-		;
-		
-		//Estimate number:
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
-			+ " style = \" font-weight:bold; font-style:underline; \" >"
-			+ "Estimate #"
-			+ "</TD>" + "\n"
-		;
-		
-		//Remove?:
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
-			+ " style = \" font-weight:bold; font-style:underline; \" >"
-			+ "Remove?"
-			+ "</TD>" + "\n"
-		;
-		
-		//Qty:
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
-			+ " style = \" font-weight:bold; font-style:underline; \" >"
-			+ "Quantity"
-			+ "</TD>" + "\n"
-		;
-		
-		//Desc:
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
-			+ " style = \" font-weight:bold; font-style:underline; \" >"
-			+ "Product Description"
-			+ "</TD>" + "\n"
-		;
+
 		
 		//For each estimate, show the totals:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
@@ -1474,18 +1592,32 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		return s;
 	}
 	
-	private String createBackIntoButton() {
+	private String createReplaceVendorQuoteLineButton() {
 		String s = "";
 		s += "<button type=\"button\""
-			+ " value=\"" + BUTTON_BACK_INTO_PRICE_CAPTION + "\""
-			+ " name=\"" + BUTTON_BACK_INTO_PRICE + "\""
-			+ " id=\"" + BUTTON_BACK_INTO_PRICE + "\""
-			+ " onClick=\"backintoprice();\">"
-			+ BUTTON_BACK_INTO_PRICE_CAPTION
+			+ " value=\"" + REPLACE_VENDOR_QUOTE_BUTTON_CAPTION + "\""
+			+ " name=\"" + REPLACE_VENDOR_QUOTE_BUTTON + "\""
+			+ " id=\"" + REPLACE_VENDOR_QUOTE_BUTTON + "\""
+			+ " onClick=\"replacevendorquote;\">"
+			+ REPLACE_VENDOR_QUOTE_BUTTON_CAPTION
 			+ "</button>\n"
 		;
 		return s;
 	}
+	
+	private String createRefreshVendorQuoteLineButton() {
+		String s = "";
+		s += "<button type=\"button\""
+			+ " value=\"" + REFRESH_VENDOR_QUOTE_BUTTON_CAPTION + "\""
+			+ " name=\"" + REFRESH_VENDOR_QUOTE_BUTTON + "\""
+			+ " id=\"" + REFRESH_VENDOR_QUOTE_BUTTON + "\""
+			+ " onClick=\"refreshvendorquote;\">"
+			+ REFRESH_VENDOR_QUOTE_BUTTON_CAPTION
+			+ "</button>\n"
+		;
+		return s;
+	}
+	
 	private String buildEstimateButtons(String sFoundVendorQuote) {
 		String s = "";
 		
@@ -1554,57 +1686,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			
 			s += "window.onload = triggerinitiation;\n";
 
-			//Build an array of taxes and rates to do the 'adjusted retail sales tax' calc on the fly:
-			int iCounter = 0;
-			String staxrates = "";
-			String scalculateonpurchaseorsale = "";
-			String scalculatetaxoncustomerinvoice = "";
-			
-			String SQL = "SELECT"
-				+ " " + SMTabletax.lid
-				+ ", " + SMTabletax.bdtaxrate
-				+ ", " + SMTabletax.icalculateonpurchaseorsale
-				+ ", " + SMTabletax.icalculatetaxoncustomerinvoice
-				+ " FROM " + SMTabletax.TableName
-				+ " ORDER BY " + SMTabletax.lid
-				;
 
-			try {
-				ResultSet rs = clsDatabaseFunctions.openResultSet(
-					SQL, 
-					getServletContext(), 
-					smedit.getsDBID(), 
-					"MySQL", 
-					this.toString() + " [1591042478] SQL: " + SQL 
-				);
-				BigDecimal bdTaxRateAsPercentage = new BigDecimal("0.00");
-				while (rs.next()){
-					iCounter++;
-					bdTaxRateAsPercentage = rs.getBigDecimal(SMTabletax.bdtaxrate);
-					staxrates += "staxrates[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
-						+ "\"] = \"" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTabletax.bdtaxratescale, bdTaxRateAsPercentage) + "\";\n";
-					
-					scalculateonpurchaseorsale += "scalculateonpurchaseorsale[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
-					+ "\"] = \"" + Integer.toString(rs.getInt(SMTabletax.icalculateonpurchaseorsale)) + "\";\n";
-					
-					scalculatetaxoncustomerinvoice += "scalculatetaxoncustomerinvoice[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
-					+ "\"] = \"" + Integer.toString(rs.getInt(SMTabletax.icalculatetaxoncustomerinvoice)) + "\";\n";
-				}
-				rs.close();
-			} catch (Exception e) {
-				throw new Exception("Error [1591112142] reading taxes for javascript - " + e.getMessage());
-			}
-			
-			//Create the arrays, if there are any:
-			if (iCounter > 0){
-				s += "var staxrates = new Array(" + Integer.toString(iCounter) + ")\n";
-				s += staxrates + "\n";
-				s += "var scalculateonpurchaseorsale = new Array(" + Integer.toString(iCounter) + ")\n";
-				s += scalculateonpurchaseorsale + "\n";
-				s += "var scalculatetaxoncustomerinvoice = new Array(" + Integer.toString(iCounter) + ")\n";
-				s += scalculatetaxoncustomerinvoice + "\n";
-			}
-			
 			s += "\n";
 			
 			s += "function triggerinitiation(){\n"		
@@ -1612,22 +1694,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    checkfortaxupdates();\n"
 				+ "}\n\n"
 			;
-			
-			s += "function taxChange(selectObj) {\n" 
-					// get the index of the selected option 
-					+ "    var idx = selectObj.selectedIndex;\n"
-					// get the value of the selected option 
-					+ "    var which = selectObj.options[idx].value;\n"
-					//+ "alert(selectObj.options[idx].value);\n"
-					// use the selected option value to retrieve the ship to fields from the ship to arrays:
-					+ "    if (which != ''){\n"
-					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.bdtaxrate + "\"].value = staxrates[which];\n"
-					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\"].value = scalculatetaxoncustomerinvoice[which];\n"
-					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\"].value = scalculateonpurchaseorsale[which];\n"
-					+ "    }\n"
-					//+ "    alert('SMTablesmestimatesummaries.bdtaxrate = ' + document.getElementById(\"" + PARAM_RETAIL_SALES_TAX_RATE + "\").value); \n"
-					+ "    recalculatelivetotals();\n"
-					+ "}\n\n"; 
 			
 			s += "function promptToSave(){\n"		
 				
@@ -1639,6 +1705,20 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "        }\n"
 				+ "    }\n"
 				+ "}\n\n"
+			;
+			
+			//Replace vendor quote:
+			s += "function replacevendorquote(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REPLACE_VENDOR_QUOTE_COMMAND + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
+			//Refresh vendor quote:
+			s += "function refreshvendorquote(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REFRESH_VENDOR_QUOTE_COMMAND + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
 			;
 			
 			//Find vendor quote:

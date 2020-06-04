@@ -569,7 +569,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
 		s += "    <TD>" + "\n";
-		s += buildEstimateTable(conn, summary, sFoundVendorQuote);
+		s += buildEstimateTable(conn, summary, sFoundVendorQuote, sm.getsDBID());
 		
 		s += buildTotalsTable(summary);
 		
@@ -600,7 +600,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		;
 		return s;
 	}
-	private String buildEstimateTable(Connection conn, SMEstimateSummary summary, String sFoundVendorQuote) throws Exception{
+	private String buildEstimateTable(
+		Connection conn, 
+		SMEstimateSummary summary, 
+		String sFoundVendorQuote,
+		String sDBID
+		) throws Exception{
 		
 		String s = "";
 		int iNumberOfColumns = 6;
@@ -665,13 +670,23 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		//Get all the estimates:
+		
 		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
 			s += "  <TR>" + "\n";
 			
 			//Line #:
-			//Estimate ID:
+			String sEstimateLink = "&nbsp;"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSMEstimateEdit"
+	    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+	    		+ "&" + SMTablesmestimates.lid + "=" + summary.getEstimateArray().get(i).getslid()
+	    		+ "&" + SMTablesmestimates.lsummarylid + "=" + summary.getEstimateArray().get(i).getslsummarylid()
+	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+	    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
+	    		+ "\">" + summary.getEstimateArray().get(i).getslsummarylinenumber() + "</A>"
+	    		+ "&nbsp;"
+    		;
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
-					+ summary.getEstimateArray().get(i).getslsummarylinenumber()
+					+ sEstimateLink
 					+ "</TD>" + "\n"
 				;
 			

@@ -69,13 +69,7 @@ public class SMOHDirectQuoteListing extends HttpServlet {
 		try {
 			out.println(printQuoteRows(sDBID, sUserID, sLicenseModuleLevel));
 		} catch (Exception e2) {
-			out.println("<FONT COLOR=RED><B>" + e2.getMessage() + "</B></FONT><BR>" + "\n");
-			//response.sendRedirect(
-			//		"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-			//		+ "Warning=" + clsServletUtilities.URLEncode(e2.getMessage())
-			//		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			//		//+ sParamString
-			//);			
+			out.println("<FONT COLOR=RED><B>" + e2.getMessage() + "</B></FONT><BR>" + "\n");		
 			return;
 		}
 		

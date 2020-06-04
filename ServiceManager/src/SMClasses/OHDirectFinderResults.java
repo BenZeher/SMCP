@@ -30,9 +30,8 @@ public class OHDirectFinderResults extends HttpServlet {
 	public static final String RESULT_LIST_FIELD = "ResultListField";
 	public static final String RESULT_LIST_HEADING = "ResultHeading";
 
-	//This is used to give the finder box a special title, e.g.: 'List of AP Transactions for vendor number OHD02'
+	//This is used to give the finder box a special title'
 	public static final String FINDER_BOX_TITLE = "FINDERBOXTITLE";
-	
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -71,6 +70,12 @@ public class OHDirectFinderResults extends HttpServlet {
 
 		//Create page
 		String title = sEndPointName + " search results.";
+		if(sEndPointName.compareToIgnoreCase(SMOHDirectFieldDefinitions.ENDPOINT_QUOTE) == 0) {
+	    	title =  SMOHDirectFieldDefinitions.ENDPOINT_QUOTE_NAME + "search results.";
+	    }
+	    if(sEndPointName.compareToIgnoreCase(SMOHDirectFieldDefinitions.ENDPOINT_ORDER) == 0) {
+	    	title = SMOHDirectFieldDefinitions.ENDPOINT_ORDER_NAME + "search results.";
+	    }
 		String subtitle = "";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getSMCPJSIncludeString(getServletContext()));
@@ -148,10 +153,8 @@ public class OHDirectFinderResults extends HttpServlet {
 			}
 			
 		}
-
 		out.println("</TABLE>\n<BR>");
 		out.println("</BODY></HTML>");
-
 	}
 
 	private String buildQuoteAPIQueryString(
@@ -167,21 +170,18 @@ public class OHDirectFinderResults extends HttpServlet {
 		sSearchCreatedStartDate = clsDateAndTimeConversions.stdDateStringToSQLDateString(sSearchCreatedStartDate);
 		sSearchCreatedEndDate = clsDateAndTimeConversions.stdDateStringToSQLDateString(sSearchCreatedEndDate);
 		
-		//TODO build request API string with given parameters
 		String sRequest = sEndPointName + "?%24filter="
-					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20ge%20'" +sSearchLastModifiedStartDate + "'"
-					+ "%20and%20"
-					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20le%20'" +sSearchLastModifiedEndDate + "'"
-					+ "%20and%20"
-					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20ge%20'" + sSearchCreatedStartDate + "'"
-					+ "%20and%20"
-					+ SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20le%20'" + sSearchCreatedEndDate + "'"
-					+ "%20and%20"
-					+ "substringof('" + sSearchJobText +  "'%2C%20" + SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME + ")%20eq%20true"
-					+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
+				+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20ge%20'" +sSearchLastModifiedStartDate + "'"
+				+ "%20and%20"
+				+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20le%20'" +sSearchLastModifiedEndDate + "'"
+				+ "%20and%20"
+				+ SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20ge%20'" + sSearchCreatedStartDate + "'"
+				+ "%20and%20"
+				+ SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20le%20'" + sSearchCreatedEndDate + "'"
+				+ "%20and%20"
+				+ "substringof('" + sSearchJobText +  "'%2C%20" + SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME + ")%20eq%20true"
+				+ "&%24orderby=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE + "%20asc"
 				;
-		//sRequest = clsServletUtilities.URLEncode(sRequest);
-        System.out.println(sRequest);
 		return sRequest;
 	}
 	
@@ -259,7 +259,7 @@ public class OHDirectFinderResults extends HttpServlet {
 						+ "?" + sReturnField + "=" + sQuoteNumberLink 
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
-						+ "&" + sAdditionalReturnParams
+						+ "&" + sAdditionalReturnParams.replace("*", "&")
 						+ "\">" + sQuoteNumberLink + "</A>"
 					;
 				}	
@@ -303,8 +303,8 @@ public class OHDirectFinderResults extends HttpServlet {
 						+ "</TD>" + "\n"
 					;
 			}
+			//TODO add the rest of the quote field definitions.
 		  }
-			//TODO add the rest of the field names
 			s += "  </TR>" + "\n";
 		}
 		return s;

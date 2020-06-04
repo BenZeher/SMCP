@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMOHDirectFieldDefinitions;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -67,7 +68,18 @@ public class OHDirectFinder extends HttpServlet {
 			in the list of results
 		 
 		 local test link
-		 http://localhost:8080/sm/SMClasses.OHDirectFinder?EndpointName=C_DealerQuote&SearchingClass=smcontrolpanel.SMEditSMSummaryEdit&ReturnField=VENDORQUOTENUMBER&ResultListField1=C_QuoteNumberString&ResultListField2=C_CreatedDate&ResultHeading1=Quote%20Number&ResultHeading2=Created%20Date
+		http://localhost:8080/sm/SMClasses.OHDirectFinder
+		?EndpointName=C_DealerQuote
+		&SearchingClass=smcontrolpanel.SMEditSMSummaryEdit
+		&ReturnField=VENDORQUOTENUMBER
+		&ResultListField1=C_QuoteNumberString
+		&ResultListField2=C_Name
+		&ResultListField3=C_CreatedDate
+		&ResultListField4=C_LastModifiedDate
+		&ResultHeading1=Quote%20Number
+		&ResultHeading2=Job%20Name
+		&ResultHeading3=Created%20Date
+		&ResultHeading4=Last%20Modified%20Date
 		 */
 		
 		if (!SMAuthenticate.authenticateSMCPCredentials(
@@ -95,8 +107,13 @@ public class OHDirectFinder extends HttpServlet {
 	    if (sDBID.compareToIgnoreCase("") == 0){
 	    	sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    }
-	    
 	    String title = "Find " + sEndPointName + ".";
+	    if(sEndPointName.compareToIgnoreCase(SMOHDirectFieldDefinitions.ENDPOINT_QUOTE) == 0) {
+	    	title = "Find " + SMOHDirectFieldDefinitions.ENDPOINT_QUOTE_NAME + ".";
+	    }
+	    if(sEndPointName.compareToIgnoreCase(SMOHDirectFieldDefinitions.ENDPOINT_ORDER) == 0) {
+	    	title = "Find " + SMOHDirectFieldDefinitions.ENDPOINT_ORDER_NAME + ".";
+	    }
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(clsServletUtilities.getDatePickerIncludeString(getServletContext()));
@@ -140,7 +157,7 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
 	    		CREATED_START_DATE_PARAM, 
 				"1/1/2000", 
-				10, 
+				8, 
 				10, 
 				""
 				) 
@@ -150,7 +167,7 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
 	    		CREATED_END_DATE_PARAM, 
     			clsDateAndTimeConversions.now("M/d/yyyy"), 
-    			10, 
+    			8, 
     			10, 
     			""
     			) 
@@ -164,7 +181,7 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
 	    		LAST_MODIFIED_START_DATE_PARAM, 
 				"1/1/2000", 
-				10, 
+				8, 
 				10, 
 				""
 				) 
@@ -174,7 +191,7 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += clsCreateHTMLFormFields.TDTextBox(
 	    		LAST_MODIFIED_END_DATE_PARAM, 
     			clsDateAndTimeConversions.now("M/d/yyyy"), 
-    			10, 
+    			8, 
     			10, 
     			""
     			) 
@@ -186,10 +203,10 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	    		SEARCH_JOB_TEXT_PARAM, 
 	    		"", 
-	    		50, 
+	    		40, 
 	    		"Search Job Name:", 
 	    		"Enter the job name search string here",
-	    		"40"
+	    		"30"
 	    		);
 	    
 	    sOutPut += "</TABLE><BR>";

@@ -27,12 +27,12 @@ public class SMOHDirectFieldDefinitions {
 	public static final String OHDIRECT_API_LINK_BASE = "https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/";
 	
 	//'Endpoint Display Names'
-	public static final String ENDPOINT_QUOTE_NAME = "OHDirect Quote";
-	public static final String ENDPOINT_QUOTELINE_NAME = "OHDirect Quote Line";
-	public static final String ENDPOINT_QUOTELINEDETAIL_NAME = "OHDirect Quote Line Detail";
-	public static final String ENDPOINT_ORDER_NAME = "OHDirect Order";
-	public static final String ENDPOINT_ORDERLINE_NAME = "OHDirect Order Line";
-	public static final String ENDPOINT_ORDERLINEDETAIL_NAME = "OHDirect Order Line Detail";
+	public static final String ENDPOINT_QUOTE_NAME = "Dealer Quote";
+	public static final String ENDPOINT_QUOTELINE_NAME = "Dealer Quote Line";
+	public static final String ENDPOINT_QUOTELINEDETAIL_NAME = "Dealer Quote Line Detail";
+	public static final String ENDPOINT_ORDER_NAME = "Dealer Order";
+	public static final String ENDPOINT_ORDERLINE_NAME = "Dealer Order Line";
+	public static final String ENDPOINT_ORDERLINEDETAIL_NAME = "Dealer Order Line Detail";
 	
 	//'Endpoint definitions':
 	public static final String ENDPOINT_QUOTE = "C_DealerQuote";

@@ -1731,6 +1731,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>SMEditSMEstimateAction</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditSMEstimateAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditSMEstimateEdit</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditSMEstimateEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>SMEditSMSummaryAction</servlet-name>
         <servlet-class>smcontrolpanel.SMEditSMSummaryAction</servlet-class>
     </servlet>
@@ -5071,6 +5081,16 @@
     <servlet-mapping>
         <servlet-name>SMEditSMOptions</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditSMOptions</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SMEditSMEstimateAction</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditSMEstimateAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMEditSMEstimateEdit</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditSMEstimateEdit</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

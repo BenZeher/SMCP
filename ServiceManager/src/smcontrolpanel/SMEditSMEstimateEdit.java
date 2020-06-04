@@ -26,7 +26,7 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 
 
-public class SMEditSMSummaryEdit extends HttpServlet {
+public class SMEditSMEstimateEdit extends HttpServlet {
 	
 	public static final String SAVE_BUTTON_CAPTION = "Save " + SMEstimateSummary.OBJECT_NAME;
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";

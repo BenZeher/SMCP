@@ -525,7 +525,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ sControlHTML
 				+ "</TD>" + "\n"
 			;
-
 		
 		s += "  </TR>" + "\n";
 		

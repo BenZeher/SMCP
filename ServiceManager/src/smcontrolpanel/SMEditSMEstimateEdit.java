@@ -78,7 +78,23 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String LABEL_COST_SUBTOTAL_CAPTION = "COST SUBTOTAL:";
 	public static final String FIELD_ADDITIONAL_TAXED_COST_CAPTION = "ADDITIONAL COST SUBJECT TO USE TAX:";
+	public static final String FIELD_ADDITIONAL_UNTAXED_COST_CAPTION = "ADDITIONAL COST NOT SUBJECT TO USE TAX:";
+	public static final String FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION = "LABOR SELL PRICE PER UNIT:";
+	
+	public static final String LABEL_LABOR_SELL_PRICE_CAPTION = "LABOR SELL PRICE:";
+	public static final String LABEL_LABOR_SELL_PRICE = "LABORSELLPRICE";
+	public static final String LABEL_MATERIAL_SELL_PRICE_CAPTION = "MATERIAL SELL PRICE:";
+	public static final String LABEL_MATERIAL_SELL_PRICE = "MATERIALSELLPRICE";
+	public static final String LABEL_TOTAL_SELL_PRICE_CAPTION = "TOTAL SELL PRICE:";
+	public static final String LABEL_TOTAL_SELL_PRICE = "TOTALSELLPRICE";
+	public static final String LABEL_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
+	public static final String LABEL_RETAIL_SALES_TAX = "RETAILSALESTAX";
+	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "Process";
+	public static final String BUTTON_BACK_INTO_PRICE = "Process";
+	
 	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
+	public static final String LABEL_TOTAL_COST_AND_MARKUP_CAPTION = "TOTAL COST AND MARK-UP:";
+	public static final String LABEL_TOTAL_COST_AND_MARKUP = "TOTALCOSTANDMARKUP";
 	public static final String REPLACE_VENDOR_QUOTE_BUTTON_CAPTION = "Replace vendor quote";
 	public static final String REPLACE_VENDOR_QUOTE_BUTTON = "REPLACEVENDORQUOTEBUTTON";
 	public static final String REPLACE_VENDOR_QUOTE_COMMAND = "REPLACEVENDORQUOTECOMMAND";
@@ -171,6 +187,19 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    	}
 	    }
 	    
+	    //Load the estimate summary, whether it's a new estimate or not:
+	    try {
+			estimate.loadSummary(getServletContext(), smedit.getsDBID(), smedit.getUserID());
+		} catch (Exception e1) {
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+					+ "?" + SMTablesmestimatesummaries.lid + "=" + estimate.getslsummarylid()
+					+ "&Warning=" + SMUtilities.URLEncode(e1.getMessage())
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+				);
+				return;
+		}
+	    
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    
@@ -244,35 +273,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ ">"
 			);
 		
-		//Keep track of hidden variables here:
-		
-		/*
-		
-		//This is used to store the on-the-fly retail sales tax rate in case the user changes the tax drop down
-		pwOut.println("<INPUT TYPE=HIDDEN"
-			+ " NAME=\"" + SMTablesmestimatesummaries.bdtaxrate + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.bdtaxrate + "\""
-			+ " VALUE=\"" + estimate.getsbdtaxrate() + "\""
-			+ ">"
-			);
-		
-		//This is used to calculate taxes on-the-fly
-		pwOut.println("<INPUT TYPE=HIDDEN"
-			+ " NAME=\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\""
-			+ " VALUE=\"" + estimate.getsicalculatetaxoncustomerinvoice() + "\""
-			+ ">"
-			);
-		
-		//This is used to calculate taxes on-the-fly
-		pwOut.println("<INPUT TYPE=HIDDEN"
-			+ " NAME=\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\""
-			+ " VALUE=\"" + estimate.getsicalculatetaxonpurchaseorsale() + "\""
-			+ ">"
-			);
-		*/
-		
 		//Create HTML Fields
 		try {
 			pwOut.println(sEditHTML);
@@ -321,287 +321,12 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		s += buildTotalsTable(estimate);
 		
-		//s += printBackIntoControls();
+		s += printBackIntoControls();
 		
 		//Close the outer table:
 		s += "    </TD>" + "\n";
 		s += "  </TR>" + "\n";
 		s += "</TABLE>" + "\n";
-		
-		
-		/*
-		
-		String sLid = estimate.getslid();
-		if (sm.getAddingNewEntryFlag()){
-			sLid = UNSAVED_ESTIMATE_LABEL;
-		}
-
-		s += "<B>Estimate ID</B>: " + sLid + "\n" 
-			+ "<INPUT TYPE=HIDDEN"
-			+ " NAME=\"" + SMTablesmestimates.lid + "\""
-			+ " VALUE=\"" + estimate.getslid() + "\""
-			+ " ID=\"" + estimate.getslid() + "\""
-			+ ">"
-			+ "\n"
-		;
-			
-		s += "&nbsp;<B>Created by: </B>" 
-			+ estimate.getscreatedbyfullname()
-			+ " on " + estimate.getsdatetimecreated()
-		;
-		
-		s += "&nbsp;<B>Last modified by: </B>" 
-			+ estimate.getslastmodifiedbyfullname()
-			+ " on " + estimate.getsdatetimeslastmodified()
-		;
-		
-		//Header table:
-		int iNumberOfColumns = 4;
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
-		
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Project:"
-			+ "</TD>" + "\n"
-			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
-				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ "<INPUT TYPE=TEXT"
-			+ " NAME=\"" + SMTablesmestimatesummaries.sjobname + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.sjobname + "\""
-			+ " VALUE=\"" + estimate.getsjobname() + "\""
-			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sjobnameLength)
-			+ " STYLE=\"width: 7in; height: 0.25in\""
-			+ ">"
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
-		s += "  <TR>" + "\n";
-		//Sales Lead
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "<B>Sales Lead ID:</B>"
-			+ "</TD>" + "\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ "<INPUT TYPE=TEXT"
-			+ " NAME=\"" + SMTablesmestimatesummaries.lsalesleadid + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.lsalesleadid + "\""
-			+ " VALUE=\"" + estimate.getslsalesleadid() + "\""
-			+ " MAXLENGTH=" + "15"
-			+ " STYLE=\"width: 1in; height: 0.25in\""
-			+ ">"
-			+ "</TD>" + "\n"
-		;
-		
-		//Labor type:
-		ArrayList<String> arrLaborTypes = new ArrayList<String>(0);
-		ArrayList<String> arrLaborTypeDescriptionsDescriptions = new ArrayList<String>(0);
-		String SQL = "SELECT"
-			+ " " + SMTablelabortypes.sID
-			+ ", " + SMTablelabortypes.sLaborName
-			+ " FROM " + SMTablelabortypes.TableName
-			+ " ORDER BY " + SMTablelabortypes.sLaborName
-		;
-		//First, add a blank item so we can be sure the user chose one:
-		arrLaborTypes.add("");
-		arrLaborTypeDescriptionsDescriptions.add("*** Select labor type ***");
-		
-		try {
-			ResultSet rsLaborTypes = clsDatabaseFunctions.openResultSet(SQL, conn);
-			while (rsLaborTypes.next()) {
-				arrLaborTypes.add(Long.toString(rsLaborTypes.getLong(SMTablelabortypes.sID)));
-				arrLaborTypeDescriptionsDescriptions.add(rsLaborTypes.getString(SMTablelabortypes.sLaborName));
-			}
-			rsLaborTypes.close();
-		} catch (SQLException e) {
-			s += "<B>Error [1590535453] reading labor types - " + e.getMessage() + "</B><BR>";
-		}
-
-		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.ilabortype + "\""
-				+ " onchange=\"flagDirty();\""
-				 + " >\n"
-			;
-			for (int i = 0; i < arrLaborTypes.size(); i++){
-				sControlHTML += "<OPTION";
-				if (arrLaborTypes.get(i).toString().compareTo(estimate.getsilabortype()) == 0){
-					sControlHTML += " selected=yes";
-				}
-				sControlHTML += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" 
-					+ arrLaborTypeDescriptionsDescriptions.get(i).toString() + "\n";
-			}
-		sControlHTML += "</SELECT>"
-		;
-			
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-				+ "<B>Labor type:</B>"
-				+ "</TD>" + "\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-				+ sControlHTML
-				+ "</TD>" + "\n"
-			;
-		
-		s += "  </TR>" + "\n";
-		
-		s += "  <TR>" + "\n";
-		//Tax Type:
-		ArrayList<String> arrTaxes = new ArrayList<String>(0);
-		ArrayList<String> arrTaxDescriptions = new ArrayList<String>(0);
-		SQL = "SELECT"
-			+ " " + SMTabletax.lid
-			+ ", " + SMTabletax.staxjurisdiction
-			+ ", " + SMTabletax.staxtype
-			+ " FROM " + SMTabletax.TableName
-			+ " WHERE ("
-				+ "(" + SMTabletax.iactive + " = 1)"
-				+ " AND (" + SMTabletax.ishowinorderentry + " = 1)"
-			+ ")"
-			+ " ORDER BY " + SMTabletax.staxjurisdiction + ", " + SMTabletax.staxtype
-		;
-		//First, add a blank item so we can be sure the user chose one:
-		arrTaxes.add("");
-		arrTaxDescriptions.add("*** Select tax ***");
-		
-		try {
-			ResultSet rsTaxes = clsDatabaseFunctions.openResultSet(SQL, conn);
-			while (rsTaxes.next()) {
-				arrTaxes.add(Long.toString(rsTaxes.getLong(SMTabletax.lid)));
-				arrTaxDescriptions.add(
-						rsTaxes.getString(SMTabletax.staxjurisdiction)
-					+ " - "
-					+ rsTaxes.getString(SMTabletax.staxtype)
-				);
-			}
-			rsTaxes.close();
-		} catch (SQLException e) {
-			s += "<B>Error [1590530698] reading tax info - " + e.getMessage() + "</B><BR>";
-		}
-
-		sControlHTML = "\n<SELECT"
-				+ " NAME = \"" + SMTablesmestimatesummaries.itaxid + "\""
-				+ " ID = \"" + SMTablesmestimatesummaries.itaxid + "\""
-				+ " onchange=\"taxChange(this);\""
-				 + " >\n"
-			;
-		String sTempBuffer = "";
-		int TAX_BUFFER_SIZE = 100;
-			for (int i = 0; i < arrTaxes.size(); i++){
-				sTempBuffer += "<OPTION";
-				if (arrTaxes.get(i).toString().compareTo(estimate.getsitaxid()) == 0){
-					sTempBuffer += " selected=yes";
-				}
-				sTempBuffer += " VALUE=\"" + arrTaxes.get(i).toString() + "\">" + arrTaxDescriptions.get(i).toString() + "\n";
-				if ((i % TAX_BUFFER_SIZE) == 0) {
-					sControlHTML += sTempBuffer;
-					sTempBuffer = "";
-				}
-			}
-		//Get any remaining items from the buffer:
-		sControlHTML += sTempBuffer;
-		sControlHTML += "</SELECT>"
-		;
-			
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-				+ "<B>Tax type:</B>"
-				+ "</TD>" + "\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-				+ sControlHTML
-				+ "</TD>" + "\n"
-			;
-		
-		//Order type:
-		//First, add a blank item so we can be sure the user chose one:
-		sControlHTML = "\n<SELECT"
-			+ " NAME = \"" + SMTablesmestimatesummaries.iordertype + "\""
-			+ " ID = \"" + SMTablesmestimatesummaries.iordertype + "\""
-			+ " onchange=\"flagDirty();\""
-			+ " >\n"
-		;
-		
-		sControlHTML += "<OPTION";
-		sControlHTML += " VALUE=\"" + "" + "\">" 
-			+ "*** Select order type ***" + "\n";
-		
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE).compareTo(estimate.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\n";
-		
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE).compareTo(estimate.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_FUTURE) + "\n";
-		
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE).compareTo(estimate.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) + "\n";
-
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING).compareTo(estimate.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) + "\n";
-		
-		sControlHTML += "</SELECT>"
-		;
-			
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-				+ "<B>Order type:</B>"
-				+ "</TD>" + "\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-				+ sControlHTML
-				+ "</TD>" + "\n"
-			;
-
-		
-		s += "  </TR>" + "\n";
-		
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Description:"
-			+ "</TD>" + "\n"
-			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
-				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ "<INPUT TYPE=TEXT"
-			+ " NAME=\"" + SMTablesmestimatesummaries.sdescription + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.sdescription + "\""
-			+ " VALUE=\"" + estimate.getsdescription() + "\""
-			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sdescriptionLength)
-			+ " STYLE=\"width: 7in; height: 0.25in\""
-			+ ">"
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Remarks:"
-			+ "</TD>" + "\n"
-			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
-				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ "<INPUT TYPE=TEXT"
-			+ " NAME=\"" + SMTablesmestimatesummaries.sremarks + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.sremarks + "\""
-			+ " VALUE=\"" + estimate.getsremarks() + "\""
-			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sremarksLength)
-			+ " STYLE=\"width: 7in; height: 0.25in\""
-			+ ">"
-			+ "</TD>" + "\n"
-		;
-		
-		
-		
-		s += "  </TR>" + "\n";
-		
-		s += "</TABLE>" + "\n";
-		
-		*/
 		
 		return s;
 	}
@@ -1097,7 +822,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "Tax type:"
 			+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ summary.getstaxdescription(conn)
+			+ summary.getstaxdescription()
 			+ "</TD>" + "\n"
 		;
 		
@@ -1165,7 +890,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
 			+ "0.00"
-			//+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, estimate.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -1237,7 +961,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
 			+ "0.00"
-			//+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, estimate.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -1280,7 +1003,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ ">"
 			+ "0.00"
-			//+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, estimate.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -1291,10 +1013,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
 				+ FIELD_ADJUSTED_MU_PER_LABOR_UNIT_CAPTION
-				//+ "</TD>" + "\n"
-				
-				//+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-				//+ ">"
 				+ "&nbsp;"
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
@@ -1364,11 +1082,11 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		//total tax
-		//TODO - get tax rate from summary
-		x
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+			+ estimate.getsummary().getstaxdescription() + " "
+			+ estimate.getsummary().getsbdtaxrate() + "% "
 			+  LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION
 			+ "</TD>" + "\n"
 			
@@ -1385,127 +1103,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		s += "  </TR>" + "\n";
 		
-		
-		/*
-		//total freight
+		//total cost and mark-up:
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_CALCULATED_TOTAL_FREIGHT_CAPTION
+			+ LABEL_TOTAL_COST_AND_MARKUP_CAPTION
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<LABEL"
-			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
-			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
-			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdfreightScale, estimate.getbdtotalfreightonestimates())
-			+ "</LABEL>"
-			
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
-		//total labor units:
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 3) + " >"
-			+ LABEL_CALCULATED_TOTAL_LABOR_UNITS_CAPTION
-			+ "</TD>" + "\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ ">"
-			+ "<LABEL"
-			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
-			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
-			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborquantityScale, estimate.getbdtotallaborunitsonestimates())
-			+ "</LABEL>"
-			
-			+ "</TD>" + "\n"
-		;
-		
-		//total labor cost:
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ LABEL_CALCULATED_TOTAL_LABOR_COST_CAPTION
-			+ "</TD>" + "\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ ">"
-			+ "<LABEL"
-			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
-			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
-			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborcostperunitScale, estimate.getbdtotallaborcostonestimates())
-			+ "</LABEL>"
-			
-			+ "</TD>" + "\n"
-		;
-		
-		s += "  </TR>" + "\n";
-		
-		//total mark-up
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_CALCULATED_TOTAL_MARKUP_CAPTION
-			+ "</TD>" + "\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ ">"
-			+ "<LABEL"
-			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
-			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
-			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdmarkupamountScale, estimate.getbdtotalmarkuponestimates())
-			+ "</LABEL>"
-			
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
-
-		
-		//total amount for summary
-		String sSummaryID = UNSAVED_ESTIMATE_LABEL;
-		if (
-			(estimate.getslid().compareToIgnoreCase("-1") != 0)
-			&& (estimate.getslid().compareToIgnoreCase("0") != 0)
-			&& (estimate.getslid().compareToIgnoreCase("") != 0)			
-		) {
-			sSummaryID = estimate.getslid();
-		}
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			//+ " style = \" font-size: large; \""
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_CALCULATED_TOTAL_FOR_SUMMARY_CAPTION + " " + sSummaryID + ":"
-			+ "</TD>" + "\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ ">"
-			+ "<LABEL"
-			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
-			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
-			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, estimate.getbdcalculatedtotalprice())
-			+ "</LABEL>"
-			
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			//+ " style = \" font-size: large; \""
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION
-			+ "</TD>" + "\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ ">"
-			+ "<LABEL"
-			+ " NAME = \"" + LABEL_CALCULATED_RETAIL_SALES_TAX + "\""
-			+ " ID = \"" + LABEL_CALCULATED_RETAIL_SALES_TAX + "\""
+			+ " NAME = \"" + LABEL_TOTAL_COST_AND_MARKUP + "\""
+			+ " ID = \"" + LABEL_TOTAL_COST_AND_MARKUP + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1514,112 +1123,62 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		s += "  </TR>" + "\n";
 		
-		//space:
-		s += "  <TR>" + "\n";
-		s += "  </TR>" + "\n";
-		
-		//ADJUSTED VALUES:
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
-			+ " style = \" font-weight:bold; font-style:underline; \""
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns) + ">"
-			+ "ADJUSTED TOTALS"
-			+ "</TD>" + "\n"
-		;
-		
-		//total adjusted material cost:
+		//Additional cost NOT subject to use tax:
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_ADJUSTED_TOTAL_MATERIAL_CAPTION
-			+ "</TD>" + "\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			+ ">"
-			+ "<LABEL"
-			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
-			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
-			+ ">"
-			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, estimate.getbdtotalmaterialcostonestimates())
-			+ "</LABEL>"
-			
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
-
-		s += "  </TR>" + "\n";
-		
-		//Labor units
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ FIELD_ADJUSTED_LABOR_UNITS_CAPTION
+			+ FIELD_ADDITIONAL_UNTAXED_COST_CAPTION
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<INPUT TYPE=TEXT"
-			+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
-			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
+			+ " NAME = \"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\""
+			+ " ID = \"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\""
 			+ " style = \" text-align:right; width:100px;\""
-			+ " VALUE = \"" + estimate.getsbdadjustedlaborunitqty() + "\""
+			+ " VALUE = \"" + estimate.getsbdadditionalposttaxcostamount() + "\""
 			+ " onchange=\"recalculatelivetotals();\""
 			+ ">"
 			+ "</INPUT>"
 			
 			+ "</TD>" + "\n"
 		;
-		
-		//Total cost per labor unit
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-				+ FIELD_ADJUSTED_COST_PER_LABOR_UNIT_CAPTION
-				+ "</TD>" + "\n"
-				
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-				+ ">"
-				+ "<INPUT TYPE=TEXT"
-				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
-				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
-				+ " style = \" text-align:right; width:100px;\""
-				+ " VALUE = \"" + estimate.getsbdadjustedlaborcostperunit() + "\""
-				+ " onchange=\"recalculatelivetotals();\""
-				+ ">"
-				+ "</INPUT>"
-				
-				+ "</TD>" + "\n"
-			;
-		
-		//Total labor cost
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-				+ LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION
-				+ "</TD>" + "\n"
-				
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-				+ ">"
-				+ "<LABEL"
-				+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
-				+ " ID = \"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
-				+ ">"
-				+ "0.00"  // TODO - fill in this value with javascript
-				+ "</LABEL>"
-				+ "</TD>" + "\n"
-			;
 		s += "  </TR>" + "\n";
 		
-
-		
-		//Total tax on material
+		//Labor sell price per unit:
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL_CAPTION
+			+ FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION
+			+ "</TD>" + "\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			+ ">"
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
+			+ " ID = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
+			+ " style = \" text-align:right; width:100px;\""
+			+ " VALUE = \"" + estimate.getsbdlaborsellpriceperunit() + "\""
+			+ " onchange=\"recalculatelivetotals();\""
+			+ ">"
+			+ "</INPUT>"
+			
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+		
+		//Labor sell price
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+			+ LABEL_LABOR_SELL_PRICE_CAPTION
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<LABEL"
-			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
-			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
+			+ " NAME = \"" + LABEL_LABOR_SELL_PRICE + "\""
+			+ " ID = \"" + LABEL_LABOR_SELL_PRICE + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1628,21 +1187,40 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		s += "  </TR>" + "\n";
 		
-		//Adjusted total
+		//Material sell price
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			//+ " style = \" font-size: large; \""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION + " " + sSummaryID + ":"
+			+ LABEL_MATERIAL_SELL_PRICE_CAPTION
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<LABEL"
-			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\""
-			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\""
+			+ " NAME = \"" + LABEL_MATERIAL_SELL_PRICE + "\""
+			+ " ID = \"" + LABEL_MATERIAL_SELL_PRICE + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ "0.00"
+			+ "</LABEL>"
+			
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+		
+		//Total sell price
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+			+ LABEL_TOTAL_SELL_PRICE_CAPTION
+			+ "</TD>" + "\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			+ ">"
+			+ "<LABEL"
+			+ " NAME = \"" + LABEL_TOTAL_SELL_PRICE + "\""
+			+ " ID = \"" + LABEL_TOTAL_SELL_PRICE + "\""
+			+ ">"
+			+ "0.00"
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -1652,18 +1230,17 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		//Retail sales tax
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-			//+ " style = \" font-size: large; \""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION
+			+ LABEL_RETAIL_SALES_TAX_CAPTION
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<LABEL"
-			+ " NAME = \"" + LABEL_ADJUSTED_RETAIL_SALES_TAX + "\""
-			+ " ID = \"" + LABEL_ADJUSTED_RETAIL_SALES_TAX + "\""
+			+ " NAME = \"" + LABEL_RETAIL_SALES_TAX + "\""
+			+ " ID = \"" + LABEL_RETAIL_SALES_TAX + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ "0.00"
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
@@ -1671,8 +1248,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
-		
-		*/
 		
 		return s;
 		
@@ -1714,6 +1289,36 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " onClick=\"refreshvendorquote;\">"
 			+ REFRESH_VENDOR_QUOTE_BUTTON_CAPTION
 			+ "</button>\n"
+		;
+		return s;
+	}
+	
+	private String createBackIntoButton() {
+		String s = "";
+		s += "<button type=\"button\""
+			+ " value=\"" + BUTTON_BACK_INTO_PRICE_CAPTION + "\""
+			+ " name=\"" + BUTTON_BACK_INTO_PRICE + "\""
+			+ " id=\"" + BUTTON_BACK_INTO_PRICE + "\""
+			+ " onClick=\"backintoprice();\">"
+			+ BUTTON_BACK_INTO_PRICE_CAPTION
+			+ "</button>\n"
+		;
+		return s;
+	}
+	private String printBackIntoControls() {
+		String s = "";
+		
+		s += "<BR><B>'Back Into' price:</B> Adjust mark-up to bring total selling price to: "
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME=\"" + FIELD_BACK_INTO_DESIRED_PRICE + "\""
+			+ " ID=\"" + FIELD_BACK_INTO_DESIRED_PRICE + "\""
+			+ " VALUE=\"" + "" + "\""
+			+ " MAXLENGTH=" + 15
+			+ " STYLE=\"width: 1.5in; height: 0.25in\""
+			+ ">"
+			+ "&nbsp;"
+			+ createBackIntoButton()
+			+ "<BR>"
 		;
 		return s;
 	}

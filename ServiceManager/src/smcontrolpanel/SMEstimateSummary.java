@@ -60,6 +60,8 @@ public class SMEstimateSummary {
 	private BigDecimal m_bdtaxrateaswholenumber;
 	private BigDecimal m_bdcalculatedtotalprice;
 	private BigDecimal m_bdtotalmarkuponestimates;
+	
+	private String m_staxdescription;
 
 	public static final int LINE_NUMBER_PADDING_LENGTH = 6;
 	public static final String LINE_NUMBER_PARAMETER = "LINENOPARAM";
@@ -570,6 +572,13 @@ public class SMEstimateSummary {
 			throw new Exception("Error [1590509860] - loading " + OBJECT_NAME + " with ID " + m_lid + " - " + e.getMessage());
 		}
 		
+		//Load the tax data:
+		try {
+			loadTaxData(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [202006081535] - loading tax data - " + e1.getMessage());
+		}
+		
 		//Load the estimates:
 		try {
 			loadEstimates(conn, m_lid);
@@ -578,7 +587,29 @@ public class SMEstimateSummary {
 		}
 		return;
 	}
-	
+	private void loadTaxData(Connection conn) throws Exception{
+		String SQL = "SELECT"
+			+ " " + SMTabletax.staxjurisdiction
+			+ ", " + SMTabletax.staxtype
+			+ " FROM " + SMTabletax.TableName
+			+ " WHERE ("
+				+ "(" + SMTabletax.lid + "=" + m_itaxid + ")"
+			+ ")"
+		;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()) {
+				m_staxdescription = rs.getString(SMTabletax.staxjurisdiction) + " " 
+					+ rs.getString(SMTabletax.staxtype);
+				rs.close();
+			}else {
+				rs.close();
+				throw new Exception("Error [202006045643] - no tax type found with ID '" + m_itaxid + "'.");
+			}
+		} catch (Exception e) {
+			throw new Exception("Error [202006045260] - error loading tax type with SQL: '" + SQL + "'.");
+		}
+	}
 	public void loadEstimates(String sSummaryID, String sDBID, ServletContext context, String sUserFullName) throws Exception{
 		
 		Connection conn = null;
@@ -915,32 +946,8 @@ public class SMEstimateSummary {
 		
 		return s;
 	}
-	public String getstaxdescription(Connection conn) throws Exception{
-		
-		String s = "";
-		String SQL = "SELECT"
-			+ " " + SMTabletax.staxjurisdiction
-			+ ", " + SMTabletax.staxtype
-			+ " FROM " + SMTabletax.TableName
-			+ " WHERE ("
-				+ "(" + SMTabletax.lid + "=" + m_itaxid + ")"
-			+ ")"
-		;
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-			if (rs.next()) {
-				s = rs.getString(SMTabletax.staxjurisdiction) + " " 
-					+ rs.getString(SMTabletax.staxtype);
-				rs.close();
-			}else {
-				rs.close();
-				throw new Exception("Error [202006045643] - no tax type found with ID '" + m_itaxid + "'.");
-			}
-		} catch (Exception e) {
-			throw new Exception("Error [202006045260] - error loading tax type with SQL: '" + SQL + "'.");
-		}
-		
-		return s;
+	public String getstaxdescription() throws Exception{
+		return m_staxdescription;
 	}
 	private void saveEstimates(Connection conn, String sUserID, String sUserFullName) throws Exception{
 		

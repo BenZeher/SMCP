@@ -53,6 +53,8 @@ public class SMEstimate {
 	private String m_datetimelastmodified;
 	private String m_slastmodifiedbyfullname;
 	
+	private SMEstimateSummary m_estimatesummary;
+	
 	private ArrayList<SMEstimateLine>arrEstimateLines;
 
 	public static final int LINE_NUMBER_PADDING_LENGTH = 6;
@@ -691,7 +693,9 @@ public class SMEstimate {
 	
 	public void load(ServletContext context, String sDBID, String sUserID) throws Exception{
 
-		Connection conn; try { conn =
+		Connection conn; 
+		try { 
+			conn =
 				clsDatabaseFunctions.getConnectionWithException( context, sDBID, "MySQL",
 						SMUtilities.getFullClassName(this.toString()) + ".load - user: " + sUserID);
 		} catch (Exception e) { throw new
@@ -1010,6 +1014,10 @@ public class SMEstimate {
 		m_slastmodifiedbyfullname = slastmodifiedbyfullname;
 	}
 	
+	public SMEstimateSummary getsummary() {
+		return m_estimatesummary;
+	}
+	
 	public void addLine(SMEstimateLine line){
 		arrEstimateLines.add(line);
 	}
@@ -1078,7 +1086,36 @@ public class SMEstimate {
 		
 		return bdTotalMaterialCost;
 	}
-	
+
+	public void loadSummary(ServletContext context, String sDBID, String sUserID) throws Exception{
+		
+		Connection conn;
+		try {
+			conn = clsDatabaseFunctions.getConnectionWithException(context, sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
+		} catch (Exception e1) {
+			throw new Exception("Error [202006080443] - could not get connection - " + e1.getMessage());
+		}
+
+		try {
+			loadSummary(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202006080801] - loading summary - " + e.getMessage());
+		}
+		
+		return;
+	}
+	private void loadSummary(Connection conn) throws Exception{
+		
+		m_estimatesummary = new SMEstimateSummary();
+		m_estimatesummary.setslid(m_lsummarylid);
+		try {
+			m_estimatesummary.load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202006083715] - could not load summary with ID '" + m_lsummarylid + "' - " + e.getMessage());
+		}
+		
+		return;
+	}
 	private void saveLines(Connection conn, String sUser) throws Exception{
 		for (int i = 0; i < arrEstimateLines.size(); i++){
 			SMEstimateLine line = arrEstimateLines.get(i);

@@ -335,7 +335,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimatesummaries.sjobname + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.sjobname + "\""
-			+ " VALUE=\"" + summary.getsjobname() + "\""
+			+ " VALUE=\"" + summary.getsjobname().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sjobnameLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
 			+ ">"
@@ -538,7 +538,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimatesummaries.sdescription + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.sdescription + "\""
-			+ " VALUE=\"" + summary.getsdescription() + "\""
+			+ " VALUE=\"" + summary.getsdescription().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sdescriptionLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
 			+ ">"
@@ -555,7 +555,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimatesummaries.sremarks + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.sremarks + "\""
-			+ " VALUE=\"" + summary.getsremarks() + "\""
+			+ " VALUE=\"" + summary.getsremarks().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sremarksLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
 			+ ">"
@@ -1856,8 +1856,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		+ DELETE_BUTTON_CAPTION
 		+ "</button>\n";
 		
-		//s += "<INPUT TYPE='CHECKBOX' NAME='" + CONFIRM_DELETE_CHECKBOX 
-		//		+ "' VALUE='" + CONFIRM_DELETE_CHECKBOX + "' > Check to confirm before deleting";
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

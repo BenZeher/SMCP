@@ -405,7 +405,7 @@ public class SMEstimateSummary {
 		}
 		try {
 			m_bdadjustedfreight = clsValidateFormFields.validateBigdecimalField(
-				m_bdadjustedfreight, 
+				m_bdadjustedfreight.replace(",", ""), 
 				"Adjusted freight", 
 				SMTablesmestimatesummaries.bdadjustedfreightScale, 
 				new BigDecimal("0.00"), 
@@ -420,7 +420,7 @@ public class SMEstimateSummary {
 		}
 		try {
 			m_bdadjustedlaborunitqty = clsValidateFormFields.validateBigdecimalField(
-				m_bdadjustedlaborunitqty, 
+				m_bdadjustedlaborunitqty.replace(",", ""), 
 				"Adjusted labor unit qty", 
 				SMTablesmestimatesummaries.bdadjustedlaborunitqtyScale, 
 				new BigDecimal("0.0000"), 
@@ -435,7 +435,7 @@ public class SMEstimateSummary {
 		}
 		try {
 			m_bdadjustedlaborcostperunit = clsValidateFormFields.validateBigdecimalField(
-				m_bdadjustedlaborcostperunit, 
+				m_bdadjustedlaborcostperunit.replace(",", ""), 
 				"Adjusted labor cost per unit", 
 				SMTablesmestimatesummaries.bdadjustedlaborcostperunitScale, 
 				new BigDecimal("0.00"), 
@@ -450,7 +450,7 @@ public class SMEstimateSummary {
 		}
 		try {
 			m_bdadjustedmarkupamt = clsValidateFormFields.validateBigdecimalField(
-				m_bdadjustedmarkupamt, 
+				m_bdadjustedmarkupamt.replace(",", ""), 
 				"Adjusted mark-up amount", 
 				SMTablesmestimatesummaries.bdadjustedlmarkupamtScale, 
 				new BigDecimal("0.00"), 
@@ -465,7 +465,7 @@ public class SMEstimateSummary {
 		}
 		try {
 			m_bdtaxrate = clsValidateFormFields.validateBigdecimalField(
-				m_bdtaxrate, 
+				m_bdtaxrate.replace(",", ""), 
 				"Tax rate", 
 				SMTablesmestimatesummaries.bdtaxrateScale, 
 				new BigDecimal("0.0000"), 

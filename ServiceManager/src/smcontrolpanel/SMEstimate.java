@@ -121,10 +121,10 @@ public class SMEstimate {
 		
 		m_slastmodifiedbyfullname = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.slastmodifiedbyfullname, req).replace("&quot;", "\"");
 		
-		readEntryLines(req);
+		readEstimateLines(req);
 	}
 
-	private void readEntryLines(HttpServletRequest request){
+	private void readEstimateLines(HttpServletRequest request){
 		//Read the estimate lines:
     	Enumeration <String> eParams = request.getParameterNames();
     	String sLineParam = "";

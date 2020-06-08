@@ -315,11 +315,41 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + estimate.getslid() + "\""+ " "
 				+ " ID=\"" + SMTablesmestimates.lid + "\""+ "\">" + "\n";
 		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.lsummarylid + "\""
+				+ " VALUE=\"" + estimate.getslsummarylid() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.lsummarylid + "\""+ "\">" + "\n";
+
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.lsummarylinenumber + "\""
+				+ " VALUE=\"" + estimate.getslsummarylinenumber() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.lsummarylinenumber + "\""+ "\">" + "\n";
+
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.lcreatedbyid + "\""
+				+ " VALUE=\"" + estimate.getslcreatedbyid() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.lcreatedbyid + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.datetimecreated + "\""
+				+ " VALUE=\"" + estimate.getsdatetimecreated() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.datetimecreated + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.screatedbyfullname + "\""
+				+ " VALUE=\"" + estimate.getscreatedbyfullname() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.screatedbyfullname + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.ivendorquotelinenumber + "\""
+				+ " VALUE=\"" + estimate.getsivendorquotelinenumber() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.ivendorquotelinenumber + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.svendorquotenumber + "\""
+				+ " VALUE=\"" + estimate.getsvendorquotenumber() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.svendorquotenumber + "\""+ "\">" + "\n";
+		
+		
+		
 		//Include an outer table:
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
 		s += "    <TD>" + "\n";
-		s += buildSummaryHeaderTable(conn, estimate);
+		s += buildSummaryHeaderTable(conn, estimate, sm);
 		
 		s += buildEstimateHeaderTable(conn, estimate, sm);
 		
@@ -486,12 +516,21 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdquantity() + "\""
 					+ " MAXLENGTH=15"
 					+ " style = \" text-align:right; width:100px;\""
+					+ ">"
+					
+					//Store the line ID in a hidden field:
+					+ "<INPUT TYPE=HIDDEN"
+					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
+					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getslid() + "\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -500,9 +539,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsitemnumber() + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" width:100px;\""
@@ -521,9 +560,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getslinedescription().replace("\"", "&quot;") + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" width:500px;\""
@@ -535,9 +574,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsunitofmeasure().replace("\"", "&quot;") + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" width:50px;\""
@@ -549,9 +588,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							Integer.toString(iEstimateLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdextendedcost() + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" text-align:right; width:120px;\""
@@ -573,6 +612,15 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + "0.0000" + "\""
 				+ " MAXLENGTH=15"
 				+ " style = \" text-align:right; width:100px;\""
+				+ ">"
+				
+				//Store the line ID in a hidden field:
+				+ "<INPUT TYPE=HIDDEN"
+				+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
+				+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
+				+ " VALUE=\"" + "-1" + "\""
 				+ ">"
 				+ "</TD>" + "\n"
 			;
@@ -762,7 +810,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 
 		return s;
 	}
-	private String buildSummaryHeaderTable(Connection conn, SMEstimate estimate) throws Exception{
+	private String buildSummaryHeaderTable(Connection conn, SMEstimate estimate, SMMasterEditEntry sm) throws Exception{
 		
 		String s = "";
 		int iNumberOfColumns = 4;
@@ -781,18 +829,20 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  <TR>" + "\n";
 		
 		//Summary ID:
+		String sSummaryLink = 
+		    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSMSummaryEdit"
+			    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+			    		+ "&" + SMTablesmestimatesummaries.lid + "=" + estimate.getslsummarylid()
+			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+			    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
+			    		+ "\">" + estimate.getslsummarylid() + "</A>"
+				;
+				
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
 			+ "Estimate Summary #:"
 			+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ summary.getslid()
-			
-			+ "<INPUT TYPE=HIDDEN"
-			+ " NAME=\"" + SMTablesmestimates.lsummarylid + "\""
-			+ " ID=\"" + SMTablesmestimates.lsummarylid + "\""
-			+ " VALUE=\"" + estimate.getslsummarylid() + "\""
-			+ ">"
-			
+			+ sSummaryLink
 			+ "</TD>" + "\n"
 		;
 		

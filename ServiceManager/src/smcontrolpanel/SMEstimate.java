@@ -19,6 +19,7 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 
 public class SMEstimate {
@@ -136,19 +137,19 @@ public class SMEstimate {
     	SMEstimateLine newline = new SMEstimateLine();
     	while (eParams.hasMoreElements()){
     		sLineParam = eParams.nextElement();
-    		//System.out.println("[1490711988] sLineParam = '" + sLineParam +"'");
+    		System.out.println("[1490712988] sLineParam = '" + sLineParam +"'");
     		//If it contains a line number parameter, then it's an GLTransactionBatchLine field:
-    		if (sLineParam.startsWith(SMEstimate.LINE_NUMBER_PARAMETER)){
-    			//System.out.println("[1490711988] sLineParam = '" + sLineParam +"'");
+    		if (sLineParam.startsWith(SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX)){
+    			System.out.println("[1490712188] sLineParam = '" + sLineParam +"'");
     			sLineNumber = sLineParam.substring(
-    				SMEstimate.LINE_NUMBER_PARAMETER.length(),
-    				SMEstimate.LINE_NUMBER_PARAMETER.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
+    				SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length(),
+    				SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
     			iLineNumber = Integer.parseInt(sLineNumber);
-    			//System.out.println("[1490711989] sLineNumber = '" + sLineNumber +"'");
-    			sFieldName = sLineParam.substring(SMEstimate.LINE_NUMBER_PARAMETER.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
-    			//System.out.println("[1490711990] sFieldName = '" + sFieldName +"'");
+    			System.out.println("[1490712989] sLineNumber = '" + sLineNumber +"'");
+    			sFieldName = sLineParam.substring(SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
+    			System.out.println("[1490712990] sFieldName = '" + sFieldName +"'");
     			sParamValue = clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim();
-    			//System.out.println("[1490711991] sParamValue = '" + sParamValue +"'");
+    			System.out.println("[1490712991] sParamValue = '" + sParamValue +"'");
     			//If the line array needs another row to fit all the line numbers, add it now:
 				while (arrEstimateLines.size() < iLineNumber){
 					SMEstimateLine line = new SMEstimateLine();
@@ -158,7 +159,7 @@ public class SMEstimate {
 				//If any of the line fields have a '0' for their line number, then that means the user is adding a new field:
     			if (iLineNumber == 0){
     				bAddingNewLine = true;
-
+    				System.out.println("[202006085409] - adding new line");
     				//Now update the new line, and we'll add it to the entry down below:
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
         				newline.setsbdextendedcost(sParamValue.replace(",", "").trim());
@@ -191,7 +192,7 @@ public class SMEstimate {
         			//Now update the field on the line we're reading:
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(sParamValue.replace(",", "").trim());
-        				//System.out.println("[1511887996] - sParamValue = '" + sParamValue + "', m_arrBatchEntryLines.get(iLineNumber - 1).getsbdamount() = " + m_arrBatchEntryLines.get(iLineNumber - 1).getsbdamount());
+        				System.out.println("[1511882996] - sParamValue = '" + sParamValue + "'.");
         			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsbdquantity(sParamValue.replace(",", "").trim());
@@ -240,6 +241,8 @@ public class SMEstimate {
     		arrEstimateLines.get(i).setslestimateid(m_lid);
     		arrEstimateLines.get(i).setslsummaryid(m_lsummarylid);
     	}
+    	
+    	//System.out.println("[202006080956] - estimate dump:\n" + dumpData());
 	}
 	
 	public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
@@ -299,8 +302,8 @@ public class SMEstimate {
 			+ ", " + m_ivendorquotelinenumber
 			+ ", " + sUserID
 			+ ", " + sUserID
-			+ ", " + this.m_lsummarylid
-			+ ", " + this.m_lsummarylinenumber
+			+ ", " + m_lsummarylid
+			+ ", " + m_lsummarylinenumber
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sadditionalposttaxcostlabel) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sadditionalpretaxcostlabel) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
@@ -319,7 +322,7 @@ public class SMEstimate {
 			+ ", " + SMTablesmestimates.bdextendedcost + " = " + m_bdextendedcost.replace(",", "")
 			+ ", " + SMTablesmestimates.bdfreight + " = " + m_bdfreight.replace(",", "")
 			+ ", " + SMTablesmestimates.bdlaborcostperunit + " = " + m_bdlaborcostperunit.replace(",", "")
-			+ ", " + SMTablesmestimates.bdlaborquantity + " = " + m_bdfreight.replace(",", "")
+			+ ", " + SMTablesmestimates.bdlaborquantity + " = " + m_bdlaborquantity.replace(",", "")
 			+ ", " + SMTablesmestimates.bdlaborsellpriceperunit + " = " + m_bdlaborsellpriceperunit.replace(",", "")
 			+ ", " + SMTablesmestimates.bdmarkupamount + " = " + m_bdmarkupamount.replace(",", "")
 			+ ", " + SMTablesmestimates.bdquantity + " = " + m_bdquantity.replace(",", "")
@@ -397,13 +400,13 @@ public class SMEstimate {
 		}
 		
 		try {
-			m_lsummarylid  = clsValidateFormFields.validateLongIntegerField(m_lid, "Estimate Summary ID", 1L, clsValidateFormFields.MAX_LONG_VALUE);
+			m_lsummarylid  = clsValidateFormFields.validateLongIntegerField(m_lsummarylid, "Estimate Summary ID", 1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
 		try {
-			m_lsummarylinenumber  = clsValidateFormFields.validateLongIntegerField(m_lid, "Estimate Summary line number", 1L, clsValidateFormFields.MAX_LONG_VALUE);
+			m_lsummarylinenumber  = clsValidateFormFields.validateLongIntegerField(m_lsummarylinenumber, "Estimate Summary line number", 1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -667,6 +670,14 @@ public class SMEstimate {
 			);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		//Remove any zero quantity lines:
+		int iLineCounter = 0;
+		while (iLineCounter < arrEstimateLines.size()) {
+			//if (arrEstimateLines.get(iLineCounter)) {
+			//	//TODO
+			//}
 		}
 		
 		//Validate the lines:

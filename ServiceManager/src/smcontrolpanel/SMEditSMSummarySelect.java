@@ -69,7 +69,7 @@ public class SMEditSMSummarySelect extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimatesummaries.lid + "\""
 			+ " VALUE = \"" + sSummaryID + "\""
 			+ " SIZE=20 MAXLENGTH=13"
-			+ " STYLE=\"width: 2.41in; height: 0.25in\">&nbsp;";
+			+ " STYLE=\"width: 1.2in; height: 0.25in\">&nbsp;";
 		
 		//Link to finder:
 		s += "<A HREF=\""

@@ -18,6 +18,7 @@ import SMClasses.SMTax;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
@@ -90,9 +91,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
-	
-	//Calculation fields:
-	public static final String PARAM_TOTAL_ESTIMATE_MATERIAL_COST = "TOTALESTIMATEMATERIALCOST";
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
@@ -334,6 +332,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + summary.getsjobname().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sjobnameLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -351,6 +350,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + summary.getslsalesleadid() + "\""
 			+ " MAXLENGTH=" + "15"
 			+ " STYLE=\"width: 1in; height: 0.25in\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -391,7 +391,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				sControlHTML += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" 
 					+ arrLaborTypeDescriptionsDescriptions.get(i).toString() + "\n";
 			}
-		sControlHTML += "</SELECT>"
+		sControlHTML += "</SELECT> \n"
 		;
 			
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
@@ -511,7 +511,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING) + "\">" 
 			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) + "\n";
 		
-		sControlHTML += "</SELECT>"
+		sControlHTML += "</SELECT> \n"
 		;
 			
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
@@ -536,6 +536,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + summary.getsdescription().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sdescriptionLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -553,6 +554,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + summary.getsremarks().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sremarksLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -963,7 +965,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedfreight() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -984,7 +986,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + summary.getsbdadjustedlaborunitqty() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1003,7 +1005,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedlaborcostperunit() + "\""
-				+ " onchange=\"recalculatelivetotals();\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1095,7 +1097,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + summary.getsbdadjustedmarkupamt() + "\""
-				+ " onchange=\"recalculatelivetotals();\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1168,7 +1170,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "</TABLE>" + "\n";
 		
 		return s;
-		
 	}
 	
 	private String buildRemoveEstimateButton(String sSummaryLineNumber) {
@@ -1368,7 +1369,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\"].value = scalculateonpurchaseorsale[which];\n"
 					+ "    }\n"
 					//+ "    alert('SMTablesmestimatesummaries.bdtaxrate = ' + document.getElementById(\"" + PARAM_RETAIL_SALES_TAX_RATE + "\").value); \n"
-					+ "    recalculatelivetotals();\n"
+					+ "    flagDirty(); \n"
 					+ "}\n\n"; 
 			
 			s += "function promptToSave(){\n"		
@@ -1468,20 +1469,21 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			s += "function flagDirty() {\n"
 					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
 					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
+					+ "    recalculatelivetotals(); \n"
 				+ "}\n";
+			
 			
 			//Recalculate live totals:
 			s += "function recalculatelivetotals(){\n"
 				//+ "    alert('Recalculating');\n"
-					
+				+ "    formatnumberinputfields(); \n"
+				
 				// TJR - 6/2/2020 - we don't want the tax to update automatically when the page loads.
 				// That should be done deliberately by the user if he WANTS to update the tax info.
 				//+ "    //Set the retail sales tax rate, based on the current index of the tax drop down: \n"
 				//+ "    taxChange(document.getElementById(\"" + SMTablesmestimatesummaries.itaxid + "\")); \n"
 				+ "\n"
 				
-				//+ "    //Turn off the line amt warning by default:\n"
-				//+ "    document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.display= \"none\"\n"
 				+ "    var adjustedlabortotalcost = parseFloat(\"0.00\");\n"
 				+ "    var adjustedlaborunits = parseFloat(\"0.00\");\n"
 				+ "    var adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
@@ -1691,6 +1693,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "}\n\n"
 			;
 			
+			//Format numbers to 4 decimal places and have commas as needed:
+			s += "function formatNumberTo4Places(num) {\n"
+				+ "    return num.toFixed(4); \n"
+				+ "}\n\n"
+			;
+			
 			s += "\n"
 				+ "function isNumeric(value) {\n"
 				+ "    if ((value == null) || (value == '')) return false;\n"
@@ -1741,7 +1749,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    var adjustedpremarkupcost = materialcost + adjustedfreightcost + adjustedlaborcost;\n"
 				
 				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=(adjustedpremarkupcost * adjustedMUpercentage).toFixed(2);\n"
-				+ "    recalculatelivetotals();\n"
+				+ "    flagDirty();\n"
 				
 	   			;
 			s += "}\n"
@@ -1768,6 +1776,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    }\n"
 				+ "    adjustedtotalmarkup = adjustedMUperlaborunit * adjustedlaborunits; \n"
 				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=adjustedtotalmarkup.toFixed(2);\n"
+				+ "    flagDirty(); \n"
 	   			;
 			s += "}\n"
 	   		;
@@ -1814,23 +1823,62 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    adjustedtotalmarkup = (adjustedpremarkupcost / (1 - (adjustedGPpercentageAsFraction))) - adjustedpremarkupcost; \n"
 				
 				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=adjustedtotalmarkup.toFixed(2);\n"
-				+ "    recalculatelivetotals();\n"
+				+ "    flagDirty();\n"
 				
 	   			;
 			s += "}\n"
 	   		;
 
-			//Flag page dirty:
-			s += "function flagDirty() {\n"
-					+ "    flagRecordChanged();\n"
-					+ "}\n"
+			//Set all editable fields to their correct decimal formats:
+			s += "function formatnumberinputfields(){ \n"
+					
+				+ "    var fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value).replace(',','');\n"
+				+ "    if (!isNumeric(temp)){ \n"
+				+ "        temp = ''; \n"
+				+ "    } \n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value=formatNumber(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\").value).replace(',','');\n"
+				+ "    if (!isNumeric(temp)){ \n"
+				+ "        temp = ''; \n"
+				+ "    } \n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\").value=formatNumber(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\").value).replace(',','');\n"
+				+ "    if (!isNumeric(temp)){ \n"
+				+ "        temp = ''; \n"
+				+ "    } \n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.0000\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\").value=formatNumberTo4Places(fieldvalue);\n"
+			
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value).replace(',','');\n"
+				+ "    if (!isNumeric(temp)){ \n"
+				+ "        temp = ''; \n"
+				+ "    } \n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=formatNumber(fieldvalue);\n"
 				;
-
-			s += "function flagRecordChanged() {\n"
-					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
-					 + RECORDWASCHANGED_FLAG_VALUE + "\";\n"
-					+ "}\n"
-				;
+				s += "}\n\n"
+			;
 			s += "</script>\n";
 			return s;
 		}

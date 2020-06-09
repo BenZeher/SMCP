@@ -854,6 +854,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+			//+ "<LABEL NAME = \""
+			+ summary.getstaxdescription() + " "
+			+ summary.getsbdtaxrate() + "% "
 			+ LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION
 			+ "</TD>" + "\n"
 			
@@ -1367,6 +1370,22 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.bdtaxrate + "\"].value = staxrates[which];\n"
 					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\"].value = scalculatetaxoncustomerinvoice[which];\n"
 					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\"].value = scalculateonpurchaseorsale[which];\n"
+					
+					//+ "        //Add the tax type and rate to the tax caption: \n"
+					//+ "        document.forms[\"MAINFORM\"].elements[\"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION 
+					//	+ "\"].innerText = staxrates[which] + '% '" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION + ";\n"
+					
+					//+ summary.getstaxdescription() + " "
+					//+ summary.getsbdtaxrate() + "% " x
+					//+ LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION
+					//+ "</TD>" + "\n"
+					
+					//+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+					//+ ">"
+					//+ "<LABEL"
+					//+ " NAME = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
+					//+ " ID = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
+					
 					+ "    }\n"
 					//+ "    alert('SMTablesmestimatesummaries.bdtaxrate = ' + document.getElementById(\"" + PARAM_RETAIL_SALES_TAX_RATE + "\").value); \n"
 					+ "    flagDirty(); \n"

@@ -155,8 +155,11 @@ public class SMCreatePOFromOrderAction extends HttpServlet{
 					+ smaction.getFullUserName()
 					);
 			if (rsUser.next()){
-				pohead.setsbillcontactname(rsUser.getString(SMTableusers.sUserFirstName) + " " + rsUser.getString(SMTableusers.sUserLastName));
-			}else{
+				String sName = rsUser.getString(SMTableusers.sUserFirstName) + " " + rsUser.getString(SMTableusers.sUserLastName);
+				pohead.setsbillcontactname(sName);
+				pohead.setcreatedbyfullname(sName);
+				pohead.setsassignedtofullname(sName);
+			}else{ 
 				pohead.setsbillcontactname("");
 			}
 			rsUser.close();

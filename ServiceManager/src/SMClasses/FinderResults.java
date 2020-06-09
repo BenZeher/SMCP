@@ -21,6 +21,7 @@ import smar.ARCallSheet;
 import smar.ARDocumentTypes;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMBidEntry;
+import smcontrolpanel.SMEstimateSummary;
 import smcontrolpanel.SMUtilities;
 import smgl.GLAccount;
 import smic.ICPOHeader;
@@ -121,6 +122,7 @@ public class FinderResults extends HttpServlet {
 				sResultListFields.add((String) request.getParameter(RESULT_LIST_FIELD + Integer.toString(i)));
 			}
 		}
+		
 		if (sResultListFields.size() == 0){
 			out.println("<BR>Error [1429302419] - sResultListFields.size() = 0,"
 				+ " Object name = '" + sObjectName + "'" 
@@ -128,6 +130,9 @@ public class FinderResults extends HttpServlet {
 				+ ".<BR>");
 			return;
 		}
+		
+		//System.out.println("[202006085039] - starting in FinderResults");
+		
 		ArrayList<String> sResultFieldAliases = new ArrayList<String>();
 		for (int i = 0; i < ObjectFinder.MAX_NUMBER_OF_RESULT_FIELDS; i++){
 			if (request.getParameter(RESULT_FIELD_ALIAS + Integer.toString(i)) != null){
@@ -338,7 +343,7 @@ public class FinderResults extends HttpServlet {
 					sSearchText		
 			);
 		}
-		
+		System.out.println("[202006084937] - didn't use special SQL");
 		if (!bUsedSpecialSQL){
 			sSQL = buildStdSQLStatement(
 					sObjectName,
@@ -351,7 +356,7 @@ public class FinderResults extends HttpServlet {
 			);
 		}
 		
-		//System.out.println("[1491249950] sSQL = '" + sSQL + "'");
+		System.out.println("[1491249950] sSQL = '" + sSQL + "'");
 		
 	    //Unless told not to, print a link to the first page after login:
 		if (clsManageRequestParameters.get_Request_Parameter(ObjectFinder.DO_NOT_SHOW_MENU_LINK, request).compareToIgnoreCase("") == 0){
@@ -1652,7 +1657,7 @@ public class FinderResults extends HttpServlet {
 		sSQL += ")";
 		
 		sSQL += " ORDER BY " + SMTablelaborbackcharges.TableName + "." + SMTablelaborbackcharges.datinitiated;
-		System.out.println("[2019262141474] " + sSQL);
+		//System.out.println("[2019262141474] " + sSQL);
 		return sSQL;
 	}
 
@@ -1734,7 +1739,10 @@ public class FinderResults extends HttpServlet {
 		if (sObject.equalsIgnoreCase(SMVendorReturn.ParamObjectName)){
 			sTable = SMTablevendorreturns.TableName;
 		}
-
+		if (sObject.equalsIgnoreCase(SMEstimateSummary.OBJECT_NAME)){
+			sTable = SMTablesmestimatesummaries.TableName;
+		}
+		
 		//Add any 'where' clauses needed here:
 		//If we are adding a credit, we need to search for an invoice ONLY, so we need to add that
 		//qualifier to the where clause:

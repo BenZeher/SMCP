@@ -794,7 +794,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			//+ " onchange=\"flagdirty();\""
 			+ ">"
 			+ "</INPUT>" + "\n"
-			+ "&nbsp;, line number:&nbsp;"
+			+ ", line number:&nbsp;"
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
 			+ " ID = \"" + FIELD_REPLACE_QUOTE_LINE + "\""

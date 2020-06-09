@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMTax;
+import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatelines;
@@ -1157,6 +1158,12 @@ public class SMEstimateSummary {
 				+ "&SearchFieldAlias2=Sales%20Lead%20ID"
 				+ "&SearchField3=" + SMTablesmestimatesummaries.sdescription
 				+ "&SearchFieldAlias3=Description"
+				+ "&ResultListField1="  + SMTablesmestimatesummaries.lid
+				+ "&ResultHeading1=Summaryt%20No."
+				+ "&ResultListField2="  + SMTablesmestimatesummaries.sjobname
+				+ "&ResultHeading2=Project%20Name"
+				
+				
 				+ "&ParameterString=*" + m_sParameterString
 				;
 		}

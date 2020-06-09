@@ -672,21 +672,39 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
-		//Remove any zero quantity lines:
-		int iLineCounter = 0;
-		while (iLineCounter < arrEstimateLines.size()) {
-			//if (arrEstimateLines.get(iLineCounter)) {
-			//	//TODO
-			//}
+		//First, check that the quantities are all valid:
+		for (int i = 0; i < arrEstimateLines.size(); i++){
+			if (arrEstimateLines.get(i).getsbdquantity().compareToIgnoreCase("") == 0) {
+				arrEstimateLines.get(i).setsbdquantity("0.0000");
+			}
+			try {
+				arrEstimateLines.get(i).setsbdquantity(
+				clsValidateFormFields.validateBigdecimalField(
+						arrEstimateLines.get(i).getsbdquantity().replace(",", ""), 
+						"Line quantity", 
+						SMTablesmestimatelines.bdquantityScale,
+						new BigDecimal("0.0000"),
+						new BigDecimal("999999999.9999")
+						).replaceAll(",", "")
+				);
+			} catch (Exception e) {
+				sResult += "  " + e.getMessage() + ".";
+			}
 		}
 		
-		//Validate the lines:
+		//Next, remove any zero quantity lines:
+		try {
+			removeZeroQtyLines();
+		} catch (Exception e1) {
+			throw new Exception("Error [202006084004] - error removing lines with zero quantity - " + e1.getMessage());
+		}
+		
+		//Now validate the lines:
 		for (int i = 0; i < arrEstimateLines.size(); i++){
 			SMEstimateLine line = arrEstimateLines.get(i);
 			line.setslestimateid(m_lid);
 			line.setslsummaryid(m_lsummarylid);
 			line.setslestimatelinenumber((Integer.toString(i + 1)));
-			
 			try {
 				line.validate_fields(conn);
 			} catch (Exception e) {
@@ -694,14 +712,29 @@ public class SMEstimate {
 			}
 		}
 		
-		if (sResult.compareToIgnoreCase("") != 0){
-			throw new Exception(sResult);
-		}
-		
 		return;
 	}
 	
-	
+    private void removeZeroQtyLines() throws Exception{
+    	ArrayList<SMEstimateLine> m_arrTempLines = new ArrayList<SMEstimateLine> (0);
+    	for (int i = 0; i < arrEstimateLines.size(); i++){
+    		BigDecimal bdQty = null;
+			try {
+				bdQty = new BigDecimal(arrEstimateLines.get(i).getsbdquantity().replace(",", ""));
+			} catch (Exception e) {
+				throw new Exception("Error [202006083912] - quantity '" + arrEstimateLines.get(i).getsbdquantity() + "' is invalid.");
+			}
+    		if (bdQty.compareTo(BigDecimal.ZERO) > 0){
+    			SMEstimateLine line = arrEstimateLines.get(i);
+    			m_arrTempLines.add(line);
+    		}
+    	}
+    	arrEstimateLines.clear();
+    	for (int i = 0; i < m_arrTempLines.size(); i++){
+    		SMEstimateLine line = m_arrTempLines.get(i);
+			arrEstimateLines.add(line);
+    	}
+     }
 	public void load(ServletContext context, String sDBID, String sUserID) throws Exception{
 
 		Connection conn; 

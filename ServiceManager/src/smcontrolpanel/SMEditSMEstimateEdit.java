@@ -34,38 +34,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
-//	public static final String REMOVE_ESTIMATE_COMMAND = "REMOVEESTIMATE";
-//	public static final String PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED = "REMOVEESTIMATELINENUMBER";
-//	public static final String BUTTON_ADD_MANUAL_ESTIMATE_CAPTION = "Add estimate manually";
-//	public static final String BUTTON_ADD_MANUAL_ESTIMATE = "ADDMANUALESTIMATE";
-//	public static final String BUTTON_ADD_VENDOR_QUOTE_CAPTION = "Add vendor quote number:";
-//	public static final String BUTTON_ADD_VENDOR_QUOTE = "ADDVENDORQUOTE";
-//	public static final String FIELD_VENDOR_QUOTE = "VENDORQUOTENUMBER";
-//	public static final String BUTTON_FIND_VENDOR_QUOTE_CAPTION = "Find vendor quote";
-//	public static final String BUTTON_FIND_VENDOR_QUOTE = "FINDVENDORQUOTE";
-//	public static final String FIND_VENDOR_QUOTE_COMMAND_VALUE = "FINDVENDORQUOTECOMMAND";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_COST = "LABELCALCULATEDTOTALMATERIALCOST";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
-//	public static final String LABEL_CALCULATED_TOTAL_FREIGHT = "LABELCALCULATEDTOTALFREIGHT";
-//	public static final String LABEL_CALCULATED_TOTAL_FREIGHT_CAPTION = "TOTAL FREIGHT:";
-//	public static final String LABEL_CALCULATED_TOTAL_LABOR_UNITS = "LABELCALCULATEDTOTALLABORUNITS";
-//	public static final String LABEL_CALCULATED_TOTAL_LABOR_UNITS_CAPTION = "TOTAL LABOR UNITS:";
-//	public static final String LABEL_CALCULATED_TOTAL_LABOR_COST = "LABELCALCULATEDTOTALLABORCOST";
-//	public static final String LABEL_CALCULATED_TOTAL_LABOR_COST_CAPTION = "TOTAL LABOR COST:";
-//	public static final String LABEL_CALCULATED_TOTAL_MARKUP = "LABELCALCULATEDTOTALMARKUP";
-//	public static final String LABEL_CALCULATED_TOTAL_MARKUP_CAPTION = "TOTAL MARK-UP:";
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL = "LABELCALCULATEDTOTALTAX";
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION = "TOTAL TAX ON MATERIAL:";
-//	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY = "LABELCALCULATEDTOTALFORSUMMARY";
-//	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY_CAPTION = "CALCULATED TOTAL FOR ESTIMATE SUMMARY #";
-//	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX = "LABELCALCULATEDRETAILSALESTAX";
-//	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
-//	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_COST = "LABELADJUSTEDTOTALMATERIALCOST";
-//	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
 	public static final String FIELD_FREIGHT_CAPTION = "TOTAL FREIGHT:";
 	public static final String FIELD_LABOR_UNITS_CAPTION = "LABOR UNITS:";
 	public static final String FIELD_COST_PER_LABOR_UNIT_CAPTION = "LABOR COST/UNIT:";
-//	public final String LABEL_ADJUSTED_TOTAL_LABOR_COST = "LABELADJUSTEDTOTALLABORCOST";
 	public static final String LABEL_TOTAL_LABOR_COST_CAPTION = "TOTAL LABOR COST:";
 	public static final String LABEL_TOTAL_LABOR_COST = "TOTOALLABORCOST";
 	public static final String FIELD_MU_PER_LABOR_UNIT = "LABELMUPERLABORUNIT";
@@ -75,12 +50,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String FIELD_GP_PERCENTAGE = "LABELGPPERCENTAGE";
 	public static final String FIELD_GP_PERCENTAGE_CAPTION = "GP PERCENTAGE:";
 	public static final String LABEL_TOTAL_MARKUP_CAPTION = "TOTAL MARK-UP:";
-//	public static final String LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL = "LABELADJUSTEDTOTALTAXONMATERIAL";
-//	public static final String LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL_CAPTION = "TOTAL TAX ON MATERIAL:";
-//	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY = "LABELADJUSTEDTOTALFORSUMMARY";
-//	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY #";
-//	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
-//	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String LABEL_COST_SUBTOTAL_CAPTION = "COST SUBTOTAL:";
 	public static final String LABEL_COST_SUBTOTAL = "COSTSUBTOTAL";
 	public static final String FIELD_ADDITIONAL_TAXED_COST_CAPTION = "ADDITIONAL COST SUBJECT TO USE TAX:";
@@ -460,6 +429,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " VALUE=\"" + estimate.getsbdquantity() + "\""
 			+ " MAXLENGTH=15"
 			+ " style = \" text-align:right; width:100px;\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -472,6 +442,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " VALUE=\"" + estimate.getsitemnumber() + "\""
 			+ " MAXLENGTH=32"
 			+ " style = \" width:100px;\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -491,6 +462,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " VALUE=\"" + estimate.getsproductdescription().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=32"
 			+ " style = \" width:500px;\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -503,6 +475,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " VALUE=\"" + estimate.getsunitofmeasure().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=32"
 			+ " style = \" width:50px;\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -515,6 +488,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " VALUE=\"" + estimate.getsbdextendedcost() + "\""
 			+ " MAXLENGTH=32"
 			+ " style = \" text-align:right; width:120px;\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -545,6 +519,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdquantity() + "\""
 					+ " MAXLENGTH=15"
 					+ " style = \" text-align:right; width:100px;\""
+					+ " onchange=\"flagDirty();\""
 					+ ">"
 					
 					//Store the line ID in a hidden field:
@@ -568,6 +543,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsitemnumber() + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" width:100px;\""
+					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -589,6 +565,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getslinedescription().replace("\"", "&quot;") + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" width:500px;\""
+					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -603,6 +580,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsunitofmeasure().replace("\"", "&quot;") + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" width:50px;\""
+					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -617,6 +595,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdextendedcost() + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" text-align:right; width:120px;\""
+					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -635,6 +614,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + "0.0000" + "\""
 				+ " MAXLENGTH=15"
 				+ " style = \" text-align:right; width:100px;\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				
 				//Store the line ID in a hidden field:
@@ -663,6 +643,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + sItemNumber + "\""
 				+ " MAXLENGTH=32"
 				+ " style = \" width:100px;\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</TD>" + "\n"
 			;
@@ -683,6 +664,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + "" + "\""
 				+ " MAXLENGTH=32"
 				+ " style = \" width:500px;\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</TD>" + "\n"
 			;
@@ -697,6 +679,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + "" + "\""
 				+ " MAXLENGTH=32"
 				+ " style = \" width:50px;\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</TD>" + "\n"
 			;
@@ -711,6 +694,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + "0.00" + "\""
 				+ " MAXLENGTH=32"
 				+ " style = \" text-align:right; width:120px;\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</TD>" + "\n"
 			;
@@ -755,7 +739,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.sprefixlabelitem + "\""
 			+ " style = \" text-align:left; width:100px;\""
 			+ " VALUE = \"" + estimate.getsprefixlabelitem().replace("\"", "&quot;") + "\""
-			+ " onchange=\"flagdirty();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			 + "\n"
@@ -766,7 +750,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.sdescription + "\""
 			+ " style = \" text-align:left; width:600px;\""
 			+ " VALUE = \"" + estimate.getsdescription().replace("\"", "&quot;") + "\""
-			+ " onchange=\"flagdirty();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			+ "\n"
@@ -814,7 +798,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + FIELD_REPLACE_QUOTE_WITH_NUMBER + "\""
 			+ " style = \" text-align:left; width:150px;\""
 			+ " VALUE = \"" + "" + "\""
-			+ " onchange=\"flagdirty();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>" + "\n"
 			+ ", line number:&nbsp;"
@@ -823,7 +807,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
 			+ " style = \" text-align:left; width:60px;\""
 			+ " VALUE = \"" + "" + "\""
-			+ " onchange=\"flagdirty();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>" + "\n"
 		;
@@ -994,7 +978,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.bdfreight + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + estimate.getsbdfreight() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1014,7 +998,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.bdlaborquantity + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + estimate.getsbdlaborquantity() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			+ "&nbsp;"
@@ -1025,7 +1009,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.bdlaborcostperunit + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + estimate.getsbdlaborcostperunit() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1065,7 +1049,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.bdadditionalpretaxcostamount + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + estimate.getsbdadditionalpretaxcostamount() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1157,7 +1141,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " ID = \"" + SMTablesmestimates.bdmarkupamount + "\""
 				+ " style = \" text-align:right; width:100px;\""
 				+ " VALUE = \"" + estimate.getsbdmarkupamount() + "\""
-				+ " onchange=\"recalculatelivetotals();\""
+				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</INPUT>"
 				
@@ -1221,7 +1205,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + estimate.getsbdadditionalposttaxcostamount() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1243,7 +1227,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
 			+ " style = \" text-align:right; width:100px;\""
 			+ " VALUE = \"" + estimate.getsbdlaborsellpriceperunit() + "\""
-			+ " onchange=\"recalculatelivetotals();\""
+			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
 			
@@ -1334,7 +1318,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "</TABLE>" + "\n";
 		
 		return s;
-		
 	}
 	
 	private String buildItemFinderButton(String sLineNumber) {
@@ -1526,13 +1509,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			s += "function flagDirty() {\n"
 					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
 					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
+					+ "    recalculatelivetotals(); \n"
 				+ "}\n";
 			
-			
-						
 			//Recalculate live totals:
 			s += "function recalculatelivetotals(){\n"
-				+ "    alert('Recalculating');\n"
+				//+ "    alert('Recalculating');\n"
+				+ "    formatnumberinputfields(); \n"
 				+ "    var materialcosttotal = parseFloat(\"0.00\");\n"
 				
 				+ "    //Get the product cost: \n"
@@ -1631,18 +1614,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    } \n"
 				+ "    document.getElementById(\"" + FIELD_MU_PERCENTAGE + "\").value=formatNumber(markuppercentage);\n\n"
 				
-				
-				/*
-				+ "    var gppercentage = parseFloat(\"0.00\");\n"
-				+ "    var totalforestimate = parseFloat(\"0.00\");\n"
-				+ "    totalforestimate = costsubtotal + "
-				+ "    gppercentage = markupamount / totalforestimate; \n"
-				+ "    adjustedgppercentage = adjustedgppercentage * 100; \n"
-				+ "    document.getElementById(\"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\").value=formatNumber(adjustedgppercentage);\n"
-				+ "    \n"
-				*/
-				
-				
 				+ "    var taxonmaterial = parseFloat(\"0.00\");\n"
 				+ "    var taxrateaspercentage = parseFloat(\"0.00\");\n"
 				+ "    var icalculatetaxoncustomerinvoice = parseFloat(\"0.00\");\n"
@@ -1680,188 +1651,170 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    } \n"
 				+ "    document.getElementById(\"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\").innerText=formatNumber(taxonmaterial);\n"
 				+ "    \n"
-;
-				
-			/*
-				//+ "    //Turn off the line amt warning by default:\n"
-				//+ "    document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.display= \"none\"\n"
-				+ "    var adjustedlabortotalcost = parseFloat(\"0.00\");\n"
-				+ "    var adjustedlaborunits = parseFloat(\"0.00\");\n"
-				+ "    var adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
-				+ "    var adjustedtotalforsummary = parseFloat(\"0.00\");\n"
-				+ "    var materialcosttotal = parseFloat(\"0.00\");\n"
-				+ "    var adjustedtfreighttotal = parseFloat(\"0.00\");\n"
-				+ "    var adjustedmarkuptotal = parseFloat(\"0.00\");\n"
-				+ "    var taxonmaterial = parseFloat(\"0.00\");\n"
-				+ "    var taxrateaspercentage = parseFloat(\"0.00\");\n"
-				+ "    var icalculatetaxoncustomerinvoice = \"0\";\n"
-				+ "    var icalculatetaxonpurchaseorsale = \"0\";\n"
-				+ "    var totalcalculatedestimateprice = \"0\";\n"
-				+ "    var totalfreightonestimates = \"0.00\"; \n"
-				+ "    var totallaboronestimates = \"0.00\"; \n"
-				+ "    var totalmarkuponestimates = \"0.00\"; \n"
-				+ "    var calculatedretailsalestax = \"0.00\"; \n"
-				+ "    var retailsalestaxrateaspercent = parseFloat(\"0.00\");\n"
-				+ "    var retailsalestaxrateasdecimal = parseFloat(\"0.00\");\n"
-				+ "    var adjustedretailsalestax = parseFloat(\"0.00\");\n"
-				+ "    var adjustedretailsalestaxamount = parseFloat(\"0.00\");\n"
-				+ "    var adjustedmarkupperlaborunit = parseFloat(\"0.00\");\n"
-				+ "    var adjustedmarkuppercentage = parseFloat(\"0.00\");\n"
-				+ "    var adjustedgppercentage = parseFloat(\"0.00\");\n"
-				
-				+ "    //Calculate the total adjusted sell price: \n"
-				+ "    //Should equal totalmaterialcost + totalfreight + totallabor + totalmarkup + totalmaterialtax \n"
-				+ "    \n"
-				
 
-				
-				+ "    //Get the tax on material: \n"
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdtaxrate + "\").value).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        taxrateaspercentage = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        taxrateaspercentage = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    \n"
-				
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\").value);\n"
-				+ "    if (temp == ''){\n"
-				+ "        icalculatetaxoncustomerinvoice = parseInt(\"0\");\n"
-				+ "    }else{\n"
-				+ "        icalculatetaxoncustomerinvoice = parseInt(temp); \n"
-				+ "    }\n"
-				+ "    \n"
-				
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\").value);\n"
-				+ "    if (temp == ''){\n"
-				+ "        icalculatetaxonpurchaseorsale = parseInt(\"0\");\n"
-				+ "    }else{\n"
-				+ "        icalculatetaxonpurchaseorsale = parseInt(temp); \n"
-				+ "    }\n"
-				+ "    \n"
-				
-				+ "    if((icalculatetaxoncustomerinvoice == 0) && ((icalculatetaxonpurchaseorsale == " 
-					+ Integer.toString(SMTabletax.TAX_CALCULATION_BASED_ON_PURCHASE_COST) + "))){ \n"
-				+ "        taxonmaterial = parseFloat((materialcosttotal * (taxrateaspercentage / 100)).toFixed(2)); \n"
-				+ "    }else{ \n"
-				+ "        taxonmaterial = parseFloat(\"0.00\"); \n"
-				+ "    } \n"
-				+ "    document.getElementById(\"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\").innerText=formatNumber(taxonmaterial);\n"
-				+ "    \n"
-
-				+ "    //Get the calculated total for the estimate summary: \n"
-				+ "    //This should equal: totalmaterialcost + totalfreightonestimates + totallaborcost + totalmarkup + totaltax \n"
-				
-				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\").innerText).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        totalfreightonestimates = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        totalfreightonestimates = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    \n"
-				
-				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\").innerText).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        totallaboronestimates = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        totallaboronestimates = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    \n"
-				
-				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_MARKUP + "\").innerText).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        totalmarkuponestimates = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        totalmarkuponestimates = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    \n"
-				
-				+ "    totalcalculatedestimateprice = \n"
-					+ "        materialcosttotal + totalfreightonestimates + totallaboronestimates + totalmarkuponestimates + taxonmaterial; \n"
-				+ "    document.getElementById(\"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\").innerText=formatNumber(totalcalculatedestimateprice);\n"
-				+ "    \n"
-					
-				+ "    //Get the calculated retail sales tax for the estimate summary: \n"
-				+ "    if((icalculatetaxoncustomerinvoice == 1) && ((icalculatetaxonpurchaseorsale == " 
-				+ Integer.toString(SMTabletax.TAX_CALCULATION_BASED_ON_SELLING_PRICE) + "))){ \n"
-				+ "        calculatedretailsalestax = parseFloat((totalcalculatedestimateprice * (taxrateaspercentage / 100)).toFixed(2)); \n"
-				+ "    }else{ \n"
-				+ "        calculatedretailsalestax = parseFloat(\"0.00\"); \n"
-				+ "    } \n"
-				+ "    document.getElementById(\"" + LABEL_CALCULATED_RETAIL_SALES_TAX + "\").innerText=formatNumber(calculatedretailsalestax);\n"
-				+ "    \n"
-				
-				+ "    //Get the adjusted freight amount: \n"
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        adjustedtfreighttotal = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        adjustedtfreighttotal = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    \n"
-				
-				+ "    //Calculate the total adjusted labor cost: \n"
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\").value).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        adjustedlaborunits = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        adjustedlaborunits = parseFloat(temp);\n"
-				+ "    }\n"
-				
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\").value).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        adjustedlaborcostperunit = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        adjustedlaborcostperunit = parseFloat(temp);\n"
-				+ "    }\n"
-				
-				+ "    adjustedlabortotalcost = adjustedlaborunits * adjustedlaborcostperunit;\n"
-				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").innerText=formatNumber(adjustedlabortotalcost);\n"
-				+ "    \n"
-				
-
-				
-				+ "    //Set the tax on material for the adjusted section (same as tax on material above): \n"
-				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\").innerText=formatNumber(taxonmaterial);\n"
-				+ "    \n"
-				
-				+ "    adjustedtotalforsummary = materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost + adjustedmarkuptotal + taxonmaterial; \n"
-				+ "    document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\").innerText=formatNumber(adjustedtotalforsummary);\n"
-				+ "    \n"
-				
-				+ "    //Calculate the MU per labor unit, as a percentage and as a GP percentage: \n"
-				+ "    //adjustedmarkupperlaborunit = adjustedmarkuptotal / adjustedlaborunits \n"
-				+ "    if(compare2DecimalPlaceFloats(adjustedlaborunits, parseFloat(\"0.00\"))){ \n"
-				+ "        adjustedmarkupperlaborunit = adjustedmarkuptotal; \n"
-				+ "    } else { \n"
-				+ "        adjustedmarkupperlaborunit = adjustedmarkuptotal / adjustedlaborunits; \n"
-				+ "    } \n"
-				+ "    document.getElementById(\"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\").value=formatNumber(adjustedmarkupperlaborunit);\n"
+				+ "    var totalcostandmarkup = parseFloat(\"0.00\");\n"
+				+ "    totalcostandmarkup = costsubtotal + markupamount + taxonmaterial; \n"
+				+ "    document.getElementById(\"" + LABEL_TOTAL_COST_AND_MARKUP + "\").innerText=formatNumber(totalcostandmarkup);\n"
 				+ "    \n\n"
-				+ "    //adjustedmarkuppercentage = adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost) \n"
-				+ "    adjustedmarkuppercentage = adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost); \n"
-				+ "    adjustedmarkuppercentage = adjustedmarkuppercentage * 100; \n"
-				+ "    document.getElementById(\"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\").value=formatNumber(adjustedmarkuppercentage);\n"
-				+ "    \n"
-				+ "    //adjustedgppercentage = adjustedmarkuptotal / adjustedtotalforsummary \n"
-				+ "    adjustedgppercentage = adjustedmarkuptotal / adjustedtotalforsummary; \n"
-				+ "    adjustedgppercentage = adjustedgppercentage * 100; \n"
-				+ "    document.getElementById(\"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\").value=formatNumber(adjustedgppercentage);\n"
+				
+				+ "    var laborsellprice = parseFloat(\"0.00\");\n"
+				+ "    var laborsellpriceperunit = parseFloat(\"0.00\");\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdlaborsellpriceperunit + "\").value);\n"
+				+ "    if (temp == ''){\n"
+				+ "        laborsellpriceperunit = parseFloat(\"0\");\n"
+				+ "    }else{\n"
+				+ "        laborsellpriceperunit = parseFloat(temp); \n"
+				+ "    }\n"
+				+ "    laborsellprice = laborunits * laborsellpriceperunit; \n"
+				+ "    document.getElementById(\"" + LABEL_LABOR_SELL_PRICE + "\").innerText=formatNumber(laborsellprice);\n"
 				+ "    \n"
 				
-				+ "    //Get the adjusted retail sales tax for the estimate summary: \n"
+				+ "    var additionalposttaxcost = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        additionalposttaxcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        additionalposttaxcost = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    var totalsellprice = parseFloat(\"0.00\");\n"
+				+ "    totalsellprice = totalcostandmarkup + additionalposttaxcost; \n"
+				+ "    document.getElementById(\"" + LABEL_TOTAL_SELL_PRICE + "\").innerText=formatNumber(totalsellprice);\n"
+				+ "    \n"
+				
+				+ "    var materialsellprice = parseFloat(\"0.00\");\n"
+				+ "    materialsellprice = totalsellprice - laborsellprice; \n"
+				+ "    document.getElementById(\"" + LABEL_MATERIAL_SELL_PRICE + "\").innerText=formatNumber(materialsellprice);\n"
+				+ "    \n"
+				
+				+ "    //Get the retail sales tax for the estimate: \n"
+				+ "    var retailsalestaxamount = parseFloat(\"0.00\");\n"
 				+ "    if((icalculatetaxoncustomerinvoice == 1) && ((icalculatetaxonpurchaseorsale == " 
 							+ Integer.toString(SMTabletax.TAX_CALCULATION_BASED_ON_SELLING_PRICE) + "))){ \n"
-				+ "        adjustedretailsalestaxamount = parseFloat((adjustedtotalforsummary * (taxrateaspercentage / 100)).toFixed(2)); \n"
+				+ "        retailsalestaxamount = parseFloat((totalsellprice * (taxrateaspercentage / 100)).toFixed(2)); \n"
 				+ "    }else{ \n"
-				+ "        adjustedretailsalestaxamount = parseFloat(\"0.00\"); \n"
+				+ "        retailsalestaxamount = parseFloat(\"0.00\"); \n"
 				+ "    } \n"
-				+ "    document.getElementById(\"" + LABEL_ADJUSTED_RETAIL_SALES_TAX + "\").innerText=formatNumber(adjustedretailsalestaxamount);\n"
+				+ "    document.getElementById(\"" + LABEL_RETAIL_SALES_TAX + "\").innerText=formatNumber(retailsalestaxamount);\n"
 				+ "    \n"
-			;	
-			*/
+				
+				+ "    var gppercentage = parseFloat(\"0.00\");\n"
+				+ "    gppercentage = markupamount / totalsellprice; \n"
+				+ "    gppercentage = gppercentage * 100; \n"
+				+ "    document.getElementById(\"" + FIELD_GP_PERCENTAGE + "\").value=formatNumber(gppercentage);\n"
+				+ "    \n"
+				
+			;
 			s += "}\n"
 	   		;
+			
+			//Set all editable fields to their correct decimal formats:
+			s += "function formatnumberinputfields(){ \n"
+					
+				+ "    var fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\").value=formatNumber(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdadditionalpretaxcostamount + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdadditionalpretaxcostamount + "\").value=formatNumber(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdextendedcost + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdextendedcost + "\").value=formatNumber(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdfreight + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdfreight + "\").value=formatNumber(fieldvalue);\n"
+								
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdlaborcostperunit + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdlaborcostperunit + "\").value=formatNumber(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdlaborquantity + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.0000\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdlaborquantity + "\").value=formatNumberTo4Places(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdlaborsellpriceperunit + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdlaborsellpriceperunit + "\").value=formatNumber(fieldvalue);\n"
+												
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdmarkupamount + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdmarkupamount + "\").value=formatNumber(fieldvalue);\n"
+										
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdquantity + "\").value).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.0000\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdquantity + "\").value=formatNumberTo4Places(fieldvalue);\n"
+				
+				+ "    //Reformat the line values: \n"
+				+ "    "
+				+ "    for (i=0; i<document.forms[0].length; i++){\n"
+				+ "        ctl = document.forms[0].elements[i];\n"
+				+ "        if (ctl.name.indexOf('" + ESTIMATE_LINE_PREFIX + "') >= 0 ){ \n"
+				+ "            if (ctl.name.indexOf('" + SMTablesmestimatelines.bdextendedcost + "') >= 0 ){ \n"
+				+ "                var temp = (ctl.value).replace(',','');\n"
+				+ "                if (temp == ''){\n"
+				+ "                    fieldvalue = parseFloat(\"0.00\");\n"
+				+ "                }else{\n"
+				+ "                    fieldvalue = parseFloat(temp);\n"
+				+ "                }\n"
+				+ "                document.getElementById(ctl.name).value=formatNumber(fieldvalue);\n"
+				+ "            } \n"
+				+ "        } \n"
+				+ "        if (ctl.name.indexOf('" + ESTIMATE_LINE_PREFIX + "') >= 0 ){ \n"
+				+ "            if (ctl.name.indexOf('" + SMTablesmestimatelines.bdquantity + "') >= 0 ){ \n"
+				+ "                var temp = (ctl.value).replace(',','');\n"
+				+ "                if (temp == ''){\n"
+				+ "                    fieldvalue = parseFloat(\"0.0000\");\n"
+				+ "                }else{\n"
+				+ "                    fieldvalue = parseFloat(temp);\n"
+				+ "                }\n"
+				+ "                document.getElementById(ctl.name).value=formatNumberTo4Places(fieldvalue);\n"
+				+ "            } \n"
+				+ "        } \n"
+
+				+ "    }"
+				
+				+ "}\n\n"
+			;
 			
 			//Compare floats with 2 decimal precision:
 			s += "function compare2DecimalPlaceFloats(float1, float2){ \n"
@@ -1881,6 +1834,12 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "}\n\n"
 			;
 			
+			//Format numbers to 4 decimal places and have commas as needed:
+			s += "function formatNumberTo4Places(num) {\n"
+				+ "    return num.toFixed(4); \n"
+				+ "}\n\n"
+			;
+			
 			s += "\n"
 				+ "function isNumeric(value) {\n"
 				+ "    if ((value == null) || (value == '')) return false;\n"
@@ -1892,137 +1851,106 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "\n\n"
 			;
 			
-			/*
 			//Recalculate MU using MU percentage:
 			s += "function calculateMUusingMUpercentage(){\n"
-				+ "    var adjustedtotalmarkup = parseFloat(\"0.00\");\n"
-				+ "    var adjustedMUpercentage = parseFloat(\"0.00\");\n"
+				+ "    var totalmarkup = parseFloat(\"0.00\");\n"
+				+ "    var MUpercentage = parseFloat(\"0.00\");\n"
 				
-				+ "    var temp = (document.getElementById(\"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\").value).replace(',','');\n"
+				
+				+ "    var temp = (document.getElementById(\"" + FIELD_MU_PERCENTAGE + "\").value).replace(',','');\n"
 				+ "    if (temp == ''){\n"
-				+ "        adjustedMUpercentage = parseFloat(\"0.00\")\n;"
+				+ "        MUpercentage = parseFloat(\"0.00\")\n;"
 				+ "    }else{\n"
-				+ "        adjustedMUpercentage = parseFloat(temp);\n"
+				+ "        MUpercentage = parseFloat(temp);\n"
 				+ "    }\n"
-				+ "    adjustedMUpercentage = adjustedMUpercentage / 100; \n"
+				+ "    MUpercentage = MUpercentage / 100; \n"
 				
 				+ "    //Get the total cost before mark-up:\n"
-				+ "    var materialcost = parseFloat(\"0.00\");\n"
-				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\").innerText).replace(',','');\n"
+				+ "    var costsubtotal = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + LABEL_COST_SUBTOTAL + "\").innerText).replace(',','');\n"
 				+ "    if (temp == ''){\n"
-				+ "        materialcost = parseFloat(\"0.00\");\n"
+				+ "        costsubtotal = parseFloat(\"0.00\");\n"
 				+ "    }else{\n"
-				+ "        materialcost = parseFloat(temp);\n"
+				+ "        costsubtotal = parseFloat(temp);\n"
 				+ "    }\n"
-
-				+ "    var adjustedfreightcost = parseFloat(\"0.00\");\n"
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        adjustedfreightcost = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        adjustedfreightcost = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    var adjustedlaborcost = parseFloat(\"0.00\");\n"
-				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").innerText).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        adjustedlaborcost = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        adjustedlaborcost = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    var adjustedpremarkupcost = materialcost + adjustedfreightcost + adjustedlaborcost;\n"
-				
-				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=(adjustedpremarkupcost * adjustedMUpercentage).toFixed(2);\n"
-				+ "    recalculatelivetotals();\n"
-				
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdmarkupamount + "\").value=(costsubtotal * MUpercentage).toFixed(2);\n"
+				+ "    flagDirty();\n"
 	   			;
 			s += "}\n"
 	   		;
 			
 			//Recalculate MU using MU per labor unit:
 			s += "function calculateMUusingMUperlaborunit(){\n"
-				+ "    // adjustedtotalmarkup = adjustedMUperlaborunit * adjustedlaborunits \n"
-				+ "    var adjustedtotalmarkup = parseFloat(\"0.00\");\n"
-				+ "    var adjustedMUperlaborunit = parseFloat(\"0.00\");\n"
-				+ "    var adjustedlaborunits = parseFloat(\"0.00\");\n"
+				+ "    var markup = parseFloat(\"0.00\");\n"
+				+ "    var MUperlaborunit = parseFloat(\"0.00\");\n"
+				+ "    var laborunits = parseFloat(\"0.00\");\n"
 				
-				+ "    var temp = (document.getElementById(\"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\").value).replace(',','');\n"
+				+ "    var temp = (document.getElementById(\"" + FIELD_MU_PER_LABOR_UNIT + "\").value).replace(',','');\n"
 				+ "    if (temp == ''){\n"
-				+ "        adjustedMUperlaborunit = parseFloat(\"0.00\")\n;"
+				+ "        MUperlaborunit = parseFloat(\"0.00\")\n;"
 				+ "    }else{\n"
-				+ "        adjustedMUperlaborunit = parseFloat(temp);\n"
+				+ "        MUperlaborunit = parseFloat(temp);\n"
 				+ "    }\n"
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\").value).replace(',','');\n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdlaborquantity + "\").value).replace(',','');\n"
 				+ "    if (temp == ''){\n"
-				+ "        adjustedlaborunits = parseFloat(\"0.00\")\n;"
+				+ "        laborunits = parseFloat(\"0.00\")\n;"
 				+ "    }else{\n"
-				+ "        adjustedlaborunits = parseFloat(temp);\n"
+				+ "        laborunits = parseFloat(temp);\n"
 				+ "    }\n"
-				+ "    adjustedtotalmarkup = adjustedMUperlaborunit * adjustedlaborunits; \n"
-				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=adjustedtotalmarkup.toFixed(2);\n"
+				+ "    markup = MUperlaborunit * laborunits; \n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdmarkupamount + "\").value=markup.toFixed(2);\n"
+				+ "    flagDirty();\n"
 	   			;
 			s += "}\n"
 	   		;
 			
 			//Recalculate MU using GP percentage:
 			s += "function calculateMUusingGPpercentage(){\n"
-				+ "    // adjustedtotalmarkup = (adjustedpremarkupcost / (1 - (adjustedGPpercentage/100))) - adjustedpremarkupcost \n"
-				+ "    var adjustedtotalmarkup = parseFloat(\"0.00\");\n"
-				+ "    var adjustedGPpercentage = parseFloat(\"0.00\");\n"
-				+ "    var adjustedGPpercentageAsFraction = parseFloat(\"0.00\");\n"
-				+ "    var temp = (document.getElementById(\"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\").value).replace(',','');\n"
+				+ "    var markup = parseFloat(\"0.00\");\n"
+				+ "    var GPpercentage = parseFloat(\"0.00\");\n"
+				+ "    var GPpercentageAsFraction = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + FIELD_GP_PERCENTAGE + "\").value).replace(',','');\n"
 				+ "    if (temp == ''){\n"
-				+ "        adjustedGPpercentage = parseFloat(\"0.00\")\n;"
+				+ "        GPpercentage = parseFloat(\"0.00\")\n;"
 				+ "    }else{\n"
-				+ "        adjustedGPpercentage = parseFloat(temp);\n"
+				+ "        GPpercentage = parseFloat(temp);\n"
 				+ "    }\n"
-				+ "    adjustedGPpercentageAsFraction = adjustedGPpercentage / 100; \n"
+				+ "    GPpercentageAsFraction = GPpercentage / 100; \n"
 				
-				+ "    //Get the total cost before mark-up:\n"
-				+ "    var materialcost = parseFloat(\"0.00\");\n"
-				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\").innerText).replace(',','');\n"
+				+ "    var costsubtotal = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + LABEL_COST_SUBTOTAL + "\").innerText).replace(',','');\n"
 				+ "    if (temp == ''){\n"
-				+ "        materialcost = parseFloat(\"0.00\");\n"
+				+ "        costsubtotal = parseFloat(\"0.00\");\n"
 				+ "    }else{\n"
-				+ "        materialcost = parseFloat(temp);\n"
+				+ "        costsubtotal = parseFloat(temp);\n"
 				+ "    }\n"
-
-				+ "    var adjustedfreightcost = parseFloat(\"0.00\");\n"
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedfreight + "\").value).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        adjustedfreightcost = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        adjustedfreightcost = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    var adjustedlaborcost = parseFloat(\"0.00\");\n"
-				+ "    var temp = (document.getElementById(\"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\").innerText).replace(',','');\n"
-				+ "    if (temp == ''){\n"
-				+ "        adjustedlaborcost = parseFloat(\"0.00\");\n"
-				+ "    }else{\n"
-				+ "        adjustedlaborcost = parseFloat(temp);\n"
-				+ "    }\n"
-				+ "    var adjustedpremarkupcost = materialcost + adjustedfreightcost + adjustedlaborcost;\n"
 				
-				+ "    adjustedtotalmarkup = (adjustedpremarkupcost / (1 - (adjustedGPpercentageAsFraction))) - adjustedpremarkupcost; \n"
+				+ "    var taxonmaterial = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\").innerText).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        taxonmaterial = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        taxonmaterial = parseFloat(temp);\n"
+				+ "    }\n"
 				
-				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=adjustedtotalmarkup.toFixed(2);\n"
-				+ "    recalculatelivetotals();\n"
+				+ "    var additionalposttaxcost = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\").innerText).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        additionalposttaxcost = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        additionalposttaxcost = parseFloat(temp);\n"
+				+ "    }\n"
+				
+				+ "    var premarkupcost = parseFloat(\"0.00\");\n"
+				+ "    var premarkupcost = costsubtotal + taxonmaterial + additionalposttaxcost; \n"
+				+ "    markup = (premarkupcost / (1 - (GPpercentageAsFraction))) - premarkupcost; \n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdmarkupamount + "\").value=markup.toFixed(2);\n"
+				+ "    flagDirty();\n"
 				
 	   			;
 			s += "}\n"
 	   		;
-			*/
 			
-			//Flag page dirty:
-			s += "function flagDirty() {\n"
-					+ "    flagRecordChanged();\n"
-					+ "}\n"
-				;
-
-			s += "function flagRecordChanged() {\n"
-					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
-					 + RECORDWASCHANGED_FLAG_VALUE + "\";\n"
-					+ "}\n"
-				;
 			s += "</script>\n";
 			return s;
 		}

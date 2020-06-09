@@ -139,33 +139,19 @@ public class SMCreatePOFromOrderAction extends HttpServlet{
 					);
 				return;
 		}
-		SQL = "SELECT * FROM " + SMTableusers.TableName
-			+ " WHERE ("
-				+ "(" + SMTableusers.lid + " = " + smaction.getUserID() + ")"
-			+ ")"
-		;
-		try {
-			ResultSet rsUser = clsDatabaseFunctions.openResultSet(
-					SQL, 
-					getServletContext(), 
-					smaction.getsDBID(),
-					"MySQL",
-					this.toString() + ".readUserName - user: " + smaction.getUserID()
-					+ " - "
-					+ smaction.getFullUserName()
+		if(smaction.getFullUserName().compareTo("")==0 || smaction.getFullUserName().isEmpty())
+		{
+			sWarning = "Error - Could not get User Name";
+			smaction.redirectAction(
+					sWarning, 
+					"", 
+					""
 					);
-			if (rsUser.next()){
-				String sName = rsUser.getString(SMTableusers.sUserFirstName) + " " + rsUser.getString(SMTableusers.sUserLastName);
-				pohead.setsbillcontactname(sName);
-				pohead.setcreatedbyfullname(sName);
-				pohead.setsassignedtofullname(sName);
-			}else{ 
-				pohead.setsbillcontactname("");
-			}
-			rsUser.close();
-		} catch (SQLException e) {
-			//Don't choke over this
-			pohead.setsbillcontactname("");
+				return;
+		}else {
+			pohead.setsbillcontactname(smaction.getFullUserName());
+			pohead.setcreatedbyfullname(smaction.getFullUserName());
+			pohead.setsassignedtofullname(smaction.getFullUserName());
 		}
 		
 		pohead.setscomment(order.getM_strimmedordernumber() + " " 

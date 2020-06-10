@@ -83,6 +83,37 @@ public class SMEditSMEstimateAction extends HttpServlet{
 			return;
 		}
 		
+		//If LOOK UP ITEM data, process that:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMEstimateEdit.LOOKUP_ITEM_COMMAND) == 0){
+			String sLineNumber = clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.PARAM_LOOKUP_ITEM_LINENUMBER, request).trim();
+			try {
+				estimate.lookUpItem(sLineNumber, conn);
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633390]");
+				smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimates.lid + "=" + estimate.getslid()
+			    		+ "&" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
+							+ clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.RECORDWASCHANGED_FLAG_VALUE, request)
+			    		);
+				return;
+			}
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633391]");
+			//System.out.println("[202006102617] - estimate dump = \n" + estimate.dumpData());
+			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
+	    	smaction.redirectAction(
+		    		"", 
+		    		"", 
+		    		SMTablesmestimates.lid + "=" + estimate.getslid()
+		    		+ "&" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
+						+ clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.RECORDWASCHANGED_FLAG_VALUE, request)
+		    		);
+			return;
+		}
+		
 		//If FIND ITEM, process that:
 		if(sCommandValue.compareToIgnoreCase(SMEditSMEstimateEdit.FIND_ITEM_COMMAND) == 0){
 			String sReturnField = clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.PARAM_FIND_ITEM_RETURN_FIELD, request).trim();
@@ -94,30 +125,7 @@ public class SMEditSMEstimateAction extends HttpServlet{
 					+ "&ResultClass=FinderResults"
 					+ "&SearchingClass=" + smaction.getCallingClass()
 					+ "&ReturnField=" + sReturnField
-					
 					+ SMFinderFunctions.getStdITEMSearchAndResultString()
-					
-					/*
-					+ "&SearchField1=" + SMTableicitems.sItemDescription
-					+ "&SearchFieldAlias1=Description"
-					+ "&SearchField2=" + SMTableicitems.sItemNumber
-					+ "&SearchFieldAlias2=Item%20No."
-					+ "&SearchField3=" + SMTableicitems.sComment1
-					+ "&SearchFieldAlias3=Comment%201"
-					+ "&SearchField4=" + SMTableicitems.sComment2
-					+ "&SearchFieldAlias4=Comment%202"
-					+ "&ResultListField1="  + SMTableicitems.sItemNumber
-					+ "&ResultHeading1=Item%20No."
-					+ "&ResultListField2="  + SMTableicitems.sItemDescription
-					+ "&ResultHeading2=Description"
-					+ "&ResultListField3="  + SMTableicitems.sCostUnitOfMeasure
-					+ "&ResultHeading3=Cost%20Unit"
-					+ "&ResultListField4="  + SMTableicitems.inonstockitem
-					+ "&ResultHeading4=Non-stock?"
-					+ "&ResultListField5="  + SMTableicitems.sPickingSequence
-					+ "&ResultHeading5=Picking%20Sequence"				+ "&ParameterString="
-					*/
-					
 					+ "&ParameterString="
 					+ "*" + SMTablesmestimates.lid + "=" + estimate.getslid()
 					+ "*" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
@@ -137,13 +145,14 @@ public class SMEditSMEstimateAction extends HttpServlet{
 		    	smaction.redirectAction(
 			    		"", 
 			    		"", 
-			    		SMTablesmestimates.lid + "=" + estimate.getslid()
+			    		SMTablesmestimates.lid + "=" + estimate.getslid()		    		
+			    			+ "&" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
+							+ clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.RECORDWASCHANGED_FLAG_VALUE, request)
 			    		);
 				return;
 			}
-			return;
-	    }
-		
+		}
+		return;
 	}
 	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{
 		try {

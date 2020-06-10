@@ -80,6 +80,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String FIND_ITEM_BUTTON = "FINDITEM";
 	public static final String FIND_ITEM_COMMAND = "FINDITEMCOMMAND";
 	public static final String PARAM_FIND_ITEM_RETURN_FIELD = "PARAMFINDITEMRETURNFIELD";
+	public static final String LOOKUP_ITEM_COMMAND = "LOOKUPITEMCOMMAND";
+	public static final String PARAM_LOOKUP_ITEM_LINENUMBER = "LOOKUPITEMLINENUMBER";
 	
 	public static final String UNSAVED_ESTIMATE_LABEL = "(UNSAVED)";
 	public static final String EMPTY_VENDOR_QUOTE_LABEL = "(NONE)";
@@ -130,10 +132,12 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    	estimate = (SMEstimate) currentSession.getAttribute(SMEstimate.OBJECT_NAME);
 	    	currentSession.removeAttribute(SMEstimate.OBJECT_NAME);
 			
+	    	// No reason to re-load this class if it's being picked up in the session:
+	    	/*
 	    	try {
 	    		estimate.load(getServletContext(), smedit.getsDBID(), smedit.getUserID());
 			} catch (Exception e) {
-				System.out.println("[202006040606] - could not load estimate - " + e.getMessage());
+				//System.out.println("[202006040606] - could not load estimate - " + e.getMessage());
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
 					+ "?" + SMTablesmestimatesummaries.lid + "=" + estimate.getslid()
@@ -142,7 +146,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				);
 				return;
 			}
-	    	
+	    	*/
 	    //But if it's NOT a 'resubmit', meaning this class was called for the first time to 
 	    //edit, we'll pick up the ID or key from the request and try to load the entry:
 	    }else{
@@ -312,6 +316,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.svendorquotenumber + "\""
 				+ " VALUE=\"" + estimate.getsvendorquotenumber() + "\""+ " "
 				+ " ID=\"" + SMTablesmestimates.svendorquotenumber + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_LOOKUP_ITEM_LINENUMBER + "\""
+				+ " VALUE=\"" + "" + "\""+ " "
+				+ " ID=\"" + PARAM_LOOKUP_ITEM_LINENUMBER + "\""+ "\">" + "\n";
 		
 		//This is used to store the on-the-fly retail sales tax rate in case the user changes the tax drop down
 		s += "<INPUT TYPE=HIDDEN"
@@ -543,7 +551,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsitemnumber() + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \" width:100px;\""
-					+ " onchange=\"flagDirty();\""
+					+ " onchange=\"lookUpItem('" + clsStringFunctions.PadLeft(
+							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + "');\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -643,7 +652,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + sItemNumber + "\""
 				+ " MAXLENGTH=32"
 				+ " style = \" width:100px;\""
-				+ " onchange=\"flagDirty();\""
+				+ " onchange=\"lookUpItem('" + clsStringFunctions.PadLeft("0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + "');\""
 				+ ">"
 				+ "</TD>" + "\n"
 			;
@@ -1392,7 +1401,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		return s;
 	}
-	
+
 	private String sCommandScripts(
 			SMEstimate estimate, 
 			SMMasterEditEntry smedit
@@ -1426,10 +1435,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				
 				+ "    if (document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value == \"" 
 					+ RECORDWASCHANGED_FLAG_VALUE + "\" ){\n"
-				+ "        if (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + SAVE_COMMAND_VALUE + "\""
-						+ " && document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + DELETE_COMMAND_VALUE + "\"){\n"
-				+ "        return 'You have unsaved changes!';\n"
-				+ "        }\n"
+				+ "        if (\n"
+				+ "            (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + SAVE_COMMAND_VALUE + "\") \n"
+				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + DELETE_COMMAND_VALUE + "\") \n"
+				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + LOOKUP_ITEM_COMMAND + "\") \n"
+				+ "        ) {\n"
+				+ "            return 'You have unsaved changes!';\n"
+				+ "        } \n"
 				+ "    }\n"
 				+ "}\n\n"
 			;
@@ -1452,6 +1464,35 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			s += "function invokeitemfinder(sItemFinderResultField){\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_ITEM_COMMAND + "\";\n"
 					+ "    document.getElementById(\"" + PARAM_FIND_ITEM_RETURN_FIELD + "\").value = sItemFinderResultField; \n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
+			//Get item info when a new item number is entered:
+			s += "function lookUpItem(slinenumber){\n"
+					+ "    //If there's no qty on the line, then just turn around right now: \n"
+					+ "    var lineqty = parseFloat(\"0.0000\");\n"
+					+ "    var temp = (document.getElementById(" 
+						+ "'" + ESTIMATE_LINE_PREFIX + "' + slinenumber + '" + SMTablesmestimatelines.bdquantity + "'"
+						+ ").value).replace(',','');\n"
+					+ "    if (temp == ''){\n"
+					+ "        lineqty = parseFloat(\"0.00\");\n"
+					+ "    }else{\n"
+					+ "        lineqty = parseFloat(temp);\n"
+					+ "    }\n"
+					+ "    \n"
+					+ "    if (compare4DecimalPlaceFloats(lineqty, 0.0000)){ \n"
+					+ "      alert('The item information on this line cannot be updated unless there is a quantity on the line.'); \n"
+					+ "      document.getElementById('" + ESTIMATE_LINE_PREFIX + "' + slinenumber + '" + SMTablesmestimatelines.sitemnumber + "').value = ''; \n"
+					+ "      document.getElementById('" + ESTIMATE_LINE_PREFIX + "' + slinenumber + '" + SMTablesmestimatelines.bdquantity + "').focus; \n"
+					+ "      return; \n"
+					+ "    } \n"
+					
+					+ "    // First, record that the record is being changed: \n"
+					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
+					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + LOOKUP_ITEM_COMMAND + "\";\n"
+					+ "    document.getElementById(\"" + PARAM_LOOKUP_ITEM_LINENUMBER + "\").value = slinenumber; \n"
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
@@ -1852,6 +1893,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			s += "function compare2DecimalPlaceFloats(float1, float2){ \n"
 				+ "    var firstfloatstring = (Math.round(parseFloat(float1)*100)/100).toFixed(2); \n"
 				+ "    var secondfloatstring = (Math.round(parseFloat(float2)*100)/100).toFixed(2); \n"
+				+ "    if(firstfloatstring.localeCompare(secondfloatstring) == 0){ \n"
+				+ "        return true; \n"
+				+ "    }else{ \n"
+				+ "        return false; \n"
+				+ "    }"
+				+ "}\n\n"
+			;
+			
+			//Compare floats with 4 decimal precision:
+			s += "function compare4DecimalPlaceFloats(float1, float2){ \n"
+				+ "    var firstfloatstring = (Math.round(parseFloat(float1)*100)/100).toFixed(4); \n"
+				+ "    var secondfloatstring = (Math.round(parseFloat(float2)*100)/100).toFixed(4); \n"
 				+ "    if(firstfloatstring.localeCompare(secondfloatstring) == 0){ \n"
 				+ "        return true; \n"
 				+ "    }else{ \n"

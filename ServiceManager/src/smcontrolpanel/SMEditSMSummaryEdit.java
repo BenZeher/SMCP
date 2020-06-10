@@ -1386,6 +1386,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    checkfortaxupdates();\n"
 				+ "    // The 'taxChange' function will trigger recalculatelivetotals() automatically: \n"
 				+ "    taxChange(document.getElementById(\"" + SMTablesmestimatesummaries.itaxid + "\")); \n"
+				+ "    //Now reset the 'record changed' flag since the user hasn't done anything yet: \n"
+				+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = ''; \n" 
 				+ "\n"
 				+ "}\n\n"
 			;
@@ -1453,8 +1455,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					+ "    } \n"
 					+ "    //We'll set the 'dirty' flag, but not trigger a recursive racalculation here: \n"
 					+ "    flagDirty(); \n"
-					//+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
-					//	+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
 					+ "}\n\n"; 
 			
 			s += "function promptToSave(){\n"		

@@ -12,6 +12,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMTax;
+import SMDataDefinition.SMTableicitems;
+import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import ServletUtilities.clsDatabaseFunctions;
@@ -19,8 +21,8 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
-import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
+import smic.ICItem;
 
 public class SMEstimate {
 
@@ -137,19 +139,19 @@ public class SMEstimate {
     	SMEstimateLine newline = new SMEstimateLine();
     	while (eParams.hasMoreElements()){
     		sLineParam = eParams.nextElement();
-    		System.out.println("[1490712988] sLineParam = '" + sLineParam +"'");
+    		//System.out.println("[1490712988] sLineParam = '" + sLineParam +"'");
     		//If it contains a line number parameter, then it's an GLTransactionBatchLine field:
     		if (sLineParam.startsWith(SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX)){
-    			System.out.println("[1490712188] sLineParam = '" + sLineParam +"'");
+    			//System.out.println("[1490712188] sLineParam = '" + sLineParam +"'");
     			sLineNumber = sLineParam.substring(
     				SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length(),
     				SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
     			iLineNumber = Integer.parseInt(sLineNumber);
-    			System.out.println("[1490712989] sLineNumber = '" + sLineNumber +"'");
+    			//System.out.println("[1490712989] sLineNumber = '" + sLineNumber +"'");
     			sFieldName = sLineParam.substring(SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
-    			System.out.println("[1490712990] sFieldName = '" + sFieldName +"'");
+    			//System.out.println("[1490712990] sFieldName = '" + sFieldName +"'");
     			sParamValue = clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim();
-    			System.out.println("[1490712991] sParamValue = '" + sParamValue +"'");
+    			//System.out.println("[1490712991] sParamValue = '" + sParamValue +"'");
     			//If the line array needs another row to fit all the line numbers, add it now:
 				while (arrEstimateLines.size() < iLineNumber){
 					SMEstimateLine line = new SMEstimateLine();
@@ -159,7 +161,7 @@ public class SMEstimate {
 				//If any of the line fields have a '0' for their line number, then that means the user is adding a new field:
     			if (iLineNumber == 0){
     				bAddingNewLine = true;
-    				System.out.println("[202006085409] - adding new line");
+    				//System.out.println("[202006085409] - adding new line");
     				//Now update the new line, and we'll add it to the entry down below:
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
         				newline.setsbdextendedcost(sParamValue.replace(",", "").trim());
@@ -192,7 +194,7 @@ public class SMEstimate {
         			//Now update the field on the line we're reading:
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(sParamValue.replace(",", "").trim());
-        				System.out.println("[1511882996] - sParamValue = '" + sParamValue + "'.");
+        				//System.out.println("[1511882996] - sParamValue = '" + sParamValue + "'.");
         			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsbdquantity(sParamValue.replace(",", "").trim());
@@ -714,7 +716,58 @@ public class SMEstimate {
 		
 		return;
 	}
-	
+	public void lookUpItem(String sLineNumber, Connection conn) throws Exception{
+		//This function replaces the description, U/M, and extended cost on the line number specified:
+		int iLineNumber = 0;
+		try {
+			iLineNumber = Integer.parseInt(sLineNumber);
+		} catch (Exception e) {
+			throw new Exception("Error [202006101549] - line number '" + sLineNumber + "' is invalid.");
+		}
+		
+		//If the user is changing the item number on a new (unsaved) line, this function will be passed in a 'ZERO' as the
+		// Line number.  But that line will have been added to the end of the line array at this point, so it's REAL
+		// line number will just be the last line number in the array:
+		if (iLineNumber == 0) {
+			iLineNumber = arrEstimateLines.size();
+		}
+		
+		//Get the item number that's now on that line:
+		String sItemNumber = "";
+		try {
+			sItemNumber = arrEstimateLines.get(iLineNumber - 1).getsitemnumber();
+		} catch (Exception e) {
+			throw new Exception("Error [202006101756] - could not read line number '" + Integer.toString(iLineNumber) 
+				+ "' in estimate line array - arr size = " + Integer.toString(arrEstimateLines.size()));
+		}
+		
+		ICItem item = new ICItem(sItemNumber);
+		if(!item.load(conn)){
+			//We just assume it's not an inventory number, and we just make it all blank:
+			arrEstimateLines.get(iLineNumber - 1).setslinedescription("(not found)");
+			arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure("(N/A)");
+			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost("0.00");
+		}else {
+			arrEstimateLines.get(iLineNumber - 1).setslinedescription(item.getItemDescription());
+			arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure(item.getCostUnitOfMeasure());
+			BigDecimal bdExtendedCost = new BigDecimal("0.00");
+			BigDecimal bdQuantity = new BigDecimal(arrEstimateLines.get(iLineNumber - 1).getsbdquantity().replace(",", ""));
+			BigDecimal bdUnitCost = new BigDecimal(item.getMostRecentCost());
+			
+			//If it's a real inventory item that we'll need to calculate an extended cost for, we need a quantity:
+			if (bdQuantity.compareTo(BigDecimal.ZERO) <= 0) {
+				throw new Exception("Error [202006103041] - Quantity for line number " + Integer.toString(iLineNumber) + ", item number '" + sItemNumber + "' cannot be zero.");
+			}
+			bdExtendedCost = bdQuantity.multiply(bdUnitCost).setScale(SMTablesmestimatelines.bdextendedcostScale, BigDecimal.ROUND_HALF_UP);
+			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedCost));
+		}
+		
+		//In case the user was changing one of the existing lines, don't let any 'zero quantity' lines stay in the array at this point:
+		removeZeroQtyLines();
+		
+		return;
+		
+	}
     private void removeZeroQtyLines() throws Exception{
     	ArrayList<SMEstimateLine> m_arrTempLines = new ArrayList<SMEstimateLine> (0);
     	for (int i = 0; i < arrEstimateLines.size(); i++){

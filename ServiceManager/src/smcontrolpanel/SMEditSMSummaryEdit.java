@@ -59,10 +59,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_CALCULATED_TOTAL_MARKUP_CAPTION = "TOTAL MARK-UP:";
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL = "LABELCALCULATEDTOTALTAX";
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION = "TOTAL TAX ON MATERIAL:";
+	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_LABEL = "CALCULATEDTAXLABEL";
 	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY = "LABELCALCULATEDTOTALFORSUMMARY";
 	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY_CAPTION = "CALCULATED TOTAL FOR ESTIMATE SUMMARY #";
 	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX = "LABELCALCULATEDRETAILSALESTAX";
 	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
+	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX_LABEL = "CALCULATEDRETAILSALESTAXLABEL";
 	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_COST = "LABELADJUSTEDTOTALMATERIALCOST";
 	public static final String LABEL_ADJUSTED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
 	public static final String FIELD_ADJUSTED_TOTAL_FREIGHT_CAPTION = "TOTAL FREIGHT:";
@@ -83,6 +85,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION = "ADJUSTED TOTAL FOR ESTIMATE SUMMARY #";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
+	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_LABEL = "ADJUSTEDRETAILSALESTAXLABEL";
 	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
 	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "Process";
 	public static final String BUTTON_BACK_INTO_PRICE = "Process";
@@ -854,10 +857,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			//+ "<LABEL NAME = \""
-			+ summary.getstaxdescription() + " "
-			+ summary.getsbdtaxrate() + "% "
+			+ "<LABEL"
+				+ " NAME = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_LABEL + "\""
+				+ " ID = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_LABEL + "\""
+			+ ">"
 			+ LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION
+			+ "</LABEL>"
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
@@ -906,7 +911,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			//+ " style = \" font-size: large; \""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
-			+ LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION
+				+ "<LABEL"
+					+ " NAME = \"" + LABEL_CALCULATED_RETAIL_SALES_TAX_LABEL + "\""
+					+ " ID = \"" + LABEL_CALCULATED_RETAIL_SALES_TAX_LABEL + "\""
+				+ ">"
+				+ LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION
+				+ "</LABEL>"
 			+ "</TD>" + "\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
@@ -1154,7 +1164,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			//+ " style = \" font-size: large; \""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+			+ "<LABEL"
+				+ " NAME = \"" + LABEL_ADJUSTED_RETAIL_SALES_TAX_LABEL + "\""
+				+ " ID = \"" + LABEL_ADJUSTED_RETAIL_SALES_TAX_LABEL + "\""
+			+ ">"
 			+ LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION
+			+ "</LABEL>"
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
@@ -1274,12 +1289,16 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			String staxrates = "";
 			String scalculateonpurchaseorsale = "";
 			String scalculatetaxoncustomerinvoice = "";
+			String staxjurisdiction = "";
+			String staxtype = "";
 			
 			String SQL = "SELECT"
 				+ " " + SMTabletax.lid
 				+ ", " + SMTabletax.bdtaxrate
 				+ ", " + SMTabletax.icalculateonpurchaseorsale
 				+ ", " + SMTabletax.icalculatetaxoncustomerinvoice
+				+ ", " + SMTabletax.staxjurisdiction
+				+ ", " + SMTabletax.staxtype
 				+ " FROM " + SMTabletax.TableName
 				+ " ORDER BY " + SMTabletax.lid
 				;
@@ -1304,6 +1323,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					
 					scalculatetaxoncustomerinvoice += "scalculatetaxoncustomerinvoice[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
 					+ "\"] = \"" + Integer.toString(rs.getInt(SMTabletax.icalculatetaxoncustomerinvoice)) + "\";\n";
+					
+					staxjurisdiction += "staxjurisdiction[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
+					+ "\"] = \"" + rs.getString(SMTabletax.staxjurisdiction) + "\";\n";
+					
+					staxtype += "staxtype[\"" + Long.toString(rs.getLong(SMTabletax.lid)) 
+					+ "\"] = \"" + rs.getString(SMTabletax.staxtype) + "\";\n";
 				}
 				rs.close();
 			} catch (Exception e) {
@@ -1318,6 +1343,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				s += scalculateonpurchaseorsale + "\n";
 				s += "var scalculatetaxoncustomerinvoice = new Array(" + Integer.toString(iCounter) + ")\n";
 				s += scalculatetaxoncustomerinvoice + "\n";
+				s += "var staxjurisdiction = new Array(" + Integer.toString(iCounter) + ")\n";
+				s += staxjurisdiction + "\n";
+				s += "var staxtype = new Array(" + Integer.toString(iCounter) + ")\n";
+				s += staxtype + "\n";
 			}
 			
 			s += "\n";
@@ -1354,8 +1383,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				;
 			
 			s += "function triggerinitiation(){\n"		
-				+ "    recalculatelivetotals();\n"
 				+ "    checkfortaxupdates();\n"
+				+ "    // The 'taxChange' function will trigger recalculatelivetotals() automatically: \n"
+				+ "    taxChange(document.getElementById(\"" + SMTablesmestimatesummaries.itaxid + "\")); \n"
+				+ "\n"
 				+ "}\n\n"
 			;
 			
@@ -1370,25 +1401,60 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.bdtaxrate + "\"].value = staxrates[which];\n"
 					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\"].value = scalculatetaxoncustomerinvoice[which];\n"
 					+ "        document.forms[\"MAINFORM\"].elements[\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\"].value = scalculateonpurchaseorsale[which];\n"
+					+ "        //Calculate the appropriate rates: \n"
+					+ "        var icalculatetaxoncustomerinvoice = parseInt(\"0\");\n"
+					+ "        var icalculatetaxonpurchaseorsale = parseInt(\"0\");\n"
+					+ "        var materialtaxrate = '';\n"
+					+ "        var retailsalestaxrate = '';\n"
+					+ "        var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice + "\").value);\n"
+					+ "        if (temp == ''){\n"
+					+ "            icalculatetaxoncustomerinvoice = parseInt(\"0\");\n"
+					+ "        }else{\n"
+					+ "            icalculatetaxoncustomerinvoice = parseInt(temp); \n"
+					+ "        }\n"
+					+ "        \n"
 					
-					//+ "        //Add the tax type and rate to the tax caption: \n"
-					//+ "        document.forms[\"MAINFORM\"].elements[\"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION 
-					//	+ "\"].innerText = staxrates[which] + '% '" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION + ";\n"
+					+ "        var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale + "\").value);\n"
+					+ "        if (temp == ''){\n"
+					+ "            icalculatetaxonpurchaseorsale = parseInt(\"0\");\n"
+					+ "        }else{\n"
+					+ "            icalculatetaxonpurchaseorsale = parseInt(temp); \n"
+					+ "        }\n"
+					+ "        \n"
 					
-					//+ summary.getstaxdescription() + " "
-					//+ summary.getsbdtaxrate() + "% " x
-					//+ LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION
-					//+ "</TD>" + "\n"
-					
-					//+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
-					//+ ">"
-					//+ "<LABEL"
-					//+ " NAME = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
-					//+ " ID = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
-					
-					+ "    }\n"
-					//+ "    alert('SMTablesmestimatesummaries.bdtaxrate = ' + document.getElementById(\"" + PARAM_RETAIL_SALES_TAX_RATE + "\").value); \n"
+					+ "        if((icalculatetaxoncustomerinvoice == 0) && ((icalculatetaxonpurchaseorsale == " 
+						+ Integer.toString(SMTabletax.TAX_CALCULATION_BASED_ON_PURCHASE_COST) + "))){ \n"
+					+ "            materialtaxrate = staxrates[which]; \n"
+					+ "        }else{ \n"
+					+ "            materialtaxrate = '0.0000'; \n"
+					+ "        } \n"
+					+ "        if((icalculatetaxoncustomerinvoice == 1) && ((icalculatetaxonpurchaseorsale == " 
+					+ Integer.toString(SMTabletax.TAX_CALCULATION_BASED_ON_SELLING_PRICE) + "))){ \n"
+					+ "            retailsalestaxrate = staxrates[which]; \n"
+					+ "        }else{ \n"
+					+ "            retailsalestaxrate = '0.0000'; \n"
+					+ "        } \n"
+					+ "        \n"
+					+ "        //Add the tax type and rate to the material tax caption: \n"
+					+ "        document.getElementById(\"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_LABEL + "\").innerText = \n"
+					+ "            staxjurisdiction[which] + ' ' + staxtype[which] + ' ' + \n"
+					+ "            materialtaxrate + '% ' + '" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION + "';\n"
+					+ "        \n"		
+					+ "        //Add the tax type and rate to the calculated retail sales tax caption: \n"
+					+ "        document.getElementById(\"" + LABEL_CALCULATED_RETAIL_SALES_TAX_LABEL + "\").innerText = \n"
+					+ "            staxjurisdiction[which] + ' ' + staxtype[which] + ' ' + \n"
+							+ "            retailsalestaxrate + '% ' + '" + LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION + "';\n"
+					+ "        \n"
+					+ "        //Add the tax type and rate to the calculated retail sales tax caption: \n"
+					+ "        document.getElementById(\"" + LABEL_ADJUSTED_RETAIL_SALES_TAX_LABEL + "\").innerText = \n"
+					+ "            staxjurisdiction[which] + ' ' + staxtype[which] + ' ' + \n"
+							+ "            retailsalestaxrate + '% ' + '" + LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION + "';\n"
+
+					+ "    } \n"
+					+ "    //We'll set the 'dirty' flag, but not trigger a recursive racalculation here: \n"
 					+ "    flagDirty(); \n"
+					//+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
+					//	+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
 					+ "}\n\n"; 
 			
 			s += "function promptToSave(){\n"		
@@ -1491,7 +1557,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					+ "    recalculatelivetotals(); \n"
 				+ "}\n";
 			
-			
 			//Recalculate live totals:
 			s += "function recalculatelivetotals(){\n"
 				//+ "    alert('Recalculating');\n"
@@ -1500,8 +1565,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				// TJR - 6/2/2020 - we don't want the tax to update automatically when the page loads.
 				// That should be done deliberately by the user if he WANTS to update the tax info.
 				//+ "    //Set the retail sales tax rate, based on the current index of the tax drop down: \n"
-				//+ "    taxChange(document.getElementById(\"" + SMTablesmestimatesummaries.itaxid + "\")); \n"
-				+ "\n"
 				
 				+ "    var adjustedlabortotalcost = parseFloat(\"0.00\");\n"
 				+ "    var adjustedlaborunits = parseFloat(\"0.00\");\n"

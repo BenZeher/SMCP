@@ -734,6 +734,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		s += "<B>Estimate ID:</B>&nbsp;" + sEstimateID
 			+ "&nbsp;&nbsp;"
+			+ "<B>Summary line #:</B>&nbsp;" + estimate.getslsummarylinenumber()
+			+ "&nbsp;&nbsp;"
 			+ "<B>Created:</B> " + estimate.getsdatetimecreated() + " by " + estimate.getscreatedbyfullname() 
 			+ "&nbsp;&nbsp;"
 			+ "Last modified " + estimate.getsdatetimelastmodified() + " by " + estimate.getslastmodifiedbyfullname()
@@ -1049,6 +1051,15 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
 			+ FIELD_ADDITIONAL_TAXED_COST_CAPTION
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME = \"" + SMTablesmestimates.sadditionalpretaxcostlabel + "\""
+			+ " ID = \"" + SMTablesmestimates.sadditionalpretaxcostlabel + "\""
+			+ " style = \" text-align:right; width:200px;\""
+			+ " VALUE = \"" + estimate.getsadditionalpretaxcostlabel() + "\""
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</INPUT>"
+			
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
@@ -1205,6 +1216,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
 			+ FIELD_ADDITIONAL_UNTAXED_COST_CAPTION
+			+ "<INPUT TYPE=TEXT"
+			+ " NAME = \"" + SMTablesmestimates.sadditionalposttaxcostlabel + "\""
+			+ " ID = \"" + SMTablesmestimates.sadditionalposttaxcostlabel + "\""
+			+ " style = \" text-align:right; width:200px;\""
+			+ " VALUE = \"" + estimate.getsadditionalposttaxcostlabel() + "\""
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</INPUT>"
 			+ "</TD>" + "\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""

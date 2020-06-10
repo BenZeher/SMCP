@@ -166,6 +166,9 @@ public class SMEstimate {
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
         				newline.setsbdextendedcost(sParamValue.replace(",", "").trim());
         			}
+        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitcost) == 0){
+        				newline.setsbdunitcost(sParamValue.replace(",", "").trim());
+        			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
         				newline.setsbdquantity(sParamValue.replace(",", "").trim());
         			}
@@ -195,6 +198,9 @@ public class SMEstimate {
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(sParamValue.replace(",", "").trim());
         				//System.out.println("[1511882996] - sParamValue = '" + sParamValue + "'.");
+        			}
+        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitcost) == 0){
+        				arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(sParamValue.replace(",", "").trim());
         			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsbdquantity(sParamValue.replace(",", "").trim());
@@ -407,6 +413,29 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
+		if (m_lsummarylinenumber.compareToIgnoreCase("-1") == 0) {
+			//Get the highest line number for this summary and increment it:
+			String SQL = "SELECT"
+				+ " " + SMTablesmestimates.lsummarylinenumber
+				+ " FROM " + SMTablesmestimates.TableName
+				+ " WHERE ("
+					+ "(" + SMTablesmestimates.lsummarylid + " = " + m_lsummarylid + ")"
+				+ ") ORDER BY " + SMTablesmestimates.lsummarylinenumber + " DESC"
+				+ " LIMIT 1"
+			;
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			try {
+				if (rs.next()) {
+					m_lsummarylinenumber = Long.toString(rs.getLong(SMTablesmestimates.lsummarylinenumber) + 1);
+				}
+				else {
+					m_lsummarylinenumber = "1";
+				}
+				rs.close();
+			} catch (Exception e) {
+				throw new Exception("Error [202006100147] - could not read highest summary line number for summary #" + m_lsummarylid + " - " + e.getMessage());
+			}
+		}
 		try {
 			m_lsummarylinenumber  = clsValidateFormFields.validateLongIntegerField(m_lsummarylinenumber, "Estimate Summary line number", 1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
@@ -446,11 +475,15 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		m_ivendorquotelinenumber = m_ivendorquotelinenumber.trim();
+		if (m_ivendorquotelinenumber.compareToIgnoreCase("") == 0) {
+			m_ivendorquotelinenumber = "0";
+		}
 		try {
 			m_ivendorquotelinenumber = clsValidateFormFields.validateIntegerField(
 				m_ivendorquotelinenumber, 
 				"Vendor quote line number", 
-				1, 
+				0, 
 				clsValidateFormFields.MAX_INT_VALUE
 			);
 		} catch (Exception e) {
@@ -760,6 +793,7 @@ public class SMEstimate {
 			}
 			bdExtendedCost = bdQuantity.multiply(bdUnitCost).setScale(SMTablesmestimatelines.bdextendedcostScale, BigDecimal.ROUND_HALF_UP);
 			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedCost));
+			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdUnitCost));
 		}
 		
 		//In case the user was changing one of the existing lines, don't let any 'zero quantity' lines stay in the array at this point:

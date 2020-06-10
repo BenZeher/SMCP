@@ -22,6 +22,7 @@ public class SMEstimateLine {
 	private String m_slinedescription;
 	private String m_sunitofmeasure;
 	private String m_sbdextendedcost;
+	private String m_sbdunitcost;
 	
 	public SMEstimateLine() 
 	{
@@ -40,6 +41,7 @@ public class SMEstimateLine {
 		SQL = "INSERT into " + SMTablesmestimatelines.TableName
 			+ " (" 
 			+ SMTablesmestimatelines.bdextendedcost
+			+ ", " + SMTablesmestimatelines.bdunitcost
 			+ ", " + SMTablesmestimatelines.bdquantity
 			+ ", " + SMTablesmestimatelines.lestimatelid
 			+ ", " + SMTablesmestimatelines.lestimatelinenumber
@@ -50,6 +52,7 @@ public class SMEstimateLine {
 			+ ")"
 			+ " VALUES ("
 			+ "" + m_sbdextendedcost.trim().replaceAll(",", "")
+			+ ", " + m_sbdunitcost.trim().replaceAll(",", "")
 			+ ", " + m_sbdquantity.trim().replaceAll(",", "")
 			+ ", " + m_slestimateid
 			+ ", " + m_slestimatelinenumber
@@ -61,6 +64,7 @@ public class SMEstimateLine {
 			
 			+ " ON DUPLICATE KEY UPDATE"
 			+ " " + SMTablesmestimatelines.bdextendedcost + " = " + m_sbdextendedcost.trim().replaceAll(",", "")
+			+ ", " + SMTablesmestimatelines.bdunitcost + " = " + m_sbdunitcost.trim().replaceAll(",", "")
 			+ ", " + SMTablesmestimatelines.bdquantity + " = " + m_sbdquantity.trim().replaceAll(",", "")
 			+ ", " + SMTablesmestimatelines.lestimatelid + " = " + m_slestimateid
 			+ ", " + SMTablesmestimatelines.lestimatelinenumber + " = " + m_slestimatelinenumber
@@ -200,6 +204,18 @@ public class SMEstimateLine {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		try {
+			m_sbdunitcost = clsValidateFormFields.validateBigdecimalField(
+				m_sbdunitcost.replace(",", ""), 
+				"Unit cost", 
+				SMTablesmestimatelines.bdunitcostScale,
+				new BigDecimal("-999999999.99"),
+				new BigDecimal("999999999.99")
+				).replaceAll(",", "");
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
 		if (sResult.compareToIgnoreCase("") != 0){
 			throw new Exception(sResult);
 		}
@@ -218,11 +234,15 @@ public class SMEstimateLine {
 				m_slsummaryid = Long.toString(rs.getLong(SMTablesmestimatelines.lsummarylid));
 				m_slestimateid = Long.toString(rs.getLong(SMTablesmestimatelines.lestimatelid));
 				m_slestimatelinenumber = Long.toString(rs.getLong(SMTablesmestimatelines.lestimatelinenumber));
-				m_sbdquantity = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatelines.bdquantityScale, rs.getBigDecimal(SMTablesmestimatelines.bdquantity));
+				m_sbdquantity = clsManageBigDecimals.BigDecimalToScaledFormattedString(
+						SMTablesmestimatelines.bdquantityScale, rs.getBigDecimal(SMTablesmestimatelines.bdquantity));
 				m_sitemnumber = rs.getString(SMTablesmestimatelines.sitemnumber).trim();
 				m_slinedescription = rs.getString(SMTablesmestimatelines.slinedescription).trim();
 				m_sunitofmeasure = rs.getString(SMTablesmestimatelines.sunitofmeasure).trim();
-				m_sbdextendedcost = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimatelines.bdextendedcostScale, rs.getBigDecimal(SMTablesmestimatelines.bdextendedcost));
+				m_sbdextendedcost = clsManageBigDecimals.BigDecimalToScaledFormattedString(
+						SMTablesmestimatelines.bdextendedcostScale, rs.getBigDecimal(SMTablesmestimatelines.bdextendedcost));
+				m_sbdunitcost = clsManageBigDecimals.BigDecimalToScaledFormattedString(
+						SMTablesmestimatelines.bdunitcostScale, rs.getBigDecimal(SMTablesmestimatelines.bdunitcost));
 			}else{
 				rs.close();
 				throw new Exception("Error [1589991935] - No estimate line found with lid = " + sLid + ".");
@@ -296,6 +316,12 @@ public class SMEstimateLine {
 		m_sbdextendedcost = sbdextendedcost;
 	}
 	
+	public String getsbdunitcost(){
+		return m_sbdunitcost;
+	}
+	public void setsbdunitcost(String sbdunitcost){
+		m_sbdunitcost = sbdunitcost;
+	}
 
 	public String dumpData(){
 		
@@ -308,6 +334,7 @@ public class SMEstimateLine {
 		s += "    Line description:" + getslinedescription() + "\n";
 		s += "    U/M:" + getsunitofmeasure() + "\n";
 		s += "    Extended cost:" + getsbdextendedcost() + "\n";
+		s += "    Unit cost:" + getsbdunitcost() + "\n";
 
 		return s;
 	}
@@ -322,5 +349,6 @@ public class SMEstimateLine {
 		m_slinedescription = "";
 		m_sunitofmeasure = "";
 		m_sbdextendedcost = "0.00";
+		m_sbdunitcost = "0.00";
 	}
 }

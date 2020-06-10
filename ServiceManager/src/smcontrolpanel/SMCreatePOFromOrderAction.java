@@ -17,7 +17,6 @@ import smic.ICPOHeader;
 import smic.ICPOLine;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTablelocations;
-import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;

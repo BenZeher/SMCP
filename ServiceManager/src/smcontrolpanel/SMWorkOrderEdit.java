@@ -968,7 +968,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
 					+ " ID=\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\""
-					+ " VALUE=" + workorder.getdPrePostingWODiscountAmount() + ""
+					+ " VALUE=" + BigDecimal.valueOf(Double.valueOf(workorder.getdPrePostingWODiscountAmount())).setScale(2, BigDecimal.ROUND_HALF_UP) + ""
 					+ " SIZE=" + "6"
 					+ SMJavaScriptFunctions.sDiscountAmountChange
 					+ ">";
@@ -1232,7 +1232,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		String s = "";
 		//Headings:
 		s += "<TR>";
-		s += "<TD class=\" fieldleftheading \">Qty used:&nbsp;</TD>";
 		s += "<TD class=\" fieldleftheading \">Qty used:&nbsp;</TD>";
 		s += "<TD class=\" fieldrightheading \">Qty assigned:&nbsp;</TD>";
 		s += "<TD class=\" fieldleftheading \">Item #:&nbsp;</TD>";

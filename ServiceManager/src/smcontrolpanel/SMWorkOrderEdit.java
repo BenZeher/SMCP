@@ -1575,7 +1575,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+  SMWorkOrderDetail.Parambdquantity + "\""
 		+ "\""
 		+ " VALUE=\"" + clsStringFunctions.filter(sQty) + "\""
-		+ " onchange=\"flagDirty();\""
+		+ " onchange=\"changePrice();\""
 		+ " SIZE=" + SMWorkOrderHeader.ITEM_QTY_FIELD_WIDTH
 		+ " MAXLENGTH=13"
 		+ ">"
@@ -1821,6 +1821,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				}
 				s += " NAME=\"" + sSetToZeroCheckboxFieldname + "\""
 					+ " ID = \"" + sSetToZeroCheckboxFieldname + "\""
+					+ " onClick=\"changePrice();\""
 					+ " width=0.25>"
 					+ "</TD>"
 				;
@@ -2353,7 +2354,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+  SMWorkOrderDetail.Parambdquantity
 				+ "\""
 				+ " VALUE=\"" + "" + "\""
-				+ " onchange=\"flagDirty();\""
+				+ " onchange=\"changePrice();\""
 				+ " SIZE=" + SMWorkOrderHeader.ITEM_QTY_FIELD_WIDTH
 				+ " MAXLENGTH=13"
 				+ ">"
@@ -3508,6 +3509,20 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "}\n"
 		;
 		
+		//TODO
+		//Change in Price
+		s += "function changePrice(){\n"
+			+ "    if (!bScreenIsFullyDisplayed()){\n"
+			+ "        return;\n"
+			+ "    }\n"
+			+ "	 flagDirty();\n"
+			+ "    document.getElementById(\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountPercentage + "\").value = \"" 
+			+ "0.0" + "\";\n"
+			+ "    document.getElementById(\"" + SMWorkOrderHeader.ParamdPrePostingWODiscountAmount + "\").value = \"" 
+			+ "0.0" + "\";\n"
+			+ "}\n"
+				;
+
 		//Save
 		s += "function save(){\n"
 			+ "    if (!bScreenIsFullyDisplayed()){\n"

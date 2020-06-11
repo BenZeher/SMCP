@@ -63,7 +63,7 @@ public class SMOHDirectFieldDefinitions {
 	//QUOTE LINES:
 	public static final String QUOTELINE_ARRAY_NAME = "items";
 	public static final String QUOTELINE_FIELD_ID = "Id"; // "ea51bac1-b858-ea11-82f9-98456f859bd9"
-	public static final String QUOTELINE_FIELD_QUOTENUMBER = "C_Quote"; // "00bac513-b658-ea11-82fa-d2da283a32ca"
+	public static final String QUOTELINE_FIELD_QUOTENUMBER = "C_Quote"; // Actually, the ID, for example: "00bac513-b658-ea11-82fa-d2da283a32ca"
 	public static final String QUOTELINE_FIELD_LINENUMBER = "C_LineNumber"; // Long integer
 	public static final String QUOTELINE_FIELD_DESCRIPTION = "C_Description"; // "521 Series Commercial Aluminum Sectional Door"
 	public static final String QUOTELINE_FIELD_LASTCONFIGURATIONDESCRIPTION = "C_LastConfigurationDescription"; // "521, 14'2\" x 14'1\""

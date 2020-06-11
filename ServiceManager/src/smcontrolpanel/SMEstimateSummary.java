@@ -11,8 +11,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMOHDirectQuoteLineList;
+import SMClasses.SMOHDirectQuoteList;
 import SMClasses.SMTax;
-import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
@@ -217,6 +217,7 @@ public class SMEstimateSummary {
 				+ ")"
 			;
 		}
+		
 		//System.out.println("[159050375] - SQL = '" + SQL + "'");
 		
 		Statement stmt = conn.createStatement();
@@ -736,18 +737,30 @@ public class SMEstimateSummary {
 		ServletContext context) throws Exception{
 		
 		//Get the vendor quote:
+		SMOHDirectQuoteList quotelist = new SMOHDirectQuoteList();
+		
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTE + "?%24filter="
+			+ SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "%20eq%20'" + sVendorQuoteNumber + "'"
+		;
+		try {
+			quotelist.getQuoteList(sRequest, conn, sDBID, sUserID);
+		} catch (Exception e) {
+			throw new Exception("Error [202004274722] - " + e.getMessage());
+		}
+		
 		SMOHDirectQuoteLineList quotelineslist = new SMOHDirectQuoteLineList();
-		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
-				+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + sVendorQuoteNumber + "'"
+		sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
+				+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + quotelist.getQuoteIDs().get(0) + "'"
 				+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "%20asc"
 			;
-		System.out.println("[202006110814] - sVendorQuoteNumber = '" + sVendorQuoteNumber + "'.");
+		//System.out.println("[202006110814] - sVendorQuoteNumber = '" + sVendorQuoteNumber + "'.");
 		try {
 			quotelineslist.getQuoteLineList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273922] - " + e4.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn, "[1588019377]");
+		
+		//System.out.println("[202006110011] - summary dump before adding new estimates: " + this.dumpData());
 		
 		try {
 			for(int i = 0; i < quotelineslist.getQuoteNumbers().size(); i++) {
@@ -759,7 +772,8 @@ public class SMEstimateSummary {
 					SMTablesmestimates.bdquantityScale, quotelineslist.getQuantities().get(i)));
 				estimate.setsdescription("");
 				estimate.setsitemnumber("MISC");
-				estimate.setsivendorquotelinenumber(clsManageBigDecimals.BigDecimalToScaledFormattedString(0, quotelineslist.getLineNumbers().get(i)));
+				estimate.setsivendorquotelinenumber(
+					clsManageBigDecimals.BigDecimalToScaledFormattedString(0, quotelineslist.getLineNumbers().get(i)).replace(".", ""));
 				estimate.setslsummarylid(m_lid);
 				estimate.setsproductdescription(quotelineslist.getDescriptions().get(i));
 				estimate.setsunitofmeasure("EA");
@@ -770,6 +784,8 @@ public class SMEstimateSummary {
 		} catch (Exception e) {
 			throw new Exception("Error [202006115656] - error adding estimates to summary from vendor quote - " + e.getMessage());
 		}
+		
+		//System.out.println("[202006110012] - summary dump after adding new estimates: " + this.dumpData());
 		
 		try {
 			clsDatabaseFunctions.start_data_transaction_with_exception(conn);
@@ -1017,11 +1033,16 @@ public class SMEstimateSummary {
 	}
 	private void saveEstimates(Connection conn, String sUserID, String sUserFullName) throws Exception{
 		
+		//System.out.println("[202006110022] - summary dump in save estimates: " + this.dumpData());
+		//System.out.println("[202006110611] - arrEstimates.size() = " + arrEstimates.size());
 		for (int i = 0; i < arrEstimates.size(); i++){
 			SMEstimate estimate = arrEstimates.get(i);
+			
+			//System.out.println("[202006115332] - m_lid = " + m_lid + ", i = " + i);
 			estimate.setslsummarylid(m_lid);
 			estimate.setslsummarylinenumber(Integer.toString(i + 1));
-			
+			//System.out.println("[202006115331] - estimate.getslsummarylid() = " + estimate.getslsummarylid() + ", estimate.getslsummarylinenumber() = " + estimate.getslsummarylinenumber());
+			//System.out.println("[202006111147] - estimate dump for summary line " + (i + 1) + " = " + estimate.dumpData());
 			try {
 				estimate.save_without_data_transaction(conn, sUserID, sUserFullName);
 			} catch (Exception e) {
@@ -1166,32 +1187,32 @@ public class SMEstimateSummary {
 	public String dumpData(){
 		String s = "";
 		
-		s += "Adjusted freight: " + getsbdadjustedfreight();
-		s += "&" + "Adjusted labor cost per unit: " + getsbdadjustedlaborcostperunit();
-		s += "&" + "Adjusted labor unit qty: " + getsbdadjustedlaborunitqty();
-		s += "&" + "Adjusted mark-up amount: " + getsbdadjustedmarkupamt();
-		s += "&" + "Date created: " + getsdatetimecreated();
-		s += "&" + "Date last modified: " + getsdatetimeslastmodified();
-		s += "&" + "Labor type: " + getsilabortype();
-		s += "&" + "Order type: " + getsiordertype();
-		s += "&" + "Tax ID: " + getsitaxid();
-		s += "&" + "Created by ID: " + getslcreatedbyid();
-		s += "&" + "ID: " + getslid();
-		s += "&" + "Last modified by ID: " + getsllastmodifiedbyid();
-		s += "&" + "Sales lead ID: " + getslsalesleadid();
-		s += "&" + "Created by full name: " + getscreatedbyfullname();
-		s += "&" + "Description: " + getsdescription();
-		s += "&" + "Job Name: " + getsjobname();
-		s += "&" + "Last modified by full name: " + getslastmodifiedbyfullname();
-		s += "&" + "Remarks: " + getsremarks();
-		s += "&" + "Tax rate: " + getsbdtaxrate();
-		s += "&" + "Calculate tax on customer invoice: " + getsicalculatetaxoncustomerinvoice();
-		s += "&" + "Calculate tax on purchase or sale: " + getsicalculatetaxonpurchaseorsale();
+		s += "\nAdjusted freight: " + getsbdadjustedfreight() + "\n";
+		s += "&" + "Adjusted labor cost per unit: " + getsbdadjustedlaborcostperunit() + "\n";
+		s += "&" + "Adjusted labor unit qty: " + getsbdadjustedlaborunitqty() + "\n";
+		s += "&" + "Adjusted mark-up amount: " + getsbdadjustedmarkupamt() + "\n";
+		s += "&" + "Date created: " + getsdatetimecreated() + "\n";
+		s += "&" + "Date last modified: " + getsdatetimeslastmodified() + "\n";
+		s += "&" + "Labor type: " + getsilabortype() + "\n";
+		s += "&" + "Order type: " + getsiordertype() + "\n";
+		s += "&" + "Tax ID: " + getsitaxid() + "\n";
+		s += "&" + "Created by ID: " + getslcreatedbyid() + "\n";
+		s += "&" + "ID: " + getslid() + "\n";
+		s += "&" + "Last modified by ID: " + getsllastmodifiedbyid() + "\n";
+		s += "&" + "Sales lead ID: " + getslsalesleadid() + "\n";
+		s += "&" + "Created by full name: " + getscreatedbyfullname() + "\n";
+		s += "&" + "Description: " + getsdescription() + "\n";
+		s += "&" + "Job Name: " + getsjobname() + "\n";
+		s += "&" + "Last modified by full name: " + getslastmodifiedbyfullname() + "\n";
+		s += "&" + "Remarks: " + getsremarks() + "\n";
+		s += "&" + "Tax rate: " + getsbdtaxrate() + "\n";
+		s += "&" + "Calculate tax on customer invoice: " + getsicalculatetaxoncustomerinvoice() + "\n";
+		s += "&" + "Calculate tax on purchase or sale: " + getsicalculatetaxonpurchaseorsale() + "\n";
 		
 		s += "  -- Number of estimates: " + arrEstimates.size() + "\n";
 		
 		for (int i = 0; i < arrEstimates.size(); i++){
-			s += "  ESTIMATE " + (i + 1) + ":\n";
+			s += "\n  ESTIMATE " + (i + 1) + ":";
 			s += arrEstimates.get(i).dumpData();
 		}
 		

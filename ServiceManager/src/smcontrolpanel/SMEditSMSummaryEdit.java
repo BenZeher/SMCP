@@ -287,7 +287,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			throw new Exception("Error [202005274220] - could not get connection - " + e1.getMessage());
 		}
 		
-		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\""
 				+ " VALUE=\"" + clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
 				+ " id=\"" + RECORDWASCHANGED_FLAG + "\""+ ">" + "\n";

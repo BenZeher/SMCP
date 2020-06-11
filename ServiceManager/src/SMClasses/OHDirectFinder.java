@@ -29,7 +29,7 @@ public class OHDirectFinder extends HttpServlet {
 	public static final String SEARCH_JOB_TEXT_PARAM = "sSeachJobText";
 	
 	
-	private static final boolean bDebugMode = true;
+	private static final boolean bDebugMode = false;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

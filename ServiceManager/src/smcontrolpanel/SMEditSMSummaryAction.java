@@ -3,23 +3,15 @@ package smcontrolpanel;
 import java.io.IOException;
 import java.sql.Connection;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import SMClasses.FinderResults;
 import SMClasses.OHDirectFinderResults;
-import SMClasses.SMFinderFunctions;
-import SMClasses.SMWorkOrderDetail;
-import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
-import SMDataDefinition.SMTableicitems;
-import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
-import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;

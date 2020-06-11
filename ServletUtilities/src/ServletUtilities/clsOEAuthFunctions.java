@@ -115,7 +115,7 @@ public class clsOEAuthFunctions {
 	    String sResult = "";
 	    
 	    long lStartingTime = System.currentTimeMillis();
-	    System.out.println("[202006111210] - sRequestEndPoint = '" + sRequestEndPoint + "', sDBID = '" + sDBID + "', sUserID = '" + sUserID + "'");
+	    //System.out.println("[202006111210] - sRequestEndPoint = '" + sRequestEndPoint + "', sDBID = '" + sDBID + "', sUserID = '" + sUserID + "'");
 	    try {
 	        URL url = new URL(token.getOHDirectRequestURLBase(sDBID) + sRequestEndPoint);
 	        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -171,7 +171,7 @@ public class clsOEAuthFunctions {
 			}
 			
 			//Try to read OHDirect again:
-			System.out.println("[202006111057] - got here....");
+			//System.out.println("[202006111057] - got here....");
 			try {
 				sResult = clsOEAuthFunctions.getOHDirectPlusRequest(token, sEndPointQuery, sDBID, sUserID, conn);
 			} catch (Exception e) {

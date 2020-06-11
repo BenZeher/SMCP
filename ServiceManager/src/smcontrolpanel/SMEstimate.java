@@ -1063,7 +1063,7 @@ public class SMEstimate {
 		return m_lsummarylinenumber;
 	}
 	public void setslsummarylinenumber(String ssummarylinenumber){
-		m_lsummarylid = ssummarylinenumber;
+		m_lsummarylinenumber = ssummarylinenumber;
 	}
 	
 	public String getsdescription(){
@@ -1294,7 +1294,7 @@ public class SMEstimate {
 			throw new Exception("Error [202005270128] - could not load tax with ID '" + summary.getsitaxid() + "' - " + e.getMessage());
 		}
 		
-		bdTaxOnMaterial = getTotalMaterialCost(conn).multiply(new BigDecimal(tax.get_bdtaxrate().replace(",", "")));
+		bdTaxOnMaterial = getTotalMaterialCost(conn).multiply((new BigDecimal(tax.get_bdtaxrate().replace(",", ""))).divide(new BigDecimal("100.00"), BigDecimal.ROUND_HALF_UP));
 		
 		return bdTaxOnMaterial;
 	}
@@ -1428,7 +1428,7 @@ public class SMEstimate {
 	public String dumpData(){
 		String s = "";
 		
-		s += "  lid: " +  getslid() + "\n";
+		s += "\n  lid: " +  getslid() + "\n";
 		s += "  summary lid: " +  getslsummarylid() + "\n";
 		s += "  summary line number: " +  getslsummarylinenumber() + "\n";
 		s += "  description: " +  getsdescription() + "\n";

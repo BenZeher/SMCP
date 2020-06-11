@@ -12,8 +12,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMTax;
-import SMDataDefinition.SMTableicitems;
-import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import ServletUtilities.clsDatabaseFunctions;
@@ -33,6 +31,7 @@ public class SMEstimate {
 	private String m_lsummarylinenumber;
 	private String m_sdescription;
 	private String m_sprefixlabelitem;
+	private String m_svendorquoteid;
 	private String m_svendorquotenumber;
 	private String m_ivendorquotelinenumber;
 	private String m_bdquantity;
@@ -88,6 +87,7 @@ public class SMEstimate {
 		
 		m_sdescription = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.sdescription, req).replace("&quot;", "\"");
 		m_sprefixlabelitem = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.sprefixlabelitem, req).replace("&quot;", "\"");
+		m_svendorquoteid = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.svendorquoteid, req).replace("&quot;", "\"");
 		m_svendorquotenumber = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.svendorquotenumber, req).replace("&quot;", "\"");
 		m_ivendorquotelinenumber = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.ivendorquotelinenumber, req).replace("&quot;", "\"");
 		m_bdquantity = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.bdquantity, req).replace("&quot;", "\"");
@@ -293,6 +293,7 @@ public class SMEstimate {
 			+ ", " + SMTablesmestimates.sprefixlabelitem
 			+ ", " + SMTablesmestimates.sproductdescription
 			+ ", " + SMTablesmestimates.sunitofmeasure
+			+ ", " + SMTablesmestimates.svendorquoteid
 			+ ", " + SMTablesmestimates.svendorquotenumber
 			+ ")"
 			+ " VALUES ("
@@ -321,6 +322,7 @@ public class SMEstimate {
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sprefixlabelitem) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sproductdescription) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sunitofmeasure) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquoteid) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquotenumber) + "'"
 			+ ")"
 					
@@ -351,6 +353,7 @@ public class SMEstimate {
 			+ ", " + SMTablesmestimates.sprefixlabelitem + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sprefixlabelitem) + "'"
 			+ ", " + SMTablesmestimates.sproductdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sproductdescription) + "'"
 			+ ", " + SMTablesmestimates.sunitofmeasure + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sunitofmeasure) + "'"
+			+ ", " + SMTablesmestimates.svendorquotenumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquoteid) + "'"
 			+ ", " + SMTablesmestimates.svendorquotenumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquotenumber) + "'"
 																					
 		;
@@ -458,6 +461,17 @@ public class SMEstimate {
 					m_sprefixlabelitem, 
 				SMTablesmestimates.sprefixlabelitemLength, 
 				"Prefix item label", 
+				true
+			);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+
+		try {
+			m_svendorquoteid = clsValidateFormFields.validateStringField(
+					m_svendorquoteid, 
+				SMTablesmestimates.svendorquoteidLength, 
+				"Vendor quote ID", 
 				true
 			);
 		} catch (Exception e) {
@@ -956,6 +970,7 @@ public class SMEstimate {
 				m_lsummarylinenumber = (Long.toString(rs.getLong(SMTablesmestimates.lsummarylinenumber)));
 				m_sdescription = rs.getString(SMTablesmestimates.sdescription);
 				m_sprefixlabelitem = rs.getString(SMTablesmestimates.sprefixlabelitem);
+				m_svendorquoteid = rs.getString(SMTablesmestimates.svendorquoteid);
 				m_svendorquotenumber = rs.getString(SMTablesmestimates.svendorquotenumber);
 				m_ivendorquotelinenumber = (Integer.toString(rs.getInt(SMTablesmestimates.ivendorquotelinenumber)));
 				m_bdquantity = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdquantityScale, rs.getBigDecimal(SMTablesmestimates.bdquantity));
@@ -1063,6 +1078,13 @@ public class SMEstimate {
 	}
 	public void setsprefixlabelitem(String sprefixlabelitem){
 		m_sprefixlabelitem = sprefixlabelitem;
+	}
+	
+	public String getsvendorquoteid(){
+		return m_svendorquoteid;
+	}
+	public void setsvendorquoteid(String svendorquoteid){
+		m_svendorquoteid = svendorquoteid;
 	}
 	
 	public String getsvendorquotenumber(){
@@ -1397,6 +1419,7 @@ public class SMEstimate {
 		sQueryString += "&" + SMTablesmestimates.sprefixlabelitem + "=" + clsServletUtilities.URLEncode(getsprefixlabelitem());
 		sQueryString += "&" + SMTablesmestimates.sproductdescription + "=" + clsServletUtilities.URLEncode(getsproductdescription());
 		sQueryString += "&" + SMTablesmestimates.sunitofmeasure + "=" + clsServletUtilities.URLEncode(getsunitofmeasure());
+		sQueryString += "&" + SMTablesmestimates.svendorquotenumber + "=" + clsServletUtilities.URLEncode(getsvendorquoteid());
 		sQueryString += "&" + SMTablesmestimates.svendorquotenumber + "=" + clsServletUtilities.URLEncode(getsvendorquotenumber());
 		
 		return sQueryString;
@@ -1410,6 +1433,7 @@ public class SMEstimate {
 		s += "  summary line number: " +  getslsummarylinenumber() + "\n";
 		s += "  description: " +  getsdescription() + "\n";
 		s += "  prefix label item: " +  getsprefixlabelitem() + "\n";
+		s += "  vendor quote ID: " +  getsvendorquoteid() + "\n";
 		s += "  vendor quote number: " +  getsvendorquotenumber() + "\n";
 		s += "  vendor quote line number: " +  getsivendorquotelinenumber() + "\n";
 		s += "  quantity: " +  getsbdquantity() + "\n";
@@ -1451,6 +1475,7 @@ public class SMEstimate {
 		m_sdescription = "";
 		m_sprefixlabelitem = "";
 		m_svendorquotenumber = "";
+		m_svendorquoteid = "";
 		m_ivendorquotelinenumber = "0";
 		m_bdquantity = "0.0000";
 		m_sitemnumber = "";

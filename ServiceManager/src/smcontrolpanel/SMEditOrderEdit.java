@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMFieldLengths;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
@@ -111,7 +112,6 @@ public class SMEditOrderEdit  extends HttpServlet {
 	public static final String NOOFQUOTECOPIES_NAME = "NOOFQUOTECOPIES";
 	public static final String BLANK_DEFAULT_ITEM_CATEGORY_DESC = "** NONE **";
 	
-	private static final String DATE_FIELD_WIDTH = "16";
 	private static final String PHONE_NUMBER_FIELD_WIDTH = "11";
 	private static final long TAX_CODE_BUFFER_SIZE = 100;
 	
@@ -1359,7 +1359,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " VALUE=\"" + entry.getM_datOrderDate().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamdatOrderDate + "\""
 			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + DATE_FIELD_WIDTH
+			+ " SIZE=" + SMFieldLengths.iDateLength
 			+ " MAXLENGTH=" + "10"
 			+ " STYLE=\"width: " + ".75" + " in; height: 0.25in\""
 			+ ">"
@@ -1429,7 +1429,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " VALUE=\"" + entry.getM_datExpectedShipDate().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamdatExpectedShipDate + "\""
 			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + DATE_FIELD_WIDTH
+			+ " SIZE=" + SMFieldLengths.iDateLength
 			+ " MAXLENGTH=" + "10"
 			+ " STYLE=\"width: " + ".75" + " in; height: 0.25in\""
 			+ ">"

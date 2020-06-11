@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import smar.ARCustomer;
 import smic.ICItem;
+import SMClasses.SMFieldLengths;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTableiccategories;
@@ -874,7 +875,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				+ " VALUE=\"" + detail.getM_datLineBookedDate().replace("\"", "&quot;") + "\""
 				+ " ID = \"" + SMOrderDetail.ParamdatLineBookedDate + "\""
 				+ " onClick=\"flagDirty();\""
-				+ " SIZE=" + "28"
+				+ " SIZE=" + SMFieldLengths.iDateLength
 				+ " MAXLENGTH=" + "10"
 				+ " STYLE=\"width: " + ".75" + " in; height: 0.25in\""
 				+ ">"
@@ -906,7 +907,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			+ " VALUE=\"" + detail.getM_datDetailExpectedShipDate().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderDetail.ParamdatDetailExpectedShipDate + "\""
 			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + "28"
+			+ " SIZE=" + SMFieldLengths.iDateLength
 			+ " MAXLENGTH=" + "10"
 			+ " STYLE=\"width: " + ".75" + " in; height: 0.25in\""
 			+ ">"

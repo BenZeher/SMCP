@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMFieldLengths;
 import SMClasses.SMJavaScriptFunctions;
 import SMClasses.SMOption;
 import SMClasses.SMOrderDetail;
@@ -2824,7 +2825,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ " VALUE=\"" + workorder.getdattimedone().replace("\"", "&quot;") + "\""
 				+ " id = \"" + SMWorkOrderHeader.Paramdattimedone + "\""
 				+ " onchange=\"flagDirty();\""
-				+ " SIZE=" + "9"
+				+ " SIZE=" + SMFieldLengths.iDateLength
 				+ " MAXLENGTH=" + "10"
 				//+ " STYLE=\"width: " + ".75" + " in; height: 0.25in\""
 				+ ">"
@@ -4188,7 +4189,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += " VALUE=\"" + sDatePortion + "\"";
 		s += " onchange=\"flagDirty();\"";
 		s += " ID=\"" + sDateFieldName + "\"";
-		s += "SIZE=28";
+		s += "SIZE=" + SMFieldLengths.iDateLength;
 		s += " MAXLENGTH=10";
 		s += " STYLE=\"width: " + ".75" + " in; height: 0.25in\"";
 		s += ">";

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
@@ -873,7 +874,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				sm.getLicenseModuleLevel())) {
 				
 				//Create a link to the vendor's quote:
-				//TODO
 				sVendorQuoteLink = 
 			    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOHDirectQuote"
 			    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
@@ -883,7 +883,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			    		+ "\">" + sVendorQuoteLink + "</A>"
 			    		+ ", line #" + estimate.getsivendorquotelinenumber()
 				;
-				// http://localhost:8080/sm/smcontrolpanel.SMDisplayOHDirectQuote?C_QuoteNumberString=SQAL000008-1&db=servmgr1&CallingClass=smcontrolpanel.SMOHDirectQuoteListing
 				
 			}
 		}else {
@@ -947,14 +946,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			    		+ "&" + SMTablesmestimatesummaries.lid + "=" + estimate.getslsummarylid()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
 			    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
-			    		+ "\">" + estimate.getslsummarylid() + "</A>"
+			    		+ "\">" + "Estimate Summary #: " + estimate.getslsummarylid() + "</A>"
 				;
 				
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Estimate Summary #:"
+			+ sSummaryLink
 			+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ sSummaryLink
+			+ ""
 			+ "</TD>" + "\n"
 		;
 		
@@ -970,11 +969,23 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  <TR>" + "\n";
 		
 		//Sales lead
+		String sSalesLeadLink = summary.getslsalesleadid();
+		if (summary.getslsalesleadid().compareToIgnoreCase("") != 0) {
+			boolean bAllowEditSalesLeads = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMEditBids, sm.getUserID(), conn, sm.getLicenseModuleLevel());
+			if (bAllowEditSalesLeads) {
+				sSalesLeadLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry"
+			    	+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+			    	+ "&" + SMBidEntry.ParamID + "=" + summary.getslsalesleadid()
+			    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+			    	+ "\">" + sSalesLeadLink + "</A>"
+				;
+			}
+		}
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
 				+ "Sales lead #:"
 				+ "</TD>" + "\n"
 					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-				+ summary.getslsalesleadid()
+				+ sSalesLeadLink
 				+ "</TD>" + "\n"
 			;
 		

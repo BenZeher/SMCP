@@ -569,7 +569,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
 		s += "    <TD>" + "\n";
-		s += buildEstimateTable(conn, summary, sVendorQuoteIdentifier, sm.getsDBID());
+		s += buildEstimateTable(conn, summary, sVendorQuoteIdentifier, sm.getsDBID(), sm.getUserID(), sm.getLicenseModuleLevel());
 		
 		s += buildTotalsTable(summary);
 		
@@ -604,11 +604,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		Connection conn, 
 		SMEstimateSummary summary, 
 		String sFoundVendorQuote,
-		String sDBID
+		String sDBID,
+		String sUserID,
+		String sLicenseModuleLevel
 		) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 6;
+		int iNumberOfColumns = 7;
 		
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
 		
@@ -653,6 +655,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		//Vendor quote:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "&nbsp;Vendor quote/line"
+			+ "</TD>" + "\n"
+		;
+		
 		//Desc:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
 			+ " style = \" font-weight:bold; font-style:underline; \" >"
@@ -682,7 +691,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    		+ "&" + SMTablesmestimates.lsummarylid + "=" + summary.getEstimateArray().get(i).getslsummarylid()
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
-	    		+ "\">" + summary.getEstimateArray().get(i).getslsummarylinenumber() + "</A>"
+	    		+ "\">Line " + summary.getEstimateArray().get(i).getslsummarylinenumber() + "</A>"
 	    		+ "&nbsp;"
     		;
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
@@ -705,6 +714,36 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Quantity:
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\" >"
 					+ summary.getEstimateArray().get(i).getsbdquantity()
+					+ "</TD>" + "\n"
+				;
+			
+			//Vendor quote:
+			String sVendorQuoteIdentifier = summary.getEstimateArray().get(i).getsvendorquotenumber()
+					+ "/" + summary.getEstimateArray().get(i).getsivendorquotelinenumber();
+			if (summary.getEstimateArray().get(i).getsvendorquotenumber().compareToIgnoreCase("") == 0) {
+				sVendorQuoteIdentifier = "";
+			}else {
+				if (SMSystemFunctions.isFunctionPermitted(
+					SMSystemFunctions.SMOHDirectQuoteList,
+					sUserID, 
+					conn, 
+					sLicenseModuleLevel)) {
+					
+					//Create a link to the vendor's quote:
+					//TODO
+					sVendorQuoteIdentifier = 
+				    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOHDirectQuote"
+				    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+				    		+ "&" + "C_QuoteNumberString=" + summary.getEstimateArray().get(i).getsvendorquotenumber()
+				    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
+				    		+ "\">" + sVendorQuoteIdentifier + "</A>"
+					;
+				}
+			}
+			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+					+ "&nbsp;"  //Just for a little space...
+					+ sVendorQuoteIdentifier
 					+ "</TD>" + "\n"
 				;
 			

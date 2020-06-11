@@ -43,6 +43,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String ADD_MANUAL_ESTIMATE_COMMAND = "ADDMANUALESTIMATECOMMAND";
 	public static final String BUTTON_ADD_VENDOR_QUOTE_CAPTION = "Add vendor quote number:";
 	public static final String BUTTON_ADD_VENDOR_QUOTE = "ADDVENDORQUOTE";
+	public static final String ADD_VENDOR_QUOTE_COMMAND = "ADDVENDORQUOTECOMMAND";
 	public static final String FIELD_VENDOR_QUOTE = "VENDORQUOTENUMBER";
 	public static final String BUTTON_FIND_VENDOR_QUOTE_CAPTION = "Find vendor quote";
 	public static final String BUTTON_FIND_VENDOR_QUOTE = "FINDVENDORQUOTE";
@@ -268,7 +269,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		pwOut.println("</FORM>");
 	}
 
-	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary, String sFoundVendorQuote) throws Exception{
+	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary, String sVendorQuoteIdentifier) throws Exception{
 		
 		String sControlHTML = "";
 		
@@ -569,7 +570,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
 		s += "    <TD>" + "\n";
-		s += buildEstimateTable(conn, summary, sFoundVendorQuote, sm.getsDBID());
+		s += buildEstimateTable(conn, summary, sVendorQuoteIdentifier, sm.getsDBID());
 		
 		s += buildTotalsTable(summary);
 		
@@ -1508,6 +1509,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
+			
+			//Add a vendor quote:
+			
+			s += "function addvendorquote(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + ADD_VENDOR_QUOTE_COMMAND + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "}\n"
+				;
 			
 			s += "function backintoprice(){\n"
 					

@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMOHDirectQuoteLineList;
 import SMClasses.SMTax;
-import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatelines;
@@ -725,7 +727,70 @@ public class SMEstimateSummary {
 		
 		return;
 	}
-	
+	public void createEstimatesFromVendorQuote(
+		Connection conn, 
+		String sVendorQuoteNumber, 
+		String sDBID, 
+		String sUserID,
+		String sUserFullName,
+		ServletContext context) throws Exception{
+		
+		//Get the vendor quote:
+		SMOHDirectQuoteLineList quotelineslist = new SMOHDirectQuoteLineList();
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
+				+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + sVendorQuoteNumber + "'"
+				+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "%20asc"
+			;
+		System.out.println("[202006110814] - sVendorQuoteNumber = '" + sVendorQuoteNumber + "'.");
+		try {
+			quotelineslist.getQuoteLineList(sRequest, conn, sDBID, sUserID);
+		} catch (Exception e4) {
+			throw new Exception("Error [202004273922] - " + e4.getMessage());
+		}
+		clsDatabaseFunctions.freeConnection(context, conn, "[1588019377]");
+		
+		try {
+			for(int i = 0; i < quotelineslist.getQuoteNumbers().size(); i++) {
+				//Build the estimate and add it to this summary:
+				SMEstimate estimate = new SMEstimate();
+				estimate.setsbdextendedcost(clsManageBigDecimals.BigDecimalToScaledFormattedString(
+					SMTablesmestimates.bdextendedcostScale, quotelineslist.getTotalCosts().get(i)));
+				estimate.setsbdquantity(clsManageBigDecimals.BigDecimalToScaledFormattedString(
+					SMTablesmestimates.bdquantityScale, quotelineslist.getQuantities().get(i)));
+				estimate.setsdescription("");
+				estimate.setsitemnumber("MISC");
+				estimate.setsivendorquotelinenumber(clsManageBigDecimals.BigDecimalToScaledFormattedString(0, quotelineslist.getLineNumbers().get(i)));
+				estimate.setslsummarylid(m_lid);
+				estimate.setsproductdescription(quotelineslist.getDescriptions().get(i));
+				estimate.setsunitofmeasure("EA");
+				estimate.setsvendorquotenumber(sVendorQuoteNumber);
+				
+				addEstimate(estimate);
+			}
+		} catch (Exception e) {
+			throw new Exception("Error [202006115656] - error adding estimates to summary from vendor quote - " + e.getMessage());
+		}
+		
+		try {
+			clsDatabaseFunctions.start_data_transaction_with_exception(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202006115842] - could not start data transaction - " + e.getMessage());
+		}
+		try {
+			save_without_data_transaction(conn, sUserID, sUserFullName);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [202006115918] - rolling back data transaction - " + e.getMessage());
+		}
+		try {
+			clsDatabaseFunctions.commit_data_transaction_with_exception(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202006110006] - committing transaction to save estimates from vendor quote - " + e.getMessage());
+		}
+		
+		return;
+		
+	}
 	public String getsdatetimecreatedInSQLFormat() throws Exception{
 		if (m_datetimecreated.compareToIgnoreCase("") == 0){
 			return SMUtilities.EMPTY_DATETIME_VALUE;

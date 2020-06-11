@@ -490,6 +490,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdquantity.compareToIgnoreCase("") == 0) {
+			m_bdquantity = "0.0000";
+		}
 		try {
 			m_bdquantity = clsValidateFormFields.validateBigdecimalField(
 				m_bdquantity.replace(",", ""), 
@@ -535,6 +538,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
+		if (m_bdextendedcost.compareToIgnoreCase("") == 0) {
+			m_bdextendedcost = "0.00";
+		}
 		try {
 			m_bdextendedcost = clsValidateFormFields.validateBigdecimalField(
 				m_bdextendedcost.replace(",", ""), 
@@ -547,6 +553,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
+		if (m_bdfreight.compareToIgnoreCase("") == 0) {
+			m_bdfreight = "0.00";
+		}
 		try {
 			m_bdfreight = clsValidateFormFields.validateBigdecimalField(
 				m_bdfreight.replace(",", ""), 
@@ -559,6 +568,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
+		if (m_bdlaborquantity.compareToIgnoreCase("") == 0) {
+			m_bdlaborquantity = "0.0000";
+		}
 		try {
 			m_bdlaborquantity = clsValidateFormFields.validateBigdecimalField(
 				m_bdlaborquantity.replace(",", ""), 
@@ -571,6 +583,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdlaborcostperunit.compareToIgnoreCase("") == 0) {
+			m_bdlaborcostperunit = "0.00";
+		}
 		try {
 			m_bdlaborcostperunit = clsValidateFormFields.validateBigdecimalField(
 				m_bdlaborcostperunit.replace(",", ""), 
@@ -594,6 +609,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdadditionalpretaxcostamount.compareToIgnoreCase("") == 0) {
+			m_bdadditionalpretaxcostamount = "0.00";
+		}
 		try {
 			m_bdadditionalpretaxcostamount = clsValidateFormFields.validateBigdecimalField(
 					m_bdadditionalpretaxcostamount.replace(",", ""), 
@@ -606,6 +624,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
+		if (m_bdmarkupamount.compareToIgnoreCase("") == 0) {
+			m_bdmarkupamount = "0.00";
+		}
 		try {
 			m_bdmarkupamount = clsValidateFormFields.validateBigdecimalField(
 				m_bdmarkupamount.replace(",", ""), 
@@ -629,6 +650,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdadditionalposttaxcostamount.compareToIgnoreCase("") == 0) {
+			m_bdadditionalposttaxcostamount = "0.00";
+		}
 		try {
 			m_bdadditionalposttaxcostamount = clsValidateFormFields.validateBigdecimalField(
 				m_bdadditionalposttaxcostamount.replace(",", ""), 
@@ -641,6 +665,9 @@ public class SMEstimate {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_bdlaborsellpriceperunit.compareToIgnoreCase("") == 0) {
+			m_bdlaborsellpriceperunit = "0.00";
+		}
 		try {
 			m_bdlaborsellpriceperunit = clsValidateFormFields.validateBigdecimalField(
 				m_bdlaborsellpriceperunit.replace(",", ""), 
@@ -797,6 +824,53 @@ public class SMEstimate {
 		}
 		
 		//In case the user was changing one of the existing lines, don't let any 'zero quantity' lines stay in the array at this point:
+		removeZeroQtyLines();
+		
+		return;
+		
+	}
+	public void refreshItem(String sLineNumber, Connection conn) throws Exception{
+		//This function updates the description, U/M, and unit/extended cost on the line number specified:
+		int iLineNumber = 0;
+		try {
+			iLineNumber = Integer.parseInt(sLineNumber);
+		} catch (Exception e) {
+			throw new Exception("Error [202006101559] - line number '" + sLineNumber + "' is invalid.");
+		}
+		
+		//Get the item number that's now on that line:
+		String sItemNumber = "";
+		try {
+			sItemNumber = arrEstimateLines.get(iLineNumber - 1).getsitemnumber();
+		} catch (Exception e) {
+			throw new Exception("Error [202006101776] - could not read line number '" + Integer.toString(iLineNumber) 
+				+ "' in estimate line array - arr size = " + Integer.toString(arrEstimateLines.size()));
+		}
+		
+		ICItem item = new ICItem(sItemNumber);
+		if(!item.load(conn)){
+			//We just assume it's not an inventory number, and we just make it all blank:
+			arrEstimateLines.get(iLineNumber - 1).setslinedescription("(not found)");
+			arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure("(N/A)");
+			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost("0.00");
+			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost("0.00");
+		}else {
+			arrEstimateLines.get(iLineNumber - 1).setslinedescription(item.getItemDescription());
+			arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure(item.getCostUnitOfMeasure());
+			BigDecimal bdExtendedCost = new BigDecimal("0.00");
+			BigDecimal bdQuantity = new BigDecimal(arrEstimateLines.get(iLineNumber - 1).getsbdquantity().replace(",", ""));
+			BigDecimal bdUnitCost = new BigDecimal(item.getMostRecentCost());
+			
+			//If it's a real inventory item that we'll need to calculate an extended cost for, we need a quantity:
+			if (bdQuantity.compareTo(BigDecimal.ZERO) <= 0) {
+				throw new Exception("Error [202006103031] - Quantity for line number " + Integer.toString(iLineNumber) + ", item number '" + sItemNumber + "' cannot be zero.");
+			}
+			bdExtendedCost = bdQuantity.multiply(bdUnitCost).setScale(SMTablesmestimatelines.bdextendedcostScale, BigDecimal.ROUND_HALF_UP);
+			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedCost));
+			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdUnitCost));
+		}
+		
+		//Remove any duplicate zero lines, but this shouldn't happen....
 		removeZeroQtyLines();
 		
 		return;
@@ -1387,7 +1461,7 @@ public class SMEstimate {
 		m_bdlaborquantity = "0.0000";
 		m_bdlaborcostperunit = "0.00";
 		m_sadditionalpretaxcostlabel = "";
-		m_bdadditionalpretaxcostamount = "";
+		m_bdadditionalpretaxcostamount = "0.00";
 		m_bdmarkupamount = "0.00";
 		m_sadditionalposttaxcostlabel = "";
 		m_bdadditionalposttaxcostamount = "0.00";

@@ -3,6 +3,7 @@ package smcontrolpanel;
 import java.io.IOException;
 import java.sql.Connection;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -207,7 +208,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&" + "CallingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
 				;
-	    	System.out.println("[202006044427] - sRedirectString = '" + sRedirectString + "'");			
+	    	//System.out.println("[202006044427] - sRedirectString = '" + sRedirectString + "'");			
 			try {
 				redirectProcess(sRedirectString, response);
 			} catch (Exception e) {
@@ -220,6 +221,42 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			    		);
 				return;
 			}
+			return;
+		}
+		
+		//If ADD VENDOR QUOTE, then:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.ADD_VENDOR_QUOTE_COMMAND) == 0){
+			String sVendorQuoteNumber = clsManageRequestParameters.get_Request_Parameter(
+					SMEditSMSummaryEdit.FIELD_VENDOR_QUOTE, request);
+			try {
+				summary.createEstimatesFromVendorQuote(
+						conn, 
+						sVendorQuoteNumber, 
+						smaction.getsDBID(), 
+						smaction.getUserID(), 
+						smaction.getFullUserName(), 
+						getServletContext()
+				);
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773959]");
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			    		);
+				return;
+			}
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689971]");
+			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
+			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Estimates added from vendor quote number " 
+					+ sVendorQuoteNumber + " added successfully");
+	    	smaction.redirectAction(
+		    		"", 
+		    		"", 
+		    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+		    		);
 			return;
 		}
 		

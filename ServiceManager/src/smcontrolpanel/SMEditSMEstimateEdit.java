@@ -55,6 +55,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String FIELD_ADDITIONAL_TAXED_COST_CAPTION = "ADDITIONAL COST SUBJECT TO USE TAX:";
 	public static final String FIELD_ADDITIONAL_UNTAXED_COST_CAPTION = "ADDITIONAL COST NOT SUBJECT TO USE TAX:";
 	public static final String FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION = "LABOR SELL PRICE PER UNIT:";
+	public static final String LABEL_PRODUCT_UNIT_COST = "LABELPRODUCTUNITCOST";
 	
 	public static final String LABEL_LABOR_SELL_PRICE_CAPTION = "LABOR SELL PRICE:";
 	public static final String LABEL_LABOR_SELL_PRICE = "LABORSELLPRICE";
@@ -79,11 +80,17 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String FIND_ITEM_BUTTON_CAPTION = "Find item";
 	public static final String FIND_ITEM_BUTTON = "FINDITEM";
 	public static final String FIND_ITEM_COMMAND = "FINDITEMCOMMAND";
+	public static final String REFRESH_ITEM_BUTTON_CAPTION = "Refresh item";
+	public static final String REFRESH_ITEM_BUTTON = "REFRESHITEM";
+	public static final String REFRESH_ITEM_COMMAND = "REFRESHITEMCOMMAND";
+	public static final String REFRESH_ITEM_LINE_NUMBER = "REFRESHITEMLINENUMBER";
+	
 	public static final String PARAM_FIND_ITEM_RETURN_FIELD = "PARAMFINDITEMRETURNFIELD";
 	public static final String LOOKUP_ITEM_COMMAND = "LOOKUPITEMCOMMAND";
 	public static final String PARAM_LOOKUP_ITEM_LINENUMBER = "LOOKUPITEMLINENUMBER";
 	
 	public static final String UNSAVED_ESTIMATE_LABEL = "(UNSAVED)";
+	public static final String UNSAVED_SUMMARY_LINE_LABEL = "(UNSAVED)";
 	public static final String EMPTY_VENDOR_QUOTE_LABEL = "(NONE)";
 	public static final String FIELD_REPLACE_QUOTE_WITH_NUMBER = "PARAMREPLACEQUOTEWITHNUMBER";
 	public static final String FIELD_REPLACE_QUOTE_LINE = "PARAMREPLACEQUOTELINE";
@@ -321,6 +328,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " VALUE=\"" + "" + "\""+ " "
 				+ " ID=\"" + PARAM_LOOKUP_ITEM_LINENUMBER + "\""+ "\">" + "\n";
 		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + REFRESH_ITEM_LINE_NUMBER + "\""
+				+ " VALUE=\"" + "" + "\""+ " "
+				+ " ID=\"" + REFRESH_ITEM_LINE_NUMBER + "\""+ "\">" + "\n";
+		
 		//This is used to store the on-the-fly retail sales tax rate in case the user changes the tax drop down
 		s += "<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + SMTablesmestimatesummaries.bdtaxrate + "\""
@@ -375,7 +386,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 7;
+		int iNumberOfColumns = 8;
 		
 		s += "<BR>";
 		
@@ -404,6 +415,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		//Blank column for item refresh on options:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ ""
+			+ "</TD>" + "\n"
+		;
+		
 		//Product description:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
 			+ " style = \" font-weight:bold; font-style:underline; \" >"
@@ -418,7 +436,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
-		//Extended price:
+		//Unit cost:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Unit cost"
+			+ "</TD>" + "\n"
+		;
+		
+		//Extended cost:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
 			+ " style = \" font-weight:bold; font-style:underline; \" >"
 			+ "Extended cost"
@@ -436,7 +461,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.bdquantity + "\""
 			+ " VALUE=\"" + estimate.getsbdquantity() + "\""
 			+ " MAXLENGTH=15"
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right; width:65px;\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
@@ -456,6 +481,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		
 		//Blank column for item finder:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
+				+ " style = \" font-weight:bold; font-style:underline; \" >"
+				+ ""
+				+ "</TD>" + "\n"
+			;
+		
+		//Blank column for item refresh:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
 				+ " style = \" font-weight:bold; font-style:underline; \" >"
 				+ ""
@@ -489,13 +521,26 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+				+ ">"
+				+ "<LABEL"
+				+ " NAME=\"" + LABEL_PRODUCT_UNIT_COST + "\""
+				+ " ID=\"" + LABEL_PRODUCT_UNIT_COST + "\""
+				+ " MAXLENGTH=32"
+				+ " style = \" text-align:right; width:70px;\""
+				+ ">"
+				+ "0.00"
+				+ "</LABEL>"
+				+ "</TD>" + "\n"
+			;
+		
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 			+ ">"
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimates.bdextendedcost + "\""
 			+ " ID=\"" + SMTablesmestimates.bdextendedcost + "\""
 			+ " VALUE=\"" + estimate.getsbdextendedcost() + "\""
 			+ " MAXLENGTH=32"
-			+ " style = \" text-align:right; width:120px;\""
+			+ " style = \" text-align:right; width:80px;\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
@@ -526,7 +571,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdquantity() + "\""
 					+ " MAXLENGTH=15"
-					+ " style = \" text-align:right; width:100px;\""
+					+ " style = \" text-align:right; width:65px;\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					
@@ -557,6 +602,15 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ "</TD>" + "\n"
 				;
 				
+				//Refresh item info
+				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
+						+ " style = \" font-weight:bold; font-style:underline; \" >"
+						+ ""
+						+ buildItemRefreshButton(Integer.toString(iEstimateLineCounter + 1))
+						+ "</TD>" + "\n"
+					;
+				
+				//Column to find item:
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
 						+ " style = \" font-weight:bold; font-style:underline; \" >"
 						+ ""
@@ -595,6 +649,21 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				;
 				
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+						+ ">"
+						+ "<INPUT TYPE=TEXT"
+						+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+								Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+						+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+								Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+						+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdunitcost() + "\""
+						+ " MAXLENGTH=32"
+						+ " style = \" text-align:right; width:70px;\""
+						+ " onchange=\"flagDirty();\""
+						+ ">"
+						+ "</TD>" + "\n"
+					;
+				
+				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
@@ -603,7 +672,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							Integer.toString(iEstimateLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdextendedcost() + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" text-align:right; width:120px;\""
+					+ " style = \" text-align:right; width:80px;\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -622,7 +691,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 						"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 				+ " VALUE=\"" + "0.0000" + "\""
 				+ " MAXLENGTH=15"
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right; width:65px;\""
 				+ " onchange=\"flagDirty();\""
 				+ ">"
 				
@@ -656,6 +725,12 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ ">"
 				+ "</TD>" + "\n"
 			;
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
+					+ " style = \" font-weight:bold; font-style:underline; \" >"
+					+ ""
+					+ "</TD>" + "\n"
+				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
 					+ " style = \" font-weight:bold; font-style:underline; \" >"
@@ -694,6 +769,21 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			;
 			
 			s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+					+ " VALUE=\"" + "0.00" + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \" text-align:right; width:70px;\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
+			
+			s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 				+ ">"
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
@@ -702,7 +792,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 						"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 				+ " VALUE=\"" + "0.00" + "\""
 				+ " MAXLENGTH=32"
-				+ " style = \" text-align:right; width:120px;\""
+				+ " style = \" text-align:right; width:80px;\""
 				+ " onchange=\"flagDirty();\""
 				+ ">"
 				+ "</TD>" + "\n"
@@ -732,9 +822,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		s += "<BR>" + "\n";
 		
+		String sSummaryLineNumber = UNSAVED_SUMMARY_LINE_LABEL;
+		if (estimate.getslsummarylinenumber().compareToIgnoreCase("-1") != 0) {
+			sSummaryLineNumber = estimate.getslsummarylinenumber();
+		}
 		s += "<B>Estimate ID:</B>&nbsp;" + sEstimateID
 			+ "&nbsp;&nbsp;"
-			+ "<B>Summary line #:</B>&nbsp;" + estimate.getslsummarylinenumber()
+			+ "<B>Summary line #:</B>&nbsp;" + sSummaryLineNumber
 			+ "&nbsp;&nbsp;"
 			+ "<B>Created:</B> " + estimate.getsdatetimecreated() + " by " + estimate.getscreatedbyfullname() 
 			+ "&nbsp;&nbsp;"
@@ -1364,6 +1458,19 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 
 		return s;
 	}
+	private String buildItemRefreshButton(String sPaddedLineNumber) {
+		String s = "";
+		s += "<button type=\"button\""
+			+ " value=\"" + REFRESH_ITEM_BUTTON_CAPTION + "\""
+			+ " name=\"" + REFRESH_ITEM_BUTTON + sPaddedLineNumber + "\""
+			+ " id=\"" + REFRESH_ITEM_BUTTON + sPaddedLineNumber + "\""
+			+ " onClick=\"invokeitemrefresh('"  + sPaddedLineNumber + "');\">"
+			+ REFRESH_ITEM_BUTTON_CAPTION
+			+ "</button>\n"
+		;
+
+		return s;
+	}
 	
 	private String createReplaceVendorQuoteLineButton() {
 		String s = "";
@@ -1458,6 +1565,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "            (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + SAVE_COMMAND_VALUE + "\") \n"
 				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + DELETE_COMMAND_VALUE + "\") \n"
 				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + LOOKUP_ITEM_COMMAND + "\") \n"
+				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + REFRESH_ITEM_COMMAND + "\") \n"
 				+ "        ) {\n"
 				+ "            return 'You have unsaved changes!';\n"
 				+ "        } \n"
@@ -1483,6 +1591,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			s += "function invokeitemfinder(sItemFinderResultField){\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_ITEM_COMMAND + "\";\n"
 					+ "    document.getElementById(\"" + PARAM_FIND_ITEM_RETURN_FIELD + "\").value = sItemFinderResultField; \n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
+			//Refresh item for estimate option:
+			s += "function invokeitemrefresh(slinenumber){\n"
+					//+ "    alert('Refresh line ' + slinenumber); \n"
+					+ "    // First, record that the record is being changed: \n"
+					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
+					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REFRESH_ITEM_COMMAND + "\";\n"
+					+ "    document.getElementById(\"" + REFRESH_ITEM_LINE_NUMBER + "\").value = slinenumber; \n"
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;

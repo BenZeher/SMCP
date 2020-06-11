@@ -253,10 +253,11 @@ public class OHDirectFinderResults extends HttpServlet {
 
 			  if(arrResultListFields.get(j).compareToIgnoreCase(SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER) == 0) {
 				String sQuoteNumberLink = ql.getQuoteNumbers().get(i);
+				String sQuoteID = ql.getQuoteIDs().get(i);
 				if (bAllowQuoteDisplay) {
 					sQuoteNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 						+ sSearchingClass
-						+ "?" + sReturnField + "=" + sQuoteNumberLink 
+						+ "?" + sReturnField + "=" + sQuoteID 
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
 						+ "&" + sAdditionalReturnParams.replace("*", "&")

@@ -11,7 +11,10 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMOHDirectQuoteLineList;
+import SMClasses.SMOHDirectQuoteList;
 import SMClasses.SMTax;
+import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import ServletUtilities.clsDatabaseFunctions;
@@ -788,6 +791,10 @@ public class SMEstimate {
 			}
 		}
 		
+		if (sResult.compareToIgnoreCase("") != 0) {
+			throw new Exception("Error [202006121844] validating estimate - " + sResult);
+		}
+		
 		return;
 	}
 	public void lookUpItem(String sLineNumber, Connection conn) throws Exception{
@@ -860,6 +867,56 @@ public class SMEstimate {
 			}
 		}
 		clsDatabaseFunctions.freeConnection(context, conn, "[1591986288]");
+		return;
+	}
+	public void refreshVendorQuoteLine(Connection conn, String sDBID, String sUserID, String sUserFullName) throws Exception{
+		
+		//Get the vendor quote:
+		SMOHDirectQuoteList quotelist = new SMOHDirectQuoteList();
+		
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTE + "?%24filter="
+			+ SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "%20eq%20'" + m_svendorquotenumber + "'"
+		;
+		try {
+			quotelist.getQuoteList(sRequest, conn, sDBID, sUserID);
+		} catch (Exception e) {
+			throw new Exception("Error [202004274322] - " + e.getMessage());
+		}
+		
+		SMOHDirectQuoteLineList quotelineslist = new SMOHDirectQuoteLineList();
+		sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
+				+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + quotelist.getQuoteIDs().get(0) + "'"
+				+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "%20asc"
+			;
+		try {
+			quotelineslist.getQuoteLineList(sRequest, conn, sDBID, sUserID);
+		} catch (Exception e4) {
+			throw new Exception("Error [202004273322] - " + e4.getMessage());
+		}
+		
+		int iQuoteLineNumber = Integer.parseInt(m_ivendorquotelinenumber);
+		
+		//System.out.println("[202006124851] - iQuoteLineNumber = '" + iQuoteLineNumber + "'.");
+		try {
+			setsbdextendedcost(clsManageBigDecimals.BigDecimalToScaledFormattedString(
+				SMTablesmestimates.bdextendedcostScale, quotelineslist.getTotalCosts().get(iQuoteLineNumber - 1)));
+			setsbdquantity(clsManageBigDecimals.BigDecimalToScaledFormattedString(
+				SMTablesmestimates.bdquantityScale, quotelineslist.getQuantities().get(iQuoteLineNumber - 1)));
+			setsdescription("");
+			setsitemnumber("MISC");
+			setsproductdescription(quotelineslist.getDescriptions().get(iQuoteLineNumber - 1));
+			setsunitofmeasure("EA");
+		} catch (Exception e) {
+			throw new Exception("Error [202006115356] - error adding estimates to summary from vendor quote - " + e.getMessage());
+		}
+		
+		//Now save the estimate:
+		try {
+			save_without_data_transaction(conn, sUserID, sUserFullName);
+		} catch (Exception e) {
+			throw new Exception("Error [202006124529] - saving estimate - " + e.getMessage());
+		}
+		
 		return;
 	}
 	public void refreshItem(String sLineNumber, Connection conn) throws Exception{

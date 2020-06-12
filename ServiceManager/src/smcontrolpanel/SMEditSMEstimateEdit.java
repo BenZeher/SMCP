@@ -173,8 +173,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    }
 	    
 	    //If we're returning from the item finder, then refresh all the lines on the estimate:
-	    System.out.println("[202006122806] - get_Request_Parameter(RETURNING_FROM_FINDER = '" 
-	    	+ clsManageRequestParameters.get_Request_Parameter(RETURNING_FROM_FINDER, request) + "'");
+	   // System.out.println("[202006122806] - get_Request_Parameter(RETURNING_FROM_FINDER = '" 
+	   // 	+ clsManageRequestParameters.get_Request_Parameter(RETURNING_FROM_FINDER, request) + "'");
 	    if (clsManageRequestParameters.get_Request_Parameter(RETURNING_FROM_FINDER, request).compareToIgnoreCase("") != 0){
 	    	try {
 				estimate.refreshAllItems(getServletContext(), smedit.getsDBID(), smedit.getUserID());
@@ -1545,7 +1545,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " value=\"" + REPLACE_VENDOR_QUOTE_BUTTON_CAPTION + "\""
 			+ " name=\"" + REPLACE_VENDOR_QUOTE_BUTTON + "\""
 			+ " id=\"" + REPLACE_VENDOR_QUOTE_BUTTON + "\""
-			+ " onClick=\"replacevendorquote;\">"
+			+ " onClick=\"replacevendorquote();\">"
 			+ REPLACE_VENDOR_QUOTE_BUTTON_CAPTION
 			+ "</button>\n"
 		;
@@ -1558,7 +1558,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " value=\"" + REFRESH_VENDOR_QUOTE_BUTTON_CAPTION + "\""
 			+ " name=\"" + REFRESH_VENDOR_QUOTE_BUTTON + "\""
 			+ " id=\"" + REFRESH_VENDOR_QUOTE_BUTTON + "\""
-			+ " onClick=\"refreshvendorquote;\">"
+			+ " onClick=\"refreshvendorquote();\">"
 			+ REFRESH_VENDOR_QUOTE_BUTTON_CAPTION
 			+ "</button>\n"
 		;
@@ -1649,6 +1649,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			
 			//Refresh vendor quote:
 			s += "function refreshvendorquote(){\n"
+					//+ "    alert('refreshing vendor quote'); \n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REFRESH_VENDOR_QUOTE_COMMAND + "\";\n"
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"

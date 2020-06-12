@@ -29,23 +29,23 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMEditSMSummaryEdit extends HttpServlet {
 	
-	public static final String SAVE_BUTTON_CAPTION = "Save " + SMEstimateSummary.OBJECT_NAME;
+	public static final String SAVE_BUTTON_CAPTION = "Sa<B><FONT COLOR=RED>v</FONT></B>e estimate summary";
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";
-	public static final String DELETE_BUTTON_CAPTION = "Delete " + SMEstimateSummary.OBJECT_NAME;
+	public static final String DELETE_BUTTON_CAPTION = "Delete estimate s<B><FONT COLOR=RED>u</FONT></B>mmary";
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 	public static final String REMOVE_ESTIMATE_COMMAND = "REMOVEESTIMATE";
 	public static final String PARAM_SUMMARY_LINE_NUMBER_TO_BE_REMOVED = "REMOVEESTIMATELINENUMBER";
-	public static final String BUTTON_ADD_MANUAL_ESTIMATE_CAPTION = "Add estimate manually";
+	public static final String BUTTON_ADD_MANUAL_ESTIMATE_CAPTION = "Add estimate <B><FONT COLOR=RED>m</FONT></B>anually";
 	public static final String BUTTON_ADD_MANUAL_ESTIMATE = "ADDMANUALESTIMATE";
 	public static final String ADD_MANUAL_ESTIMATE_COMMAND = "ADDMANUALESTIMATECOMMAND";
-	public static final String BUTTON_ADD_VENDOR_QUOTE_CAPTION = "Add vendor quote number:";
+	public static final String BUTTON_ADD_VENDOR_QUOTE_CAPTION = "Add vendor quote <B><FONT COLOR=RED>n</FONT></B>umber:";
 	public static final String BUTTON_ADD_VENDOR_QUOTE = "ADDVENDORQUOTE";
 	public static final String ADD_VENDOR_QUOTE_COMMAND = "ADDVENDORQUOTECOMMAND";
 	public static final String FIELD_VENDOR_QUOTE = "VENDORQUOTENUMBER";
-	public static final String BUTTON_FIND_VENDOR_QUOTE_CAPTION = "Find vendor quote";
+	public static final String BUTTON_FIND_VENDOR_QUOTE_CAPTION = "Find vendor <B><FONT COLOR=RED>q</FONT></B>uote";
 	public static final String BUTTON_FIND_VENDOR_QUOTE = "FINDVENDORQUOTE";
 	public static final String FIND_VENDOR_QUOTE_COMMAND_VALUE = "FINDVENDORQUOTECOMMAND";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_COST = "LABELCALCULATEDTOTALMATERIALCOST";
@@ -88,7 +88,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_LABEL = "ADJUSTEDRETAILSALESTAXLABEL";
 	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
-	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "Process";
+	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "<B><FONT COLOR=RED>P</FONT></B>rocess";
 	public static final String BUTTON_BACK_INTO_PRICE = "Process";
 	public static final String BUTTON_REMOVE_ESTIMATE_CAPTION = "Remove";
 	public static final String BUTTON_REMOVE_ESTIMATE_BASE = "REMOVEESTIMATE";
@@ -1229,7 +1229,25 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		return s;
 	}
-	
+	private String createSaveButton(){
+		return "<button type=\"button\""
+				+ " value=\"" + SAVE_BUTTON_CAPTION + "\""
+				+ " name=\"" + SAVE_BUTTON_CAPTION + "\""
+				+ " onClick=\"save();\">"
+				+ SAVE_BUTTON_CAPTION
+				+ "</button>\n";
+	}
+	private String createDeleteButton(){
+		String s = "";
+		s = "<button type=\"button\""
+		+ " value=\"" + DELETE_BUTTON_CAPTION + "\""
+		+ " name=\"" + DELETE_BUTTON_CAPTION + "\""
+		+ " onClick=\"deletesummary();\">"
+		+ DELETE_BUTTON_CAPTION
+		+ "</button>\n";
+		
+		return s;
+	}
 	private String buildRemoveEstimateButton(String sSummaryLineNumber) {
 		String s = "";
 		s += "<button type=\"button\""
@@ -1426,6 +1444,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    checkfortaxupdates();\n"
 				+ "    // The 'taxChange' function will trigger recalculatelivetotals() automatically: \n"
 				+ "    taxChange(document.getElementById(\"" + SMTablesmestimatesummaries.itaxid + "\")); \n"
+				+ "    initShortcuts();\n"
 				+ "    //Now reset the 'record changed' flag since the user hasn't done anything yet: \n"
 				+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = ''; \n" 
 				+ "\n"
@@ -2009,28 +2028,63 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				;
 				s += "}\n\n"
 			;
+				
+			s += "function initShortcuts() {\n";
+			
+			s += "    shortcut.add(\"Alt+m\",function() {\n";
+			s += "        addmanualestimate();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+				
+			s += "    shortcut.add(\"Alt+n\",function() {\n";
+			s += "        addvendorquote();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+p\",function() {\n";
+			s += "        backintoprice();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+q\",function() {\n";
+			s += "        findvendorquote();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+u\",function() {\n";
+			s += "        deletesummary();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+v\",function() {\n";
+			s += "        save();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "}\n";
+				
 			s += "</script>\n";
 			return s;
 		}
-	private String createSaveButton(){
-		return "<button type=\"button\""
-				+ " value=\"" + SAVE_BUTTON_CAPTION + "\""
-				+ " name=\"" + SAVE_BUTTON_CAPTION + "\""
-				+ " onClick=\"save();\">"
-				+ SAVE_BUTTON_CAPTION
-				+ "</button>\n";
-	}
-	private String createDeleteButton(){
-		String s = "";
-		s = "<button type=\"button\""
-		+ " value=\"" + DELETE_BUTTON_CAPTION + "\""
-		+ " name=\"" + DELETE_BUTTON_CAPTION + "\""
-		+ " onClick=\"deletesummary();\">"
-		+ DELETE_BUTTON_CAPTION
-		+ "</button>\n";
-		
-		return s;
-	}
+
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

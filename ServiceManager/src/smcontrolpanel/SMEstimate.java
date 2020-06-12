@@ -698,33 +698,6 @@ public class SMEstimate {
 		}
 		
 		try {
-			m_lcreatedbyid  = clsValidateFormFields.validateLongIntegerField(m_lcreatedbyid, "Created by user ID", 1L, clsValidateFormFields.MAX_LONG_VALUE);
-		} catch (Exception e) {
-			sResult += "  " + e.getMessage() + ".";
-		}
-		
-		try {
-			m_datetimecreated = clsValidateFormFields.validateDateTimeField(
-				m_datetimecreated, 
-				"Date created", 
-				SMUtilities.DATETIME_FORMAT_FOR_DISPLAY,
-				true);
-		} catch (Exception e) {
-			sResult += "  " + e.getMessage() + ".";
-		}
-		
-		try {
-			m_screatedbyfullname = clsValidateFormFields.validateStringField(
-				m_screatedbyfullname, 
-				SMTablesmestimates.screatedbyfullnameLength, 
-				"Created by full name", 
-				true
-			);
-		} catch (Exception e) {
-			sResult += "  " + e.getMessage() + ".";
-		}
-		
-		try {
 			m_llastmodifiedbyid  = clsValidateFormFields.validateLongIntegerField(m_llastmodifiedbyid, "Last modified by user ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";

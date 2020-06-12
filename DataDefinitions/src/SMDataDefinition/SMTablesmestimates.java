@@ -39,7 +39,7 @@ public class SMTablesmestimates {
 	public static int svendorquotenumberLength = 32;
 	public static int svendorquoteidLength = 64;
 	public static int sitemnumberLength = 32;
-	public static int sproductdescriptionLength = 75;
+	public static int sproductdescriptionLength = 128;
 	public static int sunitofmeasureLength = 10;
 	public static int sadditionalpretaxcostlabelLength = 32;
 	public static int sadditionalposttaxcostlabelLength = 32;

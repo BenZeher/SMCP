@@ -842,7 +842,9 @@ public class SMEstimate {
 		clsDatabaseFunctions.freeConnection(context, conn, "[1591986288]");
 		return;
 	}
-	public void refreshVendorQuoteLine(Connection conn, String sDBID, String sUserID, String sUserFullName) throws Exception{
+	public String refreshVendorQuoteLine(Connection conn, String sDBID, String sUserID, String sUserFullName) throws Exception{
+		
+		String sResult = "NOTE: Vendor quote number " + m_svendorquotenumber + " was last modified ";
 		
 		//Get the vendor quote:
 		SMOHDirectQuoteList quotelist = new SMOHDirectQuoteList();
@@ -855,6 +857,8 @@ public class SMEstimate {
 		} catch (Exception e) {
 			throw new Exception("Error [202004274322] - " + e.getMessage());
 		}
+		
+		sResult += quotelist.getLastModifiedDates().get(0) + ".";
 		
 		SMOHDirectQuoteLineList quotelineslist = new SMOHDirectQuoteLineList();
 		sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
@@ -890,7 +894,7 @@ public class SMEstimate {
 			throw new Exception("Error [202006124529] - saving estimate - " + e.getMessage());
 		}
 		
-		return;
+		return sResult;
 	}
 	public void refreshItem(String sLineNumber, Connection conn) throws Exception{
 		//This function updates the description, U/M, and unit/extended cost on the line number specified:

@@ -188,9 +188,9 @@ public class SMEditSMEstimateAction extends HttpServlet{
 		//If REFRESH VENDOR QUOTE, process that:
 		//System.out.println("[202006124811] - command was: '" + sCommandValue + "'.");
 		if(sCommandValue.compareToIgnoreCase(SMEditSMEstimateEdit.REFRESH_VENDOR_QUOTE_COMMAND) == 0){
-			
+			String sResult = "";
 			try {
-				estimate.refreshVendorQuoteLine(conn, smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName());
+				sResult = estimate.refreshVendorQuoteLine(conn, smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName());
 			} catch (Exception e) {
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633340]");
 				smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e.getMessage());
@@ -205,6 +205,7 @@ public class SMEditSMEstimateAction extends HttpServlet{
 				return;
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633341]");
+			smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.RESULT_STATUS_OBJECT, sResult);
 			//System.out.println("[202006102717] - estimate dump = \n" + estimate.dumpData());
 	    	smaction.redirectAction(
 		    		"", 

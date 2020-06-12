@@ -343,7 +343,7 @@ public class FinderResults extends HttpServlet {
 					sSearchText		
 			);
 		}
-		System.out.println("[202006084937] - didn't use special SQL");
+		//System.out.println("[202006084937] - didn't use special SQL");
 		if (!bUsedSpecialSQL){
 			sSQL = buildStdSQLStatement(
 					sObjectName,
@@ -356,7 +356,7 @@ public class FinderResults extends HttpServlet {
 			);
 		}
 		
-		System.out.println("[1491249950] sSQL = '" + sSQL + "'");
+		//System.out.println("[1491249950] sSQL = '" + sSQL + "'");
 		
 	    //Unless told not to, print a link to the first page after login:
 		if (clsManageRequestParameters.get_Request_Parameter(ObjectFinder.DO_NOT_SHOW_MENU_LINK, request).compareToIgnoreCase("") == 0){

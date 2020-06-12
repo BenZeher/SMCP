@@ -161,6 +161,7 @@ public class SMEditSMEstimateAction extends HttpServlet{
 					+ "*" + SMTablesmestimates.lid + "=" + estimate.getslid()
 					+ "*" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
 						+ clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.RECORDWASCHANGED_FLAG_VALUE, request)
+					+ "*" + SMEditSMEstimateEdit.RETURNING_FROM_FINDER + "=T"
 
 					+ "*CallingClass=" + smaction.getCallingClass()
 			;

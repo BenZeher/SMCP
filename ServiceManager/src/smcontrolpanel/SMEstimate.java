@@ -843,6 +843,25 @@ public class SMEstimate {
 		return;
 		
 	}
+	public void refreshAllItems(ServletContext context, String sDBID, String sUserID) throws Exception{
+		
+		Connection conn;
+		try {
+			conn = clsDatabaseFunctions.getConnectionWithException(context, sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
+		} catch (Exception e1) {
+			throw new Exception("Error [202006080743] - could not get connection - " + e1.getMessage());
+		}
+
+		for (int i = 0; i < arrEstimateLines.size(); i++) {
+			try {
+				refreshItem(Integer.toString(i + 1), conn);
+			} catch (Exception e) {
+				throw new Exception("Error [202006122552] - " + e.getMessage());
+			}
+		}
+		clsDatabaseFunctions.freeConnection(context, conn, "[1591986288]");
+		return;
+	}
 	public void refreshItem(String sLineNumber, Connection conn) throws Exception{
 		//This function updates the description, U/M, and unit/extended cost on the line number specified:
 		int iLineNumber = 0;
@@ -864,10 +883,18 @@ public class SMEstimate {
 		ICItem item = new ICItem(sItemNumber);
 		if(!item.load(conn)){
 			//We just assume it's not an inventory number, and we just make it all blank:
-			arrEstimateLines.get(iLineNumber - 1).setslinedescription("(not found)");
-			arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure("(N/A)");
-			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost("0.00");
-			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost("0.00");
+			if (arrEstimateLines.get(iLineNumber - 1).getslinedescription().compareToIgnoreCase("") == 0){
+				arrEstimateLines.get(iLineNumber - 1).setslinedescription("(not found)");
+			}
+			if (arrEstimateLines.get(iLineNumber - 1).getsunitofmeasure().compareToIgnoreCase("") == 0){
+				arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure("(N/A)");
+			}
+			if (arrEstimateLines.get(iLineNumber - 1).getsbdunitcost().compareToIgnoreCase("") == 0){
+				arrEstimateLines.get(iLineNumber - 1).setsbdunitcost("0.00");
+			}
+			if (arrEstimateLines.get(iLineNumber - 1).getsbdextendedcost().compareToIgnoreCase("") == 0){
+				arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost("0.00");
+			}
 		}else {
 			arrEstimateLines.get(iLineNumber - 1).setslinedescription(item.getItemDescription());
 			arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure(item.getCostUnitOfMeasure());
@@ -1326,9 +1353,10 @@ public class SMEstimate {
 		try {
 			loadSummary(conn);
 		} catch (Exception e) {
+			clsDatabaseFunctions.freeConnection(context, conn, "[1591986274]");
 			throw new Exception("Error [202006080801] - loading summary - " + e.getMessage());
 		}
-		
+		clsDatabaseFunctions.freeConnection(context, conn, "[1591986275]");
 		return;
 	}
 	private void loadSummary(Connection conn) throws Exception{

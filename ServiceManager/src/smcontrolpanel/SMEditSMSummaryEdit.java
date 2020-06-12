@@ -162,6 +162,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
+	    smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 	    
 	    if (currentSession.getAttribute(WARNING_OBJECT) != null) {
 	    	String sWarning = (String)currentSession.getAttribute(WARNING_OBJECT);

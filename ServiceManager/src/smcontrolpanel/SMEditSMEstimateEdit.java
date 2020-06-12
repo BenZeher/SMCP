@@ -27,10 +27,8 @@ import ServletUtilities.clsStringFunctions;
  */
 public class SMEditSMEstimateEdit extends HttpServlet {
 	
-	public static final String SAVE_BUTTON_CAPTION = "Save " + SMEstimate.OBJECT_NAME;
+	public static final String SAVE_BUTTON_CAPTION = "Sa<B><FONT COLOR=RED>v</FONT></B>e " + SMEstimate.OBJECT_NAME;
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";
-	public static final String DELETE_BUTTON_CAPTION = "Delete " + SMEstimate.OBJECT_NAME;
-	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
@@ -52,8 +50,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LABEL_TOTAL_MARKUP_CAPTION = "TOTAL MARK-UP:";
 	public static final String LABEL_COST_SUBTOTAL_CAPTION = "COST SUBTOTAL:";
 	public static final String LABEL_COST_SUBTOTAL = "COSTSUBTOTAL";
-	public static final String FIELD_ADDITIONAL_TAXED_COST_CAPTION = "ADDITIONAL COST SUBJECT TO USE TAX:";
-	public static final String FIELD_ADDITIONAL_UNTAXED_COST_CAPTION = "ADDITIONAL COST NOT SUBJECT TO USE TAX:";
+	public static final String FIELD_ADDITIONAL_TAXED_COST_CAPTION = "ADDITIONAL COST SUBJECT TO USE TAX: ";
+	public static final String FIELD_ADDITIONAL_UNTAXED_COST_CAPTION = "ADDITIONAL COST NOT SUBJECT TO USE TAX: ";
 	public static final String FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION = "LABOR SELL PRICE PER UNIT:";
 	public static final String LABEL_PRODUCT_UNIT_COST = "LABELPRODUCTUNITCOST";
 	
@@ -65,18 +63,22 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LABEL_TOTAL_SELL_PRICE = "TOTALSELLPRICE";
 	public static final String LABEL_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String LABEL_RETAIL_SALES_TAX = "RETAILSALESTAX";
-	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "Process";
-	public static final String BUTTON_BACK_INTO_PRICE = "Process";
+	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "<B><FONT COLOR=RED>P</FONT></B>rocess";
+	public static final String BUTTON_BACK_INTO_PRICE = "BUTTONBACKINTOPRICE";
 	
 	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
 	public static final String LABEL_TOTAL_COST_AND_MARKUP_CAPTION = "TOTAL COST AND MARK-UP:";
 	public static final String LABEL_TOTAL_COST_AND_MARKUP = "TOTALCOSTANDMARKUP";
-	public static final String REPLACE_VENDOR_QUOTE_BUTTON_CAPTION = "Replace vendor quote";
+	public static final String REPLACE_VENDOR_QUOTE_BUTTON_CAPTION = "Replace vendor <B><FONT COLOR=RED>q</FONT></B>uote";
 	public static final String REPLACE_VENDOR_QUOTE_BUTTON = "REPLACEVENDORQUOTEBUTTON";
 	public static final String REPLACE_VENDOR_QUOTE_COMMAND = "REPLACEVENDORQUOTECOMMAND";
-	public static final String REFRESH_VENDOR_QUOTE_BUTTON_CAPTION = "Refresh vendor quote";
+	public static final String REFRESH_VENDOR_QUOTE_BUTTON_CAPTION = "<B><FONT COLOR=RED>R</FONT></B>efresh vendor quote";
 	public static final String REFRESH_VENDOR_QUOTE_BUTTON = "REFRESHVENDORQUOTEBUTTON";
 	public static final String REFRESH_VENDOR_QUOTE_COMMAND = "REFRESHVENDORQUOTECOMMAND";
+	public static final String DISPLAY_COMMONLY_USED_ITEMS_BUTTON_CAPTION = "Display <B><FONT COLOR=RED>c</FONT></B>ommonly used items";
+	public static final String DISPLAY_COMMONLY_USED_ITEMS_BUTTON = "DISPLAYCOMMONLYUSEDITEMSBUTTON";
+	public static final String DISPLAY_COMMONLY_USED_ITEMS_COMMAND = "DISPLAYCOMMONLYUSEDITEMS";
+	
 	public static final String FIND_ITEM_BUTTON_CAPTION = "Find item";
 	public static final String FIND_ITEM_BUTTON = "FINDITEM";
 	public static final String FIND_ITEM_COMMAND = "FINDITEMCOMMAND";
@@ -204,6 +206,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
+	    smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 	    
 	    if (currentSession.getAttribute(WARNING_OBJECT) != null) {
 	    	String sWarning = (String)currentSession.getAttribute(WARNING_OBJECT);
@@ -339,6 +342,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.svendorquotenumber + "\""
 				+ " VALUE=\"" + estimate.getsvendorquotenumber() + "\""+ " "
 				+ " ID=\"" + SMTablesmestimates.svendorquotenumber + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.llastmodifiedbyid + "\""
+				+ " VALUE=\"" + estimate.getsllastmodifiedbyid() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.llastmodifiedbyid + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.datetimelastmodified + "\""
+				+ " VALUE=\"" + estimate.getsdatetimelastmodified() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.datetimelastmodified + "\""+ "\">" + "\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTablesmestimates.slastmodifiedbyfullname + "\""
+				+ " VALUE=\"" + estimate.getslastmodifiedbyfullname() + "\""+ " "
+				+ " ID=\"" + SMTablesmestimates.slastmodifiedbyfullname + "\""+ "\">" + "\n";
 		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_LOOKUP_ITEM_LINENUMBER + "\""
 				+ " VALUE=\"" + "" + "\""+ " "
@@ -855,6 +870,16 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				;
 				s += "  </TR>" + "\n";
 		}
+		
+		//Add a row for the commonly displayed items list:
+		s += "  <TR> \n";
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
+				+ " COLSPAN = " + Integer.toString(iNumberOfColumns) + " "
+				+ ">"
+				+ createDisplayCommonlyUsedItemsButton()
+				+ "</TD>" + "\n"
+			;
+		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
 		
@@ -1565,6 +1590,28 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		return s;
 	}
 	
+	private String createDisplayCommonlyUsedItemsButton() {
+		String s = "";
+		s += "<button type=\"button\""
+			+ " value=\"" + DISPLAY_COMMONLY_USED_ITEMS_BUTTON_CAPTION + "\""
+			+ " name=\"" + DISPLAY_COMMONLY_USED_ITEMS_BUTTON + "\""
+			+ " id=\"" + DISPLAY_COMMONLY_USED_ITEMS_BUTTON + "\""
+			+ " onClick=\"displaycommonlyuseditems();\">"
+			+ DISPLAY_COMMONLY_USED_ITEMS_BUTTON_CAPTION
+			+ "</button>\n"
+		;
+		return s;
+	}
+
+	private String createSaveButton(){
+		return "<button type=\"button\""
+				+ " value=\"" + SAVE_BUTTON_CAPTION + "\""
+				+ " name=\"" + SAVE_BUTTON_CAPTION + "\""
+				+ " onClick=\"save();\">"
+				+ SAVE_BUTTON_CAPTION
+				+ "</button>\n";
+	}
+
 	private String createBackIntoButton() {
 		String s = "";
 		s += "<button type=\"button\""
@@ -1618,7 +1665,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 
 			s += "\n";
 			
-			s += "function triggerinitiation(){\n"		
+			s += "function triggerinitiation(){\n"	
+				+ "    initShortcuts(); \n"
 				+ "    recalculatelivetotals();\n"
 				//+ "    checkfortaxupdates();\n"
 				+ "}\n\n"
@@ -1630,7 +1678,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ RECORDWASCHANGED_FLAG_VALUE + "\" ){\n"
 				+ "        if (\n"
 				+ "            (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + SAVE_COMMAND_VALUE + "\") \n"
-				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + DELETE_COMMAND_VALUE + "\") \n"
 				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + LOOKUP_ITEM_COMMAND + "\") \n"
 				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + REFRESH_ITEM_COMMAND + "\") \n"
 				+ "        ) {\n"
@@ -1640,10 +1687,20 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "}\n\n"
 			;
 			
+			//Display commonly used items:
+			//Replace vendor quote:
+			s += "function displaycommonlyuseditems(){\n"
+					+ "    alert('DISPLAY COMMONLY USED ITEMS is not working yet.  Have a little fuckin patience.'); \n"
+					//+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DISPLAYCOMMONLYUSEDITEMS + "\";\n"
+					//+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
 			//Replace vendor quote:
 			s += "function replacevendorquote(){\n"
-					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REPLACE_VENDOR_QUOTE_COMMAND + "\";\n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    alert('REPLACE VENDOR QUOTE is not working yet.  Have a little fuckin patience.'); \n"
+					//+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REPLACE_VENDOR_QUOTE_COMMAND + "\";\n"
+					//+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
@@ -2277,17 +2334,53 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			s += "}\n"
 	   		;
 			
+			s += "function initShortcuts() {\n";
+			
+			s += "    shortcut.add(\"Alt+c\",function() {\n";
+			s += "        displaycommonlyuseditems();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+p\",function() {\n";
+			s += "        backintoprice();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+q\",function() {\n";
+			s += "        replacevendorquote();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+r\",function() {\n";
+			s += "        refreshvendorquote();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+v\",function() {\n";
+			s += "        save();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "}\n";
+			
 			s += "</script>\n";
 			return s;
 		}
-	private String createSaveButton(){
-		return "<button type=\"button\""
-				+ " value=\"" + SAVE_BUTTON_CAPTION + "\""
-				+ " name=\"" + SAVE_BUTTON_CAPTION + "\""
-				+ " onClick=\"save();\">"
-				+ SAVE_BUTTON_CAPTION
-				+ "</button>\n";
-	}
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

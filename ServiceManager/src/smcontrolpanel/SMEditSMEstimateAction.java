@@ -206,7 +206,6 @@ public class SMEditSMEstimateAction extends HttpServlet{
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633341]");
 			//System.out.println("[202006102717] - estimate dump = \n" + estimate.dumpData());
-			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
 	    	smaction.redirectAction(
 		    		"", 
 		    		"", 

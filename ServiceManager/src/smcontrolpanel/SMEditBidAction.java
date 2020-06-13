@@ -12,6 +12,7 @@ import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalescontacts;
+import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDBServerTime;
 import ServletUtilities.clsManageRequestParameters;
@@ -95,8 +96,6 @@ public class SMEditBidAction extends HttpServlet{
 			}
 			return;
        	}
-		
-
 		
 		//Find customer
     	if (clsManageRequestParameters.get_Request_Parameter(
@@ -232,6 +231,27 @@ public class SMEditBidAction extends HttpServlet{
 				smaction.redirectAction("Could not create order: " + e1.getMessage(), "", "");
 				return;
 			}
+			try {
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				smaction.getPwOut().println("<HTML>" + e.getMessage() + "</BODY></HTML>");
+			}
+			return;
+    	}
+    	
+		//Create estimate:
+    	if (clsManageRequestParameters.get_Request_Parameter(
+    			"COMMANDFLAG", request).compareToIgnoreCase(SMEditBidEntry.CREATE_ESTIMATE_COMMAND_VALUE) == 0){
+    		sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSMSummaryEdit"
+				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y"
+				+ "&" + SMTablesmestimatesummaries.sjobname + "=" + SMUtilities.URLEncode(entry.getsprojectname())
+				+ "&" + SMTablesmestimatesummaries.lsalesleadid + "=" + entry.getlid()
+				+ "&CallingClass=smcontrolpanel.SMEditSMSummarySelect"
+				;
+			//Clear the entry attribute in the session:
+			smaction.getCurrentSession().removeAttribute("BidEntry");
+
 			try {
 				redirectProcess(sRedirectString, response);
 			} catch (Exception e) {

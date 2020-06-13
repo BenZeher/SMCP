@@ -63,6 +63,8 @@ public class SMEditBidEntry  extends HttpServlet {
 	public static final String CLONE_COMMAND_VALUE = "CLONELEAD";
 	public static final String CREATE_QUOTE_BUTTON_LABEL = "Create <B><FONT COLOR=RED>q</FONT></B>uote"; //Q
 	public static final String CREATE_QUOTE_COMMAND_VALUE = "CREATEQUOTE";
+	public static final String CREATE_ESTIMATE_BUTTON_LABEL = "Create esti<B><FONT COLOR=RED>m</FONT></B>ate"; //Q
+	public static final String CREATE_ESTIMATE_COMMAND_VALUE = "CREATEESTIMATE";
 	public static final String CREATE_ORDER_BUTTON_LABEL = "Create <B><FONT COLOR=RED>o</FONT></B>rder"; //O
 	public static final String CREATE_ORDER_COMMAND_VALUE = "CREATEORDER";
 	public static final String CREATE_APPOINTMENT_COMMAND_VALUE = "CREATEAPPOINTMENT";
@@ -1552,6 +1554,14 @@ public class SMEditBidEntry  extends HttpServlet {
 			s += createCreateQuoteButton();
 		}
 		if (SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMEditSMEstimates, 
+				smedit.getUserID(), 
+				getServletContext(), 
+				smedit.getsDBID(),
+				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+				s += createCreateEstimateButton();
+			}
+		if (SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMEditOrders, 
 				smedit.getUserID(), 
 				getServletContext(), 
@@ -1616,6 +1626,15 @@ public class SMEditBidEntry  extends HttpServlet {
 			+ " name=\"" + CREATE_QUOTE_BUTTON_LABEL + "\""
 			+ " onClick=\"createquote();\">"
 			+ CREATE_QUOTE_BUTTON_LABEL
+			+ "</button>\n"
+			;
+	}
+	private String createCreateEstimateButton(){
+		return "<button type=\"button\""
+			+ " value=\"" + CREATE_ESTIMATE_BUTTON_LABEL + "\""
+			+ " name=\"" + CREATE_ESTIMATE_BUTTON_LABEL + "\""
+			+ " onClick=\"createestimate();\">"
+			+ CREATE_ESTIMATE_BUTTON_LABEL
 			+ "</button>\n"
 			;
 	}
@@ -1895,8 +1914,6 @@ public class SMEditBidEntry  extends HttpServlet {
 		
 		//Create order:
 		s += "function createorder(){\n"
-			//+ "    alert('This function is not completed yet.');\n"
-			//+ "    return;\n"
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
 				+ CREATE_ORDER_COMMAND_VALUE + "\";\n"
 			+ "    document.forms[\"MAINFORM\"].submit();\n"
@@ -1905,14 +1922,20 @@ public class SMEditBidEntry  extends HttpServlet {
 		
 		//Create quote:
 		s += "function createquote(){\n"
-			//+ "    alert('This function is not completed yet.');\n"
-			//+ "    return;\n"
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
 				+ CREATE_QUOTE_COMMAND_VALUE + "\";\n"
 			+ "    document.forms[\"MAINFORM\"].submit();\n"
 			+ "}\n"
 		;
-		
+
+		//Create estimate:
+		s += "function createestimate(){\n"
+			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
+				+ CREATE_ESTIMATE_COMMAND_VALUE + "\";\n"
+			+ "    document.forms[\"MAINFORM\"].submit();\n"
+			+ "}\n"
+		;
+
 		//Create Appointment
 		s += "function createappointment(){\n"
 				+ "prompttosave();\n"
@@ -2036,6 +2059,14 @@ public class SMEditBidEntry  extends HttpServlet {
 
 		s += "    shortcut.add(\"Alt+f\",function() {\n";
 		s += "        createanduploadfolder();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+m\",function() {\n";
+		s += "        createestimate();\n";
 		s += "    },{\n";
 		s += "        'type':'keydown',\n";
 		s += "        'propagate':false,\n";

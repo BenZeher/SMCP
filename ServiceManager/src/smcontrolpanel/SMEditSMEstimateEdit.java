@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
@@ -958,13 +959,12 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				sVendorQuoteLink = 
 			    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOHDirectQuote"
 			    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
-			    		+ "&" + "C_QuoteNumberString=" + sVendorQuoteLink
+			    		+ "&" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "=" + estimate.getsvendorquotenumber()
+			    		+ "&" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "=" + estimate.getsivendorquotelinenumber()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
-			    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
 			    		+ "\">" + sVendorQuoteLink + "</A>"
 			    		+ ", line #" + estimate.getsivendorquotelinenumber()
 				;
-				
 			}
 		}else {
 			sVendorQuoteLink = EMPTY_VENDOR_QUOTE_LABEL;
@@ -1698,9 +1698,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			
 			//Replace vendor quote:
 			s += "function replacevendorquote(){\n"
-					+ "    alert('REPLACE VENDOR QUOTE is not working yet.  Have a little fuckin patience.'); \n"
-					//+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REPLACE_VENDOR_QUOTE_COMMAND + "\";\n"
-					//+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					//+ "    alert('REPLACE VENDOR QUOTE is not working yet.  Have a little fuckin patience.'); \n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REPLACE_VENDOR_QUOTE_COMMAND + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
@@ -1944,12 +1944,16 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    \n\n"
 				
 				+ "    var markuppercentage = parseFloat(\"0.00\");\n"
-				
 				+ "    if(compare2DecimalPlaceFloats(laborunits, parseFloat(\"0.00\"))){ \n"
-				+ "        markuppercentage = \"\"; \n"
+				+ "        markuppercentage = parseFloat(\"0\"); \n"
 				+ "    } else { \n"
-				+ "        markuppercentage = (markupamount / costsubtotal) * 100; \n"
+				+ "        if (costsubtotal > parseFloat(\"0\")){ \n"
+				+ "            markuppercentage = (markupamount / costsubtotal) * 100; \n"
+				+ "        } else {\n"
+				+ "            markuppercentage = parseFloat(\"0\"); \n"
+				+ "        } \n"
 				+ "    } \n"
+				
 				+ "    document.getElementById(\"" + FIELD_MU_PERCENTAGE + "\").value=formatNumber(markuppercentage);\n\n"
 				
 				+ "    var taxonmaterial = parseFloat(\"0.00\");\n"
@@ -2037,7 +2041,11 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    \n"
 				
 				+ "    var gppercentage = parseFloat(\"0.00\");\n"
-				+ "    gppercentage = markupamount / totalsellprice; \n"
+				+ "    if (totalsellprice > parseFloat(\"0\")){ \n"
+				+ "        gppercentage = markupamount / totalsellprice; \n"
+				+ "    } else {\n"
+				+ "        gppercentage = parseFloat(\"0\"); \n"
+				+ "    } \n"
 				+ "    gppercentage = gppercentage * 100; \n"
 				+ "    document.getElementById(\"" + FIELD_GP_PERCENTAGE + "\").value=formatNumber(gppercentage);\n"
 				+ "    \n"

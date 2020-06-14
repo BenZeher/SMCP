@@ -217,6 +217,47 @@ public class SMEditSMEstimateAction extends HttpServlet{
 			return;
 		}
 		
+		//If REPLACE VENDOR QUOTE, process that:
+		//System.out.println("[202006124811] - command was: '" + sCommandValue + "'.");
+		if(sCommandValue.compareToIgnoreCase(SMEditSMEstimateEdit.REPLACE_VENDOR_QUOTE_COMMAND) == 0){
+			String sNewVendorQuoteNumber = clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.FIELD_REPLACE_QUOTE_WITH_NUMBER, request).trim();
+			String sNewVendorQuoteLineNumber = clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.FIELD_REPLACE_QUOTE_LINE, request).trim();
+			String sResult = "";
+			try {
+				sResult = estimate.replaceVendorQuoteLine(
+					conn, 
+					smaction.getsDBID(), 
+					smaction.getUserID(), 
+					smaction.getFullUserName(), 
+					sNewVendorQuoteNumber, 
+					sNewVendorQuoteLineNumber
+				);
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633640]");
+				smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimates.lid + "=" + estimate.getslid()
+			    		+ "&" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
+							+ clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.RECORDWASCHANGED_FLAG_VALUE, request)
+			    		);
+				return;
+			}
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633641]");
+			smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.RESULT_STATUS_OBJECT, sResult);
+			//System.out.println("[202006102717] - estimate dump = \n" + estimate.dumpData());
+	    	smaction.redirectAction(
+		    		"", 
+		    		"", 
+		    		SMTablesmestimates.lid + "=" + estimate.getslid()
+		    		+ "&" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
+						+ clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.RECORDWASCHANGED_FLAG_VALUE, request)
+		    		);
+			return;
+		}
+		
 		return;
 	}
 	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{

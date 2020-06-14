@@ -16,9 +16,9 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMTax;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
-import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
@@ -566,6 +566,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "</TABLE>" + "\n";
 		
+		s += "<BR>" + createSaveButton() + "&nbsp;" + createDeleteButton();
+		
 		//Include an outer table:
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
@@ -719,10 +721,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				;
 			
 			//Vendor quote:
-			String sVendorQuoteIdentifier = summary.getEstimateArray().get(i).getsvendorquotenumber()
+			String sVendorQuoteNumber = summary.getEstimateArray().get(i).getsvendorquotenumber()
 					+ "/" + summary.getEstimateArray().get(i).getsivendorquotelinenumber();
 			if (summary.getEstimateArray().get(i).getsvendorquotenumber().compareToIgnoreCase("") == 0) {
-				sVendorQuoteIdentifier = "";
+				sVendorQuoteNumber = "";
 			}else {
 				if (SMSystemFunctions.isFunctionPermitted(
 					SMSystemFunctions.SMOHDirectQuoteList,
@@ -730,21 +732,21 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					conn, 
 					sLicenseModuleLevel)) {
 					
-					//Create a link to the vendor's quote:
+					//Create a link to the vendor's quote line:
 					//TODO
-					sVendorQuoteIdentifier = 
+					sVendorQuoteNumber = 
 				    	"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOHDirectQuote"
 				    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				    		+ "&" + "C_QuoteNumberString=" + summary.getEstimateArray().get(i).getsvendorquotenumber()
+				    		+ "&" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "=" + summary.getEstimateArray().get(i).getsvendorquotenumber()
+				    		+ "&" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "=" + summary.getEstimateArray().get(i).getsivendorquotelinenumber()
 				    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
-				    		+ "\">" + sVendorQuoteIdentifier + "</A>"
+				    		+ "\">" + sVendorQuoteNumber + "</A>"
 					;
 				}
 			}
 			s+= "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
 					+ "&nbsp;"  //Just for a little space...
-					+ sVendorQuoteIdentifier
+					+ sVendorQuoteNumber
 					+ "</TD>" + "\n"
 				;
 			
@@ -1801,12 +1803,21 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    document.getElementById(\"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\").value=formatNumber(adjustedmarkupperlaborunit);\n"
 				+ "    \n\n"
 				+ "    //adjustedmarkuppercentage = adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost) \n"
-				+ "    adjustedmarkuppercentage = adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost); \n"
+				
+				+ "    if ((materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost) > parseFloat(\"0\")){ \n"
+				+ "        adjustedmarkuppercentage = adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost); \n"
+				+ "    } else {\n"
+				+ "        adjustedmarkuppercentage = parseFloat(\"0\"); \n"
+				+ "    } \n"
 				+ "    adjustedmarkuppercentage = adjustedmarkuppercentage * 100; \n"
 				+ "    document.getElementById(\"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\").value=formatNumber(adjustedmarkuppercentage);\n"
 				+ "    \n"
 				+ "    //adjustedgppercentage = adjustedmarkuptotal / adjustedtotalforsummary \n"
-				+ "    adjustedgppercentage = adjustedmarkuptotal / adjustedtotalforsummary; \n"
+				+ "    if (adjustedtotalforsummary > parseFloat(\"0\")){ \n"
+				+ "        adjustedgppercentage = adjustedmarkuptotal / adjustedtotalforsummary; \n"
+				+ "    } else {\n"
+				+ "        adjustedgppercentage = parseFloat(\"0\"); \n"
+				+ "    } \n"
 				+ "    adjustedgppercentage = adjustedgppercentage * 100; \n"
 				+ "    document.getElementById(\"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\").value=formatNumber(adjustedgppercentage);\n"
 				+ "    \n"

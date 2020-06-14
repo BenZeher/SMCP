@@ -356,7 +356,7 @@ public class SMEstimate {
 			+ ", " + SMTablesmestimates.sprefixlabelitem + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sprefixlabelitem) + "'"
 			+ ", " + SMTablesmestimates.sproductdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sproductdescription) + "'"
 			+ ", " + SMTablesmestimates.sunitofmeasure + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sunitofmeasure) + "'"
-			+ ", " + SMTablesmestimates.svendorquotenumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquoteid) + "'"
+			+ ", " + SMTablesmestimates.svendorquoteid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquoteid) + "'"
 			+ ", " + SMTablesmestimates.svendorquotenumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquotenumber) + "'"
 																					
 		;
@@ -892,6 +892,87 @@ public class SMEstimate {
 			save_without_data_transaction(conn, sUserID, sUserFullName);
 		} catch (Exception e) {
 			throw new Exception("Error [202006124529] - saving estimate - " + e.getMessage());
+		}
+		
+		return sResult;
+	}
+	public String replaceVendorQuoteLine(
+			Connection conn, 
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName,
+			String sVendorQuoteNumber,
+			String sVendorQuoteLineNumber
+			) throws Exception{
+		
+		String sResult = "NOTE: Vendor quote number " + sVendorQuoteNumber + " was last modified ";
+		
+		//Get the vendor quote:
+		SMOHDirectQuoteList quotelist = new SMOHDirectQuoteList();
+		
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTE + "?%24filter="
+			+ SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "%20eq%20'" + sVendorQuoteNumber + "'"
+		;
+		try {
+			quotelist.getQuoteList(sRequest, conn, sDBID, sUserID);
+		} catch (Exception e) {
+			throw new Exception("Error [202004274122] - " + e.getMessage());
+		}
+		
+		if (quotelist.getQuoteNumbers().size() == 0) {
+			throw new Exception("Could not read quote number '" + sVendorQuoteNumber + "'.");
+		}
+		
+		sResult += quotelist.getLastModifiedDates().get(0) + ".";
+		
+		SMOHDirectQuoteLineList quotelineslist = new SMOHDirectQuoteLineList();
+		sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
+				+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + quotelist.getQuoteIDs().get(0) + "'"
+				+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "%20asc"
+			;
+		try {
+			quotelineslist.getQuoteLineList(sRequest, conn, sDBID, sUserID);
+		} catch (Exception e4) {
+			throw new Exception("Error [202004273122] - " + e4.getMessage());
+		}
+		
+		if (quotelineslist.getQuoteLineIDs().size() == 0) {
+			throw new Exception("Could not read line number '" + sVendorQuoteLineNumber + "' on quote number '" + sVendorQuoteNumber + "'.");
+		}
+		
+		int iQuoteLineNumber;
+		try {
+			iQuoteLineNumber = Integer.parseInt(sVendorQuoteLineNumber.trim());
+		} catch (Exception e1) {
+			throw new Exception("Error [202006142108] - vendor quote line number '" + sVendorQuoteLineNumber + "' is not a valid number.");
+		}
+		if (quotelineslist.getQuoteLineIDs().size() < iQuoteLineNumber) {
+			throw new Exception("Vendor quote number '" + sVendorQuoteNumber + "' only has " + Integer.toString(quotelineslist.getQuoteLineIDs().size())
+				+ " lines, but you are asking for line " + sVendorQuoteLineNumber + ".");
+		}
+		
+		//System.out.println("[202006124851] - iQuoteLineNumber = '" + iQuoteLineNumber + "'.");
+		try {
+			setsbdextendedcost(clsManageBigDecimals.BigDecimalToScaledFormattedString(
+				SMTablesmestimates.bdextendedcostScale, quotelineslist.getTotalCosts().get(iQuoteLineNumber - 1)));
+			setsbdquantity(clsManageBigDecimals.BigDecimalToScaledFormattedString(
+				SMTablesmestimates.bdquantityScale, quotelineslist.getQuantities().get(iQuoteLineNumber - 1)));
+			setsdescription("");
+			setsitemnumber("MISC");
+			setsproductdescription(quotelineslist.getDescriptions().get(iQuoteLineNumber - 1));
+			setsunitofmeasure("EA");
+			setsvendorquotenumber(sVendorQuoteNumber);
+			setsivendorquotelinenumber(sVendorQuoteLineNumber);
+			setsvendorquoteid(quotelist.getQuoteIDs().get(0));
+		} catch (Exception e) {
+			throw new Exception("Error [202006115156] - error replacing vendor quote - " + e.getMessage());
+		}
+		
+		//Now save the estimate:
+		try {
+			save_without_data_transaction(conn, sUserID, sUserFullName);
+		} catch (Exception e) {
+			throw new Exception("Error [202006124129] - saving estimate - " + e.getMessage());
 		}
 		
 		return sResult;

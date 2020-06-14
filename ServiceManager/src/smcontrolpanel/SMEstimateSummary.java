@@ -658,12 +658,13 @@ public class SMEstimateSummary {
 			throw new Exception("Error [1590510209] loading Estimates - " + e.getMessage());
 		}
 		//System.out.println("[202005301826] - 2");
-		try {
-			loadCalculatedValues(conn);
-		} catch (Exception e) {
-			throw new Exception("Error [202005302742] - could not calculate totals for summary - " + e.getMessage());
+		if (arrEstimates.size() > 0) {
+			try {
+				loadCalculatedValues(conn);
+			} catch (Exception e) {
+				throw new Exception("Error [202005302742] - could not calculate totals for summary - " + e.getMessage());
+			}
 		}
-		
 		return;
 	}
 	
@@ -748,6 +749,10 @@ public class SMEstimateSummary {
 			throw new Exception("Error [202004274722] - " + e.getMessage());
 		}
 		
+		if (quotelist.getQuoteNumbers().size() == 0) {
+			throw new Exception("Could not read quote number '" + sVendorQuoteNumber + "'.");
+		}
+		
 		SMOHDirectQuoteLineList quotelineslist = new SMOHDirectQuoteLineList();
 		sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
 				+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + quotelist.getQuoteIDs().get(0) + "'"
@@ -758,6 +763,10 @@ public class SMEstimateSummary {
 			quotelineslist.getQuoteLineList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [202004273922] - " + e4.getMessage());
+		}
+		
+		if (quotelineslist.getQuoteLineIDs().size() == 0) {
+			throw new Exception("Error [202006140829] - could not read any quote lines for quote number '" + sVendorQuoteNumber + "'.");
 		}
 		
 		//System.out.println("[202006110011] - summary dump before adding new estimates: " + this.dumpData());

@@ -530,33 +530,15 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Description:"
+			+ "Comments:"
 			+ "</TD>" + "\n"
 			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
 				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
 			+ "<INPUT TYPE=TEXT"
-			+ " NAME=\"" + SMTablesmestimatesummaries.sdescription + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.sdescription + "\""
-			+ " VALUE=\"" + summary.getsdescription().replace("\"", "&quot;") + "\""
-			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sdescriptionLength)
-			+ " STYLE=\"width: 7in; height: 0.25in\""
-			+ " onchange=\"flagDirty();\""
-			+ ">"
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Remarks:"
-			+ "</TD>" + "\n"
-			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
-				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ "<INPUT TYPE=TEXT"
-			+ " NAME=\"" + SMTablesmestimatesummaries.sremarks + "\""
-			+ " ID=\"" + SMTablesmestimatesummaries.sremarks + "\""
-			+ " VALUE=\"" + summary.getsremarks().replace("\"", "&quot;") + "\""
-			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.sremarksLength)
+			+ " NAME=\"" + SMTablesmestimatesummaries.scomments + "\""
+			+ " ID=\"" + SMTablesmestimatesummaries.scomments + "\""
+			+ " VALUE=\"" + summary.getscomments().replace("\"", "&quot;") + "\""
+			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimatesummaries.scommentsLength)
 			+ " STYLE=\"width: 7in; height: 0.25in\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"

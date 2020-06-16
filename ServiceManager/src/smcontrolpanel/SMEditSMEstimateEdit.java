@@ -1110,7 +1110,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "Description:"
 			+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ summary.getsdescription()
+			+ summary.getscomments()
 			+ "</TD>" + "\n"
 		;
 		s += "  </TR>" + "\n";

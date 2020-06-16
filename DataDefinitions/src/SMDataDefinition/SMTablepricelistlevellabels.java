@@ -20,4 +20,6 @@ public class SMTablepricelistlevellabels {
 	public static final int spricelevel3labelLength = 60;
 	public static final int spricelevel4labelLength = 60;
 	public static final int spricelevel5labelLength = 60;
+	
+	public static final int NUMBER_OF_PRICE_LEVELS = 5;
 }

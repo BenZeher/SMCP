@@ -32,8 +32,6 @@ public class SMTablesmestimates {
 	public static String llastmodifiedbyid = "llastmodifiedbyid";
 	public static String datetimelastmodified = "datetimelastmodified";
 	public static String slastmodifiedbyfullname = "slastmodifiedbyfullname";
-	public static String sadditionalpostsalestaxcostlabel = "sadditionalposttaxcostlabel";
-	public static String bdadditionalpostsalestaxcostamt = "bdadditionalpostsalestaxcostamt";
 	
 	//String lengths:
 	public static int sdescriptionLength = 128;
@@ -47,7 +45,6 @@ public class SMTablesmestimates {
 	public static int sadditionalposttaxcostlabelLength = 32;
 	public static int screatedbyfullnameLength = 128;
 	public static int slastmodifiedbyfullnameLength = 128;
-	public static int sadditionalpostsalestaxcostlabelLength = 32;
 	
 	//Scales:
 	public static int bdquantityScale = 4;

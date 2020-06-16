@@ -42,4 +42,5 @@ public class SMTablesmestimatesummaries {
 	public static int bdtaxrateScale = 4;
 	public static int spricelistLength = 6;
 	public static int sadditionalpostsalestaxcostlabelLength = 32;
+	public static int bdadditionalpostsalestaxcostamtScale = 2;
 }

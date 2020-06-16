@@ -14,6 +14,8 @@ public class SMTablesmestimatelines {
 	public static String sunitofmeasure = "sunitofmeasure";
 	public static String bdextendedcost = "bdextendedcost";
 	public static String bdunitcost = "bdunitcost";
+	public static String bdextendedsellprice = "bdextendedsellprice";
+	public static String bdunitsellprice = "bdunitsellprice";
 	
 	//String lengths:
 	public static int sitemnumberLength = 32;
@@ -24,4 +26,6 @@ public class SMTablesmestimatelines {
 	public static int bdquantityScale = 4;
 	public static int bdextendedcostScale = 2;
 	public static int bdunitcostScale = 2;
+	public static int bdextendedsellpriceScale = 2;
+	public static int bdunitsellpriceScale = 2;
 }

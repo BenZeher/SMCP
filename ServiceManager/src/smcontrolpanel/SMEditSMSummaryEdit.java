@@ -326,7 +326,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Project:"
+			+ "Ship-to:"
 			+ "</TD>" + "\n"
 			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns - 1) 
 				+ " class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"

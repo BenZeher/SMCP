@@ -16,8 +16,7 @@ public class SMTablesmestimatesummaries {
 	public static String llastmodifiedbyid = "llastmodifiedbyid";
 	public static String datetimelastmodified = "datetimelastmodified";
 	public static String slastmodifiedbyfullname = "slastmodifiedbyfullname";
-	public static String sdescription = "sdescription";
-	public static String sremarks = "sremarks";
+	public static String scomments = "scomments";
 	public static String bdadjustedfreight = "bdadjustedfreight";
 	public static String bdadjustedlaborunitqty = "bdadjustedlaborunitqty";
 	public static String bdadjustedlaborcostperunit = "bdadjustedlaborcostperunit";
@@ -25,16 +24,22 @@ public class SMTablesmestimatesummaries {
 	public static String bdtaxrate = "bdtaxrate";
 	public static String icalculatetaxonpurchaseorsale = "icalculatetaxonpurchaseorsale";
 	public static String icalculatetaxoncustomerinvoice = "icalculatetaxoncustomerinvoice";
+	public static String spricelistcode = "spricelistcode";
+	public static String ipricelevel = "ipricelevel";
+	public static String sadditionalpostsalestaxcostlabel = "sadditionalpostsalestaxcostlabel";
+	public static String bdadditionalpostsalestaxcostamt = "bdadditionalpostsalestaxcostamt";
 	
+	//Field Lengths:
+	public static final int spricelistcodeLength = 6;
 	public static int sjobnameLength = 128;
 	public static int sscreatedbyfullnameLength = 128;
 	public static int slastmodifiedbyfullnameLength = 128;
-	public static int sdescriptionLength = 128;
-	public static int sremarksLength = 128;
+	public static int scommentsLength = 128;
 	public static int bdadjustedfreightScale = 2;
 	public static int bdadjustedlaborunitqtyScale = 4;
 	public static int bdadjustedlaborcostperunitScale = 2;
 	public static int bdadjustedlmarkupamtScale = 2;
 	public static int bdtaxrateScale = 4;
-	
+	public static int spricelistLength = 6;
+	public static int sadditionalpostsalestaxcostlabelLength = 32;
 }

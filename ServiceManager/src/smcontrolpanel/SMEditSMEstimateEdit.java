@@ -1038,9 +1038,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
-		//Project:
+		//Ship-t0:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "Project:"
+			+ "Ship-to:"
 			+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
 			+ summary.getsjobname()

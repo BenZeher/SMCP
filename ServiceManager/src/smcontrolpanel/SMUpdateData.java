@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1482;
+	private static final int m_CurrentDatabaseVersion = 1485;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "6/14/2020";
+	private static final String m_sLastRevisionDate = "6/16/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15655,6 +15655,45 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by TJR 6/12/2020
 				SQL = "ALTER TABLE `smestimates`"
 					+ " CHANGE COLUMN `sproductdescription` `sproductdescription` varchar(128) NOT NULL default ''"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1482:
+				//Added by TJR 6/16/2020
+				SQL = "ALTER TABLE `smestimatesummaries`"
+					+ " CHANGE COLUMN `sdescription` `scomments` varchar(128) NOT NULL default ''"
+					+ ", ADD COLUMN `spricelistcode` VARCHAR(6) NOT NULL DEFAULT ''"
+					+ ", ADD COLUMN `ipricelevel` INT(11) NOT NULL DEFAULT '0'"
+					+ ", ADD COLUMN `sadditionalpostsalestaxcostlabel` VARCHAR(32) NOT NULL DEFAULT ''"
+					+ ", ADD COLUMN `bdadditionalpostsalestaxcostamt` DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1483:
+				//Added by TJR 6/16/2020
+				SQL = "ALTER TABLE `smestimates`"
+					+ " ADD COLUMN `sadditionalpostsalestaxcostlabel` VARCHAR(32) NOT NULL DEFAULT ''"
+					+ ", ADD COLUMN `bdadditionalpostsalestaxcostamt` DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1484:
+				//Added by TJR 6/16/2020
+				SQL = "ALTER TABLE `smestimatelines`"
+					+ " ADD COLUMN `bdunitsellprice` DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
+					+ ", ADD COLUMN `bdextendedsellprice` DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

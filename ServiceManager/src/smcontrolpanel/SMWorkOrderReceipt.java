@@ -639,6 +639,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 			BigDecimal bdTotalExtendedLaborPrice = new BigDecimal("0.00");
 			Double dWODiscountAmount= Double.valueOf(wo.getdPrePostingWODiscountAmount());
 			BigDecimal bdWODiscountAmount = new BigDecimal(wo.getdPrePostingWODiscountAmount());
+			String sWODiscountDescription = wo.getsworkdescription();
 			for (int i = 0; i < dummyorder.get_iOrderDetailCount(); i++){
 				bdShippedValue = bdShippedValue.add(new BigDecimal(dummyorder.getOrderDetail(i).getM_dExtendedOrderPrice().replace(",", "")));
 				boolean bIsLaborItem = false;
@@ -677,11 +678,13 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 					;
 			if(dWODiscountAmount != 0	) {
 				s += "<TR>"
-
 						+ "<TD align=left><FONT SIZE=1><B>Discount:&nbsp;&nbsp;"
 						+ "<FONT SIZE=1>" 
-						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdWODiscountAmount) + "</B></FONT>"
-						+ "</TD>"
+						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdWODiscountAmount) ;
+				if(sWODiscountDescription.compareToIgnoreCase("")!=0) {
+					s+= "nbsp;nbsp;("+sWODiscountDescription+ ")";
+				}
+					s+= "</B></FONT>" + "</TD>"
 						+ "<TD></TD>"
 						+ "<TD></TD>"
 						+ "<TD></TD>"

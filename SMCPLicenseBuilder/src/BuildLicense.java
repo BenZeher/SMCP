@@ -1,9 +1,13 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import smcontrolpanel.SMUtilities;
@@ -27,11 +31,24 @@ public class BuildLicense {
 		//System.out.println(s);
 		
 		System.out.println("NOTE: You need a folder in your root directory called smcplicense, with a subfolder called WEB-INF before you can run this program.");
-		System.out.println("Type 'C' to continue, 'Q' to quit:");
+		System.out.println("Type 'C' to continue,'F' for file, or 'Q' to quit:");
 
 		Scanner reader = new Scanner(System.in);  // Reading from System.in
 		String sResponse = reader.nextLine();
-		if (sResponse.compareToIgnoreCase("C") != 0){
+		if (sResponse.compareToIgnoreCase("F") == 0){
+			//TODO make function
+			try {
+				inputFromCSV(reader,arrCompanyIDs,arrModuleLevels,arrExpirationDates);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				reader.close();
+				System.exit(0);
+			} catch (IOException e) {
+				e.printStackTrace();
+				reader.close();
+				System.exit(0);
+			}
+		}else if(sResponse.compareToIgnoreCase("C") != 0){
 			reader.close();
 			System.exit(0);
 		}
@@ -226,5 +243,119 @@ public class BuildLicense {
 		}
 		return sResult;
 	}
+	public static void inputFromCSV(
+			Scanner reader,
+			ArrayList<String>arrCompanyIDs,
+			ArrayList<String>arrModuleLevels,
+			ArrayList<String>arrExpirationDates
+			) throws FileNotFoundException, IOException {
+		List<List<String>> records = new ArrayList<>();
+		System.out.println("Enter csv file path: ");
+		String sCSVPath = reader.nextLine();
+		
+		//Read File
+		try (BufferedReader br = new BufferedReader(new FileReader(sCSVPath))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		        String[] values = line.split(",");
+		        records.add(Arrays.asList(values));
+		    }
+		}catch (FileNotFoundException e) {
+			System.out.println("ERROR: " + e);
+			System.exit(0);
+		}catch(IOException e1){
+			System.out.println("ERROR: " + e1);
+			System.exit(0);
+		}
+		
+		for(int i = 0; i < records.size(); i++) {
+			for(int j = 0; j < 3; j++) {
+				switch(j) {
+				case 0:
+					arrCompanyIDs.add(records.get(i).get(j));
+					break;
+				case 1:
+					arrModuleLevels.add(records.get(i).get(j));
+					break;
+				case 2:
+					arrExpirationDates.add(records.get(i).get(j));
+					break;
+				}
+			}
+		}
+		
+		System.out.println(arrCompanyIDs.toString());
+		System.out.println(arrModuleLevels.toString());
+		System.out.println(arrExpirationDates.toString());
+		
+		
+		//If all goes well, then we 'encrypt' by converting each character to ascii values and add a constant:
+		String sFullLicenseFileName =
+			System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_DIRECTORY
+			+ System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_SUBDIRECTORY
+			+ System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_FILE
+			;
+		try {
+			writeLicenseFile (sFullLicenseFileName, arrCompanyIDs, arrModuleLevels, arrExpirationDates);
+		} catch (Exception e) {
+			System.out.println("Error writing license file - " + e.getMessage());
+			reader.close();
+			System.exit(0);
+		}
+		System.out.println("Successfully created license file:");
+		System.out.println("Going to create WAR file now...");
+		
+		//Remove any previous WAR file:
+		String sCommand = "rm "
+				+ System.getProperty("file.separator")
+				+ SMUtilities.SMCP_LICENSE_DIRECTORY
+				+ System.getProperty("file.separator")
+				+ SMUtilities.SMCP_LICENSE_WAR_FILE
+		;
+		@SuppressWarnings("unused")
+		String sCommandResult = "";
+		try {
+			sCommandResult = executeSystemCommand(sCommand);
+		} catch (Exception e) {
+			//Don't stop for this...
+			//System.out.println("Error removing previous WAR file - " + e.getMessage());
+			//System.exit(0);
+		}	
+		
+		//Create the new WAR file:
+		sCommand = 
+			"jar -cvfM " 
+			+ System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_DIRECTORY
+			+ System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_WAR_FILE 
+			+ " -C "
+			+ System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_DIRECTORY
+			+ " "
+			+ SMUtilities.SMCP_LICENSE_SUBDIRECTORY
+		;
+		try {
+			sCommandResult = executeSystemCommand(sCommand);
+		} catch (Exception e) {
+			System.out.println("Error creating WAR file - " + e.getMessage());
+			System.exit(0);
+		}
+		
+		System.out.println("WAR file '" 
+			+ System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_DIRECTORY
+			+ System.getProperty("file.separator")
+			+ SMUtilities.SMCP_LICENSE_WAR_FILE 
+			+ "/"
+			+ " was created successfully."
+		);
+		reader.close();
+		System.exit(0);
+	}
+	
 }
 

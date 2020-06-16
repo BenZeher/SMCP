@@ -681,8 +681,8 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 						+ "<TD align=left><FONT SIZE=1><B>Discount:&nbsp;&nbsp;"
 						+ "<FONT SIZE=1>" 
 						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdWODiscountAmount) ;
-				if(sWODiscountDescription.compareToIgnoreCase("")!=0) {
-					s+= "nbsp;nbsp;("+sWODiscountDescription+ ")";
+				if(sWODiscountDescription.trim().compareToIgnoreCase("")!=0) {
+					s+= "nbsp;nbsp;("+sWODiscountDescription.trim()+ ")";
 				}
 					s+= "</B></FONT>" + "</TD>"
 						+ "<TD></TD>"

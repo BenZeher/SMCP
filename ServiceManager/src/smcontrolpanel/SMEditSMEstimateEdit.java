@@ -1102,32 +1102,19 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		;
 		s += "  </TR>" + "\n";
 
-		//Description:
+		//Comments
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1)
 			+ "\" >"
-			+ "Description:"
+			+ "Comments:"
 			+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
 			+ summary.getscomments()
 			+ "</TD>" + "\n"
 		;
 		s += "  </TR>" + "\n";
-		
-		//Remarks:
-		s += "  <TR>" + "\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1)
-			+ "\" >"
-			+ "Remarks:"
-			+ "</TD>" + "\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-			+ summary.getsremarks()
-			+ "</TD>" + "\n"
-		;
-		s += "  </TR>" + "\n";
-		
+				
 		s += "</TABLE>" + "\n";
 		
 		return s;

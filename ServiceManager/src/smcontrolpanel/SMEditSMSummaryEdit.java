@@ -19,6 +19,8 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablepricelistcodes;
+import SMDataDefinition.SMTablepricelistlevellabels;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
@@ -359,60 +361,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
-		//Labor type:
-		ArrayList<String> arrLaborTypes = new ArrayList<String>(0);
-		ArrayList<String> arrLaborTypeDescriptionsDescriptions = new ArrayList<String>(0);
-		String SQL = "SELECT"
-			+ " " + SMTablelabortypes.sID
-			+ ", " + SMTablelabortypes.sLaborName
-			+ " FROM " + SMTablelabortypes.TableName
-			+ " ORDER BY " + SMTablelabortypes.sLaborName
-		;
-		//First, add a blank item so we can be sure the user chose one:
-		arrLaborTypes.add("");
-		arrLaborTypeDescriptionsDescriptions.add("*** Select labor type ***");
-		
-		try {
-			ResultSet rsLaborTypes = clsDatabaseFunctions.openResultSet(SQL, conn);
-			while (rsLaborTypes.next()) {
-				arrLaborTypes.add(Long.toString(rsLaborTypes.getLong(SMTablelabortypes.sID)));
-				arrLaborTypeDescriptionsDescriptions.add(rsLaborTypes.getString(SMTablelabortypes.sLaborName));
-			}
-			rsLaborTypes.close();
-		} catch (SQLException e) {
-			s += "<B>Error [1590535453] reading labor types - " + e.getMessage() + "</B><BR>";
-		}
-
-		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.ilabortype + "\""
-				+ " onchange=\"flagDirty();\""
-				 + " >\n"
-			;
-			for (int i = 0; i < arrLaborTypes.size(); i++){
-				sControlHTML += "<OPTION";
-				if (arrLaborTypes.get(i).toString().compareTo(summary.getsilabortype()) == 0){
-					sControlHTML += " selected=yes";
-				}
-				sControlHTML += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" 
-					+ arrLaborTypeDescriptionsDescriptions.get(i).toString() + "\n";
-			}
-		sControlHTML += "</SELECT> \n"
-		;
-			
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-				+ "<B>Labor type:</B>"
-				+ "</TD>" + "\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
-				+ sControlHTML
-				+ "</TD>" + "\n"
-			;
-		
-		s += "  </TR>" + "\n";
-		
-		s += "  <TR>" + "\n";
 		//Tax Type:
 		ArrayList<String> arrTaxes = new ArrayList<String>(0);
 		ArrayList<String> arrTaxDescriptions = new ArrayList<String>(0);
-		SQL = "SELECT"
+		String SQL = "SELECT"
 			+ " " + SMTabletax.lid
 			+ ", " + SMTabletax.staxjurisdiction
 			+ ", " + SMTabletax.staxtype
@@ -474,6 +426,57 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "</TD>" + "\n"
 			;
 		
+		s += "  </TR> \n";
+		
+		s += "  <TR> \n";
+		
+		//Labor type:
+		ArrayList<String> arrLaborTypes = new ArrayList<String>(0);
+		ArrayList<String> arrLaborTypeDescriptions = new ArrayList<String>(0);
+		SQL = "SELECT"
+			+ " " + SMTablelabortypes.sID
+			+ ", " + SMTablelabortypes.sLaborName
+			+ " FROM " + SMTablelabortypes.TableName
+			+ " ORDER BY " + SMTablelabortypes.sLaborName
+		;
+		//First, add a blank item so we can be sure the user chose one:
+		arrLaborTypes.add("");
+		arrLaborTypeDescriptions.add("*** Select labor type ***");
+		
+		try {
+			ResultSet rsLaborTypes = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsLaborTypes.next()) {
+				arrLaborTypes.add(Long.toString(rsLaborTypes.getLong(SMTablelabortypes.sID)));
+				arrLaborTypeDescriptions.add(rsLaborTypes.getString(SMTablelabortypes.sLaborName));
+			}
+			rsLaborTypes.close();
+		} catch (SQLException e) {
+			s += "<B>Error [1590535453] reading labor types - " + e.getMessage() + "</B><BR>";
+		}
+
+		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.ilabortype + "\""
+				+ " onchange=\"flagDirty();\""
+				 + " >\n"
+			;
+			for (int i = 0; i < arrLaborTypes.size(); i++){
+				sControlHTML += "<OPTION";
+				if (arrLaborTypes.get(i).toString().compareTo(summary.getsilabortype()) == 0){
+					sControlHTML += " selected=yes";
+				}
+				sControlHTML += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" 
+					+ arrLaborTypeDescriptions.get(i).toString() + "\n";
+			}
+		sControlHTML += "</SELECT> \n"
+		;
+			
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "<B>Labor type:</B>"
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ sControlHTML
+				+ "</TD>" + "\n"
+			;
+		
 		//Order type:
 		//First, add a blank item so we can be sure the user chose one:
 		sControlHTML = "\n<SELECT"
@@ -520,6 +523,108 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
 				+ "<B>Order type:</B>"
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ sControlHTML
+				+ "</TD>" + "\n"
+			;
+		
+		s += "  </TR>" + "\n";
+		
+		s += "  <TR>" + "\n";
+		
+		//Price list:
+		ArrayList<String> arrPriceListCodes = new ArrayList<String>(0);
+		ArrayList<String> arrPriceListCodeDescriptions = new ArrayList<String>(0);
+		SQL = "SELECT"
+			+ " " + SMTablepricelistcodes.spricelistcode
+			+ ", " + SMTablepricelistcodes.sdescription
+			+ " FROM " + SMTablepricelistcodes.TableName
+			+ " ORDER BY " + SMTablepricelistcodes.spricelistcode
+		;
+		//First, add a blank item so we can be sure the user chose one:
+		arrPriceListCodes.add("");
+		arrPriceListCodeDescriptions.add("*** Select price list ***");
+		
+		try {
+			ResultSet rsPriceListCodes = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsPriceListCodes.next()) {
+				arrPriceListCodes.add(rsPriceListCodes.getString(SMTablepricelistcodes.spricelistcode));
+				arrPriceListCodeDescriptions.add(rsPriceListCodes.getString(SMTablepricelistcodes.sdescription));
+			}
+			rsPriceListCodes.close();
+		} catch (SQLException e) {
+			s += "<B>Error [1590535753] reading price list codes - " + e.getMessage() + "</B><BR>";
+		}
+
+		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.spricelistcode + "\""
+				+ " onchange=\"flagDirty();\""
+				 + " >\n"
+			;
+			for (int i = 0; i < arrPriceListCodes.size(); i++){
+				sControlHTML += "<OPTION";
+				if (arrPriceListCodes.get(i).toString().compareTo(summary.getspricelistcode()) == 0){
+					sControlHTML += " selected=yes";
+				}
+				sControlHTML += " VALUE=\"" + arrPriceListCodes.get(i).toString() + "\">" 
+					+ arrPriceListCodeDescriptions.get(i).toString() + "\n";
+			}
+		sControlHTML += "</SELECT> \n"
+		;
+			
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "<B>Price list:</B>"
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
+				+ sControlHTML
+				+ "</TD>" + "\n"
+			;
+		
+		//Price level:
+		ArrayList<String> arrPriceLevels = new ArrayList<String>(0);
+		ArrayList<String> arrPriceLevelDescriptions = new ArrayList<String>(0);
+		SQL = "SELECT"
+			+ " * FROM " + SMTablepricelistlevellabels.TableName
+		;
+		//First, add a blank item so we can be sure the user chose one:
+		for (int i = 0; i < SMTablepricelistlevellabels.NUMBER_OF_PRICE_LEVELS; i++) {
+			arrPriceLevels.add(Integer.toString(i));
+		}
+
+		arrPriceLevelDescriptions.add("*** Select price level ***");
+		
+		try {
+			ResultSet rsPriceLevels = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsPriceLevels.next()) {
+				arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.sbasepricelabel));
+				arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel1label));
+				arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel2label));
+				arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel3label));
+				arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel4label));
+				arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel5label));
+			}
+			rsPriceLevels.close();
+		} catch (SQLException e) {
+			s += "<B>Error [1590535953] reading price level labels - " + e.getMessage() + "</B><BR>";
+		}
+
+		sControlHTML = "<SELECT NAME = \"" + SMTablesmestimatesummaries.ipricelevel + "\""
+				+ " onchange=\"flagDirty();\""
+				 + " >\n"
+			;
+			for (int i = 0; i < arrPriceLevels.size(); i++){
+				sControlHTML += "<OPTION";
+				if (arrPriceLevels.get(i).toString().compareTo(summary.getsipricelevel()) == 0){
+					sControlHTML += " selected=yes";
+				}
+				sControlHTML += " VALUE=\"" + arrPriceLevels.get(i).toString() + "\">" 
+					+ arrPriceLevelDescriptions.get(i).toString() + "\n";
+			}
+		sControlHTML += "</SELECT> \n"
+		;
+			
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "<B>Price level:</B>"
 				+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
 				+ sControlHTML

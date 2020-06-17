@@ -366,7 +366,7 @@ td.centerjustifiedheading {
   vertical-align:bottom; 
 }
 
-/* tabel cell left justified, border, small, Arial font*/
+/* table cell left justified, border, small, Arial font*/
 td.leftjustifiedcellborderaligntop {
   border: 1px solid !important;
   bordercolor: 000;
@@ -378,7 +378,7 @@ td.leftjustifiedcellborderaligntop {
   vertical-align:top;
 }
 
-/* tabel cell right justified, border, small, Arial font*/
+/* table cell right justified, border, small, Arial font*/
 td.rightjustifiedcellborderaligntop {
   border: 1px solid !important;
   bordercolor: 000;
@@ -390,7 +390,7 @@ td.rightjustifiedcellborderaligntop {
   vertical-align:top;
 }
 
-/* tabel cell center justified, border, small, Arial font*/
+/* table cell center justified, border, small, Arial font*/
 td.centerjustifiedcellborderaligntop {
   border: 1px solid !important;
   bordercolor: 000;
@@ -406,4 +406,15 @@ td.blackspace {
  font-family : Arial;
  font-size: 50%;
 }
+
+/* color themes for input boxes and labels: */
+controlthemeyellow{
+  background-color: #DDE009;
+}
+
+controlthemeblue{
+  background-color: #DDE009;
+}
+
+/* END DEFINITIONS */
 }

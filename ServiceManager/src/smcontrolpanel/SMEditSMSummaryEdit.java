@@ -89,6 +89,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX = "LABELADJUSTEDRETAILSALESTAX";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String LABEL_ADJUSTED_RETAIL_SALES_TAX_LABEL = "ADJUSTEDRETAILSALESTAXLABEL";
+	public static final String FIELD_ADJUSTED_COST_AFTER_SALES_TAX_CAPTION = "ADDITIONAL COST AFTER SALES TAX:";
 	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
 	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "<B><FONT COLOR=RED>P</FONT></B>rocess";
 	public static final String BUTTON_BACK_INTO_PRICE = "Process";
@@ -587,11 +588,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " * FROM " + SMTablepricelistlevellabels.TableName
 		;
 		//First, add a blank item so we can be sure the user chose one:
+		arrPriceLevels.add("");
+		arrPriceLevelDescriptions.add("*** Select price level ***");
 		for (int i = 0; i < SMTablepricelistlevellabels.NUMBER_OF_PRICE_LEVELS; i++) {
 			arrPriceLevels.add(Integer.toString(i));
 		}
-
-		arrPriceLevelDescriptions.add("*** Select price level ***");
 		
 		try {
 			ResultSet rsPriceLevels = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -897,6 +898,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.TEXT_OR_LABEL_COLOR_THEME_YELLOW + "\"" 
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
@@ -1313,6 +1315,38 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		s += "  </TR>" + "\n";
+		
+		//Additional cost AFTER retail sales tax:
+		s += "  <TR> \n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+				+ FIELD_ADJUSTED_COST_AFTER_SALES_TAX_CAPTION
+				+ " "
+				+ "<INPUT TYPE=TEXT"
+				+ " NAME = \"" + SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel + "\""
+				+ " ID = \"" + SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel + "\""
+				+ " style = \" text-align:right; width:200px;\""
+				+ " VALUE = \"" + summary.getsadditionalpostsalestaxcostlabel() + "\""
+				+ " onchange=\"flagDirty();\""
+				+ ">"
+				+ "</INPUT>"
+				
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+				+ ">"
+				+ "<INPUT TYPE=TEXT"
+				+ " NAME = \"" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "\""
+				+ " ID = \"" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "\""
+				+ " style = \" text-align:right; width:100px;\""
+				+ " VALUE = \"" + summary.getsbdadditionalpostsalestaxcostamt() + "\""
+				+ " onchange=\"flagDirty();\""
+				+ ">"
+				+ "</INPUT>"
+				
+				+ "</TD>" + "\n"
+			;
+		s += "  </TR>" + "\n";
+		
 		
 		s += "</TABLE>" + "\n";
 		

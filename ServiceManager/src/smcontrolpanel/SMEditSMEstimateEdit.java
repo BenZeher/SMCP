@@ -66,6 +66,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LABEL_RETAIL_SALES_TAX = "RETAILSALESTAX";
 	public static final String BUTTON_BACK_INTO_PRICE_CAPTION = "<B><FONT COLOR=RED>P</FONT></B>rocess";
 	public static final String BUTTON_BACK_INTO_PRICE = "BUTTONBACKINTOPRICE";
+	public static final String FIELD_ADJUSTED_COST_AFTER_SALES_TAX_CAPTION = "ADDITIONAL COST AFTER SALES TAX:";
 	
 	public static final String FIELD_BACK_INTO_DESIRED_PRICE = "FIELDBACKINTODESIREDPRICE";
 	public static final String LABEL_TOTAL_COST_AND_MARKUP_CAPTION = "TOTAL COST AND MARK-UP:";
@@ -99,6 +100,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String FIELD_REPLACE_QUOTE_WITH_NUMBER = "PARAMREPLACEQUOTEWITHNUMBER";
 	public static final String FIELD_REPLACE_QUOTE_LINE = "PARAMREPLACEQUOTELINE";
 	public static final String ESTIMATE_LINE_PREFIX = "ESTLINEPREFIX";
+	public static final String TOTALS_FIELD_WIDTH_FOR_LABELS = "100px";
+	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
 	public static final int ESTIMATE_LINE_NO_PAD_LENGTH = 6;
 	
 	
@@ -489,11 +492,11 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  <TR>" + "\n";
 		
 		String sReadOnlyValue = "";
-		String sFieldBackgroundColorStyle = "";
+		String sFieldTheme = SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE;
+		String sLabelTheme = SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW;
 		
 		if (estimate.getsvendorquotenumber().compareToIgnoreCase("") != 0) {
 			sReadOnlyValue = "readonly";
-			sFieldBackgroundColorStyle = " background-color: " + sBackgroundColor + "; ";
 		}
 		//If it's a vendor quote, then we don't let the user change the qty, item, U/M, or costs:
 		
@@ -504,7 +507,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.bdquantity + "\""
 			+ " VALUE=\"" + estimate.getsbdquantity() + "\""
 			+ " MAXLENGTH=15"
-			+ " style = \" text-align:right; width:65px;" + sFieldBackgroundColorStyle + "\""
+			+ " style = \"" + sLabelTheme + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS  + "text-align:right;" + "\""
 			+ " " + sReadOnlyValue
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -517,7 +520,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.sitemnumber + "\""
 			+ " VALUE=\"" + estimate.getsitemnumber() + "\""
 			+ " MAXLENGTH=32"
-			+ " style = \" width:100px;" + sFieldBackgroundColorStyle + "\""
+			+ " style = \"" + sLabelTheme + " width:" + "100"  + "\""
 			+ " " + sReadOnlyValue
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -544,8 +547,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME=\"" + SMTablesmestimates.sproductdescription + "\""
 			+ " ID=\"" + SMTablesmestimates.sproductdescription + "\""
 			+ " VALUE=\"" + estimate.getsproductdescription().replace("\"", "&quot;") + "\""
-			+ " MAXLENGTH=32"
-			+ " style = \" width:500px;\""
+			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimates.sproductdescriptionLength)
+			+ " style = \"" + sFieldTheme + " width:" + "500px" + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
@@ -557,8 +560,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME=\"" + SMTablesmestimates.sunitofmeasure + "\""
 			+ " ID=\"" + SMTablesmestimates.sunitofmeasure + "\""
 			+ " VALUE=\"" + estimate.getsunitofmeasure().replace("\"", "&quot;") + "\""
-			+ " MAXLENGTH=32"
-			+ " style = \" width:50px;" + sFieldBackgroundColorStyle + "\""
+			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimates.sunitofmeasureLength)
+			+ " style = \"" + sFieldTheme + " width:" + "50px" + "\""
 			+ " " + sReadOnlyValue
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -571,7 +574,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ " NAME=\"" + LABEL_PRODUCT_UNIT_COST + "\""
 				+ " ID=\"" + LABEL_PRODUCT_UNIT_COST + "\""
 				+ " MAXLENGTH=32"
-				+ " style = \" text-align:right; width:70px;" + sFieldBackgroundColorStyle + "\""
+				+ " style = \"" + sLabelTheme + " width:" + "70px; " + "text-align:right;" + "\""
 				+ ">"
 				+ "0.00"
 				+ "</LABEL>"
@@ -585,7 +588,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.bdextendedcost + "\""
 			+ " VALUE=\"" + estimate.getsbdextendedcost() + "\""
 			+ " MAXLENGTH=32"
-			+ " style = \" text-align:right; width:80px;" + sFieldBackgroundColorStyle + "\""
+			+ " style = \"" + sLabelTheme + " width:" + "80px; " + "text-align:right;" + "\""
 			+ " " + sReadOnlyValue
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -636,7 +639,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdquantity() + "\""
 					+ " MAXLENGTH=15"
-					+ " style = \" text-align:right; width:65px;\""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "65px; "  + "text-align:right;" + "\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					
@@ -660,7 +664,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsitemnumber() + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" width:100px;\""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "100px; " + "\""
 					+ " onchange=\"lookUpItem('" + clsStringFunctions.PadLeft(
 							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + "');\""
 					+ ">"
@@ -692,7 +697,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getslinedescription().replace("\"", "&quot;") + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" width:500px;\""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "500px; " + "\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -707,7 +713,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsunitofmeasure().replace("\"", "&quot;") + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" width:50px;\""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "50px; " + "\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -722,7 +729,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 								Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
 						+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdunitcost() + "\""
 						+ " MAXLENGTH=32"
-						+ " style = \" text-align:right; width:70px;\""
+						+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+							+ " width:" + "70px; " + "text-align:right;" + "\""
 						+ " onchange=\"flagDirty();\""
 						+ ">"
 						+ "</TD>" + "\n"
@@ -737,7 +745,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdextendedcost() + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" text-align:right; width:80px; background-color: " + sBackgroundColor + "; \""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
+						+ " width:" + "80px; " + "text-align:right;" + "\""
 					+ " onchange=\"flagDirty();\""
 					+ " readonly "
 					+ ">"
@@ -762,6 +771,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 					+ " VALUE=\"" + "0.0000" + "\""
 					+ " MAXLENGTH=15"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "65px; " + "text-align:right;" + "\""
 					+ " style = \" text-align:right; width:65px;\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
@@ -791,7 +802,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
 					+ " VALUE=\"" + sItemNumber + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" width:100px;\""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "100px; " + "\""
 					+ " onchange=\"lookUpItem('" + clsStringFunctions.PadLeft("0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + "');\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -818,7 +830,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
 					+ " VALUE=\"" + "" + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" width:500px;\""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "500px; " + "\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -833,7 +846,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
 					+ " VALUE=\"" + "" + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" width:50px;\""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "50px; " + "\""
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -848,7 +862,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 								"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
 						+ " VALUE=\"" + "0.00" + "\""
 						+ " MAXLENGTH=32"
-						+ " style = \" text-align:right; width:70px;\""
+						+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+							+ " width:" + "70px; " + "\""
 						+ " onchange=\"flagDirty();\""
 						+ ">"
 						+ "</TD>" + "\n"
@@ -863,7 +878,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
-					+ " style = \" text-align:right; width:80px; background-color: " + sBackgroundColor + "; \""
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
+						+ " width:" + "80px; " + "text-align:right;" + "\""
 					+ " onchange=\"flagDirty();\""
 					+ " readonly "
 					+ ">"
@@ -1140,6 +1156,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1160,7 +1177,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdfreight + "\""
 			+ " ID = \"" + SMTablesmestimates.bdfreight + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsbdfreight() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1180,7 +1197,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdlaborquantity + "\""
 			+ " ID = \"" + SMTablesmestimates.bdlaborquantity + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsbdlaborquantity() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1191,7 +1208,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdlaborcostperunit + "\""
 			+ " ID = \"" + SMTablesmestimates.bdlaborcostperunit + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsbdlaborcostperunit() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1211,6 +1228,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_TOTAL_LABOR_COST + "\""
 			+ " ID = \"" + LABEL_TOTAL_LABOR_COST + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1227,7 +1245,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.sadditionalpretaxcostlabel + "\""
 			+ " ID = \"" + SMTablesmestimates.sadditionalpretaxcostlabel + "\""
-			+ " style = \" text-align:right; width:200px;\""
+			+ " style = \" width:" + "200px;" + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsadditionalpretaxcostlabel() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1240,7 +1258,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdadditionalpretaxcostamount + "\""
 			+ " ID = \"" + SMTablesmestimates.bdadditionalpretaxcostamount + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsbdadditionalpretaxcostamount() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1262,6 +1280,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_COST_SUBTOTAL + "\""
 			+ " ID = \"" + LABEL_COST_SUBTOTAL + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1278,7 +1297,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + FIELD_MU_PER_LABOR_UNIT + "\""
 				+ " ID = \"" + FIELD_MU_PER_LABOR_UNIT + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 				+ " VALUE = 0.00"
 				+ " onchange=\"calculateMUusingMUperlaborunit();\""
 				+ ">"
@@ -1294,7 +1313,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + FIELD_MU_PERCENTAGE + "\""
 				+ " ID = \"" + FIELD_MU_PERCENTAGE + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 				+ " VALUE = \"0.00\""
 				+ " onchange=\"calculateMUusingMUpercentage();\""
 				+ ">"
@@ -1313,7 +1332,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + FIELD_GP_PERCENTAGE + "\""
 				+ " ID = \"" + FIELD_GP_PERCENTAGE + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 				+ " VALUE = \"0.00\""
 				+ " onchange=\"calculateMUusingGPpercentage();\""
 				+ ">"
@@ -1332,7 +1351,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + SMTablesmestimates.bdmarkupamount + "\""
 				+ " ID = \"" + SMTablesmestimates.bdmarkupamount + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 				+ " VALUE = \"" + estimate.getsbdmarkupamount() + "\""
 				+ " onchange=\"flagDirty();\""
 				+ ">"
@@ -1356,6 +1375,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1376,6 +1396,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_TOTAL_COST_AND_MARKUP + "\""
 			+ " ID = \"" + LABEL_TOTAL_COST_AND_MARKUP + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1392,7 +1413,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.sadditionalposttaxcostlabel + "\""
 			+ " ID = \"" + SMTablesmestimates.sadditionalposttaxcostlabel + "\""
-			+ " style = \" text-align:right; width:200px;\""
+			+ " style = \" width:" + "200px;" + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsadditionalposttaxcostlabel() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1404,7 +1425,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\""
 			+ " ID = \"" + SMTablesmestimates.bdadditionalposttaxcostamount + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsbdadditionalposttaxcostamount() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1426,7 +1447,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
 			+ " ID = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsbdlaborsellpriceperunit() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1448,6 +1469,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_LABOR_SELL_PRICE + "\""
 			+ " ID = \"" + LABEL_LABOR_SELL_PRICE + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1468,6 +1490,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_MATERIAL_SELL_PRICE + "\""
 			+ " ID = \"" + LABEL_MATERIAL_SELL_PRICE + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1488,6 +1511,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_TOTAL_SELL_PRICE + "\""
 			+ " ID = \"" + LABEL_TOTAL_SELL_PRICE + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1508,12 +1532,44 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_RETAIL_SALES_TAX + "\""
 			+ " ID = \"" + LABEL_RETAIL_SALES_TAX + "\""
+			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
 			
 			+ "</TD>" + "\n"
 		;
+		s += "  </TR>" + "\n";
+		
+		//Additional cost AFTER retail sales tax:
+		s += "  <TR> \n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+				+ FIELD_ADJUSTED_COST_AFTER_SALES_TAX_CAPTION
+				+ " "
+				+ "<INPUT TYPE=TEXT"
+				+ " NAME = \"" + SMTablesmestimates.sadditionalpostsalestaxcostlabel + "\""
+				+ " ID = \"" + SMTablesmestimates.sadditionalpostsalestaxcostlabel + "\""
+				+ " style = \" text-align:right; width:200px;\""
+				+ " VALUE = \"" + estimate.getsadditionalpostsalestaxcostlabel() + "\""
+				+ " onchange=\"flagDirty();\""
+				+ ">"
+				+ "</INPUT>"
+				
+				+ "</TD>" + "\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+				+ ">"
+				+ "<INPUT TYPE=TEXT"
+				+ " NAME = \"" + SMTablesmestimates.bdadditionalpostsalestaxcostamt + "\""
+				+ " ID = \"" + SMTablesmestimates.bdadditionalpostsalestaxcostamt + "\""
+				+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
+				+ " VALUE = \"" + estimate.getsbdadditionalpostsalestaxcostamt() + "\""
+				+ " onchange=\"flagDirty();\""
+				+ ">"
+				+ "</INPUT>"
+				
+				+ "</TD>" + "\n"
+			;
 		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
@@ -2143,6 +2199,17 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "        fieldvalue = parseFloat(temp);\n"
 				+ "    }\n"
 				+ "    document.getElementById(\"" + SMTablesmestimates.bdquantity + "\").value=formatNumberTo4Places(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdadditionalpostsalestaxcostamt + "\").value).replace(',','');\n"
+				+ "    if (!isNumeric(temp)){ \n"
+				+ "        temp = ''; \n"
+				+ "    } \n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.0000\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdadditionalpostsalestaxcostamt + "\").value=formatNumber(fieldvalue);\n"
 				
 				+ "    //Reformat the line values: \n"
 				+ "    "

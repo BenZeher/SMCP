@@ -518,9 +518,9 @@ public class SMEstimateSummary {
 			m_bdadditionalpostsalestaxcostamt = clsValidateFormFields.validateBigdecimalField(
 				m_bdadditionalpostsalestaxcostamt.replace(",", ""), 
 				"Additional cost after sales tax", 
-				SMTablesmestimatesummaries.bdtaxrateScale, 
+				SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamtScale, 
 				new BigDecimal("0.00"), 
-				new BigDecimal("999.00")
+				new BigDecimal("999999.00")
 			);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -1288,7 +1288,6 @@ public class SMEstimateSummary {
 		s += "&" + "Tax rate: " + getsbdtaxrate() + "\n";
 		s += "&" + "Calculate tax on customer invoice: " + getsicalculatetaxoncustomerinvoice() + "\n";
 		s += "&" + "Calculate tax on purchase or sale: " + getsicalculatetaxonpurchaseorsale() + "\n";
-		
 		s += "&" + "Price list code: " + getspricelistcode() + "\n";
 		s += "&" + "Price level: " + getsipricelevel() + "\n";
 		s += "&" + "Additional post sales tax cost label: " + getsadditionalpostsalestaxcostlabel() + "\n";

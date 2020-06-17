@@ -17,6 +17,7 @@ import SMClasses.SMTax;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
+import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -57,6 +58,8 @@ public class SMEstimate {
 	private String m_llastmodifiedbyid;
 	private String m_datetimelastmodified;
 	private String m_slastmodifiedbyfullname;
+	private String m_sadditionalpostsalestaxcostlabel;
+	private String m_bdadditionalpostsalestaxcostamt;
 	
 	private SMEstimateSummary m_estimatesummary;
 	
@@ -126,6 +129,9 @@ public class SMEstimate {
 		}
 		
 		m_slastmodifiedbyfullname = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.slastmodifiedbyfullname, req).replace("&quot;", "\"");
+		
+		m_sadditionalpostsalestaxcostlabel = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.sadditionalpostsalestaxcostlabel, req).replace("&quot;", "\"");
+		m_bdadditionalpostsalestaxcostamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.bdadditionalpostsalestaxcostamt, req).replace("&quot;", "\"");
 		
 		readEstimateLines(req);
 	}
@@ -298,6 +304,8 @@ public class SMEstimate {
 			+ ", " + SMTablesmestimates.sunitofmeasure
 			+ ", " + SMTablesmestimates.svendorquoteid
 			+ ", " + SMTablesmestimates.svendorquotenumber
+			+ ", " + SMTablesmestimates.sadditionalpostsalestaxcostlabel
+			+ ", " + SMTablesmestimates.bdadditionalpostsalestaxcostamt
 			+ ")"
 			+ " VALUES ("
 			+ m_bdadditionalposttaxcostamount.replace(",", "")
@@ -327,6 +335,8 @@ public class SMEstimate {
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sunitofmeasure) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquoteid) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquotenumber) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sadditionalpostsalestaxcostlabel) + "'"
+			+ ", " + m_bdadditionalpostsalestaxcostamt.replace(",", "")
 			+ ")"
 					
 			+ " ON DUPLICATE KEY UPDATE"
@@ -358,7 +368,8 @@ public class SMEstimate {
 			+ ", " + SMTablesmestimates.sunitofmeasure + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sunitofmeasure) + "'"
 			+ ", " + SMTablesmestimates.svendorquoteid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquoteid) + "'"
 			+ ", " + SMTablesmestimates.svendorquotenumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendorquotenumber) + "'"
-																					
+			+ ", " + SMTablesmestimates.sadditionalpostsalestaxcostlabel + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sadditionalpostsalestaxcostlabel) + "'"
+			+ ", " + SMTablesmestimates.bdadditionalpostsalestaxcostamt + " = " + m_bdadditionalpostsalestaxcostamt.replace(",", "")												
 		;
 		
 		//System.out.println("[1494260859] - SQL = '" + SQL + "'");
@@ -719,6 +730,29 @@ public class SMEstimate {
 				SMTablesmestimates.slastmodifiedbyfullnameLength, 
 				"Last modified by full name", 
 				true
+			);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
+			m_sadditionalpostsalestaxcostlabel = clsValidateFormFields.validateStringField(
+				m_sadditionalpostsalestaxcostlabel, 
+				SMTablesmestimates.sadditionalpostsalestaxcostlabelLength, 
+				"Additional cost after sales tax label", 
+				true
+			);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
+			m_bdadditionalpostsalestaxcostamt = clsValidateFormFields.validateBigdecimalField(
+				m_bdadditionalpostsalestaxcostamt.replace(",", ""), 
+				"Additional cost after sales tax", 
+				SMTablesmestimates.bdadditionalpostsalestaxcostamtScale, 
+				new BigDecimal("0.00"), 
+				new BigDecimal("999999.00")
 			);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -1138,6 +1172,9 @@ public class SMEstimate {
 				m_datetimelastmodified = clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
 					rs.getString(SMTablesmestimates.datetimelastmodified), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE);
 				m_slastmodifiedbyfullname = rs.getString(SMTablesmestimates.slastmodifiedbyfullname);
+				m_sadditionalpostsalestaxcostlabel = rs.getString(SMTablesmestimates.sadditionalpostsalestaxcostlabel);
+				m_bdadditionalpostsalestaxcostamt = clsManageBigDecimals.BigDecimalToScaledFormattedString(
+					SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamtScale, rs.getBigDecimal(SMTablesmestimates.bdadditionalpostsalestaxcostamt));
 			}else{
 				rs.close();
 				throw new Exception("Error [1590169269] - No Estimate found with lid = " + m_lid + ".");
@@ -1383,6 +1420,20 @@ public class SMEstimate {
 		m_slastmodifiedbyfullname = slastmodifiedbyfullname;
 	}
 	
+	public String getsadditionalpostsalestaxcostlabel(){
+		return m_sadditionalpostsalestaxcostlabel;
+	}
+	public void setsadditionalpostsalestaxcostlabel(String sadditionalpostsalestaxcostlabel){
+		m_sadditionalpostsalestaxcostlabel = sadditionalpostsalestaxcostlabel;
+	}
+	
+	public String getsbdadditionalpostsalestaxcostamt(){
+		return m_bdadditionalpostsalestaxcostamt;
+	}
+	public void setsbdadditionalpostsalestaxcostamt(String sbdadditionalpostsalestaxcostamt){
+		m_bdadditionalpostsalestaxcostamt = sbdadditionalpostsalestaxcostamt;
+	}
+	
 	public SMEstimateSummary getsummary() {
 		return m_estimatesummary;
 	}
@@ -1564,7 +1615,8 @@ public class SMEstimate {
 		sQueryString += "&" + SMTablesmestimates.sunitofmeasure + "=" + clsServletUtilities.URLEncode(getsunitofmeasure());
 		sQueryString += "&" + SMTablesmestimates.svendorquotenumber + "=" + clsServletUtilities.URLEncode(getsvendorquoteid());
 		sQueryString += "&" + SMTablesmestimates.svendorquotenumber + "=" + clsServletUtilities.URLEncode(getsvendorquotenumber());
-		
+		sQueryString += "&" + SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel + "=" + clsServletUtilities.URLEncode(getsadditionalpostsalestaxcostlabel());
+		sQueryString += "&" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "=" + clsServletUtilities.URLEncode(getsbdadditionalpostsalestaxcostamt());
 		return sQueryString;
 	}
 	
@@ -1599,7 +1651,9 @@ public class SMEstimate {
 		s += "  last modified by user ID: " +  getsllastmodifiedbyid() + "\n";
 		s += "  date last modified: " +  getsdatetimelastmodified() + "\n";
 		s += "  modified by full name: " +  getslastmodifiedbyfullname() + "\n";
-		
+		s += "&" + "Additional post sales tax cost label: " + getsadditionalpostsalestaxcostlabel() + "\n";
+		s += "&" + "Additional post sales tax cost amt: " + getsbdadditionalpostsalestaxcostamt() + "\n";
+				
 		s += "  -- Number of lines: " + arrEstimateLines.size() + "\n";
 		
 		for (int i = 0; i < arrEstimateLines.size(); i++){
@@ -1641,5 +1695,7 @@ public class SMEstimate {
 		m_datetimelastmodified = SMUtilities.EMPTY_DATETIME_VALUE;
 		m_slastmodifiedbyfullname = "";
 		arrEstimateLines = new ArrayList<SMEstimateLine>(0);
+		m_sadditionalpostsalestaxcostlabel = "";
+		m_bdadditionalpostsalestaxcostamt = "0.00";
 	}
 }

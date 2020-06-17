@@ -942,7 +942,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
-			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
+				+ " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + "; text-align:right; " + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborquantityScale, summary.getbdtotallaborunitsonestimates())
 			+ "</LABEL>"
@@ -2171,6 +2172,17 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "        fieldvalue = parseFloat(temp);\n"
 				+ "    }\n"
 				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\").value=formatNumber(fieldvalue);\n"
+				
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "\").value).replace(',','');\n"
+				+ "    if (!isNumeric(temp)){ \n"
+				+ "        temp = ''; \n"
+				+ "    } \n"
+				+ "    if (temp == ''){\n"
+				+ "        fieldvalue = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        fieldvalue = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    document.getElementById(\"" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "\").value=formatNumber(fieldvalue);\n"
 				;
 				s += "}\n\n"
 			;

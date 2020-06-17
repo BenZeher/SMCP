@@ -51,7 +51,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String BUTTON_FIND_VENDOR_QUOTE = "FINDVENDORQUOTE";
 	public static final String FIND_VENDOR_QUOTE_COMMAND_VALUE = "FINDVENDORQUOTECOMMAND";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_COST = "LABELCALCULATEDTOTALMATERIALCOST";
-	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
+	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST ELIGIBLE FOR USE TAX:";
 	public static final String LABEL_CALCULATED_TOTAL_FREIGHT = "LABELCALCULATEDTOTALFREIGHT";
 	public static final String LABEL_CALCULATED_TOTAL_FREIGHT_CAPTION = "TOTAL FREIGHT:";
 	public static final String LABEL_CALCULATED_TOTAL_LABOR_UNITS = "LABELCALCULATEDTOTALLABORUNITS";
@@ -65,6 +65,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_LABEL = "CALCULATEDTAXLABEL";
 	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY = "LABELCALCULATEDTOTALFORSUMMARY";
 	public static final String LABEL_CALCULATED_TOTAL_FOR_SUMMARY_CAPTION = "CALCULATED TOTAL FOR ESTIMATE SUMMARY #";
+	public static final String LABEL_CALCULATED_TOTAL_ADDITIONAL_COST_NOT_ELIGIBLE_FOR_USE_TAX_CAPTION = "TOTAL ADDITIONAL COST NOT ELIGIBLE FOR USE TAX:";
+	public static final String LABEL_CALCULATED_TOTAL_ADDITIONAL_COST_NOT_ELIGIBLE_FOR_USE_TAX = "TOTALADDITIONALCOSTNOTELIGIBLEFORUSETAX";
 	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX = "LABELCALCULATEDRETAILSALESTAX";
 	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION = "RETAIL SALES TAX:";
 	public static final String LABEL_CALCULATED_RETAIL_SALES_TAX_LABEL = "CALCULATEDRETAILSALESTAXLABEL";
@@ -1017,6 +1019,28 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		;
 		s += "  </TR>" + "\n";
 		
+		
+		//ADDITIONAL COST NOT ELIGIBLE FOR USE TAX
+		s += "  <TR>" + "\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			//+ " style = \" font-size: large; \""
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
+			+ LABEL_CALCULATED_TOTAL_ADDITIONAL_COST_NOT_ELIGIBLE_FOR_USE_TAX_CAPTION
+			+ "</TD>" + "\n"
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			+ ">"
+			+ "<LABEL"
+			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_ADDITIONAL_COST_NOT_ELIGIBLE_FOR_USE_TAX + "\""
+			+ " ID = \"" + LABEL_CALCULATED_TOTAL_ADDITIONAL_COST_NOT_ELIGIBLE_FOR_USE_TAX + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
+			+ ">"
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdtotaladdlcostnoteligibleforusetax())
+			+ "</LABEL>"
+			
+			+ "</TD>" + "\n"
+		;
+		s += "  </TR>" + "\n";
+		
 		//total amount for summary
 		String sSummaryID = UNSAVED_SUMMARY_LABEL;
 		if (
@@ -1794,6 +1818,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    var adjustedmarkupperlaborunit = parseFloat(\"0.00\");\n"
 				+ "    var adjustedmarkuppercentage = parseFloat(\"0.00\");\n"
 				+ "    var adjustedgppercentage = parseFloat(\"0.00\");\n"
+				+ "    var addlcostnoteligibleforusetax = parseFloat(\"0.00\");\n"
 				
 				+ "    //Calculate the total adjusted sell price: \n"
 				+ "    //Should equal totalmaterialcost + totalfreight + totallabor + totalmarkup + totalmaterialtax \n"
@@ -1869,8 +1894,16 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    }\n"
 				+ "    \n"
 				
+				+ "    var temp = (document.getElementById(\"" + LABEL_CALCULATED_TOTAL_ADDITIONAL_COST_NOT_ELIGIBLE_FOR_USE_TAX + "\").innerText).replace(',','');\n"
+				+ "    if (temp == ''){\n"
+				+ "        addlcostnoteligibleforusetax = parseFloat(\"0.00\");\n"
+				+ "    }else{\n"
+				+ "        addlcostnoteligibleforusetax = parseFloat(temp);\n"
+				+ "    }\n"
+				+ "    \n"
+				
 				+ "    totalcalculatedestimateprice = \n"
-					+ "        materialcosttotal + totalfreightonestimates + totallaboronestimates + totalmarkuponestimates + taxonmaterial; \n"
+					+ "        materialcosttotal + totalfreightonestimates + totallaboronestimates + totalmarkuponestimates + taxonmaterial + addlcostnoteligibleforusetax; \n"
 				+ "    document.getElementById(\"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\").innerText=formatNumber(totalcalculatedestimateprice);\n"
 				+ "    \n"
 					

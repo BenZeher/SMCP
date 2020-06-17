@@ -1487,12 +1487,18 @@ public class SMEstimate {
 			throw new Exception("Error [202005270128] - could not load tax with ID '" + summary.getsitaxid() + "' - " + e.getMessage());
 		}
 		
-		bdTaxOnMaterial = getTotalMaterialCost(conn).multiply((new BigDecimal(tax.get_bdtaxrate().replace(",", ""))).divide(new BigDecimal("100.00"), BigDecimal.ROUND_HALF_UP));
+		bdTaxOnMaterial = getTotalMaterialCostSubjectToUseTax(conn).multiply((new BigDecimal(tax.get_bdtaxrate().replace(",", ""))).divide(new BigDecimal("100.00"), BigDecimal.ROUND_HALF_UP));
 		
 		return bdTaxOnMaterial;
 	}
-	
-	public BigDecimal getTotalMaterialCost(Connection conn) throws Exception{
+	public BigDecimal getTotalAddlMaterialCostNotSubjectToUseTax(Connection conn) throws Exception{
+		BigDecimal bdTotalAddlMaterialCostNotSubjectToUseTax = new BigDecimal("0.00");
+		
+		bdTotalAddlMaterialCostNotSubjectToUseTax = new BigDecimal(m_bdadditionalposttaxcostamount.replace(",", ""));
+		
+		return bdTotalAddlMaterialCostNotSubjectToUseTax;
+	}
+	public BigDecimal getTotalMaterialCostSubjectToUseTax(Connection conn) throws Exception{
 		BigDecimal bdTotalMaterialCost = new BigDecimal("0.00");
 		
 		bdTotalMaterialCost = bdTotalMaterialCost.add(new BigDecimal(m_bdextendedcost.replace(",", "")));

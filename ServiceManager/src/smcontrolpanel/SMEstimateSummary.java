@@ -67,6 +67,7 @@ public class SMEstimateSummary {
 	private BigDecimal m_bdtaxrateaswholenumber;
 	private BigDecimal m_bdcalculatedtotalprice;
 	private BigDecimal m_bdtotalmarkuponestimates;
+	private BigDecimal m_bdbdtotaladdlcostnoteligibleforusetax;
 	
 	private String m_staxdescription;
 
@@ -1072,6 +1073,9 @@ public class SMEstimateSummary {
 	public BigDecimal getbdtotalmarkuponestimates() {
 		return m_bdtotalmarkuponestimates;
 	}
+	public BigDecimal getbdtotaladdlcostnoteligibleforusetax() {
+		return m_bdbdtotaladdlcostnoteligibleforusetax;
+	}
 	
 	public void addEstimate(SMEstimate estimate){
 		arrEstimates.add(estimate);
@@ -1182,15 +1186,17 @@ public class SMEstimateSummary {
 		//m_bdtotaltaxonmaterial = new BigDecimal("0.00");
 		m_bdtotalmarkuponestimates = new BigDecimal("0.00");
 		m_bdcalculatedtotalprice = new BigDecimal("0.00");
+		m_bdbdtotaladdlcostnoteligibleforusetax = new BigDecimal("0.00");
 		
 		for (int i = 0; i < arrEstimates.size(); i++) {
-			m_bdtotalmaterialcostonestimates = m_bdtotalmaterialcostonestimates.add(arrEstimates.get(i).getTotalMaterialCost(conn));
+			m_bdtotalmaterialcostonestimates = m_bdtotalmaterialcostonestimates.add(arrEstimates.get(i).getTotalMaterialCostSubjectToUseTax(conn));
 			m_bdtotalfreightonestimates = m_bdtotalfreightonestimates.add(new BigDecimal(arrEstimates.get(i).getsbdfreight().replace(",", "")));
 			m_bdtotallaborunitsonestimates = m_bdtotallaborunitsonestimates.add(new BigDecimal(arrEstimates.get(i).getsbdlaborquantity().replace(",", "")));
 			m_bdtotalmarkuponestimates = m_bdtotalmarkuponestimates.add(new BigDecimal(arrEstimates.get(i).getsbdmarkupamount().replace(",", "")));
 			BigDecimal bdLaborCostPerUnit = new BigDecimal(arrEstimates.get(i).getsbdlaborcostperunit().replace(",", ""));
 			BigDecimal bdLaborUnitQty = new BigDecimal(arrEstimates.get(i).getsbdlaborquantity().replace(",", ""));
 			m_bdtotallaborcostonestimates = m_bdtotallaborcostonestimates.add(bdLaborCostPerUnit.multiply(bdLaborUnitQty));
+			m_bdbdtotaladdlcostnoteligibleforusetax = m_bdbdtotaladdlcostnoteligibleforusetax.add(arrEstimates.get(i).getTotalAddlMaterialCostNotSubjectToUseTax(conn));
 		}
 		
 		m_bdtaxrateaswholenumber = new BigDecimal("0.00");
@@ -1213,7 +1219,8 @@ public class SMEstimateSummary {
 				m_bdtotalfreightonestimates).add(
 					m_bdtotallaborcostonestimates).add(
 						m_bdtotalmarkuponestimates).add(
-							m_bdtotaltaxonmaterial);
+							m_bdtotaltaxonmaterial).add(
+								m_bdbdtotaladdlcostnoteligibleforusetax);
 		
 		return;
 	}

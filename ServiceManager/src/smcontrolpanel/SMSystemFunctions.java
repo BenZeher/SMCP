@@ -345,6 +345,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMViewOHDirectQuote = 1250;
 	public static long GLDuplicateExternalCompanyBatch = 1251;
 	public static long SMEditSMEstimates = 1252;
+	public static long SMViewCommonlyUsedItemsOnEstimates = 1253;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;

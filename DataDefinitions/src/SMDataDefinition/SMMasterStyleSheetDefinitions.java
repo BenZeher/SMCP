@@ -86,7 +86,7 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String WARNING_NOTIFICATION_TEXT_ID = "notification-warning-text";
 	
 	//Text input and label color themes:
-	public static final String TEXT_OR_LABEL_COLOR_THEME_YELLOW = "controlthemeyellow";
-	public static final String TEXT_OR_LABEL_COLOR_THEME_BLUE = "controlthemeblue";
+	public static final String LABEL_COLOR_THEME_YELLOW = "background-color: #f4f73b; border-style: inset; display:inline-block;";
+	public static final String LABEL_COLOR_THEME_BLUE = "background-color: #99ebff; border-style: inset; display:inline-block;" ;
 	
 }

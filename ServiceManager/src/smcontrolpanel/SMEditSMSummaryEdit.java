@@ -98,6 +98,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String UNSAVED_SUMMARY_LABEL = "(UNSAVED)";
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
+	public static final String TOTALS_FIELD_WIDTH_FOR_LABELS = "100px";
+	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
@@ -898,7 +900,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MATERIAL_COST + "\""
-			+ " style = \"" + SMMasterStyleSheetDefinitions.TEXT_OR_LABEL_COLOR_THEME_YELLOW + "\"" 
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
@@ -919,6 +921,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FREIGHT + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdfreightScale, summary.getbdtotalfreightonestimates())
 			+ "</LABEL>"
@@ -939,6 +942,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_UNITS + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborquantityScale, summary.getbdtotallaborunitsonestimates())
 			+ "</LABEL>"
@@ -955,6 +959,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdlaborcostperunitScale, summary.getbdtotallaborcostonestimates())
 			+ "</LABEL>"
@@ -976,6 +981,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_MARKUP + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdmarkupamountScale, summary.getbdtotalmarkuponestimates())
 			+ "</LABEL>"
@@ -1001,6 +1007,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1030,6 +1037,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ " ID = \"" + LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, summary.getbdcalculatedtotalprice())
 			+ "</LABEL>"
@@ -1054,6 +1062,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_CALCULATED_RETAIL_SALES_TAX + "\""
 			+ " ID = \"" + LABEL_CALCULATED_RETAIL_SALES_TAX + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1087,6 +1096,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablesmestimates.bdextendedcostScale, summary.getbdtotalmaterialcostonestimates())
 			+ "</LABEL>"
@@ -1107,7 +1117,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedfreight + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 			+ " VALUE = \"" + summary.getsbdadjustedfreight() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1128,7 +1138,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
 			+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborunitqty + "\""
-			+ " style = \" text-align:right; width:100px;\""
+			+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 			+ " VALUE = \"" + summary.getsbdadjustedlaborunitqty() + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1147,7 +1157,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedlaborcostperunit + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 				+ " VALUE = \"" + summary.getsbdadjustedlaborcostperunit() + "\""
 				+ " onchange=\"flagDirty();\""
 				+ ">"
@@ -1166,6 +1176,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "<LABEL"
 				+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
 				+ " ID = \"" + LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
+				+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 				+ ">"
 				+ "0.00"  // TODO - fill in this value with javascript
 				+ "</LABEL>"
@@ -1185,7 +1196,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " ID = \"" + FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 				+ " VALUE = 0.00"
 				+ " onchange=\"calculateMUusingMUperlaborunit();\""
 				+ ">"
@@ -1201,7 +1212,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " ID = \"" + FIELD_ADJUSTED_MU_PERCENTAGE + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 				+ " VALUE = \"0.00\""
 				+ " onchange=\"calculateMUusingMUpercentage();\""
 				+ ">"
@@ -1220,7 +1231,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " ID = \"" + FIELD_ADJUSTED_GP_PERCENTAGE + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 				+ " VALUE = \"0.00\""
 				+ " onchange=\"calculateMUusingGPpercentage();\""
 				+ ">"
@@ -1239,7 +1250,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 				+ " VALUE = \"" + summary.getsbdadjustedmarkupamt() + "\""
 				+ " onchange=\"flagDirty();\""
 				+ ">"
@@ -1261,6 +1272,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ "0.00"
 			+ "</LABEL>"
@@ -1282,6 +1294,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ "0.00"  // TODO - fill in this value with javascript
 			+ "</LABEL>"
@@ -1308,6 +1321,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<LABEL"
 			+ " NAME = \"" + LABEL_ADJUSTED_RETAIL_SALES_TAX + "\""
 			+ " ID = \"" + LABEL_ADJUSTED_RETAIL_SALES_TAX + "\""
+			+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
 			+ "0.00"  // TODO - fill in this value with javascript
 			+ "</LABEL>"
@@ -1337,7 +1351,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "<INPUT TYPE=TEXT"
 				+ " NAME = \"" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "\""
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "\""
-				+ " style = \" text-align:right; width:100px;\""
+				+ " style = \" text-align:right;" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\""
 				+ " VALUE = \"" + summary.getsbdadditionalpostsalestaxcostamt() + "\""
 				+ " onchange=\"flagDirty();\""
 				+ ">"

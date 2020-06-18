@@ -396,7 +396,7 @@ public class SMEstimate {
 					m_lid = "0";
 				}
 				rs.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				throw new Exception("Error [1590163604] Could not get last ID number - " + e.getMessage());
 			}
 			//If something went wrong, we can't get the last ID:

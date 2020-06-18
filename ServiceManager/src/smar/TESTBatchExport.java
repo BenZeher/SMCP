@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServlet;
 
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
-import smgl.GLFinancialDataCheck;
+import smcontrolpanel.SMEstimateSummary;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -152,13 +152,20 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
-		GLFinancialDataCheck fdc = new GLFinancialDataCheck();
+		SMEstimateSummary summary = new SMEstimateSummary();
+		summary.setslid("1");
 		try {
-			fdc.checkMissingFiscalSets("12345073", conn, "");
-		} catch (Exception e) {
-			System.out.println("[202005151708] - " + e.getMessage());
+			summary.load(conn);
+		} catch (Exception e1) {
+			System.out.println("[202006181648] - " + e1.getMessage());
 		}
-		System.out.println("[202005043334] - DONE");
+		
+		try {
+			summary.saveAsNewSummaryWrapper(conn, "6", "tom ronayne");
+		} catch (Exception e1) {
+			System.out.println("[202006181731] - " + e1.getMessage());
+		}
+		System.out.println("[202006181749] - DONE");
 		
 		/*
     	GLTransactionBatch externalbatch = new GLTransactionBatch("1397");
@@ -268,6 +275,7 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println("DONE");
 		*/
 		
+		/*
 		String sRequest = "C_DealerQuote?%24filter=C_LastModifiedDate%20gt%20'2020-01-09'";
 		sRequest = "C_DealerQuote?%24filter="
 			+ SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE + "%20gt%20'2020-01-09'"
@@ -288,7 +296,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Number " + arrQuoteNumbers.get(i) + ", Name " + i + " = '" + arrNames.get(i) + "'.");
 		}
 		System.out.println("DONE");
-		
+		*/
 
 		/*
 		String sOnHoldDate = "";

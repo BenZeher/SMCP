@@ -131,7 +131,7 @@ public class SMEstimateLine {
 			m_slestimateid = clsValidateFormFields.validateLongIntegerField(
 					m_slestimateid, 
 				"Estimate ID", 
-				1L, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";

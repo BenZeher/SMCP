@@ -126,6 +126,34 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			return;
 		}
 		
+		//If SAVE AS NEW, then save the summary:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.SAVE_AS_NEW_COMMAND_VALUE) == 0){
+			String sPreviousSummaryID = summary.getslid();
+			try {
+				summary.saveAsNewSummaryWrapper(conn, smaction.getUserID(), smaction.getFullUserName());
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689871]");
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + sPreviousSummaryID
+			    		);
+				return;
+			}
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689871]");
+			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
+			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Estimate Summary #" + summary.getslid() 
+				+ " saved successfully as NEW summary #" + summary.getslid());
+	    	smaction.redirectAction(
+		    		"", 
+		    		"", 
+		    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+		    		);
+			return;
+		}
+		
 		//If REMOVE ESTIMATE, then:
 		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.REMOVE_ESTIMATE_COMMAND) == 0){
 			String sSummaryLineNumber = clsManageRequestParameters.get_Request_Parameter(

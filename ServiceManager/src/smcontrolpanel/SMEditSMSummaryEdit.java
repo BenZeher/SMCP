@@ -33,6 +33,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	
 	public static final String SAVE_BUTTON_CAPTION = "Sa<B><FONT COLOR=RED>v</FONT></B>e estimate summary";
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";
+	public static final String SAVE_AS_NEW_BUTTON_CAPTION = "Save as NE<B><FONT COLOR=RED>W</FONT></B> estimate summary";
+	public static final String SAVE_AS_NEW_COMMAND_VALUE = "SAVESUMMARYASNEW";
 	public static final String DELETE_BUTTON_CAPTION = "Delete estimate s<B><FONT COLOR=RED>u</FONT></B>mmary";
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
@@ -273,7 +275,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			throw new Exception(e.getMessage());
 		}
 		//Add save and delete buttons
-		pwOut.println("<BR>" + createSaveButton() + "&nbsp;" + createDeleteButton());
+		pwOut.println("<BR>" + createSaveButton() + "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton());
 		pwOut.println("</FORM>");
 	}
 
@@ -658,7 +660,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "</TABLE>" + "\n";
 		
-		s += "<BR>" + createSaveButton() + "&nbsp;" + createDeleteButton();
+		s += "<BR>" + createSaveButton() + "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
 		
 		//Include an outer table:
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
@@ -674,7 +676,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "    </TD>" + "\n";
 		s += "  </TR>" + "\n";
 		s += "</TABLE>" + "\n";
-		
 
 		return s;
 	}
@@ -1399,6 +1400,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ SAVE_BUTTON_CAPTION
 				+ "</button>\n";
 	}
+	private String createSaveAsNewButton(){
+		return "<button type=\"button\""
+				+ " value=\"" + SAVE_AS_NEW_BUTTON_CAPTION + "\""
+				+ " name=\"" + SAVE_AS_NEW_BUTTON_CAPTION + "\""
+				+ " onClick=\"saveasnew();\">"
+				+ SAVE_AS_NEW_BUTTON_CAPTION
+				+ "</button>\n";
+	}
 	private String createDeleteButton(){
 		String s = "";
 		s = "<button type=\"button\""
@@ -1709,6 +1718,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Save
 			s += "function save(){\n"
 				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + SAVE_COMMAND_VALUE + "\";\n"
+				+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
+			//Save as new
+			s += "function saveasnew(){\n"
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + SAVE_AS_NEW_COMMAND_VALUE + "\";\n"
 				+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
@@ -2264,6 +2280,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 			s += "    shortcut.add(\"Alt+v\",function() {\n";
 			s += "        save();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+w\",function() {\n";
+			s += "        saveasnew();\n";
 			s += "    },{\n";
 			s += "        'type':'keydown',\n";
 			s += "        'propagate':false,\n";

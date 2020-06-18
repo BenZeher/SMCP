@@ -134,7 +134,62 @@ public class SMEstimateSummary {
 		m_sadditionalpostsalestaxcostlabel = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel, req).replace("&quot;", "\"");
 		m_bdadditionalpostsalestaxcostamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt, req).replace("&quot;", "\"");
 	}
-
+	public void saveAsNewSummaryWrapper(Connection conn, String sUserID, String sUserFullName) throws Exception{
+		
+		//First save this as a NEW summary:
+		//Save the old ID in case we need to roll back:
+		String sCurrentSummaryID = getslid(); 
+		setslid("-1");
+		//Now save it as a new summary:
+		
+		try {
+			saveAsNewSummary(conn, sUserID, sUserFullName);
+		} catch (Exception e1) {
+			//Reload the original summary:
+			setslid(sCurrentSummaryID);
+			try {
+				load(conn);
+			} catch (Exception e) {
+				throw new Exception("Error [202006181115] - could not re-load summary - " + e.getMessage()
+					+ " AFTER error creating new summary: " + e1.getMessage()
+				);
+			}
+			return;
+		}
+		
+		return;
+	}
+	private void saveAsNewSummary(Connection conn, String sUserID, String sUserFullName) throws Exception{
+		try {
+			clsDatabaseFunctions.start_data_transaction_with_exception(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202006185411] - couldn't start data transaction - " + e.getMessage());
+		}
+		
+		//Set the estimate IDs to be -1 so they'll get saved as NEW estimates:
+		for (int i = 0; i < arrEstimates.size(); i++) {
+			arrEstimates.get(i).setslid("-1");
+			for (int j = 0; j < arrEstimates.get(i).getLineArray().size(); j++) {
+				arrEstimates.get(i).getLineArray().get(j).setslid("-1");
+			}
+		}
+		
+		try {
+			save_without_data_transaction(conn, sUserID, sUserFullName);
+		} catch (Exception e) {
+			throw new Exception("Error [202006185444] - could not save new summary - " + e.getMessage());
+		}
+		
+		//Commit the transaction:
+		try {
+			clsDatabaseFunctions.commit_data_transaction_with_exception(conn);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [202006185552] - couldn't commit transaction to save new estimate - " + e.getMessage());
+		}
+		
+		return;
+	}
 	public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
 
 		//long lStarttime = System.currentTimeMillis();
@@ -328,12 +383,9 @@ public class SMEstimateSummary {
 		}
 		
 		if (
-			(m_iordertype.compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE)) !=0)
-			&& (m_iordertype.compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE)) !=0)
-			&& (m_iordertype.compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE)) !=0)
-			&& (m_iordertype.compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING)) !=0)
+			(m_iordertype.compareToIgnoreCase("") ==0)
 		) {
-			sResult += "  Order type '" + m_iordertype + "' is not valid.";
+			sResult += "  Order type is not valid.";
 		}
 		
 		try {

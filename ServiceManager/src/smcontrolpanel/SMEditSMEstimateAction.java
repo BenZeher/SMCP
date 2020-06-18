@@ -9,8 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import SMClasses.FinderResults;
+import SMClasses.OHDirectFinderResults;
 import SMClasses.SMFinderFunctions;
+import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablesmestimates;
+import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;
@@ -255,6 +258,41 @@ public class SMEditSMEstimateAction extends HttpServlet{
 		    		+ "&" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
 						+ clsManageRequestParameters.get_Request_Parameter(SMEditSMEstimateEdit.RECORDWASCHANGED_FLAG_VALUE, request)
 		    		);
+			return;
+		}
+		
+		//If FIND VENDOR QUOTE:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMEstimateEdit.FIND_VENDOR_QUOTE_COMMAND_VALUE) == 0){
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773259]");
+    		String sRedirectString = 
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.OHDirectFinder"
+				+ "?" + "EndpointName=" + SMOHDirectFieldDefinitions.ENDPOINT_QUOTE
+				+ "&SearchingClass=" + "smcontrolpanel.SMEditSMEstimateEdit"
+				+ "&ReturnField=" + SMEditSMEstimateEdit.FIELD_REPLACE_QUOTE_WITH_NUMBER
+				+ "&ResultListField1=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER
+				+ "&ResultListField2=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME
+				+ "&ResultListField3=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE
+				+ "&ResultListField4=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_LASTMODIFIEDDATE
+				+ "&ResultHeading1=Quote%20Number"
+				+ "&ResultHeading2=Job%20Name"
+				+ "&ResultHeading3=Created%20Date"
+				+ "&ResultHeading4=Last%20Modified%20Date"
+				+ "&" + OHDirectFinderResults.FINDER_RETURN_PARAM + "="
+					+ SMTablesmestimates.lid + "=" + estimate.getslid()
+    		;
+	    				
+			try {
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimates.lid + "=" + estimate.getslid()
+			    		);
+				return;
+			}
 			return;
 		}
 		

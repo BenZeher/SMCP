@@ -23,6 +23,8 @@ public class SMEstimateLine {
 	private String m_sunitofmeasure;
 	private String m_sbdextendedcost;
 	private String m_sbdunitcost;
+	private String m_sbdunitsellprice;
+	private String m_sbdextendedsellprice;
 	
 	public SMEstimateLine() 
 	{
@@ -43,6 +45,8 @@ public class SMEstimateLine {
 			+ SMTablesmestimatelines.bdextendedcost
 			+ ", " + SMTablesmestimatelines.bdunitcost
 			+ ", " + SMTablesmestimatelines.bdquantity
+			+ ", " + SMTablesmestimatelines.bdunitsellprice
+			+ ", " + SMTablesmestimatelines.bdextendedsellprice
 			+ ", " + SMTablesmestimatelines.lestimatelid
 			+ ", " + SMTablesmestimatelines.lestimatelinenumber
 			+ ", " + SMTablesmestimatelines.lsummarylid
@@ -54,6 +58,8 @@ public class SMEstimateLine {
 			+ "" + m_sbdextendedcost.trim().replaceAll(",", "")
 			+ ", " + m_sbdunitcost.trim().replaceAll(",", "")
 			+ ", " + m_sbdquantity.trim().replaceAll(",", "")
+			+ ", " + m_sbdunitsellprice.trim().replaceAll(",", "")
+			+ ", " + m_sbdextendedsellprice.trim().replaceAll(",", "")
 			+ ", " + m_slestimateid
 			+ ", " + m_slestimatelinenumber
 			+ ", " + m_slsummaryid
@@ -66,6 +72,8 @@ public class SMEstimateLine {
 			+ " " + SMTablesmestimatelines.bdextendedcost + " = " + m_sbdextendedcost.trim().replaceAll(",", "")
 			+ ", " + SMTablesmestimatelines.bdunitcost + " = " + m_sbdunitcost.trim().replaceAll(",", "")
 			+ ", " + SMTablesmestimatelines.bdquantity + " = " + m_sbdquantity.trim().replaceAll(",", "")
+			+ ", " + SMTablesmestimatelines.bdunitsellprice + " = " + m_sbdunitsellprice.trim().replaceAll(",", "")
+			+ ", " + SMTablesmestimatelines.bdextendedsellprice + " = " + m_sbdextendedsellprice.trim().replaceAll(",", "")
 			+ ", " + SMTablesmestimatelines.lestimatelid + " = " + m_slestimateid
 			+ ", " + SMTablesmestimatelines.lestimatelinenumber + " = " + m_slestimatelinenumber
 			+ ", " + SMTablesmestimatelines.lsummarylid + " = " + m_slsummaryid
@@ -160,6 +168,30 @@ public class SMEstimateLine {
 		}
 		
 		try {
+			m_sbdunitsellprice = clsValidateFormFields.validateBigdecimalField(
+				m_sbdunitsellprice.replace(",", ""), 
+				"Unit sell price", 
+				SMTablesmestimatelines.bdunitsellpriceScale,
+				new BigDecimal("-999999999.99"),
+				new BigDecimal("999999999.99")
+				).replaceAll(",", "");
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
+			m_sbdextendedsellprice = clsValidateFormFields.validateBigdecimalField(
+				m_sbdextendedsellprice.replace(",", ""), 
+				"Extended sell price", 
+				SMTablesmestimatelines.bdextendedsellpriceScale,
+				new BigDecimal("-999999999.99"),
+				new BigDecimal("999999999.99")
+				).replaceAll(",", "");
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
 			m_sitemnumber = clsValidateFormFields.validateStringField(
 				m_sitemnumber, 
 				SMTablesmestimatelines.sitemnumberLength, 
@@ -243,6 +275,10 @@ public class SMEstimateLine {
 						SMTablesmestimatelines.bdextendedcostScale, rs.getBigDecimal(SMTablesmestimatelines.bdextendedcost));
 				m_sbdunitcost = clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						SMTablesmestimatelines.bdunitcostScale, rs.getBigDecimal(SMTablesmestimatelines.bdunitcost));
+				m_sbdunitsellprice = clsManageBigDecimals.BigDecimalToScaledFormattedString(
+						SMTablesmestimatelines.bdunitsellpriceScale, rs.getBigDecimal(SMTablesmestimatelines.bdunitsellprice));
+				m_sbdextendedsellprice = clsManageBigDecimals.BigDecimalToScaledFormattedString(
+						SMTablesmestimatelines.bdextendedsellpriceScale, rs.getBigDecimal(SMTablesmestimatelines.bdextendedsellprice));
 			}else{
 				rs.close();
 				throw new Exception("Error [1589991935] - No estimate line found with lid = " + sLid + ".");
@@ -322,7 +358,21 @@ public class SMEstimateLine {
 	public void setsbdunitcost(String sbdunitcost){
 		m_sbdunitcost = sbdunitcost;
 	}
-
+	
+	public String getsbdunitsellprice(){
+		return m_sbdunitsellprice;
+	}
+	public void setsbdunitsellprice(String sbdunitsellprice){
+		m_sbdunitsellprice = sbdunitsellprice;
+	}
+	
+	public String getsbdextendedsellprice(){
+		return m_sbdextendedsellprice;
+	}
+	public void setsbdextendedsellprice(String sbdextendedsellprice){
+		m_sbdextendedsellprice = sbdextendedsellprice;
+	}
+	
 	public String dumpData(){
 		
 		String s = "";
@@ -335,12 +385,12 @@ public class SMEstimateLine {
 		s += "    U/M:" + getsunitofmeasure() + "\n";
 		s += "    Extended cost:" + getsbdextendedcost() + "\n";
 		s += "    Unit cost:" + getsbdunitcost() + "\n";
-
+		s += "    Unit sell price:" + getsbdunitsellprice() + "\n";
+		s += "    Extended sell price:" + getsbdextendedsellprice() + "\n";
 		return s;
 	}
 	private void initializeVariables(){
 		m_slid  = "-1";
-		
 		m_slsummaryid = "-1";
 		m_slestimateid = "-1";
 		m_slestimatelinenumber = "0";
@@ -350,5 +400,7 @@ public class SMEstimateLine {
 		m_sunitofmeasure = "";
 		m_sbdextendedcost = "0.00";
 		m_sbdunitcost = "0.00";
+		m_sbdunitsellprice = "0.00";
+		m_sbdextendedsellprice = "0.00";
 	}
 }

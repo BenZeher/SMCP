@@ -33,6 +33,11 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
+	public static final String BUTTON_FIND_VENDOR_QUOTE_CAPTION = "Find vendor qu<B><FONT COLOR=RED>o</FONT></B>te";
+	public static final String BUTTON_FIND_VENDOR_QUOTE = "FINDVENDORQUOTE";
+	public static final String FIND_VENDOR_QUOTE_COMMAND_VALUE = "FINDVENDORQUOTECOMMAND";
+	public static final String TOTAL_SELL_PRICE_CAPTION = "TOTAL PUBLISHED SELL PRICE: ";
+	public static final String TOTAL_SELL_PRICE = "TOTALPUBLISHEDSELLPRICE";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_COST = "LABELCALCULATEDTOTALMATERIALCOST";
 	public static final String LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION = "TOTAL MATERIAL COST:";
 	public static final String LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL = "LABELCALCULATEDTOTALTAX";
@@ -397,7 +402,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "    <TD>" + "\n";
 		s += buildSummaryHeaderTable(conn, estimate, sm);
 		
-		s += buildEstimateHeaderTable(conn, estimate, sm);
+		s += buildEstimateHeaderTable(conn, estimate, sm, req);
 		
 		String sBackgroundColor = SMUtilities.getInitBackGroundColor(getServletContext(), sm.getsDBID());
 		s += buildEstimateLinesTable(conn, estimate, sm, sBackgroundColor, req);
@@ -423,7 +428,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 8;
+		int iNumberOfColumns = 10;
 		
 		s += "<BR>";
 		
@@ -473,6 +478,20 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		//Unit sell price:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Unit<BR>sell price"
+			+ "</TD>" + "\n"
+		;
+		
+		//Extended sell price:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Extended<BR>sell price"
+			+ "</TD>" + "\n"
+		;
+		
 		//Unit cost:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
 			+ " style = \" font-weight:bold; font-style:underline; \" >"
@@ -507,7 +526,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.bdquantity + "\""
 			+ " VALUE=\"" + estimate.getsbdquantity() + "\""
 			+ " MAXLENGTH=15"
-			+ " style = \"" + sLabelTheme + " width:" + TOTALS_FIELD_WIDTH_FOR_LABELS  + "text-align:right;" + "\""
+			+ " style = \"" + sLabelTheme + " width:" + "65px; "  + "text-align:right;" + "\""
 			+ " " + sReadOnlyValue
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -541,6 +560,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "</TD>" + "\n"
 			;
 		
+		//Desc
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 			+ ">"
 			+ "<INPUT TYPE=TEXT"
@@ -554,6 +574,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		//U/M
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 			+ ">"
 			+ "<INPUT TYPE=TEXT"
@@ -568,18 +589,29 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		//Blank column for unit sell price:
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 				+ ">"
-				+ "<LABEL"
-				+ " NAME=\"" + LABEL_PRODUCT_UNIT_COST + "\""
-				+ " ID=\"" + LABEL_PRODUCT_UNIT_COST + "\""
-				+ " MAXLENGTH=32"
-				+ " style = \"" + sLabelTheme + " width:" + "70px; " + "text-align:right;" + "\""
-				+ ">"
-				+ "0.00"
-				+ "</LABEL>"
 				+ "</TD>" + "\n"
 			;
+		
+		//Blank column for extended sell price:
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+			+ ">"
+			+ "</TD>" + "\n"
+		;
+
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+			+ ">"
+			+ "<LABEL"
+			+ " NAME = \"" + LABEL_PRODUCT_UNIT_COST + "\""
+			+ " ID = \"" + LABEL_PRODUCT_UNIT_COST + "\""
+			+ " style = \" text-align:right; width:" + "70px; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
+			+ ">"
+			+ "0.00"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		;
 		
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 			+ ">"
@@ -588,7 +620,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.bdextendedcost + "\""
 			+ " VALUE=\"" + estimate.getsbdextendedcost() + "\""
 			+ " MAXLENGTH=32"
-			+ " style = \"" + sLabelTheme + " width:" + "80px; " + "text-align:right;" + "\""
+			+ " style = \"" + sLabelTheme + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + "text-align:right;" + "\""
 			+ " " + sReadOnlyValue
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -720,21 +752,55 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ "</TD>" + "\n"
 				;
 				
+				//Unit sell price:
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
-						+ ">"
-						+ "<INPUT TYPE=TEXT"
-						+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-								Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
-						+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-								Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
-						+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdunitcost() + "\""
-						+ " MAXLENGTH=32"
-						+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
-							+ " width:" + "70px; " + "text-align:right;" + "\""
-						+ " onchange=\"flagDirty();\""
-						+ ">"
-						+ "</TD>" + "\n"
-					;
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
+					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdunitsellprice() + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "70px; " + "text-align:right;" + "\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
+				
+				//Extended sell price:
+				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
+					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdextendedsellprice() + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
+						+ " width:" + "80px; " + "text-align:right;" + "\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
+				
+				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdunitcost() + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "70px; " + "text-align:right;" + "\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
 				
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 					+ ">"
@@ -746,7 +812,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + estimate.getLineArray().get(iEstimateLineCounter).getsbdextendedcost() + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
-						+ " width:" + "80px; " + "text-align:right;" + "\""
+						+ " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + "text-align:right;" + "\""
 					+ " onchange=\"flagDirty();\""
 					+ " readonly "
 					+ ">"
@@ -853,21 +919,55 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ "</TD>" + "\n"
 				;
 				
+				//Unit sell price:
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
-						+ ">"
-						+ "<INPUT TYPE=TEXT"
-						+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-								"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
-						+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-								"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
-						+ " VALUE=\"" + "0.00" + "\""
-						+ " MAXLENGTH=32"
-						+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
-							+ " width:" + "70px; " + "\""
-						+ " onchange=\"flagDirty();\""
-						+ ">"
-						+ "</TD>" + "\n"
-					;
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
+					+ " VALUE=\"" + "0.00" + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "70px; " + "text-align:right;" + "\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
+				
+				//Extended sell price:
+				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
+					+ " VALUE=\"" + "0.00" + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
+						+ " width:" + "80px; " + "text-align:right;" + "\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
+				
+				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+					+ " VALUE=\"" + "0.00" + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "70px; " + "\""
+					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
 				
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 					+ ">"
@@ -879,7 +979,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
-						+ " width:" + "80px; " + "text-align:right;" + "\""
+						+ " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + "text-align:right;" + "\""
 					+ " onchange=\"flagDirty();\""
 					+ " readonly "
 					+ ">"
@@ -891,11 +991,31 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		//Add a row for the commonly displayed items list:
 		s += "  <TR> \n";
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
-				+ " COLSPAN = " + Integer.toString(iNumberOfColumns) + " "
-				+ ">"
-				+ createDisplayCommonlyUsedItemsButton()
-				+ "</TD>" + "\n"
-			;
+			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 4) + " "
+			+ ">"
+			+ createDisplayCommonlyUsedItemsButton()
+			+ "</TD>" + "\n"
+		;
+		
+		//Total established sell price column:
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
+			+ ">"
+			+ "<B>" + TOTAL_SELL_PRICE_CAPTION + "</B>"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
+			+ ">"
+			+ "<LABEL"
+			+ " NAME = \"" + TOTAL_SELL_PRICE + "\""
+			+ " ID = \"" + TOTAL_SELL_PRICE + "\""
+			+ " style = \" text-align:right; width:" + "73px; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
+			+ ">"
+			+ "0.00"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		;
+		
 		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
@@ -905,7 +1025,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	private String buildEstimateHeaderTable(
 		Connection conn, 
 		SMEstimate estimate,
-		SMMasterEditEntry sm
+		SMMasterEditEntry sm,
+		HttpServletRequest req
 		) throws Exception{
 		String s = "";
 		
@@ -998,10 +1119,19 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + FIELD_REPLACE_QUOTE_WITH_NUMBER + "\""
 			+ " ID = \"" + FIELD_REPLACE_QUOTE_WITH_NUMBER + "\""
 			+ " style = \" text-align:left; width:150px;\""
-			+ " VALUE = \"" + "" + "\""
+			+ " VALUE = \"" 
+				+ ServletUtilities.clsManageRequestParameters.get_Request_Parameter(FIELD_REPLACE_QUOTE_WITH_NUMBER, req) 
+			+ "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>" + "\n"
+			+ "&nbsp;" + "\n<button type=\"button\""
+				+ " value=\"" + BUTTON_FIND_VENDOR_QUOTE_CAPTION + "\""
+				+ " name=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
+				+ " id=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
+				+ " onClick=\"findvendorquote();\">"
+				+ BUTTON_FIND_VENDOR_QUOTE_CAPTION
+				+ "</button>\n"
 			+ ", line number:&nbsp;"
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
@@ -1755,6 +1885,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "}\n"
 			;
 			
+			//Find vendor quote:
+			s += "function findvendorquote(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_VENDOR_QUOTE_COMMAND_VALUE + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
 			//Find item for estimate option:
 			s += "function invokeitemfinder(sItemFinderResultField){\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_ITEM_COMMAND + "\";\n"
@@ -2408,6 +2545,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			
 			s += "    shortcut.add(\"Alt+p\",function() {\n";
 			s += "        backintoprice();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+o\",function() {\n";
+			s += "        findvendorquote();\n";
 			s += "    },{\n";
 			s += "        'type':'keydown',\n";
 			s += "        'propagate':false,\n";

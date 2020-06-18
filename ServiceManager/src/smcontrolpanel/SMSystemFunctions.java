@@ -346,6 +346,8 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLDuplicateExternalCompanyBatch = 1251;
 	public static long SMEditSMEstimates = 1252;
 	public static long SMViewCommonlyUsedItemsOnEstimates = 1253;
+	public static long SMEditQuerySelectorPublic = 1254;
+	public static long SMEditQuerySelectorPrivate = 1255;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2825,6 +2827,18 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smcontrolpanel.SMEditSMSummarySelect"); 
 			arrFunctionDescriptions.add("Required for editing Estimates and Estimate Summaries.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
+			
+			arrFunctions.add("SM Update Public Queries"); 
+			arrFunctionIDs.add(SMEditQuerySelectorPublic); 
+			arrFunctionLinks.add("smcontrolpanel.SMQueryGenerate"); 
+			arrFunctionDescriptions.add("Update a public query with the replaced query that was ran.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
+			
+			arrFunctions.add("SM Update Private Queries"); 
+			arrFunctionIDs.add(SMEditQuerySelectorPrivate); 
+			arrFunctionLinks.add("smcontrolpanel.SMQueryGenerate"); 
+			arrFunctionDescriptions.add("Update a private query with the replaced query that was ran.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 			
 	}
 

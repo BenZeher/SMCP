@@ -105,7 +105,6 @@ public class SMEditSMEstimateAction extends HttpServlet{
 				return;
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633391]");
-			//System.out.println("[202006102617] - estimate dump = \n" + estimate.dumpData());
 			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
 	    	smaction.redirectAction(
 		    		"", 
@@ -136,7 +135,6 @@ public class SMEditSMEstimateAction extends HttpServlet{
 				return;
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633331]");
-			//System.out.println("[202006102617] - estimate dump = \n" + estimate.dumpData());
 			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
 	    	smaction.redirectAction(
 		    		"", 

@@ -3,7 +3,6 @@ package smcontrolpanel;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -181,6 +180,12 @@ public class SMEstimate {
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
         				newline.setsbdquantity(sParamValue.replace(",", "").trim());
         			}
+        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitsellprice) == 0){
+        				newline.setsbdunitsellprice(sParamValue.replace(",", "").trim());
+        			}
+        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedsellprice) == 0){
+        				newline.setsbdextendedsellprice(sParamValue.replace(",", "").trim());
+        			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelid) == 0){
         				newline.setslestimateid(sParamValue.trim());
         			}
@@ -213,6 +218,12 @@ public class SMEstimate {
         			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsbdquantity(sParamValue.replace(",", "").trim());
+        			}
+        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitsellprice) == 0){
+        				arrEstimateLines.get(iLineNumber - 1).setsbdunitsellprice(sParamValue.replace(",", "").trim());
+        			}
+        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedsellprice) == 0){
+        				arrEstimateLines.get(iLineNumber - 1).setsbdextendedsellprice(sParamValue.replace(",", "").trim());
         			}
            			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelid) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setslestimateid(sParamValue.trim());
@@ -849,6 +860,16 @@ public class SMEstimate {
 			bdExtendedCost = bdQuantity.multiply(bdUnitCost).setScale(SMTablesmestimatelines.bdextendedcostScale, BigDecimal.ROUND_HALF_UP);
 			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedCost));
 			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdUnitCost));
+			
+			//We'll need to read the established sell price for this item, if it's a real inventory item:
+			try {
+				loadSummary(conn);
+			} catch (Exception e) {
+				throw new Exception("Error [202006183021] - could not load summary to get price list and level - " + e.getMessage());
+			}
+			arrEstimateLines.get(iLineNumber - 1).setsbdunitsellprice(
+				clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(item.getItemPrice(
+					m_estimatesummary.getspricelistcode(), m_estimatesummary.getsipricelevel(), conn)));
 		}
 		
 		//In case the user was changing one of the existing lines, don't let any 'zero quantity' lines stay in the array at this point:
@@ -1058,6 +1079,16 @@ public class SMEstimate {
 			bdExtendedCost = bdQuantity.multiply(bdUnitCost).setScale(SMTablesmestimatelines.bdextendedcostScale, BigDecimal.ROUND_HALF_UP);
 			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedCost));
 			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdUnitCost));
+			
+			//We'll need to read the established sell price for this item, if it's a real inventory item:
+			try {
+				loadSummary(conn);
+			} catch (Exception e) {
+				throw new Exception("Error [202006183121] - could not load summary to get price list and level - " + e.getMessage());
+			}
+			arrEstimateLines.get(iLineNumber - 1).setsbdunitsellprice(
+				clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(item.getItemPrice(
+					m_estimatesummary.getspricelistcode(), m_estimatesummary.getsipricelevel(), conn)));
 		}
 		
 		//Remove any duplicate zero lines, but this shouldn't happen....

@@ -1511,6 +1511,57 @@ public class ICItem extends Object{
 
 		return true;
 	}
+	public BigDecimal getItemPrice(String sPriceList, String sPriceLevel, Connection conn) throws Exception{
+		
+		BigDecimal bdItemPrice = new BigDecimal("0.00");
+		
+		String SQL = "SELECT"
+			+ " " + SMTableicitemprices.bdBasePrice
+			+ ", " + SMTableicitemprices.bdLevel1Price
+			+ ", " + SMTableicitemprices.bdLevel2Price
+			+ ", " + SMTableicitemprices.bdLevel3Price
+			+ ", " + SMTableicitemprices.bdLevel4Price
+			+ ", " + SMTableicitemprices.bdLevel5Price
+			+ " FROM " + SMTableicitemprices.TableName
+			+ " WHERE ("
+				+ "(" + SMTableicitemprices.sItemNumber + " = '" + m_sItemNumber + "')"
+				+ " AND (" + SMTableicitemprices.sPriceListCode + " = '" + sPriceList + "')"
+			+ ")"
+		;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rs.next()) {
+				int iPriceLevel;
+				try {
+					iPriceLevel = Integer.parseInt(sPriceLevel);
+				} catch (Exception e) {
+					throw new Exception("Error [202006183312] - could not parse price level '" + sPriceLevel + "' - " + e.getMessage());
+				}
+				switch(iPriceLevel) {
+				case 0:
+					bdItemPrice = rs.getBigDecimal(SMTableicitemprices.bdBasePrice);
+				case 1:
+					bdItemPrice = rs.getBigDecimal(SMTableicitemprices.bdLevel1Price);
+				case 2:
+					bdItemPrice = rs.getBigDecimal(SMTableicitemprices.bdLevel2Price);
+				case 3:
+					bdItemPrice = rs.getBigDecimal(SMTableicitemprices.bdLevel3Price);
+				case 4:
+					bdItemPrice = rs.getBigDecimal(SMTableicitemprices.bdLevel4Price);
+				case 5:
+					bdItemPrice = rs.getBigDecimal(SMTableicitemprices.bdLevel5Price);
+				default:
+					bdItemPrice = rs.getBigDecimal(SMTableicitemprices.bdBasePrice);
+				}
+			}
+			rs.close();
+		} catch (Exception e) {
+			throw new Exception("Error [202006182506] - could not get price for item '" + m_sItemNumber 
+				+ "', for price list '" + sPriceList + "' - " + e.getMessage());
+		}
+		
+		return bdItemPrice;
+	}
 	public String getNextDedicatedItemNumberForOrder(Connection conn, String sTrimmedOrderNumber) throws Exception{
 		
 		int iItemCounter = 1; 

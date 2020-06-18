@@ -34,6 +34,7 @@ public class SMQueryGenerate extends HttpServlet {
 	public static final String SAVE_AS_PUBLIC_BUTTON_LABEL = "Save new public query";
 	public static final String UPDATE_EXISTING_QUERY_BUTTON = "UpdateExistingQuery";
 	public static final String UPDATE_EXISTING_QUERY_BUTTON_LABEL = "Update existing query";
+	public static final String FORM_NAME = "MAINFORM";
 	
 	//formats
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
@@ -137,7 +138,7 @@ public class SMQueryGenerate extends HttpServlet {
 	    
 	    //Build a form to save the query here:
 	    if (!bExportAsCommaDelimited && !bExportAsHTML && !bHideHeaderFooter){
-			out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+			out.println ("<FORM ID=\"" + FORM_NAME + "\" ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 					+ sQuerySaveClass + "\" METHOD='POST'>");
 			    
 			//Store hidden variables:
@@ -244,14 +245,17 @@ public class SMQueryGenerate extends HttpServlet {
 							+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
 					);			
 					if(sQueryID.compareToIgnoreCase("") != 0) {
-						out.println("<INPUT TYPE=SUBMIT NAME='" + UPDATE_EXISTING_QUERY_BUTTON 
-								+ "' VALUE='" + UPDATE_EXISTING_QUERY_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
+						out.println("<INPUT TYPE=Button NAME='" + UPDATE_EXISTING_QUERY_BUTTON 
+								+ "' ID='" + UPDATE_EXISTING_QUERY_BUTTON + "' VALUE='" + UPDATE_EXISTING_QUERY_BUTTON_LABEL + "' STYLE='height: 0.24in' "
+										+ "onclick=confirmUpdateQuery()>"
 						);
 					}
 					
 				}
 		    }
 			out.println("</FORM>");
+	    	out.println(getJavascript(sQueryTitle,sQueryID));
+
 			
 		    out.println("<TABLE BORDER=0 WIDTH=100%>\n"
 			   + "  <TR>\n"
@@ -559,6 +563,19 @@ public class SMQueryGenerate extends HttpServlet {
 		}
 		return sCriteria;
 	}
+
+	private String getJavascript(String sQueryTitle, String sQueryID) {
+		String s = "<script type='text/javascript'>\n";
+		s+= "function confirmUpdateQuery(){\n"
+				+ "    if (confirm(\"Are you sure you want to Overwrite the current Query: " + sQueryID +" " +sQueryTitle +"?\")){\n"
+				+ "        document.getElementById(\"" + UPDATE_EXISTING_QUERY_BUTTON + "\").value = \"" + UPDATE_EXISTING_QUERY_BUTTON_LABEL + "\";\n"
+				+ "        document.forms[\"" + SMQueryGenerate.FORM_NAME + "\"].submit();\n"
+				+ "    }\n"
+				+ "}\n";
+		s+="</script>";
+		return s;
+	}
+	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

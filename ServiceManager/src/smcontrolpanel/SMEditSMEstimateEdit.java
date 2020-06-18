@@ -988,11 +988,16 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		}
 		
 		//Add a row for the commonly displayed items list:
+		String sDisplayCommonlyUsedButton = createDisplayCommonlyUsedItemsButton();
+		if (!SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMViewCommonlyUsedItemsOnEstimates, sm.getUserID(), conn, sm.getLicenseModuleLevel())) {
+			sDisplayCommonlyUsedButton = "";
+		}
 		s += "  <TR> \n";
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 4) + " "
 			+ ">"
-			+ createDisplayCommonlyUsedItemsButton()
+			+ sDisplayCommonlyUsedButton
 			+ "</TD>" + "\n"
 		;
 		
@@ -1764,6 +1769,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	
 	private String createDisplayCommonlyUsedItemsButton() {
 		String s = "";
+		
 		s += "<button type=\"button\""
 			+ " value=\"" + DISPLAY_COMMONLY_USED_ITEMS_BUTTON_CAPTION + "\""
 			+ " name=\"" + DISPLAY_COMMONLY_USED_ITEMS_BUTTON + "\""

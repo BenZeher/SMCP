@@ -2840,6 +2840,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("Update a private query with the replaced query that was ran.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 			
+			arrFunctions.add("SM View Commonly Used Items On Estimates"); 
+			arrFunctionIDs.add(SMViewCommonlyUsedItemsOnEstimates); 
+			arrFunctionLinks.add(""); 
+			arrFunctionDescriptions.add("Allow or suppress the user's ability to display the commonly used items on estimates.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
+			
 	}
 
 	public String getSecurityFunction(int iIndex){

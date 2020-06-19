@@ -1891,6 +1891,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SMListCommonEstimateItems</servlet-name>
+        <servlet-class>smcontrolpanel.SMListCommonEstimateItems</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SMListNearbyOrdersGenerate</servlet-name>
         <servlet-class>smcontrolpanel.SMListNearbyOrdersGenerate</servlet-class>
     </servlet>
@@ -5241,6 +5246,11 @@
     <servlet-mapping>
         <servlet-name>SMListBidDocuments</servlet-name>
         <url-pattern>/smcontrolpanel.SMListBidDocuments</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SMListCommonEstimateItems</servlet-name>
+        <url-pattern>/smcontrolpanel.SMListCommonEstimateItems</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

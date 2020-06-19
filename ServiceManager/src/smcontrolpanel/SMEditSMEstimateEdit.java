@@ -994,20 +994,21 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			sDisplayCommonlyUsedButton = "";
 		}
 		s += "  <TR> \n";
+		
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
-			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 4) + " "
+			+ " COLSPAN = 3"
 			+ ">"
 			+ sDisplayCommonlyUsedButton
 			+ "</TD>" + "\n"
 		;
 		
 		//Total established sell price column:
-		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+			+ " COLSPAN = 4"
 			+ ">"
 			+ "<B>" + TOTAL_SELL_PRICE_CAPTION + "</B>"
 			+ "</TD>" + "\n"
 		;
-		
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<LABEL"
@@ -1019,7 +1020,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</LABEL>"
 			+ "</TD>" + "\n"
 		;
-		
 		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>" + "\n";
@@ -2098,7 +2098,6 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "                totalextendedsellprice = totalextendedsellprice + lineextendedsellprice; \n"
 				+ "                document.getElementById(\"\" + lineextendedsellpricefieldname + \"\").value = formatNumber(lineextendedsellprice); \n"
 				+ "                document.getElementById(\"" + TOTAL_SELL_PRICE + "\").innerText = formatNumber(totalextendedsellprice); \n"
-				
 				+ "            } \n"
 				+ "        } \n"
 				

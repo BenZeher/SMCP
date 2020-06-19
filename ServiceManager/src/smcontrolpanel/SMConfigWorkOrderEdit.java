@@ -18,6 +18,7 @@ import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablemechanics;
@@ -625,7 +626,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 		
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ SMWorkOrderHeader.ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >";
 			
@@ -718,7 +719,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:ItemsTable; background-color: "
-				+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >\n";
 
 		//Headings:
 		s += "<TR>";
@@ -917,7 +918,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 			SMOrderDetail orddetail = order.getOrderDetailByDetailNumber(wodetail.getsorderdetailnumber());
 			if (orddetail != null){
 				if (orddetail.getM_mTicketComments().compareToIgnoreCase("") != 0){
-					s += "<TR style = \" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_WORK_ORDER_DETAIL_COMMENT_BG_COLOR + "; \" >"
+					s += "<TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_YELLOW + "; \" >"
 						+ "<TD COLSPAN=" + Integer.toString(iColumnCount) + ">"
 						+ "<span style= \" font-size:small ; \"><I><B>Work order detail comment:&nbsp;</B>"
 						+ order.getOrderDetailByDetailNumber(wodetail.getsorderdetailnumber()).getM_mTicketComments() + "</I>"
@@ -950,7 +951,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 					String sWorkOrderItemComment = rs.getString(SMTableicitems.sworkordercomment);
 					if (sWorkOrderItemComment.compareToIgnoreCase("") !=0){
 						//Create another line with the work order comment information:
-						s += "<TR style = \" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_WORK_ORDER_ITEM_COMMENT_BG_COLOR + "; \" >"
+						s += "<TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_PEACH + "; \" >"
 							+ "<TD COLSPAN=" + Integer.toString(iColumnCount) + ">"
 							+ "<span style= \" font-size:small ; \"><I><B>Item comment:&nbsp;</B>"
 							+ sWorkOrderItemComment + "</I>"
@@ -1258,7 +1259,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 		
 		s += "<TR><TD>";
 		s += "<TABLE class = \" innermost \" style=\" title:InstructionsTable; background-color: "
-			+ SMWorkOrderHeader.INSTRUCTIONS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";
 		
 		s += "<TR><TD><U><B>Instructions:</B></U>&nbsp;";
 		if (wo.isWorkOrderPosted()){
@@ -1305,7 +1306,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 
 		s += "<TR>\n<TD>\n";
 		s += "<TABLE class = \" innermost \" style=\" title:ScheduleFieldsTable; background-color: "
-			+ SMWorkOrderHeader.SCHEDULEFIELDS_TABLE_BG_COLOR + "; \" width=100% >\n\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n\n";
 
 		s += "<TR>\n<TD>";
 

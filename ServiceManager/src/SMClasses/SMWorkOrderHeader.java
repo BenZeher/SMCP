@@ -13,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablemechanics;
@@ -37,20 +38,6 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
 public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
-	public static final String DETAIL_SHEET_TABLE_BG_COLOR = "#CCFFB2";
-	public static final String INSTRUCTIONS_TABLE_BG_COLOR = "#CCFFB2";
-	public static final String MANAGERNOTES_TABLE_BG_COLOR = "#CCFFB2";
-	public static final String SCHEDULEFIELDS_TABLE_BG_COLOR = "#CCFFB2";
-	public static final String ITEMS_TABLE_BG_COLOR = "#FFBCA2";
-	public static final String ITEMS_TABLE_ODD_ROW_COLOR = "#FFC7B3";
-	public static final String ITEMS_TABLE_WORK_ORDER_ITEM_COMMENT_BG_COLOR = "#FF8484";
-	public static final String ITEMS_TABLE_WORK_ORDER_DETAIL_COMMENT_BG_COLOR = "#FFFF66";
-	public static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF";
-	public static final String TERMS_TABLE_BG_COLOR = "#CCFFB2";
-	public static final String WORKPERFORMED_TABLE_BG_COLOR = "#99CCFF";
-	public static final String SIGNATUREBLOCK_TABLE_BG_COLOR = "#FFBCA2";
-	public static final String COMMENTS_TABLE_BG_COLOR = "#F2C3FA";
-	public static final String JOBTIMES_TABLE_BG_COLOR = "#F2C3FA";
 	public static final String ITEM_QTY_FIELD_WIDTH = "8";
 	public static final String FORM_NAME = "MAINFORM";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
@@ -3474,7 +3461,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:DetailSheetsTable; background-color: "
-				+ DETAIL_SHEET_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";
 
 		//Drop down list:
 		s += "<TR><TD>";

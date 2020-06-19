@@ -19,6 +19,7 @@ import SMClasses.SMDeliveryTicket;
 import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTabledeliverytickets;
 import SMDataDefinition.SMTabledeliveryticketterms;
 import SMDataDefinition.SMTableicitems;
@@ -354,7 +355,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ SMWorkOrderHeader.ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 
 		s += "<TR>\n<TD style = \"text-align: left; \" >";
 

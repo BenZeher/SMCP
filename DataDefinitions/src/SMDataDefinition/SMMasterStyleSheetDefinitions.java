@@ -89,4 +89,16 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String LABEL_COLOR_THEME_YELLOW = "background-color: #f4f73b; border-style: inset; display:inline-block;";
 	public static final String LABEL_COLOR_THEME_BLUE = "background-color: #99ebff; border-style: inset; display:inline-block;" ;
 	
+	//General Colors
+	public static final String BACKGROUND_LIGHT_GREEN = "#CCFFB2";
+	public static final String BACKGROUND_LIGHT_PEACH = "#FFBCA2";
+	public static final String BACKGROUND_LIGHT_PEACH_ALT = "#FFC7B3";
+	public static final String BACKGROUND_PEACH = "#FF8484";
+	public static final String BACKGROUND_YELLOW = "#FFFF66";
+	public static final String BACKGROUND_BLUE = "#99CCFF";
+	public static final String BACKGROUND_LIGHT_PINK = "#F2C3FA";
+	
+	
+	
+	
 }

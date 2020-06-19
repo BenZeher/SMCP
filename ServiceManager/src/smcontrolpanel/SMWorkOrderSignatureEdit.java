@@ -18,6 +18,7 @@ import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTablesmoptions;
@@ -300,7 +301,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		int iColSpan = 5;
 
 		s += "<TABLE class = \" innermost \" style=\" title:MechanicInfoTable; background-color: "
-				+ SMWorkOrderHeader.COMMENTS_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "; \" width=100% >\n";
 
 		//Work order comments:
 		s += "<TR>";
@@ -334,7 +335,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-				+ SMWorkOrderHeader.ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >";
 
@@ -422,7 +423,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:ItemsTable; background-color: "
-				+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >\n";
 
 		s += createItemsTableForWorkOrderSigning(sm, workorder,bViewPrices);
 
@@ -791,7 +792,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:WorkPerformedTable; background-color: "
-				+ SMWorkOrderHeader.WORKPERFORMED_TABLE_BG_COLOR + "; \" >\n";	
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" >\n";	
 		s += "<TR><TD><U><B>Work performed codes:</B></U></TD></TR>";
 
 		//If this is read only, just load all the WPC's from the work order:
@@ -826,7 +827,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:TermsTable; background-color: "
-				+ SMWorkOrderHeader.TERMS_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";
 
 		s += "<TR><TD><U><B>Terms And Conditions Of Agreement</B></U></TD></TR>";
 		s += "<TD class=\"readonlyleftfield\" >";
@@ -864,7 +865,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:SignatureBlockTable; background-color: "
-				+ SMWorkOrderHeader.SIGNATUREBLOCK_TABLE_BG_COLOR + "; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >\n";
 
 		s += "<TR>";
 		s += "<TD><U><B>Additional work required:</B></U></TD>";

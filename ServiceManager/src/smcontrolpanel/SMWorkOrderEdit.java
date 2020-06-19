@@ -23,6 +23,7 @@ import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTabledeliverytickets;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelocations;
@@ -562,7 +563,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ SMWorkOrderHeader.ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >";
 
@@ -845,7 +846,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		String s = "";
 		
 		s += "<TABLE class = \" innermost \" style=\" title:ItemsTable; background-color: "
-				+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; width=100%; border-collapse:collapse;\">\n";  
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; width=100%; border-collapse:collapse;\">\n";  
 
 		//IF we need to show prices, we are going to load the order into a new object, to be used ONLY for calculating prices and totals:
 		SMOrderHeader dummyorder = new SMOrderHeader();
@@ -870,7 +871,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		
 		if (bShowPrices && !workorder.isWorkOrderPosted()){
 			s += "<TABLE class = \" innermost \" style=\" title:ItemTotalsTable; background-color: "
-					+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \" >\n";
+					+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >\n";
 			//Show the totals table here:
 			BigDecimal bdShippedValue = new BigDecimal("0.00");
 			BigDecimal bdTotalExtendedMaterialPrice = new BigDecimal("0.00");
@@ -1051,7 +1052,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		}else if(bShowPrices){
 
 			s += "<TABLE class = \" innermost \" style=\" title:ItemTotalsTable; background-color: "
-					+ SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \" >\n";
+					+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >\n";
 			s +="<TR>"
 					+ "<TD COLSPAN=100%><HR></TD>"
 					+ "</TR>";
@@ -1549,7 +1550,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		) throws Exception{
 		String s = "";
 		if(iLineNumber % 2 == 0){
-		s += "<TR bgcolor=" + SMWorkOrderHeader.ITEMS_TABLE_ODD_ROW_COLOR + ">";
+		s += "<TR bgcolor=" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH_ALT + ">";
 		}else{
 		s += "<TR>";
 		}
@@ -1955,7 +1956,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		SMOrderDetail orddetail = order.getOrderDetailByDetailNumber(wodetail.getsorderdetailnumber());
 		if (orddetail != null){
 			if (orddetail.getM_mTicketComments().compareToIgnoreCase("") != 0){
-				s += "<TR style = \" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_WORK_ORDER_DETAIL_COMMENT_BG_COLOR + "; \" >"
+				s += "<TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_YELLOW+ "; \" >"
 					+ "<TD COLSPAN=" + Integer.toString(iColumnCount) + ">"
 					+ "<span style= \" font-size:small ; \"><I><B>Work order detail comment:&nbsp;</B>"
 					+ order.getOrderDetailByDetailNumber(wodetail.getsorderdetailnumber()).getM_mTicketComments() + "</I>"
@@ -1988,7 +1989,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				String sWorkOrderItemComment = rs.getString(SMTableicitems.sworkordercomment);
 				if (sWorkOrderItemComment.compareToIgnoreCase("") !=0){
 					//Create another line with the work order comment information:
-					s += "<TR style = \" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_WORK_ORDER_ITEM_COMMENT_BG_COLOR + "; \" >"
+					s += "<TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_PEACH + "; \" >"
 						+ "<TD COLSPAN=" + Integer.toString(iColumnCount) + ">"
 						+ "<span style= \" font-size:small ; \"><I><B>Item comment:&nbsp;</B>"
 						+ sWorkOrderItemComment + "</I>"
@@ -2286,7 +2287,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			SMOrderDetail orddetail = order.getOrderDetailByDetailNumber(wodetail.getsorderdetailnumber());
 			if (orddetail != null){
 				if (orddetail.getM_mTicketComments().compareToIgnoreCase("") != 0){
-					s += "<TR style = \" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_WORK_ORDER_DETAIL_COMMENT_BG_COLOR + "; \" >"
+					s += "<TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_YELLOW + "; \" >"
 						+ "<TD COLSPAN=" + Integer.toString(iColumnCount) + ">"
 						+ "<span style= \" font-size:small ; \"><I><B>Work order detail comment:&nbsp;</B>"
 						+ order.getOrderDetailByDetailNumber(wodetail.getsorderdetailnumber()).getM_mTicketComments() + "</I>"
@@ -2319,7 +2320,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					String sWorkOrderItemComment = rs.getString(SMTableicitems.sworkordercomment);
 					if (sWorkOrderItemComment.compareToIgnoreCase("") !=0){
 						//Create another line with the work order comment information:
-						s += "<TR style = \" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_WORK_ORDER_ITEM_COMMENT_BG_COLOR + "; \" >"
+						s += "<TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_PEACH + "; \" >"
 							+ "<TD COLSPAN=" + Integer.toString(iColumnCount) + ">"
 							+ "<span style= \" font-size:small ; \"><I><B>Item comment:&nbsp;</B>"
 							+ sWorkOrderItemComment + "</I>"
@@ -2618,7 +2619,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		int iNumberOfWPCCodes = 0;
 		
 		s += "<TABLE class = \" innermost \" style=\" title:WorkPerformedTable; background-color: "
-				+ SMWorkOrderHeader.WORKPERFORMED_TABLE_BG_COLOR + "; width=100%; \" >\n";	
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; width=100%; \" >\n";	
 		s += "<TR><TD><U><B>Work performed codes:</B></U></TD></TR>";
 		
 		//If this is editable:
@@ -2773,7 +2774,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		int iColSpan = 5;
 
 		s += "<TABLE class = \" innermost \" style=\" title:MechanicInfoTable; background-color: "
-				+ SMWorkOrderHeader.COMMENTS_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "; \" width=100% >\n";
 
 		//Work order comments:
 		s += "<TR>";
@@ -2888,7 +2889,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		s += "<TR><TD>";
 		s += "<TABLE class = \" innermost \" style=\" title:InstructionsTable; background-color: "
-			+ SMWorkOrderHeader.INSTRUCTIONS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";
 		
 		//Ticket notes:
 		s += "<TR><TD><U><B>Work order notes:&nbsp;</B></U>";
@@ -2950,7 +2951,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:SignatureBlockTable; background-color: "
-				+ SMWorkOrderHeader.SIGNATUREBLOCK_TABLE_BG_COLOR + "; width=100%; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; width=100%; \" >\n";
 		
 		//If the work order is posted:
 		if (m_bDisplaySigantureBox){
@@ -4256,7 +4257,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		String s = "";
 		
 		s += "<TABLE class = \" innermost \" style=\" title:JobEntryTimesTable; background-color: "
-			+ SMWorkOrderHeader.JOBTIMES_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "; \" width=100% >\n";
 		s += "<TR>";
 		//Record the four permissions for editing time:
 		boolean bAllowEditingLeftPreviousSiteTime = SMSystemFunctions.isFunctionPermitted(

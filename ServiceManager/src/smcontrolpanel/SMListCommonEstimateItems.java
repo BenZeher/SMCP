@@ -2,28 +2,23 @@ package smcontrolpanel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
+import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import SMClasses.FinderResults;
-import SMClasses.OHDirectFinderResults;
-import SMClasses.SMFinderFunctions;
-import SMDataDefinition.SMOHDirectFieldDefinitions;
-import SMDataDefinition.SMTablesmestimates;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageRequestParameters;
-import smcontrolpanel.SMMasterEditAction;
-import smcontrolpanel.SMSystemFunctions;
 
 public class SMListCommonEstimateItems extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
+	private static final int COMMON_ITEMS_LIMIT = 50;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -35,7 +30,7 @@ public class SMListCommonEstimateItems extends HttpServlet{
 				getServletContext(),
 				SMEstimate.OBJECT_NAME,
 				SMUtilities.getFullClassName(this.toString()),
-				"smcontrolpanel.SMEditSMEstimateEdit",
+				"smcontrolpanel.SMListCommonEstimateItemsAction",
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
 				SMSystemFunctions.SMEditSMEstimates
@@ -47,25 +42,6 @@ public class SMListCommonEstimateItems extends HttpServlet{
 		}
 		
 		SMEstimate estimate = new SMEstimate(request);
-		
-		Connection conn = null;
-		try {
-			conn = clsDatabaseFunctions.getConnectionWithException(
-				getServletContext(), 
-				smedit.getsDBID(), 
-				"MySQL", 
-				this.toString() + ".doPost - user: " + smedit.getFullUserName()
-			);
-		} catch (Exception e2) {
-			smedit.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
-			smedit.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e2.getMessage());
-			smedit.redirectAction(
-		    		"", 
-		    		"", 
-		    		SMTablesmestimates.lid + "=" + estimate.getslid()
-		    		);
-			return;
-		}
 		
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
@@ -84,12 +60,10 @@ public class SMListCommonEstimateItems extends HttpServlet{
 				estimate
 			);
 		} catch (Exception e) {
-    		String sError = "Could not create edit page - " + e.getMessage();
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
 				+ "?" + SMTablesmestimatesummaries.lid + "=" + estimate.getslsummarylid()
 				+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
-				+ "&Warning=Could not load estimate ID: " + estimate.getslid() + " - " + SMUtilities.URLEncode(sError)
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
 			);
 				return;
@@ -114,7 +88,7 @@ public class SMListCommonEstimateItems extends HttpServlet{
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sm.getsDBID() + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" 
 				+ SMUtilities.getFullClassName(this.toString()) + "\">");
-				
+
 		//Create HTML Fields
 		try {
 			pwOut.println(sEditHTML);
@@ -128,24 +102,44 @@ public class SMListCommonEstimateItems extends HttpServlet{
 	private String getEditHTML(SMMasterEditEntry sm, SMEstimate estimate, HttpServletRequest req) throws Exception{
 		String s = "";
 		
-		return s;
-	}
-	private String buildItemList(SMEstimate estimate, Connection conn) throws Exception{
-		String s = "";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		
+		//Make sure we load the summary first:
+		try {
+			estimate.loadSummary(getServletContext(), sm.getsDBID(), sm.getUserID());
+		} catch (Exception e) {
+			throw new Exception("Error [202006193335] - could not load summary to get commonly used items - " + e.getMessage());
+		}
+		
+		//Get the list of commonly used items:
+		String SQL = "SELECT"
+			+ " " + SMTablesmestimatelines.sitemnumber
+			+ ", COUNT(" + SMTablesmestimatelines.sitemnumber + ")"
+			+ " FROM " + SMTablesmestimatelines.TableName
+			+ " LEFT JOIN " + SMTablesmestimatesummaries.TableName
+			+ " ON " + SMTablesmestimatelines.TableName + "." + SMTablesmestimatelines.lsummarylid + " = "
+				+ SMTablesmestimatesummaries.TableName + "." + SMTablesmestimatesummaries.lid
+			+ " WHERE ("
+				+ "(" + SMTablesmestimatesummaries.TableName + "." + SMTablesmestimatesummaries.iordertype + " = " + estimate.getsummary().getsiordertype() + ")"
+			+ ")"
+			+ " GROUP BY " + SMTablesmestimatelines.TableName + "." + SMTablesmestimatelines.sitemnumber
+			+ " ORDER BY COUNT(" + SMTablesmestimatelines.TableName + "." + SMTablesmestimatelines.sitemnumber + ") DESC"
+			+ " LIMIT " + COMMON_ITEMS_LIMIT
+		;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString()));
+			while (rs.next()) {
+				//Build rows here:
+			}
+			rs.close();
+		} catch (Exception e) {
+			throw new Exception("Error [202006193605] - error reading most commonly used items with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		s += "</TABLE>" + "\n";
 		return s;
 	}
-	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{
-		try {
-			res.sendRedirect(sRedirectString);
-		} catch (IOException e1) {
-			throw new Exception("Error [1395236124] in " + this.toString() + ".redirectAction - IOException error redirecting with string: "
-					+ sRedirectString + " - " + e1.getMessage());
-		} catch (IllegalStateException e1) {
-			throw new Exception("Error [1395236125] in " + this.toString() + ".redirectAction - IllegalStateException error redirecting with string: "
-					+ sRedirectString + " - " + e1.getMessage());
-		}
-	}
+
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

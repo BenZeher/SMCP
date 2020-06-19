@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablesmestimatelines;
+import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
 
@@ -41,7 +42,8 @@ public class SMListCommonEstimateItems extends HttpServlet{
 			return;
 		}
 		
-		SMEstimate estimate = new SMEstimate(request);
+		SMEstimate estimate = (SMEstimate)smedit.getCurrentSession().getAttribute(SMEstimate.OBJECT_NAME);
+		//System.out.println("[202006194016] - dumpData = " + estimate.dumpData());
 		
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
@@ -61,8 +63,8 @@ public class SMListCommonEstimateItems extends HttpServlet{
 			);
 		} catch (Exception e) {
 			response.sendRedirect(
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-				+ "?" + SMTablesmestimatesummaries.lid + "=" + estimate.getslsummarylid()
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSMEstimateEdit"
+				+ "?" + SMTablesmestimates.lid + "=" + estimate.getslid()
 				+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
 			);
@@ -108,12 +110,14 @@ public class SMListCommonEstimateItems extends HttpServlet{
 		try {
 			estimate.loadSummary(getServletContext(), sm.getsDBID(), sm.getUserID());
 		} catch (Exception e) {
-			throw new Exception("Error [202006193335] - could not load summary to get commonly used items - " + e.getMessage());
+			throw new Exception("Error [202006193335] - could not load summary for estimate number " + estimate.getslid() + " to get commonly used items - " + e.getMessage());
 		}
 		
 		//Get the list of commonly used items:
 		String SQL = "SELECT"
-			+ " " + SMTablesmestimatelines.sitemnumber
+			+ " " + SMTablesmestimatelines.TableName + "." + SMTablesmestimatelines.sitemnumber
+			+ ", " + SMTablesmestimatelines.TableName + "." + SMTablesmestimatelines.slinedescription
+			+ ", " + SMTablesmestimatelines.TableName + "." + SMTablesmestimatelines.sunitofmeasure
 			+ ", COUNT(" + SMTablesmestimatelines.sitemnumber + ")"
 			+ " FROM " + SMTablesmestimatelines.TableName
 			+ " LEFT JOIN " + SMTablesmestimatesummaries.TableName
@@ -130,6 +134,31 @@ public class SMListCommonEstimateItems extends HttpServlet{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sm.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString()));
 			while (rs.next()) {
 				//Build rows here:
+				s += "  <TR> \n";
+				
+				s += "<TD>"
+					+ "<INPUT TYPE = TEXT"
+					+ " NAME = \"" + "" + "\""
+					+ " ID = \"" + "" + "\""
+					+ "</TD> \n"
+				;
+				
+				s += "<TD>"
+					+ rs.getString(SMTablesmestimatelines.sitemnumber)
+					+ "</TD> \n"
+				;
+				
+				s += "<TD>"
+						+ rs.getString(SMTablesmestimatelines.slinedescription)
+						+ "</TD> \n"
+					;
+				
+				s += "<TD>"
+						+ rs.getString(SMTablesmestimatelines.sunitofmeasure)
+						+ "</TD> \n"
+					;
+				
+				s += "  </TR> \n";
 			}
 			rs.close();
 		} catch (Exception e) {

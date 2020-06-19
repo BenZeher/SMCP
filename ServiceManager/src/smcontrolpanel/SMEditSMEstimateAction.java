@@ -294,6 +294,29 @@ public class SMEditSMEstimateAction extends HttpServlet{
 			return;
 		}
 		
+		//If display common items:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMEstimateEdit.DISPLAY_COMMONLY_USED_ITEMS_COMMAND) == 0){
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773259]");
+			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
+    		String sRedirectString = 
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMListCommonEstimateItems"
+    		;
+	    				
+			try {
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimates.lid + "=" + estimate.getslid()
+			    		);
+				return;
+			}
+			return;
+		}
+		
 		return;
 	}
 	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{

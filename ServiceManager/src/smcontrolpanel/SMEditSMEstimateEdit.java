@@ -1868,15 +1868,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			//Display commonly used items:
 			//Replace vendor quote:
 			s += "function displaycommonlyuseditems(){\n"
-					+ "    alert('DISPLAY COMMONLY USED ITEMS is not working yet.  Have a little fuckin patience.'); \n"
-					//+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DISPLAYCOMMONLYUSEDITEMS + "\";\n"
-					//+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DISPLAY_COMMONLY_USED_ITEMS_COMMAND + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
 			//Replace vendor quote:
 			s += "function replacevendorquote(){\n"
-					//+ "    alert('REPLACE VENDOR QUOTE is not working yet.  Have a little fuckin patience.'); \n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REPLACE_VENDOR_QUOTE_COMMAND + "\";\n"
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"

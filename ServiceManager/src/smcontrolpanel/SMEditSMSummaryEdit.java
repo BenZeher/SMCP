@@ -21,6 +21,7 @@ import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablepricelistcodes;
 import SMDataDefinition.SMTablepricelistlevellabels;
+import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
@@ -484,8 +485,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "</TD>" + "\n"
 			;
 		
-		//Order type:
-		//First, add a blank item so we can be sure the user chose one:
+		//Service type:
+		ArrayList<String> arrServiceTypes = new ArrayList<String>(0);
+		ArrayList<String> arrServiceTypeDescriptions = new ArrayList<String>(0);
+		
 		sControlHTML = "\n<SELECT"
 			+ " NAME = \"" + SMTablesmestimatesummaries.iordertype + "\""
 			+ " ID = \"" + SMTablesmestimatesummaries.iordertype + "\""
@@ -493,40 +496,37 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " >\n"
 		;
 		
-		sControlHTML += "<OPTION";
-		sControlHTML += " VALUE=\"" + "" + "\">" 
-			+ "*** Select order type ***" + "\n";
+		//First, add a blank item so we can be sure the user chose one:
+		arrServiceTypes.add("");
+		arrServiceTypeDescriptions.add("*** Select order type ***");
 		
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE).compareTo(summary.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) + "\n";
-		
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE).compareTo(summary.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_FUTURE) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_FUTURE) + "\n";
-		
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE).compareTo(summary.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) + "\n";
-
-		sControlHTML += "<OPTION";
-		if (Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING).compareTo(summary.getsiordertype()) == 0){
-			sControlHTML += " selected=yes";
-		}
-		sControlHTML += " VALUE=\"" + Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING) + "\">" 
-			+ SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) + "\n";
-		
-		sControlHTML += "</SELECT> \n"
+		SQL = "SELECT"
+			+ " " + SMTableservicetypes.id
+			+ ", " + SMTableservicetypes.sName
+			+ " FROM " + SMTableservicetypes.TableName
+			+ " ORDER BY " + SMTableservicetypes.sName + " DESC"
 		;
+		try {
+			ResultSet rsServiceType = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while(rsServiceType.next()) {
+				arrServiceTypes.add(Long.toString(rsServiceType.getLong(SMTableservicetypes.id)));
+				arrServiceTypeDescriptions.add(rsServiceType.getString(SMTableservicetypes.sName));
+			}
+			rsServiceType.close();
+		} catch (Exception e1) {
+			throw new Exception("Error [202006225035] - reading service types with SQL: '" + SQL + "' - " + e1.getMessage());
+		}
+		
+		for (int i = 0; i < arrServiceTypes.size(); i++){
+			sControlHTML += "<OPTION";
+			if (arrServiceTypes.get(i).toString().compareTo(summary.getsiordertype()) == 0){
+				sControlHTML += " selected=yes";
+			}
+			sControlHTML += " VALUE=\"" + arrServiceTypes.get(i).toString() + "\">" 
+				+ arrServiceTypeDescriptions.get(i).toString() + "\n";
+		}
+		
+		sControlHTML += "</SELECT> \n";
 			
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
 				+ "<B>Order type:</B>"

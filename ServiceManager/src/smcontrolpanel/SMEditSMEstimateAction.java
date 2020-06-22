@@ -297,9 +297,12 @@ public class SMEditSMEstimateAction extends HttpServlet{
 		//If display common items:
 		if(sCommandValue.compareToIgnoreCase(SMEditSMEstimateEdit.DISPLAY_COMMONLY_USED_ITEMS_COMMAND) == 0){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773259]");
-			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
+			smaction.getCurrentSession().removeAttribute(SMEstimate.OBJECT_NAME);
     		String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMListCommonEstimateItems"
+				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&" + SMTablesmestimates.lid + "=" + estimate.getslid()
+				+ "&CallingClass=" + "smcontrolpanel.SMEditSMEstimateEdit"
     		;
 	    				
 			try {

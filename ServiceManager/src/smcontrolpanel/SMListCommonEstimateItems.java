@@ -15,7 +15,6 @@ import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
-import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 
@@ -23,7 +22,7 @@ public class SMListCommonEstimateItems extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
-	private static final String PREFIX_QTY = "ITEMQTY";
+	public static final String PREFIX_QTY = "ITEMQTY";
 	private static final String ADD_LINES_CAPTION = "Add selected <B><FONT COLOR=RED>i</FONT></B>tems";
 	
 	private static final int COMMON_ITEMS_LIMIT = 50;
@@ -49,8 +48,17 @@ public class SMListCommonEstimateItems extends HttpServlet{
 			return;
 		}
 		
-		SMEstimate estimate = (SMEstimate)smedit.getCurrentSession().getAttribute(SMEstimate.OBJECT_NAME);
-		//System.out.println("[202006194016] - dumpData = " + estimate.dumpData());
+	    SMEstimate estimate = new SMEstimate(request);
+	    try {
+			estimate.load(getServletContext(), smedit.getsDBID(), smedit.getUserID());
+		} catch (Exception e1) {
+			smedit.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e1.getMessage());
+			smedit.redirectAction(
+				"", 
+				"", 
+				SMTablesmestimates.lid + "=" + estimate.getslid());
+			return;
+		}
 		
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
@@ -77,6 +85,7 @@ public class SMListCommonEstimateItems extends HttpServlet{
 			);
 				return;
 		}
+	    
 	}
 	public void createEditPage(
 			String sEditHTML,
@@ -95,8 +104,10 @@ public class SMListCommonEstimateItems extends HttpServlet{
 		}
 		pwOut.println(sFormString);
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sm.getsDBID() + "'>");
-		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" 
-				+ SMUtilities.getFullClassName(this.toString()) + "\">");
+		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\""
+				+ "smcontrolpanel.SMEditSMEstimateEdit" + "\">");
+		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMTablesmestimates.lid + "' VALUE='" + estimate.getslid() + "'>");
+		
 
 		//Create HTML Fields
 		try {

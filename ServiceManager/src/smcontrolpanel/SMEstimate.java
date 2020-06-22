@@ -133,6 +133,7 @@ public class SMEstimate {
 		m_bdadditionalpostsalestaxcostamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimates.bdadditionalpostsalestaxcostamt, req).replace("&quot;", "\"");
 		
 		readEstimateLines(req);
+		
 	}
 
 	private void readEstimateLines(HttpServletRequest request){
@@ -424,7 +425,43 @@ public class SMEstimate {
 		
 		return;
 	}
-	
+	public void add_new_items (Connection conn, String sUserID, String sUserFullName, HttpServletRequest request) throws Exception{
+
+		//Read the estimate lines:
+    	Enumeration <String> eParams = request.getParameterNames();
+    	String sLineParam = "";
+    	String sItemNumber = "";
+    	String sQty = "";
+    	while (eParams.hasMoreElements()){
+    		sLineParam = eParams.nextElement();
+    		//System.out.println("[1490712988] sLineParam = '" + sLineParam +"'");
+    		//If it contains a line number parameter, then it's an GLTransactionBatchLine field:
+    		if (sLineParam.startsWith(SMListCommonEstimateItems.PREFIX_QTY)){
+    			//System.out.println("[1490712188] sLineParam = '" + sLineParam +"'");
+    			sItemNumber = sLineParam.substring(SMListCommonEstimateItems.PREFIX_QTY.length());
+    			sQty = clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim();
+    			if (sQty.compareToIgnoreCase("") != 0) {
+    				//Add this item to the estimate:
+    				SMEstimateLine line = new SMEstimateLine();
+    				line.setsbdquantity(sQty);
+    				line.setsitemnumber(sItemNumber);
+    				line.setslestimatelinenumber(Integer.toString(arrEstimateLines.size() + 1));
+    				line.setslestimateid(getslid());
+    				line.setslsummaryid(getslsummarylid());
+    				addLine(line);
+    				lookUpItem(line.getslestimatelinenumber(), conn);
+    			}
+    		}
+    	}
+    	
+    	try {
+			save_without_data_transaction(conn, sUserID, sUserFullName);
+		} catch (Exception e) {
+			throw new Exception("Error [202006225454] - could not save estimate after adding items - " + e.getMessage());
+		}
+    	
+		return;
+	}
 	public void validate_fields(Connection conn, String sUserID) throws Exception{
 		
 		String sResult = "";
@@ -840,6 +877,8 @@ public class SMEstimate {
 				+ "' in estimate line array - arr size = " + Integer.toString(arrEstimateLines.size()));
 		}
 		
+		//System.out.println("[202006221756] - item number = '" + sItemNumber + "'.");
+		
 		ICItem item = new ICItem(sItemNumber);
 		if(!item.load(conn)){
 			//We just assume it's not an inventory number, and we just make it all blank:
@@ -870,6 +909,7 @@ public class SMEstimate {
 			arrEstimateLines.get(iLineNumber - 1).setsbdunitsellprice(
 				clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(item.getItemPrice(
 					m_estimatesummary.getspricelistcode(), m_estimatesummary.getsipricelevel(), conn)));
+			//System.out.println("[202006222718] - unit sell price for array line " + (iLineNumber - 1) + " - price: " + arrEstimateLines.get(iLineNumber - 1).getsbdunitsellprice());
 		}
 		
 		//In case the user was changing one of the existing lines, don't let any 'zero quantity' lines stay in the array at this point:

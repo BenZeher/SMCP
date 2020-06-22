@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import SMDataDefinition.SMTablesmestimates;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 
@@ -23,14 +24,17 @@ public class SMListCommonEstimateItemsAction extends HttpServlet{
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.SMEditSMEstimates)){return;}
 		
-		//If there's any estimate object in the session, dump it:
-		try {
-			smaction.getCurrentSession().removeAttribute(SMEstimate.OBJECT_NAME);
-		} catch (Exception e1) {
-			//Don't choke on this...
-		}
-	    //Read the entry fields from the request object:
 		SMEstimate estimate = new SMEstimate(request);
+	    try {
+			estimate.load(getServletContext(), smaction.getsDBID(), smaction.getUserID());
+		} catch (Exception e1) {
+			smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e1.getMessage());
+			smaction.redirectAction(
+				"", 
+				"", 
+				SMTablesmestimates.lid + "=" + estimate.getslid());
+			return;
+		}
 		
 		Connection conn = null;
 		try {
@@ -41,7 +45,6 @@ public class SMListCommonEstimateItemsAction extends HttpServlet{
 				this.toString() + ".doPost - user: " + smaction.getFullUserName()
 			);
 		} catch (Exception e2) {
-			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
 			smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e2.getMessage());
 	    	smaction.redirectAction(
 		    		"", 
@@ -52,9 +55,9 @@ public class SMListCommonEstimateItemsAction extends HttpServlet{
 		}
 		
 		try {
-			estimate.save_without_data_transaction(conn, smaction.getUserID(), smaction.getFullUserName());
+			estimate.add_new_items(conn, smaction.getUserID(), smaction.getFullUserName(), request);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633340]");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1592842568]");
 			smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.WARNING_OBJECT, e.getMessage());
 			smaction.getCurrentSession().setAttribute(SMEstimate.OBJECT_NAME, estimate);
 	    	smaction.redirectAction(
@@ -64,25 +67,25 @@ public class SMListCommonEstimateItemsAction extends HttpServlet{
 		    		);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633341]");
-		smaction.getCurrentSession().removeAttribute(SMEstimate.OBJECT_NAME);
-		smaction.getCurrentSession().setAttribute(SMEditSMEstimateEdit.RESULT_STATUS_OBJECT, "Estimate #" + estimate.getslid() + " saved successfully");
+		
+		//Return after adding the items:
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1592842768]");
     	smaction.redirectAction(
 	    		"", 
 	    		"", 
 	    		SMTablesmestimates.lid + "=" + estimate.getslid()
 	    		);
-		
 		return;
+
 	}
 	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			throw new Exception("Error [1395236124] in " + this.toString() + ".redirectAction - IOException error redirecting with string: "
+			throw new Exception("Error [1395236724] in " + this.toString() + ".redirectAction - IOException error redirecting with string: "
 					+ sRedirectString + " - " + e1.getMessage());
 		} catch (IllegalStateException e1) {
-			throw new Exception("Error [1395236125] in " + this.toString() + ".redirectAction - IllegalStateException error redirecting with string: "
+			throw new Exception("Error [1395236725] in " + this.toString() + ".redirectAction - IllegalStateException error redirecting with string: "
 					+ sRedirectString + " - " + e1.getMessage());
 		}
 	}

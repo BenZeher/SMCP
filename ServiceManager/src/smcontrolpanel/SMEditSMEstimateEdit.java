@@ -1868,6 +1868,11 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			//Display commonly used items:
 			//Replace vendor quote:
 			s += "function displaycommonlyuseditems(){\n"
+					+ "    if (document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value == \"" 
+							+ RECORDWASCHANGED_FLAG_VALUE + "\" ){\n"
+					+ "        alert ('You must save the estimate before adding new items.'); \n"
+					+ "        return;\n"
+					+ "    } \n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DISPLAY_COMMONLY_USED_ITEMS_COMMAND + "\";\n"
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"

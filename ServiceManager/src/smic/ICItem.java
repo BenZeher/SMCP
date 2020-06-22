@@ -1513,6 +1513,8 @@ public class ICItem extends Object{
 	}
 	public BigDecimal getItemPrice(String sPriceList, String sPriceLevel, Connection conn) throws Exception{
 		
+		//System.out.println("[202006222156] - sPriceList = '" + sPriceList + "', sPriceLevel = '" + sPriceLevel + "'.");
+		
 		BigDecimal bdItemPrice = new BigDecimal("0.00");
 		
 		String SQL = "SELECT"

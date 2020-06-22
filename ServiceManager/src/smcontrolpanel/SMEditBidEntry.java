@@ -19,6 +19,7 @@ import SMClasses.SMAppointment;
 import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableappointments;
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTablecriticaldates;
@@ -42,16 +43,6 @@ public class SMEditBidEntry  extends HttpServlet {
 	public static final String FIND_SALES_CONTACT_COMMAND_VALUE = "FINDSALESCONTACT";
 	public static final String FIND_SALES_CONTACT_BUTTON_LABEL = "Find <B><FONT COLOR=RED>s</FONT></B>ales contact"; //S
 	private static final String DATE_FIELD_WIDTH = "8";
-	
-	//Colors:
-	private static final String BID_DATES_BG_COLOR = "#FFBCA2";
-	private static final String BILL_TO_BG_COLOR = "#CCFFB2";
-	private static final String SHIPTO_BG_COLOR = "#F2C3FA";
-	private static final String ACTUAL_BID_DATES_BG_COLOR = "#99CCFF";
-	//private static final String CRITICAL_DATES_BG_COLOR = "#99CCFF";
-	private static final String BID_MEMOS_BG_COLOR = "#CCFFB2";
-	private static final String BID_PRODUCTS_BG_COLOR = "#99CCFF";
-	private static final String BUTTON_COMMANDS_TABLE_BG_COLOR = "#99CCFF";
 	
 	//Buttons:
 	public static final String UPDATE_ANOTHER_BUTTON_LABEL = "Update <B><FONT COLOR=RED>a</FONT></B>nother lead"; //A
@@ -380,18 +371,18 @@ public class SMEditBidEntry  extends HttpServlet {
 		//Create the header table:
 		s += "<TR><TD><TABLE style=\" title:GeneralHeaderArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + BILL_TO_BG_COLOR + "; \">" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \">" 
 			+ createBillToTable(sm, entry) + "</TD>\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + SHIPTO_BG_COLOR + "; \">" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "; \">" 
 			+ createShipToTable(sm, entry) + "</TD>\n";
 		s += "</TR></TD></TABLE style=\" title:ENDGeneralHeaderArea; \">\n";
 
 		//Create the bid dates area table:
 		s += "<TR><TD><TABLE style=\" title:BidDatesArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + BID_DATES_BG_COLOR + "; \">" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \">" 
 			+ createBidDatesTable(sm, entry) + "</TD>\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + ACTUAL_BID_DATES_BG_COLOR + "; \">" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \">" 
 			+ createActualDatesTable(sm, entry) + "</TD>\n";
 		s += "</TR></TD></TABLE style=\" title:ENDBidDatesArea; \">\n";
 		
@@ -1284,7 +1275,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		int iNumberOfColumns = 2;
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:BidMemos; background-color: "
-			+ BID_MEMOS_BG_COLOR + "; \" width=100% >\n";		
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";		
 		
 		//Description:
 		s += "<TR>";
@@ -1504,7 +1495,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		if (entry.getsProductTypeAmountsSize() > 0){
 			//Create the table:
 			s += "<TABLE class = \" innermost \" style=\" title:BidProducts; background-color: "
-				+ BID_PRODUCTS_BG_COLOR + "; \" width=100% >\n";		
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";		
 			s += "<TR><TD>";
 			s += "<B><U>Product Type Amounts</U></B>";
 			s += "</TD><TD>&nbsp;</TD></TR>";
@@ -1535,7 +1526,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:ButtonCommands; background-color: "
-			+ BUTTON_COMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >";
 

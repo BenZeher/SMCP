@@ -91,12 +91,24 @@ public class SMMasterStyleSheetDefinitions {
 	
 	//General Colors
 	public static final String BACKGROUND_LIGHT_GREEN = "#CCFFB2";
+	public static final String BACKGROUND_BRIGHT_GREEN = "#58FA58";
+	
+	public static final String BACKGROUND_PEACH = "#FF8484";
 	public static final String BACKGROUND_LIGHT_PEACH = "#FFBCA2";
 	public static final String BACKGROUND_LIGHT_PEACH_ALT = "#FFC7B3";
-	public static final String BACKGROUND_PEACH = "#FF8484";
-	public static final String BACKGROUND_YELLOW = "#FFFF66";
-	public static final String BACKGROUND_BLUE = "#99CCFF";
+	
 	public static final String BACKGROUND_LIGHT_PINK = "#F2C3FA";
+
+	public static final String BACKGROUND_YELLOW = "#FFFF66";
+	
+	public static final String BACKGROUND_ORANGE = "#EE9A4D";
+	
+	public static final String BACKGROUND_GOLD = "#E8C355";
+		
+	public static final String BACKGROUND_BLUE = "#99CCFF";
+	public static final String BACKGROUND_LIGHT_BLUE = "#A3D1FF";
+	
+	public static final String BACKGROUND_WHITE = "#FFFFFF";
 	
 	
 	

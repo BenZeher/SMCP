@@ -54,23 +54,7 @@ import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
 public class SMDisplayOrderInformation extends HttpServlet {
-	private static final String PROPOSAL_TABLE_BG_COLOR = "#CCFFB2";
-	private static final String ORDER_HEADER_TABLE_BG_COLOR = "#FFFFFF"; //"#FFBCA2"; 
-	private static final String ORDER_DETAILS_BG_COLOR = "#FFB8B8";
-	private static final String LEFT_ON_ORDER_BG_COLOR = "#58FA58";
-	private static final String WORK_ORDERS_TABLE_BG_COLOR = "#FFFF66";
-	private static final String CHANGEORDERS_TABLE_BG_COLOR = "#A3D1FF";
-	private static final String SUBHEADER_TABLE_BG_COLOR = "#FFFFFF"; //"#F2C3FA";
-	private static final String MATERIAL_RETURNS_TABLE_BG_COLOR = "#CCFFB2";
-	private static final String BILLING_SUMMARY_TABLE_BG_COLOR = "#F2C3FA";
-	private static final String CRITICAL_DATE_TABLE_BG_COLOR = "#FFBCA2";
-	private static final String TAX_CALCULATION_TABLE_BG_COLOR = "#A3D1FF";
 	private static final long serialVersionUID = 1L;
-	
-	private static final String DELIVERY_TICKET_TABLE_BG_COLOR = "#EE9A4D";
-	private static final String LABOR_BACKCHARGES_TABLE_BG_COLOR = "#FFFFBB";
-	private static final String FOLLOWUP_SALES_LEAD_TABLE_BG_COLOR = "#FFBCA2";
-	private static final String APPOINTMENTS_TABLE_BG_COLOR = "#e8c355";
 	private static SimpleDateFormat USDateOnlyformatter = new SimpleDateFormat("MM-dd-yyyy");
 	
 	//TODO Flag to test google drive picker to create upload files.
@@ -619,7 +603,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				pwOut.println("</FONT><BR>");
 
 				if(bAllowOrderHeaderView){
-					pwOut.println("<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " + ORDER_HEADER_TABLE_BG_COLOR + "; \">");
+					pwOut.println("<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "; \">");
 					pwOut.println("<TR><TD colspan=2><hr></TD></TR>");
 					pwOut.println("<TR>");
 					String sBillToName = rsOrder.getString(SMTableorderheaders.sBillToName);
@@ -718,7 +702,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					
 					pwOut.println("</TABLE>");
 	
-					pwOut.println("<TABLE BORDER=0 WIDTH=100%  style= \" background-color: " + SUBHEADER_TABLE_BG_COLOR + "; \" >");
+					pwOut.println("<TABLE BORDER=0 WIDTH=100%  style= \" background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "; \" >");
 					pwOut.println("<tr><TD colspan=4><hr></TD></tr>");
 					pwOut.println("<TR>");
 					pwOut.println("<TD><FONT SIZE=2><B>Price level: </B>" + Integer.toString(rsOrder.getInt(SMTableorderheaders.iCustomerDiscountLevel)) + "</FONT></TD>");
@@ -1103,7 +1087,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">";
-			s += "<TR STYLE=\"background-color: " + ORDER_DETAILS_BG_COLOR +";\" >";
+			s += "<TR STYLE=\"background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH_ALT +";\" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"><BR>Line #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Qty<BR>ordered</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Qty shipped<BR>to date</TD>";
@@ -1337,7 +1321,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +LEFT_ON_ORDER_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_BRIGHT_GREEN + "; \" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\"><BR>Line #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">Qty<BR>Remaining</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">Qty shipped<BR>to date</TD>";
@@ -1541,7 +1525,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +CHANGEORDERS_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "; \" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Date</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">C.O. #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Description</TD>";
@@ -1636,7 +1620,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +WORK_ORDERS_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_YELLOW + "; \" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Schedule date</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Done date</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">W.O. #</TD>";
@@ -1741,7 +1725,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +APPOINTMENTS_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_GOLD + "; \" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Date/Time</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Scheduled for</TD>";
@@ -1808,7 +1792,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +DELIVERY_TICKET_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_ORANGE + "; \" >";
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Initiated date</TD>";		
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Delivery Ticket #</TD>";
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +" \" >View?</TD>";
@@ -1901,7 +1885,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +MATERIAL_RETURNS_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Initiated</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">By</TD>";
@@ -2027,7 +2011,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +FOLLOWUP_SALES_LEAD_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Date</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Sales Person</TD>";
@@ -2110,7 +2094,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +LABOR_BACKCHARGES_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_YELLOW + "; \" >";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Initiated</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">By</TD>";
@@ -2176,7 +2160,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		s += "<BR><a name=\"Proposal\"><B><U>Proposal</U></B></a><BR>";
 		s += sLinks + "<BR>";
 		s += "<TABLE BORDER=1 cellspacing=0 cellpadding=1 style=\" title:ProposalTable; background-color: "
-			+ PROPOSAL_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		
 		String SQL = "SELECT"
 			+ " " + SMTableproposals.strimmedordernumber
@@ -2256,7 +2240,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				s += sLinks + "<BR>";
 				
 				s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-				s += "<TR STYLE=\"background-color: " +BILLING_SUMMARY_TABLE_BG_COLOR + "; \" >";
+				s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "; \" >";
 				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Invoice date</TD>";
 				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Invoice number</TD>";
 				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Created by</TD>";
@@ -2434,7 +2418,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +CRITICAL_DATE_TABLE_BG_COLOR + "; \" >";
+			s += "<TR STYLE=\"background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >";
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >ID</TD>";
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Date</TD>";
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Resolved?</TD>";
@@ -2519,7 +2503,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		s += sLinks + "<BR>";
 		
 		s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-		s += "<TR STYLE=\"background-color: " +TAX_CALCULATION_TABLE_BG_COLOR + "; \" >";
+		s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "; \" >";
 		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >Line</TD>";
 		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Item</TD>";
 		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >Qty&nbsp;Shipped</TD>";

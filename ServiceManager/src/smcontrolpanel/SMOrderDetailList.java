@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import smar.ARCustomer;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablechangeorders;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
@@ -36,10 +37,6 @@ import ServletUtilities.clsStringFunctions;
 public class SMOrderDetailList  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String DARK_BG_COLOR = "DCDCDC";
-	private static final String LIGHT_BG_COLOR = "FFFFFF";
-	private static final String LINECOMMANDS_BG_COLOR = "#99CCFF";
-	private static final String COSTVALUES_COLOR = "#120991";
 	public static final String LINEDETAILBASE = "LINEDETAIL";
 	public static final String LINENUMBERMOVEMARKER = "MOVELINENUMBER";
 	public static final String LINECOMMANDHEADER_BUTTON = "LINECOMMANDHEADER";
@@ -113,7 +110,6 @@ public class SMOrderDetailList  extends HttpServlet {
 	public static final String LINECOMMAND_FLAG = "LINECOMMANDFLAG";
 	public static final String NUMBEROFLINES_FLAG = "NUMBEROFLINESFLAG";
 	public static final String LASTDETAILNUMBEREDITED_PARAM = "LASTDETAILNUMBEREDITED";
-	private static final String HIGHLIGHTROWCOLOR = "#66ff99";
 	private static final int NUMBEROFRECORDSTOBUFFER = 25;
 	
 	private boolean bDebugMode = false;
@@ -400,7 +396,7 @@ public class SMOrderDetailList  extends HttpServlet {
 		String s = "";
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:LineCommands; background-color: "
-			+ LINECOMMANDS_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		boolean bAllowProposalEdit = SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMEditProposals, 
 				sUserID, 
@@ -828,9 +824,9 @@ public class SMOrderDetailList  extends HttpServlet {
 				}
 				//We are going to add to this string buffer in chunks to try to optimize really large orders:
 				if(bOddRow){
-					sBackgroundColor = "#" + DARK_BG_COLOR + "";
+					sBackgroundColor = "" + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "";
 				}else{
-					sBackgroundColor = "#" + LIGHT_BG_COLOR + "";
+					sBackgroundColor = "" +  SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "";
 				}
 				
 				String sDetailNumber = Integer.toString(rsDetails.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iDetailNumber));
@@ -1025,10 +1021,10 @@ public class SMOrderDetailList  extends HttpServlet {
 				//Add a row for the labor units:
 				sTemp += "<TR>"
 						+ "<TD align=right colspan = " + Integer.toString(iColumnCount - 1) 
-						+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + "><B>Labor qty:</B></FONT></TD>"
+						+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "><B>Labor qty:</B></FONT></TD>"
 						//+ "<TD>&nbsp;</TD>"
 						+ "<TD align=right>"
-						+ "<FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + ">" 
+						+ "<FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + ">" 
 						+ "<B>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyOrderedScale, bdLaborUnits)
 							+ "</B></FONT>"
 						+ "</TD>"
@@ -1041,11 +1037,11 @@ public class SMOrderDetailList  extends HttpServlet {
 				}
 				sTemp += "<TR>"
 					+ "<TD align=right colspan = " + Integer.toString(iColumnCount - 1) 
-					+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + "><B>Mark up per labor unit: "
+					+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "><B>Mark up per labor unit: "
 					+ "<a href=\"#Footnote2\"><SUP>2</SUP></a></B></FONT></TD>"
 					//+ "<TD>&nbsp;</TD>"
 					+ "<TD align=right>"
-					+ "<FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + ">" 
+					+ "<FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + ">" 
 					+ "<B>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdMarkUpPerLaborUnit)
 						+ "</B></FONT>"
 					+ "</TD>"
@@ -1054,11 +1050,11 @@ public class SMOrderDetailList  extends HttpServlet {
 
 				sTemp += "<TR>"
 					+ "<TD align=right colspan = " + Integer.toString(iColumnCount - 1) 
-					+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + "><B>Mark up: "
+					+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "><B>Mark up: "
 					+ "<a href=\"#Footnote3\"><SUP>3</SUP></a></B></FONT></TD>"
 					//+ "<TD>&nbsp;</TD>"
 					+ "<TD align=right>"
-					+ "<FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + ">" 
+					+ "<FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + ">" 
 					+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdGrossMarkup) + "</B></FONT>"
 					+ "</TD>"
 					+ "</TR>"
@@ -1070,11 +1066,11 @@ public class SMOrderDetailList  extends HttpServlet {
 				}
 				sTemp += "<TR>"
 						+ "<TD align=right colspan = " + Integer.toString(iColumnCount - 1) 
-						+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + "><B>Gross profit percentage: "
+						+ " class=\"orderlineheadingright\" ><FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "><B>Gross profit percentage: "
 						+ "<a href=\"#Footnote4\"><SUP>4</SUP></a></B></FONT></TD>"
 						//+ "<TD>&nbsp;</TD>"
 						+ "<TD align=right>"
-						+ "<FONT SIZE=2 COLOR=" + COSTVALUES_COLOR + ">" 
+						+ "<FONT SIZE=2 COLOR=" +  SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + ">" 
 						+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdGrossProfitPercentage) + "</B></FONT>"
 						+ "</TD>"
 						+ "</TR>"
@@ -1264,9 +1260,9 @@ public class SMOrderDetailList  extends HttpServlet {
 
 			boolean bOddRow = true;
 			if(bOddRow){
-				sBackgroundColor = "\"#" + DARK_BG_COLOR + "\"";
+				sBackgroundColor = "\"" +  SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\"";
 			}else{
-				sBackgroundColor = "\"#FFFFFF\"";
+				sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 			}
 			//sCellStyle = "style=\"border: 0px solid\" bordercolor=" + sBackgroundColor;
 			s += "<TR bgcolor =" + sBackgroundColor + ">";
@@ -1282,9 +1278,9 @@ public class SMOrderDetailList  extends HttpServlet {
 			while(rsChangeOrders.next()){
 				bdChangeOrderTotal = bdChangeOrderTotal.add(rsChangeOrders.getBigDecimal(SMTablechangeorders.dAmount.replace("`", "")));
 				if(bOddRow){
-					sBackgroundColor = "\"#" + DARK_BG_COLOR + "\"";
+					sBackgroundColor = "\"" +  SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\"";
 				}else{
-					sBackgroundColor = "\"#FFFFFF\"";
+					sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 				}
 				//sCellStyle = "style=\"border: 0px solid\" bordercolor=" + sBackgroundColor;
 				s += "<TR bgcolor =" + sBackgroundColor + ">";
@@ -1384,9 +1380,9 @@ public class SMOrderDetailList  extends HttpServlet {
 			while(rsInvoices.next()){
 				bdTotalBilled = bdTotalBilled.add(rsInvoices.getBigDecimal("EXTPRICE"));
 				if(bOddRow){
-					sBackgroundColor = "\"#" + DARK_BG_COLOR + "\"";
+					sBackgroundColor = "\"" +  SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\"";
 				}else{
-					sBackgroundColor = "\"#FFFFFF\"";
+					sBackgroundColor = "\"" +  SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 				}
 				//sCellStyle = "style=\"border: 0px solid\" bordercolor=" + sBackgroundColor;
 				s += "<TR bgcolor =" + sBackgroundColor + ">";
@@ -1612,7 +1608,7 @@ public class SMOrderDetailList  extends HttpServlet {
 			+ " 		Rows.push(\"ROWID\" + j);\n"
 			+ " 	}\n"
 			+ "		for (k=0; k<Rows.length; k++){\n"
-			+ " 		document.getElementById(Rows[k]).style.backgroundColor = '" + HIGHLIGHTROWCOLOR + "';"
+			+ " 		document.getElementById(Rows[k]).style.backgroundColor = '" +  SMMasterStyleSheetDefinitions.BACKGROUND_TEAL + "';"
 			+ " 	}\n"
    			+ "}else{\n"
 			+ "		for (i=0; i<document.forms[\"MAINFORM\"].elements.length; i++){\n"
@@ -1627,9 +1623,9 @@ public class SMOrderDetailList  extends HttpServlet {
 			+ " 	}\n"
 			+ "		for (k=0; k<Rows.length; k++){\n"
 			+ "  		if (k % 2 == 0){\n"
-			+ " 			document.getElementById(Rows[k]).style.backgroundColor = '" + DARK_BG_COLOR + "';\n"
+			+ " 			document.getElementById(Rows[k]).style.backgroundColor = '" +  SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "';\n"
 			+ " 		}else{\n"
-			+ "				document.getElementById(Rows[k]).style.backgroundColor = '#FFFFFF';\n"
+			+ "				document.getElementById(Rows[k]).style.backgroundColor = '" +  SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "';\n"
 			+ " 		}\n"
 			+ " 	}\n"
    			+ "	}\n"
@@ -1892,7 +1888,7 @@ public class SMOrderDetailList  extends HttpServlet {
 		
 		//Toggle colors of detail when selected
 		s += "function toggle(x,origColor){\n"
-			+ "    var newColor = '" + HIGHLIGHTROWCOLOR + "';\n"
+			+ "    var newColor = '" +  SMMasterStyleSheetDefinitions.BACKGROUND_TEAL + "';\n"
 			
 			//This function converts the rgb( , , ) function to a hex value
 			+ "function colorToHex(color) {\n" + 

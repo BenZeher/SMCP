@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablesecurityusergroups;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsDatabaseFunctions;
@@ -23,7 +24,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMViewUserSessionInformation  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	private static final String HEADER_BG_COLOR = "#C2E0FF";
 	private static final String USER_PLATFORM_FIELD = "USERPLATFORMFIELD";
 	private static final String LOCAL_DATETIME_FIELD = "LOCALDATETIMEFIELD";
@@ -235,7 +235,7 @@ public class SMViewUserSessionInformation  extends HttpServlet {
 		}
 		String sBackgroundColor = DARK_ROW_BG_COLOR;
 		if (bOddRow){
-			sBackgroundColor = LIGHT_ROW_BG_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 		}
 		String s = "<TR style = \" background-color: " + sBackgroundColor +  "; \">";
 		s += "<TD class = \"rightjustifiedheading \" >"

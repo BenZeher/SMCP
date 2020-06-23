@@ -371,7 +371,7 @@ public class APEditBatchesEdit extends HttpServlet {
         
         //List out the entries on the screen as links to edit:
         pwOut.println("<BR><I><B>NOTE:</B> Out-of-balance entry amounts and entry dates outside the posting period are displayed in RED.</I>");
-        pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+        pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 
         
     	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");

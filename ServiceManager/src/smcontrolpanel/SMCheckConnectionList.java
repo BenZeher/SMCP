@@ -47,7 +47,7 @@ public class SMCheckConnectionList extends HttpServlet {
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>Connection Pool Status - + " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
-		   "<BODY BGCOLOR=\"#FFFFFF\">" +
+		   "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" +
 		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">" +
 		   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>Connection Pool Status -  " + sCompanyName + "</B></FONT></TD></TR>");
 				   

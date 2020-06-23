@@ -1,5 +1,7 @@
 package SMClasses;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
+
 public class SMBatchStatuses {
 	
 	public static final int ENTERED = 0;
@@ -9,7 +11,7 @@ public class SMBatchStatuses {
 	public static final String STATUS_COLOR_ENTERED = "#8BFF8B";
 	public static final String STATUS_COLOR_IMPORTED = "#8BAAFF";
 	public static final String STATUS_COLOR_DELETED = "#FCA8A8";
-	public static final String STATUS_COLOR_POSTED = "#FFFFFF";
+	public static final String STATUS_COLOR_POSTED =  SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 	
 	public static String Get_Transaction_Status(int iStatus){
 		

@@ -24,7 +24,6 @@ public class GLDuplicateExternalBatchSelect extends HttpServlet {
 	
 	public static final String CONFIRM_PROCESS = "ConfirmProcess";
 	public static final String RADIO_BUTTONS_NAME = "RadioButtonSelect";
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static String PARAM_BATCH_NUMBER = "BATCHNUMBER";
 	public static final String SESSION_WARNING_OBJECT = "DUPLICATEEXTERNALBATCHWARNING";
@@ -140,7 +139,7 @@ public class GLDuplicateExternalBatchSelect extends HttpServlet {
 		String sLineText = "";
 		boolean bFirstRecord = true;
 		while (rs.next()){
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}

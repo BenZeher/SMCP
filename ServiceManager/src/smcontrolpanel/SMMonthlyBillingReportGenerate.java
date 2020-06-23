@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -194,7 +195,7 @@ public class SMMonthlyBillingReportGenerate extends HttpServlet {
 	       +    SMUtilities.getMasterStyleSheetLink()+"\n"
 	       +    "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE>\n"
 	       +  "</HEAD>\n<BR>" 
-	       +  "<BODY BGCOLOR=\"#FFFFFF\">\n" 
+	       +  "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">\n" 
 	       +    "<TABLE BORDER=0 WIDTH=100% BGCOLOR= \"" + sColor + "\">\n" 
 	       +      "<TR>\n"
 	       +        "<TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 

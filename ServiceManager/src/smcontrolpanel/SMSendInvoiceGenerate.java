@@ -844,7 +844,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 			+ "<STYLE TYPE=\"text/css\" media=\"print\">\n"
 			+ "</STYLE><TITLE>" + "Invoice/Credit Note" + "</TITLE>"
 			+ "</HEAD>" 
-			+ "<BODY BGCOLOR=\"" + "#FFFFFF" + "\">"
+			+ "<BODY BGCOLOR=\"" + "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "" + "\">"
 		; 
 				
 		sInvoiceHTML += invprinter.printOneCopyOfInvoice(conn);
@@ -1005,7 +1005,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				+ "H4.western { font-family: \"Arial\", sans-serif; font-size: 10pt; }\n"
 				+ "</STYLE><TITLE>" + "Report" + "</TITLE></HEAD>\n<BR>" + 
 				"<BODY"
-					+ " BGCOLOR=\"" + "#FFFFFF" + "\""
+					+ " BGCOLOR=\"" + "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "" + "\""
 					+ sBodyFontString
 				+ "\">";
 		//HashMap<String,String> hFullLogoImageFilePath = getInvoiceLogo(arrInvoices,request,getServletContext(),conn);

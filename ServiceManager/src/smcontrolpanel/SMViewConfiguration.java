@@ -83,7 +83,7 @@ public class SMViewConfiguration  extends HttpServlet {
 		
 		title = "View System Configuration";
 		String subtitle = "";
-		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
 
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){

@@ -777,7 +777,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 		String s = "";
 		s += SMUtilities.getMasterStyleSheetLink();
 		s += "<BR>";
-		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">";
+		s += "<TABLE WIDTH=100% BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">";
 		s += printReceivedLinesHeader();
 
 		boolean bAdditionalLineHeadingPrinted = false;

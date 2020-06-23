@@ -70,7 +70,7 @@ public class SMStatistics extends HttpServlet {
 	    	out.println("<BR>Error opening database connection.<BR>");
 	    	return;
 	    }
-	    out.println("<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+	    out.println("<TABLE BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" WIDTH=100% CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		try{
 	        sSQL = MySQLs.Statistics_OrderHeaders_Count_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);

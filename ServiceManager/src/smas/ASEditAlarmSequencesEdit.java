@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablessalarmsequences;
 import SMDataDefinition.SMTablessdevices;
 import ServletUtilities.clsCreateHTMLTableFormFields;
@@ -24,7 +25,6 @@ public class ASEditAlarmSequencesEdit  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String OBJECT_NAME = SSAlarmSequence.ParamObjectName;
 	private static final String DARK_ROW_BG_COLOR = "#cceeff"; //Light blue
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	
 	private static final String ALARM_SET_DELAY_0_SECONDS = "0";
 	private static final String ALARM_SET_DELAY_30_SECONDS = "30";
@@ -291,7 +291,7 @@ public class ASEditAlarmSequencesEdit  extends HttpServlet {
 		//Display all the current trigger devices:
 		for (int i = 0; i < entry.getTriggerDeviceList().size(); i++){
 			if (bOddRow){
-				sBackgroundColor = LIGHT_ROW_BG_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			}else{
 				sBackgroundColor = DARK_ROW_BG_COLOR;
 			}
@@ -345,7 +345,7 @@ public class ASEditAlarmSequencesEdit  extends HttpServlet {
 
 		//Now add a row for adding additional trigger devices:
 		if (bOddRow){
-			sBackgroundColor = LIGHT_ROW_BG_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 		}else{
 			sBackgroundColor = DARK_ROW_BG_COLOR;
 		}
@@ -438,7 +438,7 @@ public class ASEditAlarmSequencesEdit  extends HttpServlet {
 		//Display all the current activation devices:
 		for (int i = 0; i < entry.getActivationDeviceList().size(); i++){
 			if (bOddRow){
-				sBackgroundColor = LIGHT_ROW_BG_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			}else{
 				sBackgroundColor = DARK_ROW_BG_COLOR;
 			}
@@ -504,7 +504,7 @@ public class ASEditAlarmSequencesEdit  extends HttpServlet {
 
 		//Now add a row for adding additional trigger devices:
 		if (bOddRow){
-			sBackgroundColor = LIGHT_ROW_BG_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 		}else{
 			sBackgroundColor = DARK_ROW_BG_COLOR;
 		}

@@ -67,7 +67,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
     	
     	//Customized title
     	String sReportTitle = "Job Cost Summary";
-    	out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", "#FFFFFF", sCompanyName));
+    	out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
     	out.println("<FONT SIZE=2>Printed by:" + sUserFullName + "&nbsp;&nbsp;" + USDateformatter.format(System.currentTimeMillis()) + "</FONT><BR>");
 
 	    out.println("<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 

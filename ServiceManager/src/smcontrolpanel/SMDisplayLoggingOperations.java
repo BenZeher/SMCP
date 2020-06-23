@@ -51,7 +51,7 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 
 		 	       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" 
 		 		   + "<BODY BGCOLOR=\"" 
-		 		   + "#FFFFFF"
+		 		   + "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ""
 		 		   + "\""
 		 		   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
 		 		   //Jump to the last edit:

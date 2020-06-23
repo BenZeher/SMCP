@@ -3809,7 +3809,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 
 		//s +=
 		//	"tr.d0 td {"
-		//	+ "background-color: #FFFFFF; "
+		//	+ "background-color: " + BACKGROUND_WHITE + "; "
 		//	+"}"
 		//	;
 		//s +=

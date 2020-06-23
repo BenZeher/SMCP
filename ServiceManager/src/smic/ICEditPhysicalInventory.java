@@ -425,7 +425,7 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 		
 		out.println(SMUtilities.getMasterStyleSheetLink());
 		//List entry counts here:
-		out.println("<TABLE WIDTH=100% BGCOLOR = \"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+		out.println("<TABLE WIDTH=100% BGCOLOR = \"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Count #</TD>");
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">ID</TD>");

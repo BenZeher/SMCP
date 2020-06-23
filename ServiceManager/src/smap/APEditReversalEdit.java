@@ -56,7 +56,6 @@ public class APEditReversalEdit  extends HttpServlet {
 	
 	public static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW"; //"#FF2080";
 	public static final int NUMBER_PADDING_LENGTH = 11;
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String CALCULATED_LINE_TOTAL_FIELD = "CALCULATEDLINETOTAL";
@@ -569,7 +568,7 @@ public class APEditReversalEdit  extends HttpServlet {
 		//System.out.println("[1490927363] entry.getLineArray().size(): " + entry.getLineArray().size());
 		for (int i = 0; i < entry.getLineArray().size(); i++){
 			APBatchEntryLine line = entry.getLineArray().get(i);
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if ((iLineCounter % 2) == 1){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}

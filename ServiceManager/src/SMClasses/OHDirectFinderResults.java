@@ -117,7 +117,7 @@ public class OHDirectFinderResults extends HttpServlet {
 
 		
 		//Now set up the table and header row:
-		out.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CELLSPACING=2 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">\n");
+		out.println("<TABLE WIDTH=100% BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CELLSPACING=2 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">\n");
 		out.println(printResultHeadings(arrDisplayHeadings));
 		
 		

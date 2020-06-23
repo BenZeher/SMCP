@@ -18,6 +18,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablecallsheets;
 import ServletUtilities.clsServletUtilities;
@@ -385,7 +386,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 		       + "<HTML>"
 		       + "<HEAD>"
 		       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" 
-			   + "<BODY BGCOLOR=\"#FFFFFF\""
+			   + "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\""
 			   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
 			   + ">"
 			   + "<TABLE BORDER=0 WIDTH=100% BGCOLOR = " + sColor +  " >"

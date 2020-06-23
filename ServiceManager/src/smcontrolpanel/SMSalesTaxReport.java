@@ -10,6 +10,7 @@ import java.util.HashMap;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecostcenters;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableicitems;
@@ -26,7 +27,6 @@ public class SMSalesTaxReport {
 	
 	//private static final String CELL_BORDER_COLOR = "#808080";
 	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	private static final String SUBTOTAL_LINE_BG_COLOR = "#ccd9ff";
 	private static final String SUBTOTAL_INVOICE__LINE_BG_COLOR = "#e6fffa";
 	private static final String SUMMARY_TAX_JURISDICTION_TOTALS_BG_COLOR = "#e6fffa";
@@ -343,7 +343,7 @@ public class SMSalesTaxReport {
 				String sBackgroundColor = "";
 
 				if (bOddRow){
-					sBackgroundColor = LIGHT_ROW_BG_COLOR;
+					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				}else{
 					sBackgroundColor = DARK_ROW_BG_COLOR;
 				}

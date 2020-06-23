@@ -67,7 +67,6 @@ public class SMTableproposals {
 	public static final int SIGNATURE_PEN_G_COLOUR = 83;
 	public static final int SIGNATURE_PEN_B_COLOUR = 148;
 	public static final String SIGNATURE_TOP = "52";
-	public static final String SIGNATURE_LINE_COLOUR = "#ffffff";  //This effectively makes the line transparent
 	public static final int SIGNATURE_LINE_R_COLOUR = 12;
 	public static final int SIGNATURE_LINE_G_COLOUR = 12;
 	public static final int SIGNATURE_LINE_B_COLOUR = 12;

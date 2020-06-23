@@ -514,7 +514,7 @@ public class SMUtilities extends clsServletUtilities {
 
 		//s +=
 		//	"tr.d0 td {"
-		//	+ "background-color: #FFFFFF; "
+		//	+ "background-color: " + BACKGROUND_WHITE + "; "
 		//	+"}"
 		//	;
 		//s +=

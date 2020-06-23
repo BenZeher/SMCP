@@ -72,7 +72,6 @@ public class ICEditPOEdit  extends HttpServlet {
 	private static final String CRITICAL_DATE_TABLE_BG_COLOR = "#F2C3FA";
 	private static final String DETAILS_TABLE_BG_COLOR = "#FFBCA2";
 	private static final String RECEIPTS_TABLE_BG_COLOR = "#A3D1FF";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
 	
 	private static final String HEADER_TABLE_MAX_WIDTH = "1000px";
@@ -1051,7 +1050,7 @@ public class ICEditPOEdit  extends HttpServlet {
 					if(bOddRow){
 						sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
 					}else{
-						sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+						sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 					}
 					
 					out.println("<TR bgcolor=" + sBackgroundColor + ">");
@@ -1182,7 +1181,7 @@ public class ICEditPOEdit  extends HttpServlet {
 		if(bOddRow){
 			sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
 		}else{
-			sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 		}
 		//Print the grand total:
 		out.println("<TR bgcolor= " + sBackgroundColor + ">");
@@ -1308,7 +1307,7 @@ public class ICEditPOEdit  extends HttpServlet {
 				if(bOddRow){
 					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 				}
 				//Because we are getting a 'SUM' in this query, it will return one record every time, even if there are no
 				//receipts at all.  So we have to add this check to make sure that we have a 'real' receipt:
@@ -2688,7 +2687,7 @@ public class ICEditPOEdit  extends HttpServlet {
 						if(bOddRow){
 							sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
 						}else{
-							sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+							sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 						}
 						//Because we are getting a 'SUM' in this query, it will return one record every time, even if there are no
 						//receipts at all.  So we have to add this check to make sure that we have a 'real' receipt:

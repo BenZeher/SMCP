@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
@@ -871,7 +872,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		if(bIsOddRow){
 			sBackgroundColor = "\"#EEEEEE\"";
 		}else{
-			sBackgroundColor = "\"#FFFFFF\"";
+			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 		}
 		pwOut.println("<TR bgcolor =" + sBackgroundColor + ">");
 		

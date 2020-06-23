@@ -66,7 +66,7 @@ public class SMBidReportGenerate extends HttpServlet {
 		/*************GET the PARAMETERs***************/
 		title = SMBidEntry.ParamObjectName + " Report";
 		subtitle = "";
-		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
 
 		out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 

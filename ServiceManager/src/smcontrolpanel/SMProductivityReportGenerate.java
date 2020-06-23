@@ -208,7 +208,7 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	    			   "Transitional//EN\">" +
 	    		       "<HTML>" +
 	    		       "<HEAD><TITLE>" + title + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
-	    			   "<BODY BGCOLOR=\"#FFFFFF\">" +
+	    			   "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" +
 	    			   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\" >" +
 	    			   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 	    			   + USDateTimeformatter.format(new Date(System.currentTimeMillis())) 

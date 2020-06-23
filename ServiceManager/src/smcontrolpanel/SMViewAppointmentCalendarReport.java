@@ -14,6 +14,7 @@ import java.util.Date;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMAppointment;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableappointments;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
@@ -23,7 +24,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class SMViewAppointmentCalendarReport extends java.lang.Object{
 
 	private static String CELL_SHADED = "#EBEBEB";
-	private static String CELL_UNSHADED = "#FFFFFF";
 	private static String ENTRY_BACKGROUND = "#e6ffe6";
 	private static String ENTRY_BACKGROUND_HOVER = "#b3ffb3";
 	private static String TODAYS_CELL_SHADED = "#DAE6EE";
@@ -766,7 +766,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + CELL_UNSHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ";"
 				+ "}"	
 		);
 		pwOut.println(
@@ -792,7 +792,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + CELL_UNSHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ";"
 				+ "}"	
 		);
 		pwOut.println(

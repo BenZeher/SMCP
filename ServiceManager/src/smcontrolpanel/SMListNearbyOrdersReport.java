@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
@@ -431,7 +432,7 @@ public class SMListNearbyOrdersReport extends java.lang.Object{
 	        "</script>" +
 	        */
 	       "</HEAD>\n<BR>" + 
-		   "<BODY BGCOLOR=\"#FFFFFF\">" +
+		   "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" +
 		   "<table class=noborder WIDTH=100%>" +
 		   "<tr><td class=noborder ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + " Printed by " + sUserName 

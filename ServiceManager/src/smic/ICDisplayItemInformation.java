@@ -108,7 +108,7 @@ public class ICDisplayItemInformation extends HttpServlet {
 
 		//Customized title
 		String sReportTitle = "Display Item Information";
-		out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", "#FFFFFF", sCompanyName));
+		out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
 
 		if (sSisterCompany.compareToIgnoreCase("") != 0){
 			out.println("<B>NOTE: SHOWING CORRESPONDING ITEM INFORMATION FOR " + sSisterCompany + "</B><BR>");

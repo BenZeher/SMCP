@@ -41,7 +41,6 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 	public static final String LINE_NUMBER_TO_UNAPPLY_PARAM = "UnapplyLineNumber";
 	public static final String COMMAND_VALUE_APPLYTODOC = "ApplyLine";
 	public static final String APPLYTODOCNUMBER_TO_APPLY_PARAM = "ApplyToDocNumber";
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String UPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>U</FONT></B>pdate"; // U
@@ -182,7 +181,7 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 		
 		String sLineText = "";
 		while (rs.next()){
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -239,7 +238,7 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 
 		//Add one blank line so the user can add lines:
 		
-		sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+		sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 		if (bOddRow){
 			sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 		}

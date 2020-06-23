@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
@@ -60,7 +61,7 @@ public class ICPrintPOGenerate extends HttpServlet {
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 				   "Transitional//EN\">" +
 			       "<HTML>" +
-			       "<HEAD><BODY BGCOLOR=\"#FFFFFF\">" 
+			       "<HEAD><BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" 
 			       		+ "<STYLE TYPE=\"text/css\">P.breakhere {page-break-before: always}</STYLE>"
 			       + "</HEAD>"
 				   );

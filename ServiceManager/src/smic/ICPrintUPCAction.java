@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
@@ -130,11 +131,11 @@ public class ICPrintUPCAction extends HttpServlet {
 					+ "<HTML>"
 
 					//Add a page break definition here:
-					+ "<HEAD><BODY BGCOLOR=\"#FFFFFF\">" 
+					+ "<HEAD><BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" 
 					+ "<STYLE TYPE=\"text/css\">P.breakhere {page-break-before: always}</STYLE>"
 					+ "</HEAD>"
 
-					+ "<BODY BGCOLOR=\"#FFFFFF\">"
+					+ "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">"
 			);
 		}
 		String sQueryList = "";

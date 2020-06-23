@@ -17,6 +17,7 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelocations;
@@ -30,7 +31,6 @@ import ServletUtilities.clsStringFunctions;
 public class ICBulkTransferEdit  extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final String DARK_ROW_BG_COLOR = "#cceeff";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	private static final String sICBulkTransferEditCalledClassName = "ICBulkTransferAction";
 	public static final int INITIAL_NUMBER_OF_ROWS = 25;
 	public static final String PARAM_COMMAND = "COMMAND";
@@ -210,7 +210,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 		}
 	    
 	    for (int i = 0;i < entry.getLineCount(); i++){
-			out.println("<TR style = \" background-color: " + LIGHT_ROW_BG_COLOR +  ";  \">");
+			out.println("<TR style = \" background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE +  ";  \">");
 
     	    sQuantity = entry.getLineByIndex(i).sQtySTDFormat();
 			if (sQuantity.compareToIgnoreCase("") == 0){

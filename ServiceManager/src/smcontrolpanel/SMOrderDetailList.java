@@ -1304,7 +1304,7 @@ public class SMOrderDetailList  extends HttpServlet {
 			rsChangeOrders.close();
 			
 			//Print the change order total:
-			sBackgroundColor = "\"#FFFFFF\"";
+			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 			//sCellStyle = "style=\"border: 0px solid\" bordercolor=" + sBackgroundColor;
 			s += "<TR bgcolor =" + sBackgroundColor + ">";
 			s += 
@@ -1454,7 +1454,7 @@ public class SMOrderDetailList  extends HttpServlet {
 			rsInvoices.close();
 			
 			//Show the total amount billed:
-			sBackgroundColor = "\"#FFFFFF\"";
+			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 			s += "<TR bgcolor =" + sBackgroundColor + ">";
 			s += 
 				"<TD ALIGN=RIGHT COLSPAN=4" + sCellStyle 
@@ -2120,7 +2120,7 @@ public class SMOrderDetailList  extends HttpServlet {
 
 		//s +=
 		//	"tr.d0 td {"
-		//	+ "background-color: #FFFFFF; "
+		//	+ "background-color: " + BACKGROUND_WHITE + "; "
 		//	+"}"
 		//	;
 		//s +=

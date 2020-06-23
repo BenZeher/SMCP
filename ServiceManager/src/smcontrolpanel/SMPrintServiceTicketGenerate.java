@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMSystemFunctions;
@@ -81,7 +82,7 @@ public class SMPrintServiceTicketGenerate extends HttpServlet {
 			       		+ "H4.western { font-family: \"Arial\", sans-serif; font-size: 10pt; }\n"
 			       		+ "@page { size:8.5in 11in; margin: 0.4in }\n"
 			       		+ "</STYLE>"
-			       + "</HEAD><BODY BGCOLOR=\"#FFFFFF\">"
+			       + "</HEAD><BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">"
 				   );
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(

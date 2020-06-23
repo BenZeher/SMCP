@@ -170,7 +170,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 			+ "    <TITLE>" + sReportTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE>\n"
 			+ "  </HEAD>\n"
 			+ "<BR>" 
-			+ "  <BODY BGCOLOR=\"#FFFFFF\">\n" 
+			+ "  <BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">\n" 
 			+ "    <TABLE BORDER=0 WIDTH=100%>\n" 
 			+ "      <TR>\n"
 			+ "        <TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + "</FONT></TD>\n"

@@ -146,7 +146,7 @@ public class SMListSecurityBy extends HttpServlet {
         	out.println(SMUtilities.getMasterStyleSheetLink());
         	
 	        // Set up table and headings:
-	    	out.println("<TABLE BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\"><TR>");
+	    	out.println("<TABLE BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\"><TR>");
 	    	out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 	    	if (sHeading1.length() !=0){
 	    		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">" + sHeading1 + "</TD>");

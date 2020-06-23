@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -79,7 +80,7 @@ public class ARPrintPostingJournal extends HttpServlet{
 		out.println(clsServletUtilities.DOCTYPE +
 	        "<HTML>" +
 	        "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>\n"  
-			+ "<BODY BGCOLOR=\"#FFFFFF\">");
+			+ "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">");
 		String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), conn);
 		out.println("<TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">\n" +
 				"<TR><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>\n" +

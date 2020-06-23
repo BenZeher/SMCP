@@ -2,7 +2,7 @@
 
 /* row background color WHITE */
 tr.evennumberedtablerow:{
-  background-color: #FFFFFF !important;
+  background-color: " + BACKGROUND_WHITE + " !important;
 }
 
 /* row background color GREY */

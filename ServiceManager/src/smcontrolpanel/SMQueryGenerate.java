@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablesavedqueries;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsCreateHTMLFormFields;
@@ -112,7 +113,7 @@ public class SMQueryGenerate extends HttpServlet {
 		       								//double quotes in iframes, etc.
 		      //
 		       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + "\n"
-		       + "<BODY BGCOLOR=\"#FFFFFF\">" + "\n"
+		       + "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" + "\n"
 			   + "<TABLE BORDER=0 WIDTH=100%>" + "\n"
 			   + "  <TR>" + "\n"
 			   + "    <TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 

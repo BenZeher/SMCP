@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMInvoicePrinter;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
@@ -74,7 +75,7 @@ public class SMPrintInvoice extends HttpServlet {
 
 		       		+ "<TITLE>" + sReportTitle + "</TITLE>\n"
 		       		+ "</HEAD>\n" 
-		       		+ "<BODY BGCOLOR=\"" + "#FFFFFF" + "\">\n"
+		       		+ "<BODY BGCOLOR=\"" + "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "" + "\">\n"
 
 				);
 		out.println(SMInvoicePrinter.sStyleScripts());

@@ -103,6 +103,7 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_YELLOW = "#FFFF66";
 	
 	public static final String BACKGROUND_ORANGE = "#EE9A4D";
+	public static final String BACKGROUND_DARK_ORANGE = "#CF6031";
 	
 	public static final String BACKGROUND_GOLD = "#E8C355";
 		
@@ -111,9 +112,10 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_DARK_BLUE = "#120991";
 	
 	public static final String BACKGROUND_WHITE = "#FFFFFF";
+	public static final String BACKGROUND_LIGHT_GREY = "#EBEBEB";
 	public static final String BACKGROUND_GREY = "#DCDCDC";
-	
-	
+	public static final String BACKGROUND_GREY_BLUE = "#DAE6EE";
+	public static final String BACKGROUND_GREY_BLUE_ALT = "#E9F7FF";
 	
 	
 }

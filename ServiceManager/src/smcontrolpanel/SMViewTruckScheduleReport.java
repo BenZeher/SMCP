@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTablemechanicservicetypes;
 import SMDataDefinition.SMTableorderheaders;
@@ -37,13 +38,6 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 	public static String TEMPTABLE_FIELD_WORKORDERCREATED = "iworkordercreated";
 	public static String TEMPTABLE_FIELD_WORKORDERIMPORTED = "iworkorderimported";
 	public static String TEMPTABLE_FIELD_WORKORDERPOSTED = "iworkorderposted";
-	private static String CELL_SHADED = "#EBEBEB";
-	//private static String CELL_SHADED = "#FFFFFF";
-	private static String CELL_UNSHADED = "#FFFFFF";
-	private static String TODAYS_CELL_SHADED = "#DAE6EE";
-	//private static String TODAYS_CELL_UNSHADED = "#FFFF80";
-	private static String TODAYS_CELL_UNSHADED = "#E9F7FF";
-	public static String SERVICETYPE_COLOR = "#CF6031";
 	private static String SCHEDULECOMMENT_COLOR = "RED";
 	private static String SHIP_TO_CITY_COLOR = "GREEN";
 	public static String WORK_ORDER_STATUS_COLOR = "BLACK";
@@ -588,7 +582,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 							+ rs.getString(TEMPTABLE_FIELD_SCHEDULECOMMENT) + "</FONT></I>"
 							+ " "
 							+ sTotalHoursLink
-							+ "<B><FONT COLOR=" + SERVICETYPE_COLOR + "></FONT></B>" + sServiceType
+							+ "<B><FONT COLOR=" + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_ORANGE + "></FONT></B>" + sServiceType
 							+ " "
 							+ "<B><FONT COLOR=" + WORK_ORDER_STATUS_COLOR + ">" + sWorkOrderStatusLink + "</FONT></B>" ).trim()
 					);
@@ -1291,7 +1285,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + TODAYS_CELL_UNSHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY_BLUE_ALT + ";"
 				+ "}"	
 		);
 		pwOut.println(
@@ -1304,7 +1298,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + TODAYS_CELL_SHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY_BLUE + ";"
 				+ "}"	
 		);
 		
@@ -1318,7 +1312,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + CELL_UNSHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ";"
 				+ "}"	
 		);
 		pwOut.println(
@@ -1331,7 +1325,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + CELL_SHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + ";"
 				+ "}"	
 		);
 		pwOut.println(
@@ -1342,7 +1336,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + CELL_UNSHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ";"
 				+ "}"	
 		);
 		pwOut.println(
@@ -1353,7 +1347,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + CELL_SHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + ";"
 				+ "}"	
 		);
 

@@ -53,7 +53,7 @@ public class ARResetPostingFlagAction extends HttpServlet {
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE></HEAD>\n<BR>" + 
-		   "<BODY BGCOLOR=\"#FFFFFF\">" +
+		   "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" +
 		   "<TABLE BORDER=0 WIDTH=100%>" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>"
 		   + clsDateAndTimeConversions.nowStdFormat()

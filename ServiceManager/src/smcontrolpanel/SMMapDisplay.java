@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMGoogleMapAPIKey;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTablelocations;
@@ -520,7 +521,7 @@ public class SMMapDisplay extends HttpServlet {
 					+ sEditJobCostLink
 					+ "&nbsp;-&nbsp;Order&nbsp;#&nbsp;" 
 					+ sOrderNumberLink + "&nbsp;" 
-					+ "<B><FONT COLOR=" + SMViewTruckScheduleReport.SERVICETYPE_COLOR + ">"
+					+ "<B><FONT COLOR=" + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_ORANGE + ">"
 					+ sServiceType + "&nbsp;</FONT></B>"
 					+ "<BR>LOCATION:&nbsp;" + sMapAddress
 					+ "<BR>CUSTOMER:&nbsp;" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName)

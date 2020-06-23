@@ -71,7 +71,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    
 	    title = "Pending " + SMBidEntry.ParamObjectName + "s";
 	    subtitle = "";
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
 	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    out.println(sStyleScripts());

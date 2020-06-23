@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablesavedqueries;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
@@ -40,8 +41,6 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 	//public static final String SHOW_PRIVATE_QUERIES = "SHOWPRIVATEQUERIES";
 	private static final String TABLE_BACKGROUND_COLOR = "LightSteelBlue";
 	private static final String EVEN_ROW_BACKGROUND_COLOR = "#DCDCDC";
-	private static final String ODD_ROW_BACKGROUND_COLOR = "#FFFFFF";
-	
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -521,7 +520,7 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 			"td.queryfieldleftalignedoddrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + ODD_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: left; "
@@ -534,7 +533,7 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 			"td.queryfieldrightalignedoddrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + ODD_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: right; "
@@ -548,7 +547,7 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 			"td.queryfieldcenteralignedoddrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + ODD_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: center; "

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableinvoicemgrcomments;
 import ServletUtilities.clsServletUtilities;
@@ -357,7 +358,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 	       + "<body onLoad=\"window.location='#LastEdit'\">"
 	       
 	       + "</HEAD>\n<BR>" + 
-		   "<BODY BGCOLOR=\"#FFFFFF\">" +
+		   "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" +
 		   "<TABLE BORDER=0 WIDTH=100%>" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + " Printed by " + sFullName 

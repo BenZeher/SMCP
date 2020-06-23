@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
@@ -104,7 +105,7 @@ public class FAAssetListGenerate extends HttpServlet {
 				+ "Transitional//EN\">"
 				+ "<HTML>"
 				+ "<HEAD><TITLE>" + sReportTitle + "</TITLE></HEAD>\n<BR>" 
-				+ "<BODY BGCOLOR=\"#FFFFFF\">"
+				+ "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">"
 				+ "<TABLE BORDER=0 WIDTH=100% style= \"font-family: Arial;\" BGCOLOR = \"" + sColor +"\" >"
 				+ "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 				+ dfUSDateformatter.format((new Timestamp(System.currentTimeMillis()))) 

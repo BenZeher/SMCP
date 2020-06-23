@@ -196,7 +196,7 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 	    out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">" +
 			        "<HTML>" +
 			        "<HEAD><TITLE>" + title + " - " + subtitle + "</TITLE></HEAD>\n<BR>" + 
-				    "<BODY BGCOLOR=\""+ "#FFFFFF"
+				    "<BODY BGCOLOR=\""+ "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ""
 			        + "\">"
 	    );
 	    

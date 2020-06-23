@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 
 public class SMExecuteLockedDBConnection extends HttpServlet {
@@ -39,7 +40,7 @@ public class SMExecuteLockedDBConnection extends HttpServlet {
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>Killing deadlock database connection - + " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
-		   "<BODY BGCOLOR=\"#FFFFFF\">" +
+		   "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" +
 		   "<TABLE BORDER=0 WIDTH=100%>" +
 		   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>Killing deadlock database connection - + " + sCompanyName + "</B></FONT></TD></TR>");
 				   

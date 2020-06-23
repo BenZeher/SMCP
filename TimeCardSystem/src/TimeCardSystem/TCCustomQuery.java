@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -260,7 +261,7 @@ public class TCCustomQuery extends java.lang.Object{
 
 			out.println(
 					"tr.d0 td {"
-					+ "background-color: #FFFFFF; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "; "
 					+"}"
 			);
 			out.println(

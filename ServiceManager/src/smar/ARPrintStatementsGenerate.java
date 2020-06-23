@@ -19,6 +19,7 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTablearmatchingline;
@@ -135,7 +136,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 					"Transitional//EN\">" +
 					"<HTML>" +
-					"<HEAD><BODY BGCOLOR=\"#FFFFFF\">" 
+					"<HEAD><BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" 
 					+ "<STYLE TYPE=\"text/css\">P.breakhere {page-break-before: always}</STYLE>"
 					+ "</HEAD>"
 					);

@@ -15,6 +15,7 @@ import smcontrolpanel.SMBackgroundJobManager;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablessalarmsequences;
 import SMDataDefinition.SMTablessdevices;
 import SMDataDefinition.SMTablesseventscheduledetails;
@@ -29,7 +30,6 @@ public class ASEditEventSchedulesEdit  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String OBJECT_NAME = SSEventSchedule.ParamObjectName;
 	private static final String DARK_ROW_BG_COLOR = "#cceeff"; //Light blue
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	
 	public static final String DAYOFWEEKLABEL_SUNDAY = "Sunday";
 	public static final String DAYOFWEEKLABEL_MONDAY = "Monday";
@@ -325,7 +325,7 @@ public class ASEditEventSchedulesEdit  extends HttpServlet {
 		//Display all the current trigger devices:
 		for (int i = 0; i < entry.getEventScheduleDetails().size(); i++){
 			if (bOddRow){
-				sBackgroundColor = LIGHT_ROW_BG_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			}else{
 				sBackgroundColor = DARK_ROW_BG_COLOR;
 			}

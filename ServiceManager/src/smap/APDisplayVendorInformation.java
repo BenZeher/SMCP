@@ -75,7 +75,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 
     	//Customized title
     	String sReportTitle = "View Vendor Information";
-    	out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", "#FFFFFF", sCompanyName));
+    	out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
     	out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"styles/MasterStyleSheet.css\" media=\"screen\" />");
     	
     	out.println(clsServletUtilities.getDatePickerIncludeString(getServletContext()));

@@ -37,7 +37,6 @@ public class APViewTransactionInformation  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -805,7 +804,7 @@ public class APViewTransactionInformation  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			boolean bOddRow = true;
 			while (rs.next()){
-				String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+				String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				if (bOddRow){
 					sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 				}

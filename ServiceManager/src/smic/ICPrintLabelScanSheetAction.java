@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitems;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -92,9 +93,9 @@ public class ICPrintLabelScanSheetAction extends HttpServlet {
 				"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 "
 				+ "Transitional//EN\">"
 				+ "<HTML>"
-				+ "<HEAD><BODY BGCOLOR=\"#FFFFFF\">" 
+				+ "<HEAD><BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" 
 				+ "</HEAD>"
-				+ "<BODY BGCOLOR=\"#FFFFFF\">"
+				+ "<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">"
 		);
 
 		Connection conn = clsDatabaseFunctions.getConnection(

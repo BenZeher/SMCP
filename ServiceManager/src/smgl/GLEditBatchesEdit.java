@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMOption;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
@@ -34,7 +35,6 @@ public class GLEditBatchesEdit extends HttpServlet {
 	
 	private static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW";
 	private static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
-	private static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	public static final String GL_BATCH_POSTING_SESSION_WARNING_OBJECT = "GLEDITBATCHWARNING";
 	
 	private static final long serialVersionUID = 1L;
@@ -330,7 +330,7 @@ public class GLEditBatchesEdit extends HttpServlet {
     		boolean bOddRow = true;
     		for (int i = 0; i < batch.getBatchEntryArray().size(); i++){
     			GLTransactionBatchEntry entry = batch.getBatchEntryArray().get(i);
-				String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+				String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				if (bOddRow){
 					sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 				}

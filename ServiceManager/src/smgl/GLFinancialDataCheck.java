@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
@@ -2040,7 +2041,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		String s = "";
 		String sBackgroundColor = "#DCDCDC";
 		if ((iRowNumber % 2) == 0){
-			sBackgroundColor = "#FFFFFF";
+			sBackgroundColor = "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "";
 		}
 		s += "  <TR style = \" background-color:" + sBackgroundColor + "; \" >" + "\n";
 		

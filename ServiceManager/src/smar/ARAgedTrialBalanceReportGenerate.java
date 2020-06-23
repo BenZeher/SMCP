@@ -323,7 +323,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 					"Transitional//EN\">" +
 					"<HTML>" +
 					"<HEAD><TITLE>" + sReportTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE></HEAD>\n<BR>" + 
-					"<BODY BGCOLOR=\"#FFFFFF\">" +
+					"<BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">" +
 					"<TABLE BORDER=0 WIDTH=100% BGCOLOR = " + sColor + ">" +
 					"<P STYLE = \"font-family:arial;\"><TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 					+ USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 

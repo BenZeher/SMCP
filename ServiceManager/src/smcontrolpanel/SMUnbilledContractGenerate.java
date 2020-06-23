@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableservicetypes;
@@ -199,7 +200,7 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 	    /*************END of PARAMETER list***************/
 
     	//print out report heading and selected criteria
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
 	    out.println("<TABLE BORDER=0 WIDTH=100%><TR>");
 	    out.println("<TD ALIGN=LEFT VALIGN=TOP><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 		+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 

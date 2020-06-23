@@ -70,7 +70,6 @@ public class APEditPaymentEdit  extends HttpServlet {
 	public static final String TABLE_APPLIED_DOCUMENTS = "APPLIEDDOCUMENTS";
 	public static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW"; //"#FF2080";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	
 	public static final String NET_AMT_FIELD_NAME = "NETAMT";
 	
@@ -1056,7 +1055,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String buildPrePaymentDetailsTable(boolean bEditable, APBatchEntry entry, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		
-		s += "<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
+		s += "<TABLE BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
 		//Header row:
 		
@@ -1400,7 +1399,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String buildMiscPaymentDetailsTable(boolean bEditable, APBatchEntry entry, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		
-		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
+		s += "<TABLE WIDTH=100% BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
 		//Header row:
 		if (bEditable){
@@ -2038,7 +2037,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 					}
 				}
 				if(!bDocumentIsAlreadyApplied){
-					String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+					String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 					if (bOddRow){
 						sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 					}
@@ -2131,7 +2130,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 		String s = "";
 		//Print headings:
 		s += "<B><I><U>UNAPPLIED INVOICES</U></I></B> - <I>(Click on the headings to sort)</I>\n";
-		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE WIDTH=100% BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 			+ " ID = \"" + TABLE_UNAPPLIED_DOCUMENTS + "\""
 			+ ">\n";
 		
@@ -2213,7 +2212,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 					}
 				}
 				if(!bDocumentIsAlreadyApplied){
-					String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+					String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 					if (bOddRow){
 						sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 					}
@@ -2296,7 +2295,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String displayDetailLinesForPayments(APBatchEntry entry, boolean bEditable, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		s += "<B><I><U>APPLIED INVOICES</U></I></B>\n";
-		s += "<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 			+ " ID = \"" + TABLE_APPLIED_DOCUMENTS + "\""
 			+ ">\n";
 		
@@ -2391,7 +2390,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 			}else{
 				
 			}
-			String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -2561,7 +2560,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String displayDetailLinesForApplyTos(APBatchEntry entry, boolean bEditable, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		s += "<B><I><U>APPLIED INVOICES</U></I></B>\n";
-		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE WIDTH=100% BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 			+ " ID = \"" + TABLE_APPLIED_DOCUMENTS + "\""
 			+ ">\n";
 		
@@ -2661,7 +2660,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 			}else{
 				
 			}
-			String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -3168,9 +3167,9 @@ public class APEditPaymentEdit  extends HttpServlet {
 			+ "                unappliedTable.rows[i].onmouseout = function () { this.style.backgroundColor = \"" + TABLE_ROW_ODD_ROW_BACKGROUND_COLOR + "\";  }; \n" //this.style.color = \"\";
 			+ "            }else{\n"
 			//+ "                unappliedTable.rows[i].style.background = \"" + TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR + "\"; \n"
-			+ "                unappliedTable.rows[i].onmouseout = function () { this.style.backgroundColor = \"" + TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR + "\";  }; \n" //this.style.color = \"\";
+			+ "                unappliedTable.rows[i].onmouseout = function () { this.style.backgroundColor = \"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\";  }; \n" //this.style.color = \"\";
 			+ "            }\n"
-			+ "            unappliedTable.rows[i].onmousemove = function () { this.style.backgroundColor = \"" + ROW_BACKGROUND_HIGHLIGHT_COLOR + "\"; }; \n" //this.style.color = \"#FFFFFF\"; 
+			+ "            unappliedTable.rows[i].onmousemove = function () { this.style.backgroundColor = \"" + ROW_BACKGROUND_HIGHLIGHT_COLOR + "\"; }; \n" //this.style.color = \"" + BACKGROUND_WHITE + "\"; 
 			//+ "            tbl.rows[i].onclick = function () { moveRowToAppliedTable(this); }; \n" //this.style.color = \"\";
 			+ "            oddrow = !oddrow;\n"
 		;

@@ -52,7 +52,7 @@ public class ICListPhysicalInventories extends HttpServlet {
 	    //Get the variables for the class:
 	    String title = "Physical inventories.";
 	    String subtitle = "";
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "", sCompanyName));
 
 	    //Display any warnings:
 	    if (request.getParameter("Warning") != null){

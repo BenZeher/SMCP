@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -216,7 +217,7 @@ public class SMListOrdersForSchedulingGenerate extends HttpServlet {
 
 	       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" 
 		   + "<BODY BGCOLOR=\"" 
-		   + "#FFFFFF"
+		   + "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ""
 		   + "\""
 		   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
 		   //Jump to the last edit:

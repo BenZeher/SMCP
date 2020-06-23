@@ -16,6 +16,7 @@ import SMClasses.SMDeliveryTicket;
 import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTabledeliverytickets;
 import SMDataDefinition.SMTabledeliveryticketterms;
 import SMDataDefinition.SMTablesmoptions;
@@ -679,7 +680,7 @@ public class SMDeliveryTicketSignatureEdit  extends HttpServlet {
 			+ " lineTop:" + SMTabledeliverytickets.SIGNATURE_TOP + ","
 			+ " penWidth:" + SMTabledeliverytickets.SIGNATURE_PEN_WIDTH + ","
 			+ " penColour:" + "\"" + SMTabledeliverytickets.SIGNATURE_PEN_COLOUR + "\","
-			+ " lineColour:\"" + SMTabledeliverytickets.SIGNATURE_LINE_COLOUR + "\"," //makes the line transparent
+			+ " lineColour:\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"," //makes the line transparent
 			+ " lineWidth:" + SMTabledeliverytickets.SIGNATURE_LINE_WIDTH + ","
 			+ " lineMargin:" + SMTabledeliverytickets.SIGNATURE_LINE_MARGIN
 		;

@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegltransactionbatchentries;
@@ -275,7 +276,7 @@ public class SMCustomQuery extends java.lang.Object{
 
 			out.println(
 					"tr.d0 td {"
-					+ "background-color: #FFFFFF; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "; "
 					+"}"
 			);
 			out.println(

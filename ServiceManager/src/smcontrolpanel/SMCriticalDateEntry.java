@@ -715,7 +715,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 				if(bOddRow){
 					sBackgroundColor = "\"" + "#f3f3f3" + "\"";
 				}else{
-					sBackgroundColor = "\"" + "#FFFFFF" + "\"";
+					sBackgroundColor = "\"" + "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "" + "\"";
 				}
 				if (rs.getLong(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sId) > 0L){
 					s +="<TR  bgcolor =" + sBackgroundColor +" >";

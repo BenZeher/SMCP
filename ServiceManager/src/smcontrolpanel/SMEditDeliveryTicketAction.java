@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import SMClasses.SMDeliveryTicket;
 import SMClasses.SMLogEntry;
 import SMClasses.SMOption;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTabledeliverytickets;
 import SMDataDefinition.SMTablesmoptions;
@@ -307,7 +308,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 		//For printing signature:
 		s += "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
 					+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js\"></script>";
-		s += "</HEAD><BODY BGCOLOR=\"#FFFFFF\">"
+		s += "</HEAD><BODY BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\">"
 		;
 	 	//Retrieve information
 	 	Connection conn;

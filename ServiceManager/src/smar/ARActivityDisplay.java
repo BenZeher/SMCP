@@ -335,7 +335,7 @@ public class ARActivityDisplay extends HttpServlet {
 	
 	        		if (iLineCounter == 0){
 	        			out.println(SMUtilities.getMasterStyleSheetLink());
-	        			out.println("<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+	        			out.println("<TABLE BGCOLOR=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 	        			printTableHeader(out, sOrderBy, sLinkMain);
 	        		}
 	        		if(iLineCounter % 2 == 0) {

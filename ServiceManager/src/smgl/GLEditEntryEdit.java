@@ -56,7 +56,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 	public static final String LINE_NUMBER_TO_UNAPPLY_PARAM = "UnapplyLineNumber";
 	public static final String COMMAND_VALUE_APPLYTODOC = "ApplyLine";
 	public static final String APPLYTODOCNUMBER_TO_APPLY_PARAM = "ApplyToDocNumber";
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String UPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>U</FONT></B>pdate"; // U
@@ -970,7 +969,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		//Long lStartingTime = System.currentTimeMillis();
 		for (int i = 0; i < entry.getLineArray().size(); i++){
 			GLTransactionBatchLine line = entry.getLineArray().get(i);
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -1239,7 +1238,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			transactionline.setsentrynumber(entry.getsentrynumber());
 			transactionline.setslinenumber("0");
 			
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -1430,7 +1429,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		}
 		
 		//Print a line for the totals:
-		s += "  <TR style = \"  background-color:" + TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR + ";  \""
+		s += "  <TR style = \"  background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ";  \""
 				+ ">\n"
 			;
 		s += "    <TD COLSPAN=3 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";

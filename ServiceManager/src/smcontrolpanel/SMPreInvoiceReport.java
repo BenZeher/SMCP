@@ -12,6 +12,7 @@ import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTabledefaultsalesgroupsalesperson;
@@ -820,7 +821,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 		if(bIsOddRow){
 			sBackgroundColor = "\"#EEEEEE\"";
 		}else{
-			sBackgroundColor = "\"#FFFFFF\"";
+			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 		}
 		pwOut.println("<TR bgcolor =" + sBackgroundColor + ">");
 		

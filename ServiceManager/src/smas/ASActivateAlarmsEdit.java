@@ -13,6 +13,7 @@ import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMGoogleMapAPIKey;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablessalarmsequences;
 import SMDataDefinition.SMTablessalarmsequenceusers;
 import ServletUtilities.clsDatabaseFunctions;
@@ -23,7 +24,6 @@ public class ASActivateAlarmsEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final String DARK_ROW_BG_COLOR = "#cceeff";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	private static final String ARM_ZONE_BUTTON_LABEL = "ARM";
 	private static final String DISARM_ZONE_BUTTON_LABEL = "DISARM";
 	private static final String ARM_DISARM_BUTTON_NAME = "ARMDISARMBUTTON";
@@ -228,7 +228,7 @@ public class ASActivateAlarmsEdit  extends HttpServlet {
 				String sBackgroundColor = "";
 
 				if (bOddRow){
-					sBackgroundColor = LIGHT_ROW_BG_COLOR;
+					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				}else{
 					sBackgroundColor = DARK_ROW_BG_COLOR;
 				}

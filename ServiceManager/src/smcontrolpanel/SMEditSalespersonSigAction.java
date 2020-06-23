@@ -1,5 +1,6 @@
 package smcontrolpanel;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableproposals;
 import SMDataDefinition.SMTablesalesperson;
 import ServletUtilities.clsDatabaseFunctions;
@@ -78,7 +79,7 @@ public class SMEditSalespersonSigAction extends HttpServlet{
 				+ " displayOnly:true,"
 				+ " errorMessageDraw: \"\","
 				+ " lineTop:" + SMTableproposals.SIGNATURE_TOP + ","
-				+ " lineColour:\"" + SMTableproposals.SIGNATURE_LINE_COLOUR + "\"" //makes the line transparent
+				+ " lineColour:\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"" //makes the line transparent
 			;
 	    out.println("<BR><script src=\"scripts/jquery-signaturepad-min.js\"></script> <script>");
 	    out.println("$(document).ready(function () {");

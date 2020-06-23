@@ -80,7 +80,6 @@ public class APEditInvoiceEdit  extends HttpServlet {
 	public static final String LINE_NUMBER_TO_UNAPPLY_PARAM = "UnapplyLineNumber";
 	public static final String COMMAND_VALUE_APPLYTODOC = "ApplyLine";
 	public static final String APPLYTODOCNUMBER_TO_APPLY_PARAM = "ApplyToDocNumber";
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String BOOKMARK_TOP_OF_TABLES = "TopOfTables";
@@ -1332,7 +1331,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 		boolean bOddRow = false;
 		for (int i = 0; i < entry.getLineArray().size(); i++){
 			APBatchEntryLine line = entry.getLineArray().get(i);
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -1595,7 +1594,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			line.setsentrynumber(entry.getsentrynumber());
 			line.setslinenumber("0");
 			
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -1907,7 +1906,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			
 			APBatchEntryLine line = entry.getLineArray().get(i);
 			
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -2175,7 +2174,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			line.setsentrynumber(entry.getsentrynumber());
 			line.setslinenumber("0");
 			
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
@@ -2418,7 +2417,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 				
 				// TJR - 6/15/2017 - we'll allow the user to apply to the same document as many times as needed:
 				//if(!bDocumentIsAlreadyApplied){
-					String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
+					String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 					if (bOddRow){
 						sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 					}

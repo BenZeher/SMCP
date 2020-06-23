@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
+import smcontrolpanel.SMEstimate;
 import smcontrolpanel.SMEstimateSummary;
 import smgl.GLTransactionBatch;
 
@@ -152,6 +153,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		/*
 		SMEstimateSummary summary = new SMEstimateSummary();
 		summary.setslid("1");
 		try {
@@ -165,6 +167,27 @@ public class TESTBatchExport extends HttpServlet{
 		} catch (Exception e1) {
 			System.out.println("[202006181731] - " + e1.getMessage());
 		}
+		*/
+		
+		SMEstimate estimate = new SMEstimate();
+		estimate.setslid("139");
+		try {
+			estimate.load(conn);
+		} catch (Exception e1) {
+			System.out.println("[202006235142] - " + e1.getMessage());
+		}
+		try {
+			estimate.sortEstimateLinesByLineNumber();
+		} catch (Exception e1) {
+			System.out.println("[202006235201] - " + e1.getMessage());
+		}
+		
+		for (int i = 0; i < estimate.getLineArray().size(); i++) {
+			System.out.println("[202006235355] - line " + estimate.getLineArray().get(i).getslestimatelinenumber()
+				+ ", item: '" + estimate.getLineArray().get(i).getsitemnumber() + "."
+					);
+		}
+		
 		System.out.println("[202006181749] - DONE");
 		
 		/*

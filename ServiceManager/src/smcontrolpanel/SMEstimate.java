@@ -191,7 +191,7 @@ public class SMEstimate {
         				newline.setslestimateid(sParamValue.trim());
         			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelinenumber) == 0){
-        				newline.setslestimatelinenumber(sParamValue.trim());
+        				newline.setslestimatelinenumber(Integer.toString(iLineNumber));
         			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lid) == 0){
         				newline.setslid(sParamValue.trim());
@@ -229,9 +229,6 @@ public class SMEstimate {
            			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelid) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setslestimateid(sParamValue.trim());
         			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelinenumber) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setslestimatelinenumber(sParamValue.trim());
-        			}
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lid) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setslid(sParamValue.trim());
         			}
@@ -247,6 +244,9 @@ public class SMEstimate {
         			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.sunitofmeasure) == 0){
         				arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure(sParamValue.trim());
         			}
+        			
+        			//Now set the line number:
+        			arrEstimateLines.get(iLineNumber - 1).setslestimatelinenumber(Integer.toString(iLineNumber));
     			}
     		}
     	}
@@ -262,6 +262,8 @@ public class SMEstimate {
     			|| (newline.getslinedescription().compareToIgnoreCase("0.00") != 0)
     			|| (newline.getsunitofmeasure().compareToIgnoreCase("") != 0)
     		){
+    			//Set the line number of the new line:
+    			newline.setslestimatelinenumber(Integer.toString(arrEstimateLines.size() + 1));
     			addLine(newline);
     		}
     	}
@@ -271,9 +273,48 @@ public class SMEstimate {
     		arrEstimateLines.get(i).setslsummaryid(m_lsummarylid);
     	}
     	
-    	//System.out.println("[202006080956] - estimate dump:\n" + dumpData());
+    	for (int i = 0; i < arrEstimateLines.size(); i++){
+    		//System.out.println("[202006230037] - i = " + i + ", item = '" + arrEstimateLines.get(i).getsitemnumber() + ", line number = " + arrEstimateLines.get(i).getslestimatelinenumber());
+    		arrEstimateLines.get(i).setslsummaryid(m_lsummarylid);
+    	}
+    	
+    	for (int i = 0; i < arrEstimateLines.size(); i++){
+    		//System.out.println("[202006230038] - i = " + i + ", item = '" + arrEstimateLines.get(i).getsitemnumber() + ", line number = " + arrEstimateLines.get(i).getslestimatelinenumber());
+    		arrEstimateLines.get(i).setslsummaryid(m_lsummarylid);
+    	}
+    	
+    	//Sort the lines to make sure they're actually ordered by line number:
+    	try {
+			sortEstimateLinesByLineNumber();
+		} catch (Exception e) {
+			//No place to display this error, so we send it to the error log:
+			System.out.println("[202006233629] - " + e.getMessage());
+		}
+    	
 	}
-	
+	public void sortEstimateLinesByLineNumber() throws Exception{
+		ArrayList <SMEstimateLine>arrTempLines = new ArrayList<SMEstimateLine>(0);
+
+		//First, move all the lines into the temp array:
+		//System.out.println("[202006230416] - arrEstimateLines.size() = " + arrEstimateLines.size());
+		for (int i = 0; i < arrEstimateLines.size(); i++) {
+			arrTempLines.add(arrEstimateLines.get(i));
+		}
+		arrEstimateLines.clear();
+		
+		//System.out.println("[202006230415] - arrTempLines.size() = " + arrTempLines.size());
+			
+		//Now, move them back into the estimate line array in order:
+		for (int i = 0; i < arrTempLines.size(); i++) {
+			//System.out.println("[202006234208] - i = " + i);
+			try {
+				arrEstimateLines.add(getLineByLineNumber(Integer.toString(i + 1), arrTempLines));
+			} catch (Exception e) {
+				throw new Exception("Error [202006233442] - could not add line number " 
+					+ Integer.toString(i + 1) + " - " + e.getMessage());
+			}
+		}
+	}
 	public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
 
 		//long lStarttime = System.currentTimeMillis();
@@ -1090,6 +1131,8 @@ public class SMEstimate {
 				+ "' in estimate line array - arr size = " + Integer.toString(arrEstimateLines.size()));
 		}
 		
+		System.out.println("[202006231410] - sLineNumber " + sLineNumber + ", item: '" + sItemNumber + "'.");
+		
 		ICItem item = new ICItem(sItemNumber);
 		if(!item.load(conn)){
 			//We just assume it's not an inventory number, and we just make it all blank:
@@ -1659,7 +1702,21 @@ public class SMEstimate {
     		throw new Exception("Error [1590170726] line number '" + sLineNumber + "' was not found in the Estimate.");
     	}
 	}
-
+	private SMEstimateLine getLineByLineNumber(String sLineNumber, ArrayList<SMEstimateLine>arrLineArray) throws Exception{
+		
+		//System.out.println("[202006234240] - in getLineByLineNumber, sLineNumber = '" + sLineNumber + "'");
+		//System.out.println("[202006231047] - arrLineArray.size() = " + arrLineArray.size());
+		for (int i = 0; i < arrLineArray.size(); i++) {
+			//System.out.println("[202006231010] - arrLineArray.get(i).getslestimatelinenumber() = " + arrLineArray.get(i).getslestimatelinenumber());
+			
+			if (arrLineArray.get(i).getslestimatelinenumber().compareToIgnoreCase(sLineNumber.trim()) == 0) {
+				//System.out.println("[202006234316] - returning line number '" + arrLineArray.get(i).getslestimatelinenumber() + " at array position " + i + ".");
+				return arrLineArray.get(i);
+			}
+		}
+		
+		throw new Exception("Error [202006233315] - could not get line number " + sLineNumber);
+	}
 	public String getQueryString(){
 		//Particular to the specific class
 		String sQueryString = "";

@@ -153,13 +153,16 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    	// No reason to re-load this class if it's being picked up in the session.
 	    	//But if we are returning from finding an item, we'll want to update that item value:
 	    	//So we'll iterate through the request parameters and see if it includes one of the item number fields:
-	    	
-	    	for (int iLineCounter = 0; iLineCounter <= estimate.getLineArray().size(); iLineCounter++) {
+	    	System.out.println("[202006232845] - estimate.getLineArray().size() = " + estimate.getLineArray().size());
+	    	for (int iLineCounter = 0; iLineCounter < estimate.getLineArray().size(); iLineCounter++) {
 	    		String sLineItemNumberParam = ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-						Integer.toString(iLineCounter + 1), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber;
+						Integer.toString(iLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber;
+	    		//System.out.println("[202006233057] - line " + (iLineCounter) + ", sLineItemNumberParam = '" + sLineItemNumberParam + "'.");
 	    		String sReturnedItemNumber = clsManageRequestParameters.get_Request_Parameter(sLineItemNumberParam, request);
+	    		//System.out.println("[202006233155] - sReturnedItemNumber = '" + sReturnedItemNumber + "'.");
 	    		if (sReturnedItemNumber.compareToIgnoreCase("") != 0){
 	    			estimate.getLineArray().get(iLineCounter).setsitemnumber(sReturnedItemNumber);
+	    			//System.out.println("[202006231028] - item number for line counter " + iLineCounter + " = '" + estimate.getLineArray().get(iLineCounter).getsitemnumber() + "'.");
 	    		}
 	    	}
 	    	
@@ -185,6 +188,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    //If we're returning from the item finder, then refresh all the lines on the estimate:
 	   // System.out.println("[202006122806] - get_Request_Parameter(RETURNING_FROM_FINDER = '" 
 	   // 	+ clsManageRequestParameters.get_Request_Parameter(RETURNING_FROM_FINDER, request) + "'");
+	    
+	    //System.out.println("[202006231826] - estimate dump - " + estimate.dumpData());
+	    
 	    if (clsManageRequestParameters.get_Request_Parameter(RETURNING_FROM_FINDER, request).compareToIgnoreCase("") != 0){
 	    	try {
 				estimate.refreshAllItems(getServletContext(), smedit.getsDBID(), smedit.getUserID());

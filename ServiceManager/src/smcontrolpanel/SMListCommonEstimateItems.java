@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -210,6 +211,14 @@ public class SMListCommonEstimateItems extends HttpServlet{
 		
 		s += "  </TR> \n";
 		
+		boolean bAllowViewingItemInformation = SMSystemFunctions.isFunctionPermitted(
+			SMSystemFunctions.ICDisplayItemInformation, 
+			sm.getUserID(), 
+			getServletContext(),
+			sm.getsDBID(),
+			sm.getLicenseModuleLevel()
+		);
+		
 		//Get the list of commonly used items:
 		SQL = "SELECT"
 			+ " " + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber
@@ -257,8 +266,19 @@ public class SMListCommonEstimateItems extends HttpServlet{
 						+ "</TD> \n"
 					;
 				
+				String sItemNumberLink = rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sItemNumber);
+				if (bAllowViewingItemInformation) {
+					sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+						+ "smic.ICDisplayItemInformation"
+						+ "?ItemNumber=" + sItemNumberLink
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+						+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
+						+ "\">" + sItemNumberLink + "</A>"
+					; 
+				}
+				
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
-					+ rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sItemNumber)
+					+ sItemNumberLink
 					+ "</TD> \n"
 				;
 				

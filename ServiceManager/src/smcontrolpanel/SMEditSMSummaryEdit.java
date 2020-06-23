@@ -556,8 +556,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		try {
 			ResultSet rsPriceListCodes = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rsPriceListCodes.next()) {
-				arrPriceListCodes.add(rsPriceListCodes.getString(SMTablepricelistcodes.spricelistcode));
-				arrPriceListCodeDescriptions.add(rsPriceListCodes.getString(SMTablepricelistcodes.sdescription));
+				arrPriceListCodes.add(rsPriceListCodes.getString(SMTablepricelistcodes.spricelistcode).trim());
+				arrPriceListCodeDescriptions.add(rsPriceListCodes.getString(SMTablepricelistcodes.sdescription).trim());
 			}
 			rsPriceListCodes.close();
 		} catch (SQLException e) {

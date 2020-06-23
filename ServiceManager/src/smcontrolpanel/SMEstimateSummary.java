@@ -15,7 +15,6 @@ import SMClasses.SMOHDirectQuoteList;
 import SMClasses.SMTax;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablelabortypes;
-import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablepricelistlevellabels;
 import SMDataDefinition.SMTablesmestimatelines;
 import SMDataDefinition.SMTablesmestimates;
@@ -339,6 +338,7 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		m_sjobname = m_sjobname.trim();
 		try {
 			m_sjobname = clsValidateFormFields.validateStringField(
 				m_sjobname, 
@@ -431,6 +431,7 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		m_screatedbyfullname = m_screatedbyfullname.trim();
 		try {
 			m_screatedbyfullname = clsValidateFormFields.validateStringField(
 				m_screatedbyfullname, 
@@ -442,6 +443,7 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		m_slastmodifiedbyfullname = m_slastmodifiedbyfullname.trim();
 		try {
 			m_slastmodifiedbyfullname = clsValidateFormFields.validateStringField(
 				m_slastmodifiedbyfullname, 
@@ -453,6 +455,7 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		m_scomments = m_scomments.trim();
 		try {
 			m_scomments = clsValidateFormFields.validateStringField(
 				m_scomments, 
@@ -539,6 +542,7 @@ public class SMEstimateSummary {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		m_spricelistcode = m_spricelistcode.trim();
 		try {
 			m_spricelistcode = clsValidateFormFields.validateStringField(
 					m_spricelistcode, 
@@ -906,7 +910,7 @@ public class SMEstimateSummary {
 			save_without_data_transaction(conn, sUserID, sUserFullName);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception("Error [202006115918] - rolling back data transaction - " + e.getMessage());
+			throw new Exception("Error [202006115918] - " + e.getMessage());
 		}
 		try {
 			clsDatabaseFunctions.commit_data_transaction_with_exception(conn);

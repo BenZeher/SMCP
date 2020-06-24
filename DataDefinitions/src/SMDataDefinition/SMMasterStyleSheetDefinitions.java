@@ -90,7 +90,9 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String LABEL_COLOR_THEME_BLUE = "background-color: #99ebff; border-style: inset; display:inline-block;" ;
 	
 	//General Colors
+	public static final String BACKGROUND_PALE_GREEN = "#E6FFE6";
 	public static final String BACKGROUND_LIGHT_GREEN = "#CCFFB2";
+	public static final String BACKGROUND_LIGHT_GREEN_ALT = "#B3FFB3";
 	public static final String BACKGROUND_BRIGHT_GREEN = "#58FA58";
 	public static final String BACKGROUND_TEAL = "#66FF99";
 	

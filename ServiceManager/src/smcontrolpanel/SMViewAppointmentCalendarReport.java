@@ -23,8 +23,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 
 public class SMViewAppointmentCalendarReport extends java.lang.Object{
 
-	private static String ENTRY_BACKGROUND = "#e6ffe6";
-	private static String ENTRY_BACKGROUND_HOVER = "#b3ffb3";
 	private static String APPOINTMENT_COMMENT_COLOR = "RED";
 	private static String SHIP_TO_CITY_COLOR = "GREEN";
 	
@@ -813,7 +811,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + ENTRY_BACKGROUND + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_PALE_GREEN + ";"
 				+ "}"	
 		);
 		
@@ -825,7 +823,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + ENTRY_BACKGROUND + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_PALE_GREEN + ";"
 				+ "}"	
 		);
 		
@@ -837,7 +835,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + ENTRY_BACKGROUND + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_PALE_GREEN + ";"
 				+ "}"	
 		);
 		
@@ -849,7 +847,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + ENTRY_BACKGROUND + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_PALE_GREEN + ";"
 				+ "}"	
 		);
 		
@@ -857,13 +855,13 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 		
 		pwOut.println(
 				"div.entryrecordedit:hover {"
-				+ " background-color: " + ENTRY_BACKGROUND_HOVER + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN_ALT + ";"
 				+ "}"	
 		);
 		
 		pwOut.println(
 				"div.entryrecordeditsingleday:hover {"
-				+ " background-color: " + ENTRY_BACKGROUND_HOVER + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN_ALT + ";"
 				+ "}"	
 		);
 

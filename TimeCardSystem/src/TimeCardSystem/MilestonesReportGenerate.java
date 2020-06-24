@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -49,7 +50,6 @@ public class MilestonesReportGenerate extends HttpServlet {
 	//private static final String COLOR_LIGHT_BLUE = "#4d94ff"; //"#e6ffff";
 	private static final String COLOR_LIGHT_LIGHT_BLUE = "#99c2ff"; //"#ccffff";
 	//private static final String COLOR_LIGHT_GREEN = "#e6fff2";
-	private static final String COLOR_LIGHT_GREEN_2 = "#b3ffb3";
 	//private static final String COLOR_MEDIUM_BLUE = "#99c2ff";
 	private static final String COLOR_LIGHT_SLATE = "#e0e0eb";
 	//private static final String COLOR_OF_EVENT_ENTRY_NAME = "#ff66ff"; //"#ff99ff";
@@ -351,7 +351,7 @@ public class MilestonesReportGenerate extends HttpServlet {
 				}
 				
 				if(bIsComplete){
-					sRowColor = COLOR_LIGHT_GREEN_2;
+					sRowColor = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN_ALT;
 				}else{
 					sRowColor = COLOR_LIGHT_LIGHT_BLUE;
 				}

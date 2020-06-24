@@ -1962,6 +1962,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "            (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + SAVE_COMMAND_VALUE + "\") \n"
 				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + LOOKUP_ITEM_COMMAND + "\") \n"
 				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + REFRESH_ITEM_COMMAND + "\") \n"
+				+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + FIND_ITEM_COMMAND + "\") \n"
 				+ "        ) {\n"
 				+ "            return 'You have unsaved changes!';\n"
 				+ "        } \n"

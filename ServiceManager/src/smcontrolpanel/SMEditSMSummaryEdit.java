@@ -279,7 +279,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			throw new Exception(e.getMessage());
 		}
 		//Add save and delete buttons
-		pwOut.println("<BR>" + createSaveButton() + "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton());
+		String sSaveAndDeleteButtons = createSaveButton();
+		if (summary.getslid().compareToIgnoreCase("-1") != 0) {
+			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
+		}
+		pwOut.println("<BR>" + sSaveAndDeleteButtons);
 		pwOut.println("</FORM>");
 	}
 
@@ -309,7 +313,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " VALUE=\"" + "" + "\""+ " "
 				+ " ID=\"" + COMMAND_FLAG + "\""+ "\">" + "\n";
 		
-		s += "<BR>" + createSaveButton() + "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
+		String sSaveAndDeleteButtons = createSaveButton();
+		if (summary.getslid().compareToIgnoreCase("-1") != 0) {
+			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
+		}
+		s += "<BR>" + sSaveAndDeleteButtons;
 		
 		//Create a 'parent' table for the whole page:
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + " \" >" + "\n";
@@ -336,7 +344,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ "<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + SMTablesmestimatesummaries.lid + "\""
 			+ " VALUE=\"" + summary.getslid() + "\""
-			+ " ID=\"" + summary.getslid() + "\""
+			+ " ID=\"" + SMTablesmestimatesummaries.lid + "\""
 			+ ">"
 			+ "\n"
 		;
@@ -876,10 +884,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			s += "  </TR>" + "\n";
 		}
 		
-		
 		s += "  <TR>" + "\n";
+		//Don't allow the user to add estimates until the summary is saved:
+		String sEstimateButtons = "";
+		if (summary.getslid().compareToIgnoreCase("-1") != 0) {
+			sEstimateButtons = buildEstimateButtons(sFoundVendorQuote);
+		}
 		s += "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns) + " >"
-			+ buildEstimateButtons(sFoundVendorQuote)
+			+ sEstimateButtons
 			+ "</TD>" + "\n"
 		;
 		s += "  </TR>" + "\n";

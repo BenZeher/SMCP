@@ -460,8 +460,8 @@ public class SMEstimateSummary {
 			m_scomments = clsValidateFormFields.validateStringField(
 				m_scomments, 
 				SMTablesmestimatesummaries.slastmodifiedbyfullnameLength, 
-				"Description", 
-				false
+				"Comments", 
+				true
 			);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";

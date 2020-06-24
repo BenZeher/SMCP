@@ -22,6 +22,7 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 import smic.ICItem;
 
@@ -72,6 +73,7 @@ public class SMEstimate {
 		initializeVariables();
 	}
 	public SMEstimate(HttpServletRequest req){
+		
 		//Read the batch fields from a servlet request:
 		initializeVariables();
 		
@@ -137,160 +139,116 @@ public class SMEstimate {
 	}
 
 	private void readEstimateLines(HttpServletRequest request){
+		
 		//Read the estimate lines:
-    	Enumeration <String> eParams = request.getParameterNames();
-    	String sLineParam = "";
-    	String sLineNumber = "";
-    	int iLineNumber = 0;
-    	String sFieldName = "";
-    	String sParamValue = "";
-    	boolean bAddingNewLine = false;
-    	SMEstimateLine newline = new SMEstimateLine();
-    	while (eParams.hasMoreElements()){
-    		sLineParam = eParams.nextElement();
-    		//System.out.println("[1490712988] sLineParam = '" + sLineParam +"'");
-    		//If it contains a line number parameter, then it's an GLTransactionBatchLine field:
-    		if (sLineParam.startsWith(SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX)){
-    			//System.out.println("[1490712188] sLineParam = '" + sLineParam +"'");
-    			sLineNumber = sLineParam.substring(
-    				SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length(),
-    				SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
-    			iLineNumber = Integer.parseInt(sLineNumber);
-    			//System.out.println("[1490712989] sLineNumber = '" + sLineNumber +"'");
-    			sFieldName = sLineParam.substring(SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX.length() + SMEstimate.LINE_NUMBER_PADDING_LENGTH);
-    			//System.out.println("[1490712990] sFieldName = '" + sFieldName +"'");
-    			sParamValue = clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim();
-    			//System.out.println("[1490712991] sParamValue = '" + sParamValue +"'");
-    			//If the line array needs another row to fit all the line numbers, add it now:
-				while (arrEstimateLines.size() < iLineNumber){
-					SMEstimateLine line = new SMEstimateLine();
-					arrEstimateLines.add(line);
-				}
+    	arrEstimateLines.clear();
+    	
+		//Read lines until there aren't any more:
+		int iLastLineRead = 0;
+		while (true) {
+			//Line number:
+			String sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+				Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lestimatelinenumber;
+			//System.out.println("[202006240038] - sLineParam = '" + sLineParam + "'.");
+			//System.out.println("[202006240039] - clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim() = '" + clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim() + "'.");
+			
+			String sLineNumber = clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim();
+			
+			//If there's a value for the line number, then read all the rest of the fields for this line:
+			if (sLineNumber.compareToIgnoreCase("") == 0) {
+				break;
+			}else {
+				SMEstimateLine line = new SMEstimateLine();
+				line.setslestimatelinenumber(sLineNumber);
 				
-				//If any of the line fields have a '0' for their line number, then that means the user is adding a new field:
-    			if (iLineNumber == 0){
-    				bAddingNewLine = true;
-    				//System.out.println("[202006085409] - adding new line");
-    				//Now update the new line, and we'll add it to the entry down below:
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
-        				newline.setsbdextendedcost(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitcost) == 0){
-        				newline.setsbdunitcost(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
-        				newline.setsbdquantity(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitsellprice) == 0){
-        				newline.setsbdunitsellprice(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedsellprice) == 0){
-        				newline.setsbdextendedsellprice(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelid) == 0){
-        				newline.setslestimateid(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelinenumber) == 0){
-        				newline.setslestimatelinenumber(Integer.toString(iLineNumber));
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lid) == 0){
-        				newline.setslid(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lsummarylid) == 0){
-        				newline.setslsummaryid(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.sitemnumber) == 0){
-        				newline.setsitemnumber(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.slinedescription) == 0){
-        				newline.setslinedescription(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.sunitofmeasure) == 0){
-        				newline.setsunitofmeasure(sParamValue.trim());
-        			}
-    			}else{
-        			//Now update the field on the line we're reading:
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedcost) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(sParamValue.replace(",", "").trim());
-        				//System.out.println("[1511882996] - sParamValue = '" + sParamValue + "'.");
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitcost) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdquantity) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setsbdquantity(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdunitsellprice) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setsbdunitsellprice(sParamValue.replace(",", "").trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.bdextendedsellprice) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setsbdextendedsellprice(sParamValue.replace(",", "").trim());
-        			}
-           			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lestimatelid) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setslestimateid(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lid) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setslid(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.lsummarylid) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setslsummaryid(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.sitemnumber) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setsitemnumber(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.slinedescription) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setslinedescription(sParamValue.trim());
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablesmestimatelines.sunitofmeasure) == 0){
-        				arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure(sParamValue.trim());
-        			}
-        			
-        			//Now set the line number:
-        			arrEstimateLines.get(iLineNumber - 1).setslestimatelinenumber(Integer.toString(iLineNumber));
-    			}
-    		}
-    	}
-
-    	//If the user was adding a new line, then....
-    	if (bAddingNewLine){
-    		//Just add that line to the entry:
-    		//If the user has actually added anything to the new line:
-    		if (
-    			(newline.getsbdextendedcost().compareToIgnoreCase("") != 0)
-    			|| (newline.getsbdquantity().compareToIgnoreCase("") != 0)
-    			|| (newline.getsitemnumber().compareToIgnoreCase("0.00") != 0)
-    			|| (newline.getslinedescription().compareToIgnoreCase("0.00") != 0)
-    			|| (newline.getsunitofmeasure().compareToIgnoreCase("") != 0)
-    		){
-    			//Set the line number of the new line:
-    			newline.setslestimatelinenumber(Integer.toString(arrEstimateLines.size() + 1));
-    			addLine(newline);
-    		}
-    	}
+				//Quantity
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity;
+				line.setsbdquantity(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim().replace(",", ""));
+				
+				//Unit cost:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost;
+				line.setsbdunitcost(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim().replace(",", ""));
+				
+				//Extended cost
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost;
+				line.setsbdextendedcost(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim().replace(",", ""));
+				
+				//Extended sell price:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice;
+				line.setsbdextendedsellprice(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim().replace(",", ""));
+				
+				//Unit sell price:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice;
+				line.setsbdunitsellprice(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim().replace(",", ""));
+				
+				//Item number:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber;
+				line.setsitemnumber(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim());
+				
+				// ID:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid;
+				line.setslid(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim());
+				
+				//Description:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription;
+				line.setslinedescription(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim());
+				
+				//U/M:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure;
+				line.setsunitofmeasure(clsManageRequestParameters.get_Request_Parameter(sLineParam, request).trim());
+				
+				//Now add the line to the array:
+				arrEstimateLines.add(line);
+			}
+			iLastLineRead++;
+		}
+    	
     	//Make sure we set the summary and estimate IDs:
     	for (int i = 0; i < arrEstimateLines.size(); i++){
     		arrEstimateLines.get(i).setslestimateid(m_lid);
     		arrEstimateLines.get(i).setslsummaryid(m_lsummarylid);
     	}
-    	
-    	for (int i = 0; i < arrEstimateLines.size(); i++){
-    		//System.out.println("[202006230037] - i = " + i + ", item = '" + arrEstimateLines.get(i).getsitemnumber() + ", line number = " + arrEstimateLines.get(i).getslestimatelinenumber());
-    		arrEstimateLines.get(i).setslsummaryid(m_lsummarylid);
-    	}
-    	
-    	for (int i = 0; i < arrEstimateLines.size(); i++){
-    		//System.out.println("[202006230038] - i = " + i + ", item = '" + arrEstimateLines.get(i).getsitemnumber() + ", line number = " + arrEstimateLines.get(i).getslestimatelinenumber());
-    		arrEstimateLines.get(i).setslsummaryid(m_lsummarylid);
-    	}
-    	
+		
     	//Sort the lines to make sure they're actually ordered by line number:
+    	//System.out.println("[202006240208] - arrEstimateLines.size() = " + arrEstimateLines.size());
     	try {
 			sortEstimateLinesByLineNumber();
 		} catch (Exception e) {
 			//No place to display this error, so we send it to the error log:
-			System.out.println("[202006233629] - " + e.getMessage());
+			System.out.println("Error [202006233629] in SMEstimate.readEstimateLines, caused by sortEstimateLinesByLineNumber() - " + e.getMessage());
 		}
-    	
+
+    	//If the user was adding a new line, then....
+    	//System.out.println("[202006240209] - arrEstimateLines.size() = " + arrEstimateLines.size());
+    	if (arrEstimateLines.size() > 0) {
+	    	if (arrEstimateLines.get(arrEstimateLines.size() - 1).getslid().compareToIgnoreCase("-1") == 0){
+	    		//Just add that line to the entry:
+	    		//If the user has actually added anything to the new line:
+	    		if (
+	    			(arrEstimateLines.get(arrEstimateLines.size() - 1).getsbdextendedcost().compareToIgnoreCase("") != 0)
+	    			|| (arrEstimateLines.get(arrEstimateLines.size() - 1).getsbdquantity().compareToIgnoreCase("") != 0)
+	    			|| (arrEstimateLines.get(arrEstimateLines.size() - 1).getsitemnumber().compareToIgnoreCase("0.00") != 0)
+	    			|| (arrEstimateLines.get(arrEstimateLines.size() - 1).getslinedescription().compareToIgnoreCase("0.00") != 0)
+	    			|| (arrEstimateLines.get(arrEstimateLines.size() - 1).getsunitofmeasure().compareToIgnoreCase("") != 0)
+	    		){
+	    			//Set the line number of the new line:
+	    			arrEstimateLines.get(arrEstimateLines.size() - 1).setslestimatelinenumber(Integer.toString(arrEstimateLines.size() + 1));
+	    			//addLine(newline);
+	    		}else {
+	    			//If the user didn't enter anything, remove this line from the array:
+	    			arrEstimateLines.remove(arrEstimateLines.size() - 1);
+	    		}
+	    	}
+    	}
 	}
 	public void sortEstimateLinesByLineNumber() throws Exception{
 		ArrayList <SMEstimateLine>arrTempLines = new ArrayList<SMEstimateLine>(0);
@@ -1131,7 +1089,7 @@ public class SMEstimate {
 				+ "' in estimate line array - arr size = " + Integer.toString(arrEstimateLines.size()));
 		}
 		
-		System.out.println("[202006231410] - sLineNumber " + sLineNumber + ", item: '" + sItemNumber + "'.");
+		//System.out.println("[202006231410] - sLineNumber " + sLineNumber + ", item: '" + sItemNumber + "'.");
 		
 		ICItem item = new ICItem(sItemNumber);
 		if(!item.load(conn)){

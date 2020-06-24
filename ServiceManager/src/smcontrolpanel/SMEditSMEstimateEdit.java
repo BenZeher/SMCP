@@ -153,16 +153,17 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	    	// No reason to re-load this class if it's being picked up in the session.
 	    	//But if we are returning from finding an item, we'll want to update that item value:
 	    	//So we'll iterate through the request parameters and see if it includes one of the item number fields:
-	    	System.out.println("[202006232845] - estimate.getLineArray().size() = " + estimate.getLineArray().size());
-	    	for (int iLineCounter = 0; iLineCounter < estimate.getLineArray().size(); iLineCounter++) {
+	    	//System.out.println("[202006232845] - estimate.getLineArray().size() = " + estimate.getLineArray().size());
+	    	for (int iLineNumber = 1; iLineNumber <= estimate.getLineArray().size(); iLineNumber++) {
 	    		String sLineItemNumberParam = ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-						Integer.toString(iLineCounter), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber;
-	    		//System.out.println("[202006233057] - line " + (iLineCounter) + ", sLineItemNumberParam = '" + sLineItemNumberParam + "'.");
+						Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber;
+	    		//System.out.println("[202006233057] - line number " + (iLineNumber) + ", sLineItemNumberParam = '" + sLineItemNumberParam + "'.");
+	    		//System.out.println("[202006244202] - line number " + (iLineNumber) + " item number: '" + estimate.getLineArray().get(iLineNumber - 1).getsitemnumber() + "'.");
 	    		String sReturnedItemNumber = clsManageRequestParameters.get_Request_Parameter(sLineItemNumberParam, request);
 	    		//System.out.println("[202006233155] - sReturnedItemNumber = '" + sReturnedItemNumber + "'.");
 	    		if (sReturnedItemNumber.compareToIgnoreCase("") != 0){
-	    			estimate.getLineArray().get(iLineCounter).setsitemnumber(sReturnedItemNumber);
-	    			//System.out.println("[202006231028] - item number for line counter " + iLineCounter + " = '" + estimate.getLineArray().get(iLineCounter).getsitemnumber() + "'.");
+	    			estimate.getLineArray().get(iLineNumber - 1).setsitemnumber(sReturnedItemNumber);
+	    			//System.out.println("[202006231028] - item number for line number " + iLineNumber + " = '" + estimate.getLineArray().get(iLineNumber - 1).getsitemnumber() + "'.");
 	    		}
 	    	}
 	    	
@@ -649,16 +650,17 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		//We'll use this to figure out if the user couldn't save the last line, so we can just redisplay it as the last line, and
 		// not add a new BLANK line at the bottom:
 		boolean bLastLineWasNotSaved = false;
+		int iLineNumber = 0;
 		for (int iEstimateLineCounter = 0; iEstimateLineCounter < estimate.getLineArray().size(); iEstimateLineCounter++) {
 			//Display each line:
 			
-			int iLineNumber = iEstimateLineCounter + 1;
+			iLineNumber = iEstimateLineCounter + 1;
 			if (
 				(estimate.getLineArray().get(iEstimateLineCounter).getslid().compareToIgnoreCase("-1") == 0)
 			) {
 				bLastLineWasNotSaved = true;
 				//Here we'll set the line number to ZERO so this will be our 'new' line:
-				iLineNumber = 0;
+				//iLineNumber = 0;
 			}
 			
 			//System.out.println("[202006125051] - array index = " + iEstimateLineCounter + ", getslid() = '" 
@@ -667,6 +669,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			//);
 			
 			s += "  <TR>" + "\n";
+			
+			//Store the line number so we can read these lines properly:
+			s += "<INPUT TYPE=HIDDEN"
+				+ " "
+				+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lestimatelinenumber + "\""
+				+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lestimatelinenumber + "\""
+						+ " VALUE=\"" + Integer.toString(iLineNumber) + "\""
+				+ " > \n"
+			;
+			
 			s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
@@ -832,14 +846,27 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		//So if the last line was NOT NOT saved - meaning if it WAS saved, then we'll add a new blank line:
 		if(!bLastLineWasNotSaved) {
+			iLineNumber++;
 			s += "  <TR>" + "\n";
+			
+			//Store the line number so we can read these lines properly:
+			s += "<INPUT TYPE=HIDDEN"
+				+ " "
+				+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lestimatelinenumber + "\""
+				+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lestimatelinenumber + "\""
+						+ " VALUE=\"" + Integer.toString(iLineNumber) + "\""
+				+ " > \n"
+			;
+			
 			s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-						"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity + "\""
 					+ " VALUE=\"" + "0.0000" + "\""
 					+ " MAXLENGTH=15"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
@@ -851,9 +878,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					//Store the line ID in a hidden field:
 					+ "<INPUT TYPE=HIDDEN"
 					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.lid + "\""
 					+ " VALUE=\"" + "-1" + "\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -862,15 +889,15 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				//If there's an item number being returned by the finder, insert that into this line:
 				String sItemNumber = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(
 						ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-								"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber,
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber,
 					req);
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sitemnumber + "\""
 					+ " VALUE=\"" + sItemNumber + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
@@ -888,7 +915,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
 						+ " style = \" font-weight:bold; font-style:underline; \" >"
-						+ buildItemFinderButton("0")
+						+ buildItemFinderButton(Integer.toString(iLineNumber))
 						+ "</TD>" + "\n"
 					;
 				
@@ -896,9 +923,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.slinedescription + "\""
 					+ " VALUE=\"" + "" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
@@ -912,9 +939,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.sunitofmeasure + "\""
 					+ " VALUE=\"" + "" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
@@ -929,9 +956,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitsellprice + "\""
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
@@ -946,9 +973,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedsellprice + "\""
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
@@ -962,9 +989,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdunitcost + "\""
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
@@ -978,9 +1005,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ ">"
 					+ "<INPUT TYPE=TEXT"
 					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
-							"0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdextendedcost + "\""
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 

@@ -98,6 +98,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String PARAM_LOOKUP_ITEM_LINENUMBER = "LOOKUPITEMLINENUMBER";
 	public static final String RETURNING_FROM_FINDER = "RETURNINGFROMFINDER";
 	
+	//Cost multiplier fields:
+	public static final String FIELD_COST_MULTIPLIER_MARKER = "FIELDCOSTMULTIPLIER";
+	
 	public static final String UNSAVED_ESTIMATE_LABEL = "(UNSAVED)";
 	public static final String UNSAVED_SUMMARY_LINE_LABEL = "(UNSAVED)";
 	public static final String EMPTY_VENDOR_QUOTE_LABEL = "(NONE)";
@@ -108,10 +111,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
 	public static final int ESTIMATE_LINE_NO_PAD_LENGTH = 6;
 	
-	public static final String TOTALS_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH;
+	public static final String TOTALS_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_PEACH;
 	public static final String ESTIMATE_LINES_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY;
-	public static final String ESTIMATE_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN;
-	public static final String SUMMARY_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE;
+	public static final String ESTIMATE_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_GREEN;
+	public static final String SUMMARY_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_BLUE;
 	
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
@@ -438,7 +441,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 10;
+		int iNumberOfColumns = 11;
 		
 		//s += "<BR>";
 		
@@ -490,6 +493,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "U/M"
 			+ "</TD>" + "\n"
 		;
+		
+		//Cost multiplier:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+				+ " style = \" font-weight:bold; font-style:underline; \" >"
+				+ "Multiplier"
+				+ "</TD>" + "\n"
+			;
 		
 		//Unit sell price:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
@@ -601,6 +611,12 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ ">"
 			+ "</TD>" + "\n"
 		;
+		
+		//Blank column for cost multiplier:
+		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+				+ ">"
+				+ "</TD>" + "\n"
+			;
 		
 		//Blank column for unit sell price:
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
@@ -774,6 +790,23 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
 						+ " width:" + "50px; " + "\""
 					+ " onchange=\"flagDirty();\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
+				
+				//Cost multiplier:
+				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + FIELD_COST_MULTIPLIER_MARKER + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + FIELD_COST_MULTIPLIER_MARKER + "\""
+					+ " VALUE=\"" + "0.00" + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "50px; " + "text-align:right;" + "\""
+					+ " onchange=\"multiplyCostForSellPrice(" + Integer.toString(iLineNumber) + ");\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -958,6 +991,23 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ "</TD>" + "\n"
 				;
 				
+				//Cost multiplier:
+				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
+					+ ">"
+					+ "<INPUT TYPE=TEXT"
+					+ " NAME=\"" +  ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + FIELD_COST_MULTIPLIER_MARKER + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + FIELD_COST_MULTIPLIER_MARKER + "\""
+					+ " VALUE=\"" + "0.00" + "\""
+					+ " MAXLENGTH=32"
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
+						+ " width:" + "50px; " + "text-align:right;" + "\""
+						+ " onchange=\"multiplyCostForSellPrice(" + Integer.toString(iLineNumber) + ");\""
+					+ ">"
+					+ "</TD>" + "\n"
+				;
+				
 				//Unit sell price:
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + "\""
 					+ ">"
@@ -1036,7 +1086,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  <TR> \n";
 		
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
-			+ " COLSPAN = 3"
+			+ " COLSPAN = 4"
 			+ ">"
 			+ sDisplayCommonlyUsedButton
 			+ "</TD>" + "\n"
@@ -2052,6 +2102,39 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "}\n"
 			;
 
+			//Multiply cost for sell price:
+			s += "function multiplyCostForSellPrice(sLineNumber) {\n"
+					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
+					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
+					+ "    //Set the sell price to a selected multiple of the cost: \n"
+					//+ "    alert('Set sell price for line number: ' + sLineNumber); \n"
+					+ "    //Get the line number into a padded string: \n"
+					+ "    var paddedlinenumber = String(\"000000\" + sLineNumber).slice(-6); \n"
+					
+					+ "    var unitcost = parseFloat(\"0.00\"); \n"
+					+ "    var unitcostfieldname = '" + ESTIMATE_LINE_PREFIX + "' + paddedlinenumber + '" + SMTablesmestimatelines.bdunitcost + "'; \n"
+					+ "    var temp = (document.getElementById(\"\" + unitcostfieldname + \"\").value).replace(',','');\n"
+					+ "    if (temp == ''){\n"
+					+ "        unitcost = parseFloat(\"0.00\");\n"
+					+ "    }else{\n"
+					+ "        unitcost = parseFloat(temp);\n"
+					+ "    }\n\n"
+					
+					+ "    var multiplier = parseFloat(\"0.00\"); \n"
+					+ "    var multiplierfieldname = '" + ESTIMATE_LINE_PREFIX + "' + paddedlinenumber + '" + FIELD_COST_MULTIPLIER_MARKER + "'; \n"
+					+ "    var temp = (document.getElementById(\"\" + multiplierfieldname + \"\").value).replace(',','');\n"
+					+ "    if (temp == ''){\n"
+					+ "        multiplier = parseFloat(\"0.00\");\n"
+					+ "    }else{\n"
+					+ "        multiplier = parseFloat(temp);\n"
+					+ "    }\n\n"
+					
+					+ "    var unitsellprice = unitcost * multiplier; \n"
+					+ "    var unitsellpricefieldname = '" + ESTIMATE_LINE_PREFIX + "' + paddedlinenumber + '" + SMTablesmestimatelines.bdunitsellprice + "'; \n"
+					+ "    document.getElementById(\"\" + unitsellpricefieldname + \"\").value = formatNumber(unitsellprice); \n"
+					+ "    flagDirty(); \n"
+				+ "}\n";
+			
 			s += "function flagDirty() {\n"
 					+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
 					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
@@ -2159,6 +2242,39 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "        } \n"
 				
 				+ "    } \n"
+				
+				+ "    //Calculate the cost multiplier values: \n"
+				+ "    for (i=0; i<document.forms[0].length; i++){\n"
+				+ "        ctl = document.forms[0].elements[i];\n"
+				+ "        if (ctl.name.indexOf('" + FIELD_COST_MULTIPLIER_MARKER + "') >= 0 ){ \n"
+				+ "            var unitcost = parseFloat(\"0.00\"); \n"
+				+ "            var unitcostfieldname = ctl.name.replace('" + FIELD_COST_MULTIPLIER_MARKER + "', '" + SMTablesmestimatelines.bdunitcost + "');\n"
+				+ "            var temp = (document.getElementById(\"\" + unitcostfieldname + \"\").value).replace(',','');\n"
+				+ "            if (temp == ''){\n"
+				+ "                unitcost = parseFloat(\"0.00\");\n"
+				+ "            }else{\n"
+				+ "                unitcost = parseFloat(temp);\n"
+				+ "            }\n"
+				
+				+ "            var unitsellprice = parseFloat(\"0.00\"); \n"
+				+ "            var unitsellpricefieldname = ctl.name.replace('" + FIELD_COST_MULTIPLIER_MARKER + "', '" + SMTablesmestimatelines.bdunitsellprice + "');\n"
+				+ "            var temp = (document.getElementById(\"\" + unitsellpricefieldname + \"\").value).replace(',','');\n"
+				+ "            if (temp == ''){\n"
+				+ "                unitsellprice = parseFloat(\"0.00\");\n"
+				+ "            }else{\n"
+				+ "                unitsellprice = parseFloat(temp);\n"
+				+ "            }\n"
+				
+				+ "            var multiplier = parseFloat(\"0.00\"); \n"
+				+ "            if(compare2DecimalPlaceFloats(unitsellprice, parseFloat(\"0.00\"))){ \n"
+				+ "                // Multiplier is just zero \n"
+				+ "            } else { \n"
+				+ "                multiplier = unitsellprice / unitcost; \n"
+				+ "            } \n"
+				+ "            ctl.value=formatNumber(multiplier);\n"
+				+ "        } \n"
+				+ "    } \n"
+				+ "    \n\n"
 				
 				+ "\n"
 				+ "    //Get the line costs: \n"
@@ -2521,6 +2637,19 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "            } \n\n"
 				
 				+ "            if (ctl.name.indexOf('" + SMTablesmestimatelines.bdextendedsellprice + "') >= 0 ){ \n"
+				+ "                var temp = (ctl.value).replace(',','');\n"
+				+ "                if (!isNumeric(temp)){ \n"
+				+ "                    temp = ''; \n"
+				+ "                } \n"
+				+ "                if (temp == ''){\n"
+				+ "                    fieldvalue = parseFloat(\"0.0000\");\n"
+				+ "                }else{\n"
+				+ "                    fieldvalue = parseFloat(temp);\n"
+				+ "                }\n"
+				+ "                document.getElementById(ctl.name).value=formatNumber(fieldvalue);\n"
+				+ "            } \n\n"
+				
+				+ "            if (ctl.name.indexOf('" + FIELD_COST_MULTIPLIER_MARKER + "') >= 0 ){ \n"
 				+ "                var temp = (ctl.value).replace(',','');\n"
 				+ "                if (!isNumeric(temp)){ \n"
 				+ "                    temp = ''; \n"

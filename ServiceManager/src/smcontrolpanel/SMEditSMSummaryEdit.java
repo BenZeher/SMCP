@@ -18,7 +18,6 @@ import SMClasses.SMTax;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablelabortypes;
-import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablepricelistcodes;
 import SMDataDefinition.SMTablepricelistlevellabels;
 import SMDataDefinition.SMTableservicetypes;
@@ -106,9 +105,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String TOTALS_FIELD_WIDTH_FOR_LABELS = "100px";
 	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
 	
-	public static final String SUMMARY_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE;
+	public static final String SUMMARY_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_BLUE;
 	public static final String ESTIMATES_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY;
-	public static final String TOTALS_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH;
+	public static final String TOTALS_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_PEACH;
 	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";

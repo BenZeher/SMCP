@@ -722,7 +722,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		String s = "";
 		//Open table
 		s += "<TABLE class = \" innermost \" style=\" title:DeliveryLines; background-color:"+ 
-				SMDeliveryTicket.ORDERCOMMANDS_TABLE_BG_COLOR + "\" width=100% >\n";
+				SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "\" width=100% >\n";
 		
 				s+= "<TR>\n<TD width='10%' valign='top'><B>Items Delivered:</B>";
 	

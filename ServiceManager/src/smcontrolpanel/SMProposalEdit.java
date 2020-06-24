@@ -35,9 +35,6 @@ public class SMProposalEdit  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	//Colors:
-	private static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF";
-	private static final String SIGNATUREBLOCK_TABLE_BG_COLOR = "#99CCFF";
-	private static final String PRICEBLOCK_TABLE_BG_COLOR = "#99CCFF";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
 	
 	//Commands:
@@ -704,7 +701,7 @@ public class SMProposalEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:PriceBlockTable; background-color: "
-			+ PRICEBLOCK_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 
 		s += "<TR><TD COLSPAN=2>";
 		s += "<B>We hereby propose to complete in accordance with above specification, for the sum of:</B>&nbsp;<FONT COLOR=RED>"
@@ -783,7 +780,7 @@ public class SMProposalEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:SignatureBlockTable; background-color: "
-				+ SIGNATUREBLOCK_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 
 		String sSalesPersonString = "";
 		String SQL = "SELECT"
@@ -1092,7 +1089,7 @@ public class SMProposalEdit  extends HttpServlet {
 		
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >"
 			+ "<button type=\"button\""

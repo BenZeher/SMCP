@@ -25,7 +25,6 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
-	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	public static final String ORDERUPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>S</FONT></B>ave"; //S
 	public static final String DETAILS_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>etails"; //D
 	public static final String HEADER_BUTTON_LABEL = "<B><FONT COLOR=RED>H</FONT></B>eader"; //H
@@ -375,7 +374,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 		s += "<TR><TD>";
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ ORDERCOMMANDS_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 				//Place the 'update' button here:
 				s += "<TR><TD style = \"text-align: left; \" >"
 					+ "<B><I>Go to:</I></B>"

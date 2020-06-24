@@ -270,7 +270,7 @@ public class SMDeliveryTicketSignatureEdit  extends HttpServlet {
 		
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ SMDeliveryTicket.ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >";
 

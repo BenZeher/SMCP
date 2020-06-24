@@ -37,7 +37,6 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
-	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	public static final String WPFCONTROL_MARKER = "WPF";
 	public static final String HEADER_BUTTON_LABEL = "<B><FONT COLOR=RED>H</FONT></B>eader"; //H
 	public static final String DETAILS_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>etails"; //D
@@ -1076,7 +1075,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 		s += "<TR><TD>";
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ ORDERCOMMANDS_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 				//Place the 'update' button here:
 				s += "<TR><TD style = \"text-align: left; \" >"
 					//+ " <input type=button"

@@ -47,7 +47,6 @@ public class BKEditStatementEdit  extends HttpServlet {
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
-	private static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF";
 	private static final String ENTRIES_TABLE_ODD_ROW_BG_COLOR = "#B8E6A0";
 	public static final String CHECKBOX_MARKER = "CHECKBOXMARKER";
 	public static final String DEPOSIT_ENTRY_AMOUNT_MARKER = "DEPOSITENTRYAMTMARKER";
@@ -229,7 +228,7 @@ public class BKEditStatementEdit  extends HttpServlet {
 		
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >";
 		s += createSaveButton();

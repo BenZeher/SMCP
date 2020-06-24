@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableproposals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
@@ -35,9 +36,6 @@ public class SMProposalPrintSelection extends HttpServlet {
 	//
 	public static final String NUMBER_OF_PROPOSAL_COPIES = "NOOFPROPOSALCOPIES";
 
-	//Colors
-	private static final String PRINT_TABLE_BG_COLOR = "#99CCFF";
-	
 	private static final long serialVersionUID = 1L;
 	private static final String sCalledClass = "smcontrolpanel.SMProposalPrintAction";
 	public void doPost(HttpServletRequest request,
@@ -145,7 +143,7 @@ public class SMProposalPrintSelection extends HttpServlet {
 		String sUser) throws Exception{
 		String sNumberOfColumns = "1";
 		String s = "";
-		s += "<TABLE  class = \"innermost\" \" style=\" title:PrintTable; padding: 0px; background-color:" + PRINT_TABLE_BG_COLOR + "; \" width=100% >\n";
+		s += "<TABLE  class = \"innermost\" \" style=\" title:PrintTable; padding: 0px; background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 
 		//Header:
 		s += "<TR><TD COLSPAN=" + sNumberOfColumns + ">"

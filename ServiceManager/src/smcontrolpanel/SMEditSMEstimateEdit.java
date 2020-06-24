@@ -108,6 +108,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
 	public static final int ESTIMATE_LINE_NO_PAD_LENGTH = 6;
 	
+	public static final String TOTALS_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH;
+	public static final String ESTIMATE_LINES_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY;
+	public static final String ESTIMATE_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN;
+	public static final String SUMMARY_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE;
 	
 	public static final String WARNING_OBJECT = "SMEDITSMSUMMARYWARNINGOBJECT";
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
@@ -429,16 +433,19 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		Connection conn, 
 		SMEstimate estimate,
 		SMMasterEditEntry sm,
-		String sBackgroundColor,
+		String sCellBackgroundColor,
 		HttpServletRequest req
 		) throws Exception{
 		
 		String s = "";
 		int iNumberOfColumns = 10;
 		
-		s += "<BR>";
+		//s += "<BR>";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \""
+				+ " width:100%; "
+				+ " background-color: " + ESTIMATE_LINES_BACKGROUND_COLOR + ";"
+				+ " \" >" + "\n";		
 		
 		s += "  <TR>" + "\n";
 		
@@ -1077,7 +1084,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			sEstimateID = estimate.getslid();
 		}
 		
-		s += "<BR>" + "\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \""
+				+ " width:100%; "
+				+ " background-color: " + ESTIMATE_HEADER_TABLE_BACKGROUND_COLOR + ";"
+				+ " \" >" + "\n";
+		
+		s += "  <TR> \n";
+		s += "    <TD> \n";
 		
 		String sSummaryLineNumber = UNSAVED_SUMMARY_LINE_LABEL;
 		if (estimate.getslsummarylinenumber().compareToIgnoreCase("-1") != 0) {
@@ -1180,7 +1193,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</INPUT>" + "\n"
 		;
 		
-		s += "<BR>" + "\n";
+		s += "    </TD> \n";
+		s += "  </TR> \n";
+		s += "</TABLE> \n";
 		;
 
 		return s;
@@ -1199,7 +1214,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			throw new Exception("Error [202006040000] - loading summary with ID '" + summary.getslid() + " - " + e.getMessage());
 		}
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \""
+			+ " width:100%; "
+			+ " background-color: " + SUMMARY_HEADER_TABLE_BACKGROUND_COLOR + ";"
+			+ " \" >" + "\n";
 		
 		s += "  <TR>" + "\n";
 		
@@ -1309,7 +1327,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		String s = "";
 		int iNumberOfColumns = 6;
 
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \""
+				+ " width:100%; "
+				+ " background-color: " + TOTALS_TABLE_BACKGROUND_COLOR + ";"
+				+ " \" >" + "\n";
 		
 		//total material cost:
 		s += "  <TR>" + "\n";

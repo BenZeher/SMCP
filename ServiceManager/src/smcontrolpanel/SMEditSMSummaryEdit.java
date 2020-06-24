@@ -106,6 +106,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String TOTALS_FIELD_WIDTH_FOR_LABELS = "100px";
 	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
 	
+	public static final String SUMMARY_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE;
+	public static final String ESTIMATES_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY;
+	public static final String TOTALS_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH;
+	
 	private static final long serialVersionUID = 1L;
 	private static final String FORM_NAME = "MAINFORM";
 	
@@ -306,6 +310,24 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " VALUE=\"" + "" + "\""+ " "
 				+ " ID=\"" + COMMAND_FLAG + "\""+ "\">" + "\n";
 		
+		s += "<BR>" + createSaveButton() + "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
+		
+		//Create a 'parent' table for the whole page:
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + " \" >" + "\n";
+		s += "  <TR> \n";
+		s += "    <TD> \n";
+		
+		//Header table:
+		int iNumberOfColumns = 4;
+		
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \""
+				+ " width:100%; "
+				+ " background-color: " + SUMMARY_HEADER_TABLE_BACKGROUND_COLOR + ";"
+				+ " \" >" + "\n";
+			
+			s += "  <TR>" + "\n";
+			s += "  <TD COLSPAN = " + Integer.toString(iNumberOfColumns) + " >" + "\n";
+		
 		String sLid = summary.getslid();
 		if (sm.getAddingNewEntryFlag()){
 			sLid = UNSAVED_SUMMARY_LABEL;
@@ -330,9 +352,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " on " + summary.getsdatetimeslastmodified()
 		;
 		
-		//Header table:
-		int iNumberOfColumns = 4;
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
+		s += "    </TD> \n";
+		
+		s += "  </TR>" + "\n";
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
@@ -660,23 +682,17 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "</TABLE>" + "\n";
 		
-		s += "<BR>" + createSaveButton() + "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
-		
-		//Include an outer table:
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
-		s += "  <TR>" + "\n";
-		s += "    <TD>" + "\n";
 		s += buildEstimateTable(conn, summary, sVendorQuoteIdentifier, sm.getsDBID(), sm.getUserID(), sm.getLicenseModuleLevel());
 		
 		s += buildTotalsTable(summary);
-		
-		s += printBackIntoControls();
 		
 		//Close the outer table:
 		s += "    </TD>" + "\n";
 		s += "  </TR>" + "\n";
 		s += "</TABLE>" + "\n";
 
+		s += printBackIntoControls();
+		
 		return s;
 	}
 	private String printBackIntoControls() {
@@ -692,7 +708,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ ">"
 			+ "&nbsp;"
 			+ createBackIntoButton()
-			+ "<BR>"
+			//+ "<BR>"
 		;
 		return s;
 	}
@@ -708,7 +724,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		String s = "";
 		int iNumberOfColumns = 7;
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \""
+				+ " width:100%; "
+				+ " background-color: " + ESTIMATES_TABLE_BACKGROUND_COLOR + ";"
+				+ " \" >" + "\n";
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
@@ -877,9 +896,10 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		String s = "";
 		int iNumberOfColumns = 6;
 		
-		s += "<BR>";
-		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \" width:100%; \" >" + "\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" style = \""
+				+ " width:100%; "
+				+ " background-color: " + TOTALS_TABLE_BACKGROUND_COLOR + ";"
+				+ " \" >" + "\n";
 		
 		s += "  <TR>" + "\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""

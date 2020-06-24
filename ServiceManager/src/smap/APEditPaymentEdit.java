@@ -69,7 +69,6 @@ public class APEditPaymentEdit  extends HttpServlet {
 	public static final String TABLE_UNAPPLIED_DOCUMENTS = "APPLYTODOCSTABLE";
 	public static final String TABLE_APPLIED_DOCUMENTS = "APPLIEDDOCUMENTS";
 	public static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW"; //"#FF2080";
-	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String NET_AMT_FIELD_NAME = "NETAMT";
 	
@@ -2039,7 +2038,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 				if(!bDocumentIsAlreadyApplied){
 					String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 					if (bOddRow){
-						sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+						sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 					}
 					sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
 						+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
@@ -2214,7 +2213,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 				if(!bDocumentIsAlreadyApplied){
 					String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 					if (bOddRow){
-						sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+						sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 					}
 					sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
 						+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
@@ -2392,7 +2391,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 			}
 			String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 			sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
 				+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
@@ -2662,7 +2661,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 			}
 			String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 			sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
 				+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
@@ -3164,7 +3163,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 			//+ "            tbl.rows[i].style.cursor = \"pointer\";\n"
 			+ "            if (oddrow){\n"
 			//+ "                unappliedTable.rows[i].style.background = \"" + TABLE_ROW_ODD_ROW_BACKGROUND_COLOR + "\"; \n"
-			+ "                unappliedTable.rows[i].onmouseout = function () { this.style.backgroundColor = \"" + TABLE_ROW_ODD_ROW_BACKGROUND_COLOR + "\";  }; \n" //this.style.color = \"\";
+			+ "                unappliedTable.rows[i].onmouseout = function () { this.style.backgroundColor = \"" + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\";  }; \n" //this.style.color = \"\";
 			+ "            }else{\n"
 			//+ "                unappliedTable.rows[i].style.background = \"" + TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR + "\"; \n"
 			+ "                unappliedTable.rows[i].onmouseout = function () { this.style.backgroundColor = \"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\";  }; \n" //this.style.color = \"\";

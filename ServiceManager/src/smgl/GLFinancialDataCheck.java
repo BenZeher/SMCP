@@ -2039,9 +2039,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		, String sDBID
 		){
 		String s = "";
-		String sBackgroundColor = "#DCDCDC";
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 		if ((iRowNumber % 2) == 0){
-			sBackgroundColor = "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "";
+			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 		}
 		s += "  <TR style = \" background-color:" + sBackgroundColor + "; \" >" + "\n";
 		

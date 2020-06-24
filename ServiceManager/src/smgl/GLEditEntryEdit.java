@@ -56,7 +56,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 	public static final String LINE_NUMBER_TO_UNAPPLY_PARAM = "UnapplyLineNumber";
 	public static final String COMMAND_VALUE_APPLYTODOC = "ApplyLine";
 	public static final String APPLYTODOCNUMBER_TO_APPLY_PARAM = "ApplyToDocNumber";
-	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String UPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>U</FONT></B>pdate"; // U
 	public static final String UPDATE_AND_ADD_NEW_ENTRY_BUTTON_LABEL = "Update and add <B><FONT COLOR=RED>n</FONT></B>ew ENTRY"; // N
@@ -971,7 +970,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			GLTransactionBatchLine line = entry.getLineArray().get(i);
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 
 			s1stBufferLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
@@ -1240,7 +1239,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 
 			s += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""

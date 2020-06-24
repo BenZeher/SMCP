@@ -43,7 +43,6 @@ public class TCSavedQueriesSelect  extends HttpServlet {
 	public static final String SHOW_PUBLIC_QUERIES = "SHOWPUBLICQUERIES";
 	//public static final String SHOW_PRIVATE_QUERIES = "SHOWPRIVATEQUERIES";
 	private static final String TABLE_BACKGROUND_COLOR = "LightSteelBlue";
-	private static final String EVEN_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,
@@ -625,7 +624,7 @@ public class TCSavedQueriesSelect  extends HttpServlet {
 			"td.queryfieldleftalignedevenrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + EVEN_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: left; "
@@ -638,7 +637,7 @@ public class TCSavedQueriesSelect  extends HttpServlet {
 			"td.queryfieldrightalignedevenrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + EVEN_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: right; "
@@ -652,7 +651,7 @@ public class TCSavedQueriesSelect  extends HttpServlet {
 			"td.queryfieldcenteralignedevenrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + EVEN_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: center; "

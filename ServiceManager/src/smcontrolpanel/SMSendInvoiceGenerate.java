@@ -556,7 +556,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			boolean bIsRowOdd = false;
-			String sRowColor = "#DCDCDC";
+			String sRowColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			while(rs.next()){
 
 				//sCurrentServiceType

@@ -26,7 +26,6 @@ import ServletUtilities.clsServletUtilities;
 public class SMSalesTaxReport {
 	
 	//private static final String CELL_BORDER_COLOR = "#808080";
-	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
 	private static final String SUBTOTAL_LINE_BG_COLOR = "#ccd9ff";
 	private static final String SUBTOTAL_INVOICE__LINE_BG_COLOR = "#e6fffa";
 	private static final String SUMMARY_TAX_JURISDICTION_TOTALS_BG_COLOR = "#e6fffa";
@@ -345,7 +344,7 @@ public class SMSalesTaxReport {
 				if (bOddRow){
 					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				}else{
-					sBackgroundColor = DARK_ROW_BG_COLOR;
+					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 				}
 				
 				BigDecimal bdExtendedCost = rs.getBigDecimal("EXTENDEDCOST");

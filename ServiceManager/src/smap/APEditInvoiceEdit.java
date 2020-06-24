@@ -80,7 +80,6 @@ public class APEditInvoiceEdit  extends HttpServlet {
 	public static final String LINE_NUMBER_TO_UNAPPLY_PARAM = "UnapplyLineNumber";
 	public static final String COMMAND_VALUE_APPLYTODOC = "ApplyLine";
 	public static final String APPLYTODOCNUMBER_TO_APPLY_PARAM = "ApplyToDocNumber";
-	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String BOOKMARK_TOP_OF_TABLES = "TopOfTables";
 	public static final String RETURN_TO_TABLES_BOOKMARK = "RETURNTOTABLESPARAM";
@@ -1333,7 +1332,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			APBatchEntryLine line = entry.getLineArray().get(i);
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 
 			String sLineText = "";
@@ -1596,7 +1595,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 
 			s += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
@@ -1908,7 +1907,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 
 			sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
@@ -2176,7 +2175,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 
 			s += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
@@ -2419,7 +2418,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 				//if(!bDocumentIsAlreadyApplied){
 					String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 					if (bOddRow){
-						sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+						sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 					}
 					s += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
 						+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""

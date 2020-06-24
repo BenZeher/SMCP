@@ -34,7 +34,6 @@ public class SMImportWorkOrdersEdit  extends HttpServlet {
 	public static final String LOCATION_LIST = "LOCATIONLIST";
 	public static final String CATEGORY_LIST = "CATEGORYLIST";
 	private static final String TABLE_BACKGROUND_COLOR = "LightSteelBlue";
-	private static final String EVEN_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static final String LOCATION_OPTION_USE_WORK_ORDER_LOCATIONS = "";
 	public static final String LOCATION_LABEL_USE_WORK_ORDER_LOCATIONS = "Use work order locations";
 	private static final long serialVersionUID = 1L;
@@ -349,7 +348,7 @@ public class SMImportWorkOrdersEdit  extends HttpServlet {
 			"td.queryfieldleftalignedevenrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + EVEN_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: left; "
@@ -362,7 +361,7 @@ public class SMImportWorkOrdersEdit  extends HttpServlet {
 			"td.queryfieldrightalignedevenrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + EVEN_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: right; "
@@ -376,7 +375,7 @@ public class SMImportWorkOrdersEdit  extends HttpServlet {
 			"td.queryfieldcenteralignedevenrow {"
 					+ "height: " + sRowHeight + "; "
 					//+ "vertical-align: bottom;"
-					+ "background-color: " + EVEN_ROW_BACKGROUND_COLOR + "; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "; "
 					+ "font-weight: normal; "
 					+ "font-size: small; "
 					+ "text-align: center; "

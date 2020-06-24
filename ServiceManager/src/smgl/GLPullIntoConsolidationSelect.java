@@ -28,7 +28,6 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	public static final String CONFIRM_PROCESS = "ConfirmProcess";
 	public static final String ADD_GL_ACCOUNTS = "AddGLAccounts";
 	public static final String RADIO_BUTTONS_NAME = "RadioButtonSelect";
-	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_FISCAL_PERIOD_SELECTION = "FISCALPERIODSELECTION";
 	public static String PARAM_BATCH_DATE = "BATCHDATE";
@@ -207,7 +206,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 		while (rs.next()){
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 			
 			String slid = Long.toString(rs.getLong(SMTableglexternalcompanies.lid));

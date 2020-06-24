@@ -23,7 +23,6 @@ public class GLReversePullSelect extends HttpServlet {
 	
 	public static final String CONFIRM_PROCESS = "ConfirmProcess";
 	public static final String RADIO_BUTTONS_NAME = "RadioButtonSelect";
-	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static final String SESSION_WARNING_OBJECT = "REVERSEEXTERNALCOMPANIESWARNING";
 	
@@ -150,7 +149,7 @@ public class GLReversePullSelect extends HttpServlet {
 		while (rs.next()){
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 			}
 			
 			sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""

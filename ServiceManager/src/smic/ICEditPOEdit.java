@@ -72,7 +72,6 @@ public class ICEditPOEdit  extends HttpServlet {
 	private static final String CRITICAL_DATE_TABLE_BG_COLOR = "#F2C3FA";
 	private static final String DETAILS_TABLE_BG_COLOR = "#FFBCA2";
 	private static final String RECEIPTS_TABLE_BG_COLOR = "#A3D1FF";
-	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
 	
 	private static final String HEADER_TABLE_MAX_WIDTH = "1000px";
 	private static final String INFO_TABLES_MAX_WIDTH = "1100px";
@@ -1048,7 +1047,7 @@ public class ICEditPOEdit  extends HttpServlet {
 				while (rs.next()){
 					
 					if(bOddRow){
-						sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+						sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\"";
 					}else{
 						sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 					}
@@ -1179,7 +1178,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			}
 		}
 		if(bOddRow){
-			sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\"";
 		}else{
 			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 		}
@@ -1305,7 +1304,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			String sBackgroundColor= "";
 			while (rs.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\"";
 				}else{
 					sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 				}
@@ -2685,7 +2684,7 @@ public class ICEditPOEdit  extends HttpServlet {
 					String sBackgroundColor= "";
 					while (rs.next()){
 						if(bOddRow){
-							sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+							sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + "\"";
 						}else{
 							sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 						}

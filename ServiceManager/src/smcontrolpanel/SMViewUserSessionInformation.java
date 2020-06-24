@@ -23,7 +23,6 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMViewUserSessionInformation  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
 	private static final String HEADER_BG_COLOR = "#C2E0FF";
 	private static final String USER_PLATFORM_FIELD = "USERPLATFORMFIELD";
 	private static final String LOCAL_DATETIME_FIELD = "LOCALDATETIMEFIELD";
@@ -233,7 +232,7 @@ public class SMViewUserSessionInformation  extends HttpServlet {
 		if (sFilteredRemark.compareToIgnoreCase("") == 0){
 			sFilteredRemark = "&nbsp;";
 		}
-		String sBackgroundColor = DARK_ROW_BG_COLOR;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 		if (bOddRow){
 			sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 		}

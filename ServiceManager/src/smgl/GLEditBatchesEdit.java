@@ -34,7 +34,6 @@ public class GLEditBatchesEdit extends HttpServlet {
 	public static final String BATCH_EDITABLE_PARAMETER_VALUE_TRUE = "Yes";
 	
 	private static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW";
-	private static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static final String GL_BATCH_POSTING_SESSION_WARNING_OBJECT = "GLEDITBATCHWARNING";
 	
 	private static final long serialVersionUID = 1L;
@@ -332,7 +331,7 @@ public class GLEditBatchesEdit extends HttpServlet {
     			GLTransactionBatchEntry entry = batch.getBatchEntryArray().get(i);
 				String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				if (bOddRow){
-					sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
+					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_GREY;
 				}
     			pwOut.println("  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
 					+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""

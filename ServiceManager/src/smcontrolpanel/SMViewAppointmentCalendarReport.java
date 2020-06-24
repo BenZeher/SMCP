@@ -23,11 +23,8 @@ import ServletUtilities.clsDateAndTimeConversions;
 
 public class SMViewAppointmentCalendarReport extends java.lang.Object{
 
-	private static String CELL_SHADED = "#EBEBEB";
 	private static String ENTRY_BACKGROUND = "#e6ffe6";
 	private static String ENTRY_BACKGROUND_HOVER = "#b3ffb3";
-	private static String TODAYS_CELL_SHADED = "#DAE6EE";
-	private static String TODAYS_CELL_UNSHADED = "#E9F7FF";
 	private static String APPOINTMENT_COMMENT_COLOR = "RED";
 	private static String SHIP_TO_CITY_COLOR = "GREEN";
 	
@@ -737,7 +734,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + TODAYS_CELL_UNSHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY_BLUE_ALT + ";"
 				+ "}"	
 		);
 		pwOut.println(
@@ -751,7 +748,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + TODAYS_CELL_SHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY_BLUE + ";"
 				+ "}"	
 		);
 		
@@ -780,7 +777,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				+ " margin:0px;"
 				+ " text-align:center;"
 				+ " vertical-align:top;"
-				+ " background-color: " + CELL_SHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + ";"
 				+ "}"	
 		);
 		pwOut.println(
@@ -804,7 +801,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				//+ " text-decoration:underline;"
 				+ " border-style: none;"
 				+ " text-align:left;"
-				+ " background-color: " + CELL_SHADED + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + ";"
 				+ "}"	
 		);
 		

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableproposalphrasegroups;
 import SMDataDefinition.SMTableproposalphrases;
 import ServletUtilities.clsDatabaseFunctions;
@@ -31,7 +32,6 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 	public static final String UPDATE_BUTTON_LABEL = "Update Proposal Phrase Group";
 	public static final String ADD_NEW_PHRASE_LABEL = "Add New Proposal Phrase";
 	public static final String SORT_LINE_COMMAND_VALUE = "SORTPHRASEORDER";
-	public static final String PROPOSAL_PHRASE_BACKGROUND_HOVER = "#EBEBEB";
 	
 	private boolean bDebug = false;
 	
@@ -406,7 +406,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			 +"}\n";  
 		
 		s += "span.clicktoeditproposalphrase:hover {"
-			 + " background-color: " + PROPOSAL_PHRASE_BACKGROUND_HOVER + ";"
+			 + " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + ";"
 			 + "}"	
 			 ;	
 		s += "</style>\n\n";

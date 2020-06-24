@@ -49,7 +49,6 @@ public class BKEditStatementEdit  extends HttpServlet {
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 	private static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF";
 	private static final String ENTRIES_TABLE_ODD_ROW_BG_COLOR = "#B8E6A0";
-	private static final String TOTALS_TABLE_BG_COLOR = "#F2C3FA";
 	public static final String CHECKBOX_MARKER = "CHECKBOXMARKER";
 	public static final String DEPOSIT_ENTRY_AMOUNT_MARKER = "DEPOSITENTRYAMTMARKER";
 	public static final String WITHDRAWAL_ENTRY_AMOUNT_MARKER = "WITHDRAWALENTRYAMTMARKER";
@@ -433,7 +432,7 @@ public class BKEditStatementEdit  extends HttpServlet {
 	private String createTotalsTable(BKBankStatement statement) throws Exception{
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:TotalsTable; background-color: "
-				+ TOTALS_TABLE_BG_COLOR + "; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "; \" >\n";
 		
 		s += "<TR>";
 		s+= "<TD class=\" readonlyrightfield \">" + "<B>ADJUSTED BANK BALANCE:&nbsp;</B></TD>" 	

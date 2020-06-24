@@ -1468,7 +1468,7 @@ public class SMEditBidEntry  extends HttpServlet {
     				SMTablecriticaldates.SALES_LEAD_RECORD_TYPE,
     				entry.getlid(),
     				"1100px",
-    				"#F2C3FA",
+    				SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK,
     				getServletContext(), 
     				sm.getsDBID(), 
     				sm.getUserID(),

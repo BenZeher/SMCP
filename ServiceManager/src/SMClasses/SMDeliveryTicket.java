@@ -21,9 +21,7 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMDeliveryTicket extends clsMasterEntry{
 
-	public static final String DETAIL_TABLE_BG_COLOR = "#F2C3FA";
 	public static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF"; //
-	public static final String COMMENTS_TABLE_BG_COLOR = "#F2C3FA"; //
 	public static final String MAIN_FORM_NAME = "MAINFORM";
 	public static final String NUMBER_OF_ITEM_LINES_USED = "NUMOFITEMLINESUSED";
 	public static final String ITEM_LINE_QTY = "ITEMLINEQTY";

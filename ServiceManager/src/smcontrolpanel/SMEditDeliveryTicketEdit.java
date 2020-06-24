@@ -744,7 +744,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 	private String createCommentsTable(SMDeliveryTicket entry, boolean isPosted){
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:Comments;  background-color:"+ 
-				SMDeliveryTicket.DETAIL_TABLE_BG_COLOR + "\" width=100% >\n";
+				SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "\" width=100% >\n";
 				s += "<TR>\n<TD width='10%' valign='top'>";
 				s += "<B>Comments:</B>";
 				if(!isPosted){
@@ -810,7 +810,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 	private String createDeliveredByTable(SMDeliveryTicket entry, boolean isPosted, SMMasterEditEntry smedit){
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:DeliveredBy;  background-color:"+ 
-				SMDeliveryTicket.DETAIL_TABLE_BG_COLOR + "\" width=100% >\n";
+				SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "\" width=100% >\n";
 				s += "<TR>\n<TD width='10%' valign='top'>";
 				s += "<B>Delivered By:</B>";
 				if(!isPosted){

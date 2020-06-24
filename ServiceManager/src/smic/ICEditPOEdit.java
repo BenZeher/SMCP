@@ -69,7 +69,6 @@ public class ICEditPOEdit  extends HttpServlet {
 	public static final String Paramlastsavedpodate = "lastsavedpodate";
 	public static final String Paramlastsavedexpecteddate = "lastsavedexpecteddate";
 	
-	private static final String CRITICAL_DATE_TABLE_BG_COLOR = "#F2C3FA";
 	private static final String RECEIPTS_TABLE_BG_COLOR = "#A3D1FF";
 	
 	private static final String HEADER_TABLE_MAX_WIDTH = "1000px";
@@ -397,7 +396,7 @@ public class ICEditPOEdit  extends HttpServlet {
 					SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE,
 					entry.getsID(),
 					INFO_TABLES_MAX_WIDTH,
-					CRITICAL_DATE_TABLE_BG_COLOR,
+					SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK,
 					getServletContext(), 
 					smedit.getsDBID(), 
 					smedit.getUserID(),

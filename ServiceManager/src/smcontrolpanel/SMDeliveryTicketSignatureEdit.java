@@ -233,7 +233,7 @@ public class SMDeliveryTicketSignatureEdit  extends HttpServlet {
 		int iColSpan = 5;
 
 		s += "<TABLE class = \" innermost \" style=\" title:MechanicInfoTable; background-color: "
-				+ SMDeliveryTicket.COMMENTS_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK + "; \" width=100% >\n";
 
 		//Work order comments:
 		s += "<TR>";

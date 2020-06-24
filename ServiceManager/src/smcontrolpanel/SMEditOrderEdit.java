@@ -1249,10 +1249,15 @@ public class SMEditOrderEdit  extends HttpServlet {
 					sm.getsDBID(), 
 					"MySQL", 
 					this.toString() + " [1332425727] SQL: " + SQL);
+			int rowcount = 0;
+			if (rsSalesgroups.last()) {
+			  rowcount = rsSalesgroups.getRow();
+			  rsSalesgroups.beforeFirst();
+			}
 			while (rsSalesgroups.next()){
 				String sSalesGroupID = Long.toString(rsSalesgroups.getLong(SMTablesalesgroups.iSalesGroupId));
 				s += "<OPTION";
-				if (sSalesGroupID.compareToIgnoreCase(entry.getM_iSalesGroup()) == 0){
+				if (sSalesGroupID.compareToIgnoreCase(entry.getM_iSalesGroup()) == 0 || rowcount == 1){
 					s += " selected=YES ";
 				}
 				s += " VALUE=\"" + sSalesGroupID + "\">\n" 
@@ -1332,10 +1337,15 @@ public class SMEditOrderEdit  extends HttpServlet {
 					sm.getsDBID(), 
 					"MySQL", 
 					this.toString() + " [1332425792] SQL: " + SQL);
+			int rowcount = 0;
+			if (rsDefaultItemLocation.last()) {
+			  rowcount = rsDefaultItemLocation.getRow();
+			  rsDefaultItemLocation.beforeFirst();
+			}
 			while (rsDefaultItemLocation.next()){
 				String sDefaultItemLocation = rsDefaultItemLocation.getString(SMTablelocations.sLocation);
 				s += "<OPTION";
-				if (sDefaultItemLocation.compareToIgnoreCase(entry.getM_sLocation()) == 0){
+				if (sDefaultItemLocation.compareToIgnoreCase(entry.getM_sLocation()) == 0 || rowcount == 1){
 					s += " selected=YES ";
 				}
 				s += " VALUE=\"" + sDefaultItemLocation + "\">\n" 

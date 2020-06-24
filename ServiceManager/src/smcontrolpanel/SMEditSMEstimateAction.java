@@ -265,6 +265,7 @@ public class SMEditSMEstimateAction extends HttpServlet{
     		String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.OHDirectFinder"
 				+ "?" + "EndpointName=" + SMOHDirectFieldDefinitions.ENDPOINT_QUOTE
+				+ "&" + OHDirectFinderResults.FINDER_LIST_FORMAT_PARAM + "=" + OHDirectFinderResults.FINDER_LIST_FORMAT_QUOTE_LINES_VALUE
 				+ "&SearchingClass=" + "smcontrolpanel.SMEditSMEstimateEdit"
 				+ "&ReturnField=" + SMEditSMEstimateEdit.FIELD_REPLACE_QUOTE_WITH_NUMBER
 				+ "&ResultListField1=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER

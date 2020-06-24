@@ -188,6 +188,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
     		String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.OHDirectFinder"
 				+ "?" + "EndpointName=" + SMOHDirectFieldDefinitions.ENDPOINT_QUOTE
+				+ "&" + OHDirectFinderResults.FINDER_LIST_FORMAT_PARAM + "=" + OHDirectFinderResults.FINDER_LIST_FORMAT_QUOTES_VALUE
 				+ "&SearchingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
 				+ "&ReturnField=" + SMEditSMSummaryEdit.FIELD_VENDOR_QUOTE
 				+ "&ResultListField1=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER

@@ -1225,13 +1225,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>" + "\n"
-			+ "&nbsp;" + "\n<button type=\"button\""
-				+ " value=\"" + BUTTON_FIND_VENDOR_QUOTE_CAPTION + "\""
-				+ " name=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
-				+ " id=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
-				+ " onClick=\"findvendorquote();\">"
-				+ BUTTON_FIND_VENDOR_QUOTE_CAPTION
-				+ "</button>\n"
+			
 			+ ", line number:&nbsp;"
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
@@ -1241,6 +1235,15 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>" + "\n"
+			
+			+ "&nbsp;" + "\n<button type=\"button\""
+				+ " value=\"" + BUTTON_FIND_VENDOR_QUOTE_CAPTION + "\""
+				+ " name=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
+				+ " id=\"" + BUTTON_FIND_VENDOR_QUOTE + "\""
+				+ " onClick=\"findvendorquote();\">"
+				+ BUTTON_FIND_VENDOR_QUOTE_CAPTION
+				+ "</button>\n"
+
 		;
 		
 		s += "    </TD> \n";

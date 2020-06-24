@@ -97,6 +97,7 @@ public class OHDirectFinder extends HttpServlet {
 
 	    //Get the parameters:
 	    String sEndPointName = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_ENDPOINT_NAME_PARAM, request);
+	    String sListFormat = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_LIST_FORMAT_PARAM, request);
 	    String sSearchingClass = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_SEARCHING_CLASS_PARAM, request);
 	    String sReturnField = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM, request);
 	    String sParameterString = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_PARAM, request);
@@ -125,7 +126,7 @@ public class OHDirectFinder extends HttpServlet {
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_SEARCHING_CLASS_PARAM + "\" VALUE=\"" + sSearchingClass + "\">");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM + "\" VALUE=\"" + sReturnField + "\">");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_RETURN_PARAM + "\" VALUE=\"" + sParameterString + "\">");
-	    
+	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_LIST_FORMAT_PARAM + "\" VALUE=\"" + sListFormat + "\">");
 	    
 	    //Store the display fields and headings for the results page:
 	    for (int i = 0; i < MAX_NUMBER_OF_RESULT_FIELDS; i++){

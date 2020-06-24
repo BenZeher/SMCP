@@ -69,8 +69,6 @@ public class ICEditPOEdit  extends HttpServlet {
 	public static final String Paramlastsavedpodate = "lastsavedpodate";
 	public static final String Paramlastsavedexpecteddate = "lastsavedexpecteddate";
 	
-	private static final String RECEIPTS_TABLE_BG_COLOR = "#A3D1FF";
-	
 	private static final String HEADER_TABLE_MAX_WIDTH = "1000px";
 	private static final String INFO_TABLES_MAX_WIDTH = "1100px";
 
@@ -1288,7 +1286,7 @@ public class ICEditPOEdit  extends HttpServlet {
 
 			if(rs.isBeforeFirst()) {
 				out.println("<TABLE BORDER=0  WIDTH=100% cellspacing=0 cellpadding=1 style= \"max-width:"+ INFO_TABLES_MAX_WIDTH +";"
-						+ " background-color: " + RECEIPTS_TABLE_BG_COLOR + "; \" ><TR>");
+						+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "; \" ><TR>");
 				out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Receipt&nbsp;#</B></FONT></TD>");
 				out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Created&nbsp;by</B></FONT></TD>");
 				out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Date</B></FONT></TD>");
@@ -2672,7 +2670,7 @@ public class ICEditPOEdit  extends HttpServlet {
 
 				if(rs.next() != false) {
 					out.println("<TABLE BORDER=0 cellspacing=0 cellpadding=1 style= \""
-							+ " background-color: " + RECEIPTS_TABLE_BG_COLOR + "; \" ><TR>");
+							+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "; \" ><TR>");
 					out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Vendor Return Link(s)</B></FONT></TD>");				
 					out.println("</TR>");
 					rs.beforeFirst();

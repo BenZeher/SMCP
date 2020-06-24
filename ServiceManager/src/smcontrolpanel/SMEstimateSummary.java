@@ -274,11 +274,11 @@ public class SMEstimateSummary {
 				+ ", " + SMTablesmestimatesummaries.ilabortype + " = " + m_ilabortype
 				+ ", " + SMTablesmestimatesummaries.iordertype + " = " + m_iordertype
 				+ ", " + SMTablesmestimatesummaries.itaxid + " = " + m_itaxid
-				+ ", " + SMTablesmestimatesummaries.llastmodifiedbyid + " = " + m_llastmodifiedbyid
+				+ ", " + SMTablesmestimatesummaries.llastmodifiedbyid + " = " + sUserID
 				+ ", " + SMTablesmestimatesummaries.lsalesleadid + " = " + m_lsalesleadid
 				+ ", " + SMTablesmestimatesummaries.scomments + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_scomments) + "'"
 				+ ", " + SMTablesmestimatesummaries.sjobname + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sjobname) + "'"
-				+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_slastmodifiedbyfullname) + "'"
+				+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 				+ ", " + SMTablesmestimatesummaries.spricelistcode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_spricelistcode) + "'"
 				+ ", " + SMTablesmestimatesummaries.ipricelevel + " = " + m_ipricelevel
 				+ ", " + SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sadditionalpostsalestaxcostlabel) + "'"

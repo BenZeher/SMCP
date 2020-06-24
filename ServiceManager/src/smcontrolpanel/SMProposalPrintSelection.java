@@ -36,7 +36,6 @@ public class SMProposalPrintSelection extends HttpServlet {
 	public static final String NUMBER_OF_PROPOSAL_COPIES = "NOOFPROPOSALCOPIES";
 
 	//Colors
-	//private static final String COMMON_TABLE_BG_COLOR = "#CCFFB2";
 	private static final String PRINT_TABLE_BG_COLOR = "#99CCFF";
 	//private static final String EMAIL_TABLE_BG_COLOR = "#FFBCA2";
 	

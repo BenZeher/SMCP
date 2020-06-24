@@ -24,8 +24,6 @@ public class SMDeliveryTicket extends clsMasterEntry{
 	public static final String ITEMS_TABLE_BG_COLOR = "#FFBCA2"; //
 	public static final String DETAIL_TABLE_BG_COLOR = "#F2C3FA";
 	public static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF"; //
-	public static final String ORDERNUMBER_TABLE_BG_COLOR = "#CCFFB2"; //
-	public static final String TERMS_TABLE_BG_COLOR = "#CCFFB2"; //
 	public static final String SIGNATUREBLOCK_TABLE_BG_COLOR = "#FFBCA2"; //
 	public static final String COMMENTS_TABLE_BG_COLOR = "#F2C3FA"; //
 	public static final String MAIN_FORM_NAME = "MAINFORM";

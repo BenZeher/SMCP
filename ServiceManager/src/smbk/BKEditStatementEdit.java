@@ -16,6 +16,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMBatchTypes;
 import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableaptransactions;
@@ -47,7 +48,6 @@ public class BKEditStatementEdit  extends HttpServlet {
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 	private static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF";
-	private static final String ENTRIES_TABLE_BG_COLOR = "#CCFFB2";
 	private static final String ENTRIES_TABLE_ODD_ROW_BG_COLOR = "#B8E6A0";
 	private static final String TOTALS_TABLE_BG_COLOR = "#F2C3FA";
 	public static final String CHECKBOX_MARKER = "CHECKBOXMARKER";
@@ -492,7 +492,7 @@ public class BKEditStatementEdit  extends HttpServlet {
 			) throws Exception{
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:EntriesTable; background-color: "
-			+ ENTRIES_TABLE_BG_COLOR + "; \" >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" >\n";
 //		s += "<TABLE class = \" innermost \" style=\" title:EntriesTable; \" >\n";
 
 		//Build the header:

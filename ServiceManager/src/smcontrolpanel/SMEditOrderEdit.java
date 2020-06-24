@@ -18,6 +18,7 @@ import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomershiptos;
 import SMDataDefinition.SMTablearterms;
 import SMDataDefinition.SMTableconveniencephrases;
@@ -45,12 +46,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final String CUSTOMERSETTINGS_BG_COLOR = "#FFBCA2";
-	private static final String CUSTOMERBILLTO_BG_COLOR = "#CCFFB2";
 	private static final String CUSTOMERSHIPTO_BG_COLOR = "#99CCFF";
 	private static final String ORDERDATES_BG_COLOR = "#99CCFF";
 	private static final String PROJECTFIELDS_BG_COLOR = "#FFBCA2";
 	private static final String CONVENIENCEPHRASES_BG_COLOR = "#FFBCA2";
-	private static final String ORDERMEMOS_BG_COLOR = "#CCFFB2";
 	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
 	public static final String ORDERUPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>S</FONT></B>ave"; //S
@@ -758,7 +757,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "<TR>";
 		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSETTINGS_BG_COLOR + "; \">\n" 
 			+ createCustomerSettingsTable(sm, entry, cus, sObjectName) + "</TD>\n\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERBILLTO_BG_COLOR + "; \">\n" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \">\n" 
 			+ createCustomerBillToTable(sm, entry) + "</TD>\n\n";
 		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSHIPTO_BG_COLOR + "; \">\n" 
 			+ createCustomerShipToTable(sm, entry) + "</TD>\n\n";
@@ -2364,7 +2363,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		int iNumberOfColumns = 2;
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderTotals; background-color: "
-			+ ORDERMEMOS_BG_COLOR + "; \" width=100% >\n";		
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";		
 		
 		//Add a field for the Google Docs Link and buttons for google web apps
 		String sRenameFolderButton = "";

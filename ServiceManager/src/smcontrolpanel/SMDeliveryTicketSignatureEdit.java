@@ -336,7 +336,7 @@ public class SMDeliveryTicketSignatureEdit  extends HttpServlet {
 		String s = "";
 		//Open Table
 		s += "<TABLE class = \" innermost \" style=\" title:TermsTable; background-color: "
-			+ SMDeliveryTicket.TERMS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";
 		
 		s += "<TR><TD><U><B>Terms And Conditions </B></U></TD></TR>";
 		s += "<TD class=\"readonlyleftfield\" >";

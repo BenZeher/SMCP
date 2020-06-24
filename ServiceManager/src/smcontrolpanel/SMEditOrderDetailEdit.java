@@ -17,6 +17,7 @@ import smic.ICItem;
 import SMClasses.SMFieldLengths;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableiccategories;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTablelocations;
@@ -36,7 +37,6 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
-	private static final String ITEMEDIT_BG_COLOR = "#CCFFB2";
 	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	private static final String WORKPERFORMEDCODES_BG_COLOR = "#FFBCA2";
 	public static final String WPFCONTROL_MARKER = "WPF";
@@ -445,7 +445,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 		//Create the edit area table:
 		s += "<TR><TD><TABLE style=\" title:DetailArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + ITEMEDIT_BG_COLOR + "; \">" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \">" 
 			+ createItemEditTable(sm, order, detail, item, cn) + "</TD>\n";
 		//Create the order commands line at the bottom:
 		s += createDetailCommandsTable(sm.getAddingNewEntryFlag());

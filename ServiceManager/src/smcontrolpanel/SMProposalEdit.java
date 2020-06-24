@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableproposalphrasegroups;
@@ -34,12 +35,10 @@ public class SMProposalEdit  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	//Colors:
-	private static final String BODYDESCRIPTION_TABLE_BG_COLOR = "#CCFFB2";
 	private static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF";
 	private static final String ALTERNATES_TABLE_BG_COLOR = "#FFBCA2";
 	private static final String SIGNATUREBLOCK_TABLE_BG_COLOR = "#99CCFF";
 	private static final String PRICEBLOCK_TABLE_BG_COLOR = "#99CCFF";
-	private static final String TERMS_TABLE_BG_COLOR = "#CCFFB2";
 	private static final String CONVENIENCEPHRASES_BG_COLOR = "#FFBCA2";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
 	
@@ -339,7 +338,7 @@ public class SMProposalEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:BodyDescriptionTable; background-color: "
-				+ BODYDESCRIPTION_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";
 
 		//List of 'F&I' headings:
 		s += "<TR>";
@@ -852,7 +851,7 @@ public class SMProposalEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:ProposalTermsTable; background-color: "
-			+ TERMS_TABLE_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \" width=100% >\n";
 
 		ArrayList <String>arrProposalTermIDs = new ArrayList<String>(0);
 		ArrayList <String>arrProposalTermCodes = new ArrayList<String>(0);

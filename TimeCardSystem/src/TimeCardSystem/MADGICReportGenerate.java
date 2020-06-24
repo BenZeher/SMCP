@@ -79,13 +79,6 @@ public class MADGICReportGenerate extends HttpServlet {
 	
 	private static int TABLE_COLUMN_SPAN = 8;
 	
-	private static final String COLOR_LIGHT_BLUE = "#4d94ff"; //"#e6ffff";
-	private static final String COLOR_LIGHT_LIGHT_BLUE = "#99c2ff"; //"#ccffff";
-	//private static final String COLOR_LIGHT_GREEN = "#e6fff2";
-	//private static final String COLOR_MEDIUM_BLUE = "#99c2ff";
-	private static final String COLOR_LIGHT_SLATE = "#e0e0eb";
-	private static final String COLOR_OF_EVENT_ENTRY_NAME = "#ff66ff"; //"#ff99ff";
-	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)throws ServletException, IOException {
 
@@ -520,7 +513,7 @@ public class MADGICReportGenerate extends HttpServlet {
 		public String printEmployeeHeading(ArrayList<String>arrEventNames){
 			String s = "";
 			SimpleDateFormat starttimeformat = new SimpleDateFormat("hh:mm a");
-			s = "  <TR bgcolor=\"" + COLOR_LIGHT_SLATE + "\">\n"
+			s = "  <TR bgcolor=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + "\">\n"
 				+ "    <TD><B>" + m_sDeptDescription + "</B></TD>\n"
 				+ "    <TD COLSPAN=2><B>" + m_sEmployeeName + "</B> <I>Start: " + starttimeformat.format(m_tsStartTime.getTime()) + "</I></B></TD>\n"
 				+ "    <TD ALIGN=RIGHT>Weekly</TD>\n"
@@ -662,9 +655,9 @@ public class MADGICReportGenerate extends HttpServlet {
 			for (int i = 0; i < m_arrDaysInSelectionRange.size(); i++){
 				MADGICWorkedDay day = m_arrDaysInSelectionRange.get(i);
 				
-				String sBackgroundColor = COLOR_LIGHT_BLUE;
+				String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_BLUE_ALT;
 				if ((i % 2) > 0){
-					sBackgroundColor = COLOR_LIGHT_LIGHT_BLUE;
+					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_BLUE;
 				}
 				
 				String sPrefix = sdf.format(day.m_calendarDay.getTime())
@@ -755,7 +748,7 @@ public class MADGICReportGenerate extends HttpServlet {
 					s += "  <TR bgcolor=\"" + sBackgroundColor + "\" style = \" color: black; \" >\n"
 						+ "    <TD>"
 						+ sPrefix
-						+ "    <TD><B><FONT COLOR=" + COLOR_OF_EVENT_ENTRY_NAME + ">" + evententry.m_sEventTypeName + "</FONT></B>" + "</TD>\n"
+						+ "    <TD><B><FONT COLOR=" + SMMasterStyleSheetDefinitions.BACKGROUND_BRIGHT_PINK + ">" + evententry.m_sEventTypeName + "</FONT></B>" + "</TD>\n"
 						+ "    <TD><I>" + sLinkToMADGICEvent + "&nbsp;-&nbsp;" + evententry.m_sEventDesc + "</I></TD>\n"
 					;
 					

@@ -97,10 +97,12 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_TEAL = "#66FF99";
 	
 	public static final String BACKGROUND_PEACH = "#FF8484";
+	public static final String BACKGROUND_PALE_PEACH = "#FFE2D7";
 	public static final String BACKGROUND_LIGHT_PEACH = "#FFBCA2";
 	public static final String BACKGROUND_LIGHT_PEACH_ALT = "#FFC7B3";
 	
 	public static final String BACKGROUND_LIGHT_PINK = "#F2C3FA";
+	public static final String BACKGROUND_BRIGHT_PINK = "#FF66FF";
 
 	public static final String BACKGROUND_YELLOW = "#FFFF66";
 	public static final String BACKGROUND_GOLD = "#E8C355";
@@ -108,6 +110,8 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_DARK_ORANGE = "#CF6031";
 	
 	public static final String BACKGROUND_BLUE = "#99CCFF";
+	public static final String BACKGROUND_BLUE_ALT = "#4D94FF";
+	public static final String BACKGROUND_PALE_BLUE = "#DBEDFF";
 	public static final String BACKGROUND_LIGHT_BLUE = "#A3D1FF";
 	public static final String BACKGROUND_DARK_BLUE = "#120991";
 	

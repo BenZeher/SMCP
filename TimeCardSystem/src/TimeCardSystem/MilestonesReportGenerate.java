@@ -47,13 +47,6 @@ public class MilestonesReportGenerate extends HttpServlet {
 	public static final String INCOMPLETE_MILESTONE_TEXT = "Incomplete";
 	private static final int TABLE_COLUMN_SPAN = 3;
 	
-	//private static final String COLOR_LIGHT_BLUE = "#4d94ff"; //"#e6ffff";
-	private static final String COLOR_LIGHT_LIGHT_BLUE = "#99c2ff"; //"#ccffff";
-	//private static final String COLOR_LIGHT_GREEN = "#e6fff2";
-	//private static final String COLOR_MEDIUM_BLUE = "#99c2ff";
-	private static final String COLOR_LIGHT_SLATE = "#e0e0eb";
-	//private static final String COLOR_OF_EVENT_ENTRY_NAME = "#ff66ff"; //"#ff99ff";
-	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {
@@ -326,7 +319,7 @@ public class MilestonesReportGenerate extends HttpServlet {
 			}
 			
 			s += "<TR><TD COLSPAN=" + Integer.toString(TABLE_COLUMN_SPAN) + "></TD></TR>";
-			s += "<TR style=\"background-color:" + COLOR_LIGHT_SLATE + ";\">";	
+			s += "<TR style=\"background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_GREY + ";\">";	
 			s += "<TD COLSPAN=" + Integer.toString(TABLE_COLUMN_SPAN) + "><B>" + m_sEmployeeFirstName + " " + m_sEmployeeLastName + "</B></TD>\n";
 			s += "</TR>\n\n";
 			
@@ -353,7 +346,7 @@ public class MilestonesReportGenerate extends HttpServlet {
 				if(bIsComplete){
 					sRowColor = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN_ALT;
 				}else{
-					sRowColor = COLOR_LIGHT_LIGHT_BLUE;
+					sRowColor = SMMasterStyleSheetDefinitions.BACKGROUND_BLUE;
 				}
 				//Display every Milestone for this employee
 				s += "<TR class=\"border_top\" style=\"background-color:" + sRowColor+ ";\">";

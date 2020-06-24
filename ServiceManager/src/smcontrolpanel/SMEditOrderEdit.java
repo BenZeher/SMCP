@@ -45,11 +45,8 @@ import smar.ARCustomer;
 public class SMEditOrderEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String CUSTOMERSETTINGS_BG_COLOR = "#FFBCA2";
 	private static final String CUSTOMERSHIPTO_BG_COLOR = "#99CCFF";
 	private static final String ORDERDATES_BG_COLOR = "#99CCFF";
-	private static final String PROJECTFIELDS_BG_COLOR = "#FFBCA2";
-	private static final String CONVENIENCEPHRASES_BG_COLOR = "#FFBCA2";
 	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
 	public static final String ORDERUPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>S</FONT></B>ave"; //S
@@ -755,7 +752,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		//Create the customer area table:
 		s += "<TR><TD>\n<TABLE style=\" title:CustomerArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSETTINGS_BG_COLOR + "; \">\n" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \">\n" 
 			+ createCustomerSettingsTable(sm, entry, cus, sObjectName) + "</TD>\n\n";
 		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \">\n" 
 			+ createCustomerBillToTable(sm, entry) + "</TD>\n\n";
@@ -768,7 +765,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "<TR>";
 		s += "<TD style=\" vertical-align:top; background-color: " + ORDERDATES_BG_COLOR + "; \">\n" 
 			+ createOrderSettings2Table(sm, entry) + "</TD>\n\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + PROJECTFIELDS_BG_COLOR + "; \">\n" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \">\n" 
 			+ createProjectFieldsTable(sm, entry) + "</TD>\n\n";
 		s += "</TR>\n</TD>\n</TABLE style=\" title:ENDOrderArea; \">\n\n";
 		
@@ -2539,7 +2536,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		;
 			
 		s += "<div id=\"ScrollCB\" style=\"height:350;width:100%;background-color:" 
-				+ CONVENIENCEPHRASES_BG_COLOR + ";overflow:auto;border:1px solid blue;display:none\">\n\n"
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + ";overflow:auto;border:1px solid blue;display:none\">\n\n"
 		;
 		
 //		s += "<div style = \"width:100%;\">\n";
@@ -3513,7 +3510,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		;
 		
 		s += "function colorChangeBack(targetLabel){\n"
-			+ "    targetLabel.style.backgroundColor=\"" + CONVENIENCEPHRASES_BG_COLOR + "\"\n"
+			+ "    targetLabel.style.backgroundColor=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "\"\n"
 			+ "}\n"
 		;
 		

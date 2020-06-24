@@ -38,7 +38,6 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
 	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
-	private static final String WORKPERFORMEDCODES_BG_COLOR = "#FFBCA2";
 	public static final String WPFCONTROL_MARKER = "WPF";
 	public static final String HEADER_BUTTON_LABEL = "<B><FONT COLOR=RED>H</FONT></B>eader"; //H
 	public static final String DETAILS_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>etails"; //D
@@ -1027,7 +1026,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 		;
 			
 		s += "<div id=\"ScrollWPF\" style=\"height:350;width:100%;background-color:" 
-				+ WORKPERFORMEDCODES_BG_COLOR + ";overflow:auto;border:1px solid blue;display:none\">\n"
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + ";overflow:auto;border:1px solid blue;display:none\">\n"
 		;
 		
 		SQL = "SELECT * FROM " + SMTableworkperformedcodes.TableName
@@ -1808,7 +1807,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 		;
 		
 		s += "function colorChangeBack(targetLabel){\n"
-			+ "targetLabel.style.backgroundColor=\"" + WORKPERFORMEDCODES_BG_COLOR + "\""
+			+ "targetLabel.style.backgroundColor=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "\""
 			+ "}\n"
 		;
 		

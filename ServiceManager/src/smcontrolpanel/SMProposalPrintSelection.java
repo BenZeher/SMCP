@@ -37,7 +37,6 @@ public class SMProposalPrintSelection extends HttpServlet {
 
 	//Colors
 	private static final String PRINT_TABLE_BG_COLOR = "#99CCFF";
-	//private static final String EMAIL_TABLE_BG_COLOR = "#FFBCA2";
 	
 	private static final long serialVersionUID = 1L;
 	private static final String sCalledClass = "smcontrolpanel.SMProposalPrintAction";

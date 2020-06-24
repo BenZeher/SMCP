@@ -307,7 +307,7 @@ public class SMDeliveryTicketSignatureEdit  extends HttpServlet {
 		String s = "";
 		//Open Table
 		s += "<TABLE class = \" innermost \" style=\" title:ItemsTable; background-color: "
-				+ SMDeliveryTicket.ITEMS_TABLE_BG_COLOR + "; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >\n";
 		
 		//Display the items delivered:
 		s += "<TR><TD width='20%'><B><U>ITEMS DELIVERED:</U></B></TD>";
@@ -376,7 +376,7 @@ public class SMDeliveryTicketSignatureEdit  extends HttpServlet {
 		
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:SignatureBlockTable; background-color: "
-				+ SMDeliveryTicket.SIGNATUREBLOCK_TABLE_BG_COLOR + "; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" >\n";
 		
 		s += "<TR>";
 		s += "<TD><U><B>Confirmation of delivery:</B></U></TD>";

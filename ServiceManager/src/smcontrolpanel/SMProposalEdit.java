@@ -36,10 +36,8 @@ public class SMProposalEdit  extends HttpServlet {
 
 	//Colors:
 	private static final String ORDERCOMMANDS_TABLE_BG_COLOR = "#99CCFF";
-	private static final String ALTERNATES_TABLE_BG_COLOR = "#FFBCA2";
 	private static final String SIGNATUREBLOCK_TABLE_BG_COLOR = "#99CCFF";
 	private static final String PRICEBLOCK_TABLE_BG_COLOR = "#99CCFF";
-	private static final String CONVENIENCEPHRASES_BG_COLOR = "#FFBCA2";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
 	
 	//Commands:
@@ -529,7 +527,7 @@ public class SMProposalEdit  extends HttpServlet {
 				//Need to start a new div:
 				iProposalPhraseGroupID = rscps.getInt(SMTableproposalphrases.iphrasegroupid);
 				s += "<div id=\"" + PROPOSALPHRASESBYGROUPDIV + Integer.toString(iProposalPhraseGroupID) + "\"" + " style=\"height:200;width:100%;background-color:" 
-				+ CONVENIENCEPHRASES_BG_COLOR + ";overflow:auto;border:1px solid blue;display:none\">\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + ";overflow:auto;border:1px solid blue;display:none\">\n";
 			}
 			iProposalPhraseGroupID = rscps.getInt(SMTableproposalphrases.iphrasegroupid);
 			//This creates a list:
@@ -579,7 +577,7 @@ public class SMProposalEdit  extends HttpServlet {
 		String s = "";
 
 		s += "<TABLE class = \" innermost \" style=\" title:AlternatesTable; background-color: "
-				+ ALTERNATES_TABLE_BG_COLOR + "; \" width=100% >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \" width=100% >\n";
 
 		//Alternate 1:
 		s += "<TR>";
@@ -1337,7 +1335,7 @@ public class SMProposalEdit  extends HttpServlet {
 			+ "}\n"
 		;
 		s += "function colorChangeBack(targetLabel){\n"
-			+ "    targetLabel.style.backgroundColor=\"" + CONVENIENCEPHRASES_BG_COLOR + "\";\n"
+			+ "    targetLabel.style.backgroundColor=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "\";\n"
 			+ "}\n"
 		;
 		s += "function exposeProposalPhraseGroupChoices() {\n" 

@@ -622,7 +622,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 	    			);
 	    	//Create table heading 
 	    	s+=	"<TABLE class = ' innermost ' style=' title:OrderDetailLinesTable; background-color:"+ 
-	    			SMDeliveryTicket.ITEMS_TABLE_BG_COLOR + "' width=100% >";
+	    			SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "' width=100% >";
 	    	s += "<TR>\n<TD ALIGN=LEFT><B>Order Lines:<B></TR>\n\n";
 	    	s += "<TR>\n";
 			s+= "<TD class=\" fieldrightheading \"><FONT SIZE=2>Quantity</FONT></TD>\n";
@@ -676,7 +676,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:SignatureBlockTable; background-color: "
-				+ SMDeliveryTicket.ITEMS_TABLE_BG_COLOR + "; width=100%; \" >\n";
+				+ SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; width=100%; \" >\n";
 			
 			//Signature:
 			s += "<TR>\n<TD>\n";

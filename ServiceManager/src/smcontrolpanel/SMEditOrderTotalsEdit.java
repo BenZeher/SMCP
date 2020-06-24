@@ -14,6 +14,7 @@ import smar.ARCustomer;
 import SMClasses.SMJavaScriptFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
@@ -24,7 +25,6 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
-	private static final String TOTALS_BG_COLOR = "#FFBCA2";
 	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	public static final String ORDERUPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>S</FONT></B>ave"; //S
 	public static final String DETAILS_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>etails"; //D
@@ -269,7 +269,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 		//Create the customer area table:
 		s += "<TR><TD><TABLE style=\" title:TotalsArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + TOTALS_BG_COLOR + "; \">" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \">" 
 			+ createOrderTotalsTable(sm, entry, conn) + "</TD>\n";
 		s += "</TR></TD></TABLE style=\" title:ENDTotalsArea; \">\n";
 		

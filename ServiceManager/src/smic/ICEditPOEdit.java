@@ -70,7 +70,6 @@ public class ICEditPOEdit  extends HttpServlet {
 	public static final String Paramlastsavedexpecteddate = "lastsavedexpecteddate";
 	
 	private static final String CRITICAL_DATE_TABLE_BG_COLOR = "#F2C3FA";
-	private static final String DETAILS_TABLE_BG_COLOR = "#FFBCA2";
 	private static final String RECEIPTS_TABLE_BG_COLOR = "#A3D1FF";
 	
 	private static final String HEADER_TABLE_MAX_WIDTH = "1000px";
@@ -966,7 +965,7 @@ public class ICEditPOEdit  extends HttpServlet {
 	){
 		out.println("<br><br><b><u><FONT SIZE=2>PO Detail Lines</FONT></u></b><br>");
 
-		out.println("<TABLE STYLE=\"max-width:"+INFO_TABLES_MAX_WIDTH+"; table-layout: fixed; background-color: " + DETAILS_TABLE_BG_COLOR + ";\" BORDER=0 cellspacing=0 cellpadding=1><TR>");
+		out.println("<TABLE STYLE=\"max-width:"+INFO_TABLES_MAX_WIDTH+"; table-layout: fixed; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + ";\" BORDER=0 cellspacing=0 cellpadding=1><TR>");
 		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>&nbsp;&nbsp;</B></FONT></TD>");
 		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Line&nbsp;#</B></FONT></TD>");
 		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Location</B></FONT></TD>");

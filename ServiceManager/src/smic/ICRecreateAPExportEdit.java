@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicinvoiceexportsequences;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import ServletUtilities.clsDatabaseFunctions;
@@ -367,7 +368,7 @@ public class ICRecreateAPExportEdit  extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: left; "
@@ -383,7 +384,7 @@ public class ICRecreateAPExportEdit  extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: right; "
@@ -399,7 +400,7 @@ public class ICRecreateAPExportEdit  extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: center; "
@@ -435,7 +436,7 @@ public class ICRecreateAPExportEdit  extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: left; "
@@ -451,7 +452,7 @@ public class ICRecreateAPExportEdit  extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: right; "
@@ -467,7 +468,7 @@ public class ICRecreateAPExportEdit  extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: center; "

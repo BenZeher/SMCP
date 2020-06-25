@@ -4067,7 +4067,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: text-bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: center; "

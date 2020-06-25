@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMBatchStatuses;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsServletUtilities;
@@ -541,7 +542,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: left; "
@@ -559,7 +560,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: right; "

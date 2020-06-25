@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
 import ServletUtilities.clsBase64Functions;
@@ -1107,7 +1108,7 @@ public class SMInvoicePrinter extends Object{
 			//+ "border-style: none; "
 			//+ "border-color: white; "
 			+ "vertical-align: text-bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: center; "

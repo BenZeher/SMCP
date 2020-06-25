@@ -2004,7 +2004,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			"th.orderlineheading {"
 			+ "height: " + sRowHeight + "; "
 			+ "vertical-align: text-bottom;"
-			+ "background-color: #708090; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "font-weight: bold; "
 			+ "font-size: small; "
 			+ "text-align: center; "

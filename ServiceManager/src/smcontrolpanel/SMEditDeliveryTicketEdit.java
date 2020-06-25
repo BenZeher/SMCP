@@ -700,7 +700,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 			s +=
 	        	"\n"
 	        	+ "<canvas class=pad width=" + iSignatureWidth + " name=signaturecanvas"
-	        		+ " height=" + sSignatureBoxHeight + " style=\"border:1px solid  #000000;\" ></canvas>\n"
+	        		+ " height=" + sSignatureBoxHeight + " style=\"border:1px solid  " + SMMasterStyleSheetDefinitions.BACKGROUND_BLACK + ";\" ></canvas>\n"
 	        ;	
 	
 			s += "&nbsp;<B>Date signed:</B>&nbsp;";

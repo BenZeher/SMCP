@@ -928,7 +928,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 		s +=
 				"\n"
 						+ "<canvas class=pad width=" + sSignatureBoxWidth + " name=signaturecanvas"
-						+ " height=" + sSignatureBoxHeight + " style=\"border:1px solid  #000000;\""
+						+ " height=" + sSignatureBoxHeight + " style=\"border:1px solid  " + SMMasterStyleSheetDefinitions.BACKGROUND_BLACK + ";\""
 						+ " onchange=\"flagDirty();\""
 						+ "></canvas>\n"
 						+ "<input type=hidden name='" + SMWorkOrderHeader.Parammsignature + "' class=" + SIGNATURE_JSON_OUTPUT_FIELD_NAME + ">\n"

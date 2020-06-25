@@ -3002,7 +3002,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			s +=
 	        	"\n"
 	        	+ "<canvas class=pad width=" + sSignatureBoxWidth + " name=signaturecanvas"
-        		+ " height=" + sSignatureBoxHeight + " style=\"border:1px solid  #000000;\" ></canvas>\n"
+        		+ " height=" + sSignatureBoxHeight + " style=\"border:1px solid  " + SMMasterStyleSheetDefinitions.BACKGROUND_BLACK + ";\" ></canvas>\n"
 	        ;	
 			s += "&nbsp;<B>Date signed:</B>&nbsp;";
 			s += workorder.getdattimesigned();

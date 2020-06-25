@@ -120,6 +120,7 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_GREY = "#DCDCDC";
 	public static final String BACKGROUND_GREY_BLUE = "#DAE6EE";
 	public static final String BACKGROUND_GREY_BLUE_ALT = "#E9F7FF";
+	public static final String BACKGROUND_BLACK = "#000000";
 	
 	//CURENT PALLET https://www.color-hex.com/color-palette/94534
 	

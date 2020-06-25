@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.CompanyDataCredentials;
 import ConnectionPool.ServerSettingsFileParameters;
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTableicoptions;
 import SMDataDefinition.SMTableusers;
@@ -638,7 +639,7 @@ public class SMUtilities extends clsServletUtilities {
 						SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ "' NAME='"
 						+ arPermittedFunctionNames.get(j).replace(" ", "") + "Link"
-						+ "'><U><FONT SIZE=3 STYLE='font-size: 11pt'><FONT COLOR='#000080'>"
+						+ "'><U><FONT SIZE=3 STYLE='font-size: 11pt'><FONT COLOR='" + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "'>"
 						+ arPermittedFunctionNames.get(j)
 						+ " (" + Long.toString(arPermittedFunctions.get(j)) + ")"
 						+ "</FONT></FONT></U></A><BR>"

@@ -1,5 +1,7 @@
 package ServletUtilities;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
+
 public class clsTextEditorFunctions {
 
 	//NOTE: To add an editable text box add the getJavascriptTextEditToolBarFunctions() function to the top of the page
@@ -108,7 +110,7 @@ public class clsTextEditorFunctions {
 		s+="<iframe name=\"" + sFieldName + "iFrame\" id=\"" + sFieldName + "iFrame\""
 		    + " tabindex=\"-1\""
 			+ " style=\"background-color:white;"
-			+ " border:#000000 1px solid;"
+			+ " border:" + SMMasterStyleSheetDefinitions.BACKGROUND_BLACK + " 1px solid;"
 			+ " resize: both; "
 			+ " min-width:" + iWidth_px + "px; "
 			+ " min-height:" + iHeight_px+ "px;\""

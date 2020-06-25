@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecustomlinks;
 import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
@@ -924,7 +925,7 @@ public class SMUserLogin extends HttpServlet {
 			String sLink = "";
 			while(rsCustomLinks.next()){
 				sLink ="<A HREF='" + rsCustomLinks.getString( SMTablecustomlinks.surl)+ "'>"
-						+ "<U><FONT SIZE=3 STYLE='font-size: 11pt'><FONT COLOR='#000080'>"
+						+ "<U><FONT SIZE=3 STYLE='font-size: 11pt'><FONT COLOR='" + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "'>"
 						+ rsCustomLinks.getString( SMTablecustomlinks.surlname)
 						+ "</FONT></FONT></U></A><BR>"
 						;

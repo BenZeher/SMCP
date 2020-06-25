@@ -158,7 +158,7 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
         	+ "</ul> <div class=\"sig sigWrapper\">\n"
         	+ "<div class=typed></div>\n"
         	+ "<canvas class=pad width=" + SMTableproposals.SIGNATURE_CANVAS_WIDTH 
-        		+ " height=" + SMTableproposals.SIGNATURE_CANVAS_HEIGHT + " style=\"border:1px solid  #000000;\" ></canvas>\n"
+        		+ " height=" + SMTableproposals.SIGNATURE_CANVAS_HEIGHT + " style=\"border:1px solid  " + SMMasterStyleSheetDefinitions.BACKGROUND_BLACK + ";\" ></canvas>\n"
         	+ "<input type=hidden name='" + SIGNATURE_FIELD_NAME + "' class=output>\n"
         	+ "</div>"
         	+ "<P><INPUT TYPE=SUBMIT NAME='" + SUBMIT_BUTTON_NAME 

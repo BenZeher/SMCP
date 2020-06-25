@@ -113,12 +113,24 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_BLUE_ALT = "#4D94FF";
 	public static final String BACKGROUND_PALE_BLUE = "#DBEDFF";
 	public static final String BACKGROUND_LIGHT_BLUE = "#A3D1FF";
-	public static final String BACKGROUND_DARK_BLUE = "#120991";
+	public static final String BACKGROUND_DARK_BLUE = "#145394";
 	
 	public static final String BACKGROUND_WHITE = "#FFFFFF";
 	public static final String BACKGROUND_LIGHT_GREY = "#EBEBEB";
 	public static final String BACKGROUND_GREY = "#DCDCDC";
 	public static final String BACKGROUND_GREY_BLUE = "#DAE6EE";
 	public static final String BACKGROUND_GREY_BLUE_ALT = "#E9F7FF";
+	
+	//CURENT PALLET https://www.color-hex.com/color-palette/94534
+	
+	/*Classical Pastel Color Palette
+	 *  #ccffb2		Green
+	 *  #feff9e		Yellow
+	 *  #aaebf9	Blue
+	 *  #f5c1ff		Purple
+	 *  #ffa7dc		Pink
+	 *  https://www.color-hex.com/color-palette/68671
+	 */
+	 
 	
 }

@@ -62,7 +62,6 @@ public class SMTableproposals {
 	public static final String SIGNATURE_CANVAS_WIDTH = "200"; 
 	public static final String SIGNATURE_CANVAS_HEIGHT = "53";
 	public static final String SIGNATURE_PEN_WIDTH = "2";
-	public static final String SIGNATURE_PEN_COLOUR = "#145394";
 	public static final int SIGNATURE_PEN_R_COLOUR = 20;
 	public static final int SIGNATURE_PEN_G_COLOUR = 83;
 	public static final int SIGNATURE_PEN_B_COLOUR = 148;

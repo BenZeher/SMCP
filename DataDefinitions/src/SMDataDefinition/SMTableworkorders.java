@@ -87,7 +87,6 @@ public class SMTableworkorders {
 	public static final String SIGNATURE_DISPLAY_WIDTH = "200";  //Originally "200"; 
 	public static final String SIGNATURE_DISPLAY_HEIGHT = "53"; //Originally "53";
 	public static final String SIGNATURE_PEN_WIDTH = "2";
-	public static final String SIGNATURE_PEN_COLOUR = "#145394";
 	public static final int SIGNATURE_PEN_R_COLOUR = 20;
 	public static final int SIGNATURE_PEN_G_COLOUR = 83;
 	public static final int SIGNATURE_PEN_B_COLOUR = 148;

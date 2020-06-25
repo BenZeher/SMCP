@@ -1239,7 +1239,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 				+ " errorMessageDraw: \"\","
 				+ " lineTop:" + SMTableworkorders.SIGNATURE_TOP + ","
 				+ " penWidth:" + SMTableworkorders.SIGNATURE_PEN_WIDTH + ","
-				+ " penColour:" + "\"" + SMTableworkorders.SIGNATURE_PEN_COLOUR + "\","
+				+ " penColour:" + "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "\","
 				+ " lineColour:\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"," //makes the line transparent
 				+ " lineWidth:" + SMTableworkorders.SIGNATURE_LINE_WIDTH + ","
 				+ " lineMargin:" + SMTableworkorders.SIGNATURE_LINE_MARGIN

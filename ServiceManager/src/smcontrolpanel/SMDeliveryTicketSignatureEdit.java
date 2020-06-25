@@ -679,7 +679,7 @@ public class SMDeliveryTicketSignatureEdit  extends HttpServlet {
 			+ " errorMessageDraw: \"\","
 			+ " lineTop:" + SMTabledeliverytickets.SIGNATURE_TOP + ","
 			+ " penWidth:" + SMTabledeliverytickets.SIGNATURE_PEN_WIDTH + ","
-			+ " penColour:" + "\"" + SMTabledeliverytickets.SIGNATURE_PEN_COLOUR + "\","
+			+ " penColour:" + "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "\","
 			+ " lineColour:\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"," //makes the line transparent
 			+ " lineWidth:" + SMTabledeliverytickets.SIGNATURE_LINE_WIDTH + ","
 			+ " lineMargin:" + SMTabledeliverytickets.SIGNATURE_LINE_MARGIN

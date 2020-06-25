@@ -24,7 +24,6 @@ import ServletUtilities.clsServletUtilities;
 public class ASActivateSelectedSequencesEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String DARK_ROW_BG_COLOR = "#cceeff";
 	private static final String ARM_ZONE_BUTTON_LABEL = "ARM";
 	private static final String DISARM_ZONE_BUTTON_LABEL = "DISARM";
 	private static final String ARM_DISARM_BUTTON_NAME = "ARMDISARMBUTTON";
@@ -244,7 +243,7 @@ public class ASActivateSelectedSequencesEdit  extends HttpServlet {
 				if (bOddRow){
 					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				}else{
-					sBackgroundColor = DARK_ROW_BG_COLOR;
+					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_BLUE;
 				}
 				
 				int iAlarmState = rs.getInt(SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.ialarmstate);
@@ -361,13 +360,13 @@ public class ASActivateSelectedSequencesEdit  extends HttpServlet {
 
 	private String createArmButton(String sZoneID, int iCurrentArmingState){
 		//Green for armed zones, red for disarmed zones:
-		String sBackgroundColor = "#4CAF50"; //Green
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.GOOGLE_GREEN; //Green
 		String sCommandValue = ARM_ZONE_BUTTON_LABEL;
 		if (iCurrentArmingState == SMTablessalarmsequences.ALARM_STATE_UNARMED){
-			sBackgroundColor = "#4CAF50"; //Green
+			sBackgroundColor = SMMasterStyleSheetDefinitions.GOOGLE_GREEN; //Green
 			sCommandValue = ARM_ZONE_BUTTON_LABEL;
 		}else{
-			sBackgroundColor = "#ff0000"; //Red
+			sBackgroundColor = SMMasterStyleSheetDefinitions.GOOGLE_RED; //Red
 			sCommandValue = DISARM_ZONE_BUTTON_LABEL;
 		}
 		return "      <button type=\"button\"\n"

@@ -122,6 +122,13 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_GREY_BLUE_ALT = "#E9F7FF";
 	public static final String BACKGROUND_BLACK = "#000000";
 	
+	
+	public static final String GOOGLE_GREEN = "#008744";
+	public static final String GOOGLE_BLUE = "#0057E7";
+	public static final String GOOGLE_RED = "#D62D20";
+	public static final String GOOGLE_ORANGE = "#FFA700";
+	
+	
 	//CURENT PALLET https://www.color-hex.com/color-palette/94534
 	
 	/*Classical Pastel Color Palette
@@ -131,6 +138,13 @@ public class SMMasterStyleSheetDefinitions {
 	 *  #f5c1ff		Purple
 	 *  #ffa7dc		Pink
 	 *  https://www.color-hex.com/color-palette/68671
+	 *  
+	 *  Google Colors Color Palette
+	 *  #008744	Green
+	 *  #0057e7	Blue
+	 *  #d62d20	Red
+	 *  #ffa700	Yellow/Orange
+	 *  https://www.color-hex.com/color-palette/1872
 	 */
 	 
 	

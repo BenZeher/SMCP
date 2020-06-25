@@ -23,7 +23,6 @@ import smcontrolpanel.SMUtilities;
 public class ASActivateDevicesEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String DARK_ROW_BG_COLOR = "#cceeff";
 	private static final String ACTIVATE_DEVICE_BUTTON_NAME = "ACTIVATE";
 	public static final String ACTIVATE_DEVICE_PARAMETER = "PARAMACTIVEDEVICE";
 	public static final String ACTIVATE_DEVICE_VALUE_ACTIVATE = "ACTIVATEDEVICE";
@@ -207,7 +206,7 @@ public class ASActivateDevicesEdit  extends HttpServlet {
 				if (bOddRow){
 					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 				}else{
-					sBackgroundColor = DARK_ROW_BG_COLOR;
+					sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_BLUE;
 				}
 
 				s += "<TR style = \" background-color: " + sBackgroundColor +  "; \">"; //line-height: 60px; padding: 10px;
@@ -523,7 +522,7 @@ public class ASActivateDevicesEdit  extends HttpServlet {
 
 		String s = "<button type=\"button\""
 				+ " style = \"" 
-				+ "background-color: #4CAF50;"
+				+ "background-color: " + SMMasterStyleSheetDefinitions.GOOGLE_GREEN + ";"
 				+ "border: none;"
 				+ "color: white;"
 				+ "padding: 6px 6px;"

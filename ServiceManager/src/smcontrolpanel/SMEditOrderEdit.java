@@ -45,9 +45,6 @@ import smar.ARCustomer;
 public class SMEditOrderEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String CUSTOMERSHIPTO_BG_COLOR = "#99CCFF";
-	private static final String ORDERDATES_BG_COLOR = "#99CCFF";
-	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
 	public static final String ORDERUPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>S</FONT></B>ave"; //S
 	public static final String DETAILS_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>etails"; //D
@@ -756,14 +753,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ createCustomerSettingsTable(sm, entry, cus, sObjectName) + "</TD>\n\n";
 		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN + "; \">\n" 
 			+ createCustomerBillToTable(sm, entry) + "</TD>\n\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSHIPTO_BG_COLOR + "; \">\n" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \">\n" 
 			+ createCustomerShipToTable(sm, entry) + "</TD>\n\n";
 		s += "</TR>\n</TD>\n</TABLE style=\" title:ENDCustomerArea; \">\n\n";
 
 		//Create the order area table:
 		s += "<TR><TD>\n<TABLE style=\" title:OrderArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + ORDERDATES_BG_COLOR + "; \">\n" 
+		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \">\n" 
 			+ createOrderSettings2Table(sm, entry) + "</TD>\n\n";
 		s += "<TD style=\" vertical-align:top; background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + "; \">\n" 
 			+ createProjectFieldsTable(sm, entry) + "</TD>\n\n";
@@ -2633,7 +2630,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "<TR><TD>\n";
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
-			+ ORDERCOMMANDS_BG_COLOR + "; \" width=100% >\n";
+			+ SMMasterStyleSheetDefinitions.BACKGROUND_BLUE + "; \" width=100% >\n";
 				//Place the 'update' button here:
 				if (sm.getAddingNewEntryFlag()){
 					s += "<TR><TD style = \"text-align: left; \" >"

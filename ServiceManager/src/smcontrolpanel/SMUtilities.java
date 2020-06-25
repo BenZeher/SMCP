@@ -459,7 +459,7 @@ public class SMUtilities extends clsServletUtilities {
 
 			+ "<style type=text/css>\n"
 			//Button style:
-			+ "input.buttonstyle {width: 100%; height: 50px; color: #99FFFF; background-color: black; font-weight: 900;}\n"
+			+ "input.buttonstyle {width: 100%; height: 50px; color: " + SMMasterStyleSheetDefinitions.BACKGROUND_TEAL_ALT + "; background-color: black; font-weight: 900;}\n"
 			//Input text style:
 			+ "input.text {height: 30px; color: black; background-color: white; font-weight: 400;}\n"
 			+ "</style>\n"
@@ -476,9 +476,9 @@ public class SMUtilities extends clsServletUtilities {
 
 		//Set hyperlink style:
 		s += "a {font-family : Arial; text-decoration : none; font-weight: 900}\n";
-		s += "a:link {color : #99FFFF}\n";
-		s += "a:visited {color : #99FFFF}\n";
-		s += "a:active {color : #99FFFF}\n";
+		s += "a:link {color : "+SMMasterStyleSheetDefinitions.BACKGROUND_TEAL_ALT + "}\n";
+		s += "a:visited {color : "+SMMasterStyleSheetDefinitions.BACKGROUND_TEAL_ALT+"}\n";
+		s += "a:active {color : "+SMMasterStyleSheetDefinitions.BACKGROUND_TEAL_ALT+"}\n";
 		s += "a:hover {color : white}\n";
 
 		//Layout table:
@@ -504,7 +504,7 @@ public class SMUtilities extends clsServletUtilities {
 			//+ "border-style: inset; "
 			+ "border-style: none; "
 			+ "border-color: white; "
-			+ "background-color: #99FFFF; "
+			+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_TEAL_ALT + "; "
 			+ "color: black; "
 			+ "font-family : Arial; "
 			+ "vertical-align: text-middle; "
@@ -534,7 +534,7 @@ public class SMUtilities extends clsServletUtilities {
 			+ "vertical-align: text-middle;"
 			+ "background-color: black; "
 			+ "text-align: center; "
-			+ "color: #99FFFF; "
+			+ "color: " +SMMasterStyleSheetDefinitions.BACKGROUND_TEAL_ALT +"; "
 			+ "height: 50px; "
 			+ "}"
 			+ "\n"

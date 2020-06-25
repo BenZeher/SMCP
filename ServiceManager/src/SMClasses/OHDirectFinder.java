@@ -27,7 +27,9 @@ public class OHDirectFinder extends HttpServlet {
 	public static final String LAST_MODIFIED_START_DATE_PARAM = "datEndLastModified";
 	public static final String LAST_MODIFIED_END_DATE_PARAM = "datStartLastModified";
 	public static final String SEARCH_JOB_TEXT_PARAM = "sSeachJobText";
-	
+	private static final String FORM_NAME = "MAINFORM";
+	private static final String SEARCH_BUTTON_CAPTION = "S<B><FONT COLOR=RED>t</FONT></B>art search";
+	private static final String SEARCH_BUTTON = "SEARCHBUTTON";
 	
 	private static final boolean bDebugMode = false;
 	public void doPost(HttpServletRequest request,
@@ -118,7 +120,9 @@ public class OHDirectFinder extends HttpServlet {
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(clsServletUtilities.getDatePickerIncludeString(getServletContext()));
-	    out.println("<FORM NAME='MAINFORM' ACTION='" 
+	    out.println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
+	    
+	    out.println("<FORM NAME='" + FORM_NAME + "' ACTION='" 
 	    		+ SMUtilities.getURLLinkBase(getServletContext()) 
 	    		+ "SMClasses.OHDirectFinderResults" + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
@@ -201,30 +205,69 @@ public class OHDirectFinder extends HttpServlet {
 	    sOutPut += "</TD><TD>Input as (mm/dd/yyyy)</TD></TR>";
 	    
 	    //Job search text:
-	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-	    		SEARCH_JOB_TEXT_PARAM, 
-	    		"", 
-	    		40, 
-	    		"Search Job Name:", 
-	    		"Enter the job name search string here",
-	    		"30"
-	    		);
-	    
+	    sOutPut +=  "  <TR>\n"
+	    	+ "    <TD ALIGN=RIGHT><B>" + "Search Job Name:"  + " </B></TD>\n"
+	    	+ "    <TD ALIGN=LEFT>"
+	    	+ "<INPUT TYPE=TEXT"
+	    	+ " NAME=\"" + SEARCH_JOB_TEXT_PARAM + "\""
+	    	+ " ID=\"" + SEARCH_JOB_TEXT_PARAM + "\""
+	    	+ "SIZE=" + "40"
+	    	+ ">"
+	    	+ "</TD> \n"
+	    	+ "  </TR> \n"
+	    	;
+
 	    sOutPut += "</TABLE><BR>";
 	    
-	    sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Start search' STYLE='width: 2.00in; height: 0.24in'></P>";
+	    sOutPut += createSearchButton();
 	    
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);
 		
 		//Set the default focus:
 		out.println("<script language=\"JavaScript\">");
-		out.println("document.MAINFORM.sSearchString.focus();");
+		out.println("window.onload = triggerinitiation;");
+		out.println("document.getElementById(\"" + SEARCH_JOB_TEXT_PARAM + "\").focus();");
+		
+		String s = 
+			"function triggerinitiation(){\n"	
+				+ "    initShortcuts(); \n"
+				+ "    document.getElementById(\"" + SEARCH_JOB_TEXT_PARAM + "\").focus(); \n"
+			+ "}\n\n"
+				
+			+ "function search(){ \n"
+				+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
+			+ "} \n"
+			+ "\n"
+		;	
+		s += "function initShortcuts() {\n";
+			
+		s += "    shortcut.add(\"Alt+t\",function() {\n";
+		s += "        search();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		s += "}\n";
+		
+		out.println(s);
 		out.println("</script>");
 		
 		out.println("</BODY></HTML>");
 	}
-	
+	private String createSearchButton() {
+		String s = "";
+		s += "<button type=\"button\""
+				+ " value=\"" + SEARCH_BUTTON_CAPTION + "\""
+				+ " name=\"" + SEARCH_BUTTON + "\""
+				+ " id=\"" + SEARCH_BUTTON + "\""
+				+ " onClick=\"search();\">"
+				+ SEARCH_BUTTON_CAPTION
+				+ "</button>\n"
+			;
+		return s;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

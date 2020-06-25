@@ -96,10 +96,10 @@ public class clsCreateHTMLTableFormFields {
 			String sTextBoxWidth
 	){
 	
-		String sRow = "<TR>\n";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
+		String sRow = "  <TR>\n";
+		sRow += "    <TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>";
+		sRow += "    <TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
 		if (sValue != null){
 			sRow += " VALUE=\"" + sValue + "\"";
@@ -112,8 +112,8 @@ public class clsCreateHTMLTableFormFields {
 		//sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
 		sRow += "></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
-		sRow += "</TR>\n\n";
+		sRow += "    <TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "  </TR>\n\n";
 		return sRow;
 	
 	}

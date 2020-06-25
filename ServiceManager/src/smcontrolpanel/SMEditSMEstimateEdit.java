@@ -1997,14 +1997,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ "        return;\n"
 					+ "    } \n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + DISPLAY_COMMONLY_USED_ITEMS_COMMAND + "\";\n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
 			//Replace vendor quote:
 			s += "function replacevendorquote(){\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REPLACE_VENDOR_QUOTE_COMMAND + "\";\n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
@@ -2012,14 +2012,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			s += "function refreshvendorquote(){\n"
 					//+ "    alert('refreshing vendor quote'); \n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REFRESH_VENDOR_QUOTE_COMMAND + "\";\n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
 			//Find vendor quote:
 			s += "function findvendorquote(){\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_VENDOR_QUOTE_COMMAND_VALUE + "\";\n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
@@ -2027,7 +2027,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			s += "function invokeitemfinder(sItemFinderResultField){\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_ITEM_COMMAND + "\";\n"
 					+ "    document.getElementById(\"" + PARAM_FIND_ITEM_RETURN_FIELD + "\").value = sItemFinderResultField; \n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
@@ -2039,7 +2039,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + REFRESH_ITEM_COMMAND + "\";\n"
 					+ "    document.getElementById(\"" + REFRESH_ITEM_LINE_NUMBER + "\").value = slinenumber; \n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			
@@ -2068,7 +2068,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + LOOKUP_ITEM_COMMAND + "\";\n"
 					+ "    document.getElementById(\"" + PARAM_LOOKUP_ITEM_LINENUMBER + "\").value = slinenumber; \n"
-					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+					+ "    document.forms[\"" + FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
 			

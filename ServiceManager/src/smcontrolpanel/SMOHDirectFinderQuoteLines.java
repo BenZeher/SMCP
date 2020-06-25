@@ -18,8 +18,9 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsStringFunctions;
 
-public class SMDisplayOHDirectQuote extends HttpServlet {
+public class SMOHDirectFinderQuoteLines extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -169,8 +170,8 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		SMOHDirectQuoteList ql = new SMOHDirectQuoteList();
 		
 		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTE + "?%24filter="
-				+ SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "%20eq%20'" + sQuoteNumber + "'"
-			;
+			+ SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "%20eq%20'" + sQuoteNumber + "'"
+		;
 		
 		try {
 			ql.getQuoteList(sRequest, conn, sDBID, sUserID);
@@ -289,11 +290,11 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		String sLicenseModuleLevel) throws Exception{
 		String s = "";
 		
-		boolean bAllowDisplayItemInformation = SMSystemFunctions.isFunctionPermitted(
-			SMSystemFunctions.ICDisplayItemInformation, 
-			sUserID, 
-			conn, 
-			sLicenseModuleLevel);
+		//boolean bAllowDisplayItemInformation = SMSystemFunctions.isFunctionPermitted(
+		//	SMSystemFunctions.ICDisplayItemInformation, 
+		//	sUserID, 
+		//	conn, 
+		//	sLicenseModuleLevel);
 		
 		//Get the OHDirect connection settings:
 		SMOHDirectQuoteLineList ql = new SMOHDirectQuoteLineList();
@@ -330,8 +331,32 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 			//Print a row:
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + "\" >" + "\n";
 			
+			String sQuoteLineLink = "";			String sItemNumberLink = ql.getLabels().get(i);
+			//Not worried about linking further to items because this is a FINDER function:
+			//if (bAllowDisplayItemInformation) {
+			//	sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+			//	+ "smic.ICDisplayItemInformation"
+			//	+ "?ItemNumber=" + sItemNumberLink
+			//	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//	+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
+			//	+ "\">" + sItemNumberLink + "</A>"
+			//; 
+			//}else {
+				sItemNumberLink = "<B>" + sItemNumberLink + "</B>";
+			//}
+			sQuoteLineLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+				+ "smic.ICDisplayItemInformation"
+				+ "?ItemNumber=" + sQuoteLineLink
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
+				+ "\">" 
+				+ clsStringFunctions.PadLeft(ql.getLineNumbers().get(i).toString(), "0", 4)
+				+ "</A>"
+			; 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ "<B>" + ql.getLineNumbers().get(i) + "</B"
+				//Create a link BACK to the original calling class that will populate the quote number and line number:
+					
+				+ "<B>" + sQuoteLineLink + "</B"
 				+ "</TD>" + "\n"
 			;
 
@@ -340,20 +365,8 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 				+ "</TD>" + "\n"
 			;
 			
-			String sItemNumberLink = ql.getLabels().get(i);
-			if (bAllowDisplayItemInformation) {
-				sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-				+ "smic.ICDisplayItemInformation"
-				+ "?ItemNumber=" + sItemNumberLink
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "\">" + sItemNumberLink + "</A>"
-			; 
-			}else {
-				sItemNumberLink = "<B>" + sItemNumberLink + "</B>";
-			}
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ sItemNumberLink
+					+ "<B>" + ql.getLabels().get(i) + "</B>"
 					+ "</TD>" + "\n"
 				;
 			
@@ -372,15 +385,16 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 					+ "</TD>" + "\n"
 				;
 			
+			//No need to show the line details on a finder screen:
 			bdTotalQuoteCost = bdTotalQuoteCost.add(ql.getTotalCosts().get(i));
 			
-			s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i), sDBID, sUserID);
+			//s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i), sDBID, sUserID);
 			
 			s += "  </TR>" + "\n";
 		}
-		
+
+		/* - Don't need this for a finder list:
 		//Print a line for the overall cost:
-		
 		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_BLACK + "\" >" + "\n";
 		
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\""
@@ -399,6 +413,8 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 			;
 		
 		s += "  </TR>" + "\n";
+		
+		*/
 		
 		return s;
 	}

@@ -1541,6 +1541,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SMOHDirectFinderQuoteLines</servlet-name>
+        <servlet-class>smcontrolpanel.SMOHDirectFinderQuoteLines</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SMOHDirectQuoteListing</servlet-name>
         <servlet-class>smcontrolpanel.SMOHDirectQuoteListing</servlet-class>
     </servlet>
@@ -4901,6 +4906,11 @@
     <servlet-mapping>
         <servlet-name>SMEditMechanicsSave</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditMechanicsSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SMOHDirectFinderQuoteLines</servlet-name>
+        <url-pattern>/smcontrolpanel.SMOHDirectFinderQuoteLines</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

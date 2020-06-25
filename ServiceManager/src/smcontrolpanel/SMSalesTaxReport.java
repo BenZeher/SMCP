@@ -25,12 +25,6 @@ import ServletUtilities.clsServletUtilities;
 
 public class SMSalesTaxReport {
 	
-	//private static final String CELL_BORDER_COLOR = "#808080";
-	private static final String SUBTOTAL_LINE_BG_COLOR = "#ccd9ff";
-	private static final String SUBTOTAL_INVOICE__LINE_BG_COLOR = "#e6fffa";
-	private static final String SUMMARY_TAX_JURISDICTION_TOTALS_BG_COLOR = "#e6fffa";
-	private static final String SUMMARY_TAX_TYPE_TOTALS_BG_COLOR = "#ffe6f2";
-	private static final String SUMMARY_COSTCENTER_TOTALS_BG_COLOR = "#f0f5f5";
 	private static final String COSTCENTER_AND_TAX_SEPARATOR = "&nbsp;&nbsp;&nbsp;";
 	private static final int MAX_LINE_BUFFER_COUNT = 100; //If we're just printing to the PrintWriter, we're not buffering
 		//and we don't need this set to anything but one.  If we want to use it, we'll try it at 50.
@@ -400,7 +394,7 @@ public class SMSalesTaxReport {
 							bAllowInvoiceView,
 							sBillToName,
 							sShipToName,
-							SUBTOTAL_INVOICE__LINE_BG_COLOR,
+							SMMasterStyleSheetDefinitions.BACKGROUND_PALE_TEAL,
 							context,
 							iTotalColumnCount
 							);
@@ -789,7 +783,7 @@ public class SMSalesTaxReport {
 			return s;
 		}
 
-		String sBackgroundColor = SUBTOTAL_LINE_BG_COLOR;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE;
 		//Heading line for the totals:
 		s += "<TR style = \" background-color: " + sBackgroundColor +  "; \" >"
 			+ "<TD COLSPAN = " + Integer.toString(iTotalColumnCount - 9) + " ALIGN=RIGHT><B>" 
@@ -1048,7 +1042,7 @@ public class SMSalesTaxReport {
 		HashMap<String,BigDecimal> hashTotals = new HashMap<String,BigDecimal>();
 		String s = "";
 		//Heading line for the cost centers:
-		String sBackgroundColor = SUMMARY_COSTCENTER_TOTALS_BG_COLOR;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY;
 		//One separator line:
 		s += printBlankSeparatorLine(sBackgroundColor, iTotalNumberOfColumns);
 		
@@ -1172,7 +1166,7 @@ public class SMSalesTaxReport {
 		String s = "";
 		String sBackgroundColor = "";
 		//First, list a total for each tax type:
-		sBackgroundColor = SUMMARY_TAX_JURISDICTION_TOTALS_BG_COLOR;
+		sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_TEAL;
 		//Separator line:
 		//One separator line:
 		s += printBlankSeparatorLine(sBackgroundColor, iTotalNumberOfColumns);
@@ -1223,7 +1217,7 @@ public class SMSalesTaxReport {
 		//*********************************************
 		//Next list a total for each tax jurisdiction:
 		//Heading line for the tax jurisdictions:
-		sBackgroundColor = SUMMARY_TAX_TYPE_TOTALS_BG_COLOR;
+		sBackgroundColor = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PINK;
 		//One separator line:
 		s += printBlankSeparatorLine(sBackgroundColor, iTotalNumberOfColumns);
 		

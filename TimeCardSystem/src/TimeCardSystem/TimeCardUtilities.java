@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.CompanyDataCredentials;
 import ConnectionPool.ServerSettingsFileParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
@@ -65,8 +66,8 @@ public class TimeCardUtilities extends clsServletUtilities{
 	
 	public static final String BASE_FONT_FAMILY = "Arial";
 	
-	public static final String BACKGROUND_COLOR_FOR_ADMIN_SCREENS = "#C0C0FF";
-	public static final String BACKGROUND_COLOR_FOR_USER_SCREENS = "#FDF5E6";
+	public static final String BACKGROUND_COLOR_FOR_ADMIN_SCREENS = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PURPLE;
+	public static final String BACKGROUND_COLOR_FOR_USER_SCREENS = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_TAN;
 	
 	public static int Get_Pay_Period_Length(ServletContext context){
 

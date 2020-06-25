@@ -40,8 +40,6 @@ public class APDisplayVendorInformation extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	//private String BACKGROUND_COLOR_LIGHT_YELLOW = "#FFFFBB";
-	private String BACKGROUND_COLOR_LIGHT_BLUE = "#C2E0FF";
 	private String VIEW_TRANSACTIONS_FORM_NAME = "VIEWTRANSACTIONS";
 	private String VIEW_TRANSACTIONS_SUBMIT_BUTTON = "VIEWTRANSACTIONSBUTTON";
 	private String VIEW_TRANSACTIONS_BUTTON_LABEL = "View Transactions";
@@ -210,7 +208,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 				pwOut.println("</TABLE>");
 				
 				//Start the parent table:
-				pwOut.println("<TABLE BORDER=1 WIDTH=100%  bgcolor=" + BACKGROUND_COLOR_LIGHT_BLUE + " cellspacing=0 cellpadding=2><TR>");
+				pwOut.println("<TABLE BORDER=1 WIDTH=100%  bgcolor=" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + " cellspacing=0 cellpadding=2><TR>");
 
 				//Start the left hand cell:
 				pwOut.println("<TD>");
@@ -483,7 +481,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 							SMTableaptransactions.AP_TRANSACTION_TYPE_REVERSAL
 						) + "\"" + " VALUE=\"" + "Y" + "\" >" + "\n"
 						
-					+ "<DIV style = \" font-size: small; font-weight: bold; background-color:" + BACKGROUND_COLOR_LIGHT_BLUE + "; \" >"
+					+ "<DIV style = \" font-size: small; font-weight: bold; background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "; \" >"
 					
 					+ "<BR>" + "\n"
 					+ "&nbsp;&nbsp;"
@@ -763,7 +761,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 					}
 					
 					pwOut.println(
-							"<TR bgcolor=\"" + BACKGROUND_COLOR_LIGHT_BLUE + "\" >"
+							"<TR bgcolor=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\" >"
 							+ "<TD CLASS=\"fieldcontrolright\"COLSPAN=2><FONT SIZE=2><B>TOTAL:</B></FONT></TD>"
 							+ "<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2><B>" + Long.toString(lTotalNoInvoinces)+"</B></FONT></TD>"
 							+ "<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2><B>" + Long.toString(lTotalNoCredits)+"</B></FONT></TD>"

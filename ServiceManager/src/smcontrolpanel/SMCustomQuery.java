@@ -281,7 +281,7 @@ public class SMCustomQuery extends java.lang.Object{
 			);
 			out.println(
 					"tr.d1 td {"
-					+ "background-color: #EEEEEE; "
+					+ "background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + "; "
 					+ "}"
 			);
 

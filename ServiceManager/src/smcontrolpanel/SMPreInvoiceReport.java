@@ -817,7 +817,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 		String sBackgroundColor = "";
 		String sItemNumberLink = "";
 		if(bIsOddRow){
-			sBackgroundColor = "\"#EEEEEE\"";
+			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + "\"";
 		}else{
 			sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "\"";
 		}

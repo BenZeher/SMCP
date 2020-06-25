@@ -335,7 +335,7 @@ public class ICItemValuationReport extends java.lang.Object{
 		
 		//Print the SQL statement that created the list:
 		out.println("<TABLE style = \" table-layout:fixed; width:100%; \" >"
-			+ "<TR STYLE = \"  background-color: #E1D276;\">"
+			+ "<TR STYLE = \"  background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GOLD + ";\">"
 			+ "<TD style= \" word-wrap:break-word; \" >"
 			+ "<P STYLE = \"font-family:arial\"> SQL Statement: '<B>" + clsStringFunctions.filter(SQL) + "'</B></P>"
 			+ "</TD>"

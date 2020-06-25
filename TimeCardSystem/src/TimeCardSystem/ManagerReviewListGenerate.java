@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import TCSDataDefinition.*;
 
@@ -333,7 +334,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 	    				out.println("</FONT></TD>");
 	    				
 	    				//check for labels for Special Entry Type
-	    				out.println("<TD ALIGN=CENTER VALIGN=TOP><Font SIZE=1 COLOR=#FF0000>");
+	    				out.println("<TD ALIGN=CENTER VALIGN=TOP><Font SIZE=1 COLOR=" + SMMasterStyleSheetDefinitions.GOOGLE_RED + ">");
 	    				if (rs.getInt("iEntryTypeID") != 0){
 	    					rsSTET.beforeFirst();
 	    					while (rsSTET.next()){

@@ -47,7 +47,6 @@ public class BKEditStatementEdit  extends HttpServlet {
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
-	private static final String ENTRIES_TABLE_ODD_ROW_BG_COLOR = "#B8E6A0";
 	public static final String CHECKBOX_MARKER = "CHECKBOXMARKER";
 	public static final String DEPOSIT_ENTRY_AMOUNT_MARKER = "DEPOSITENTRYAMTMARKER";
 	public static final String WITHDRAWAL_ENTRY_AMOUNT_MARKER = "WITHDRAWALENTRYAMTMARKER";
@@ -648,7 +647,7 @@ public class BKEditStatementEdit  extends HttpServlet {
 		}
 		
 		if (bIsOddNumberedRow){
-			s += "<TR style = \" background-color: " + ENTRIES_TABLE_ODD_ROW_BG_COLOR + " \">"; 
+			s += "<TR style = \" background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREEN_ALT + " \">"; 
 		}else{
 			s += "<TR>";
 		}

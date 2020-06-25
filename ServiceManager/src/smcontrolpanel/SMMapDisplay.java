@@ -604,7 +604,7 @@ public class SMMapDisplay extends HttpServlet {
 			+ "    #map_canvas { height: 100% }\n"
 			
 			+ "    #legend {\n"
-			+ "    background: #FFF;\n"
+			+ "    background: " + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + ";\n"
 			+ "    padding: 10px;\n"
 			+ "    margin: 5px;\n"
 			+ "    font-size: 10px;\n"

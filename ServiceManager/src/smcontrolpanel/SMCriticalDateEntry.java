@@ -713,7 +713,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 			String sBackgroundColor = "";
 			while (rs.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + "#f3f3f3" + "\"";
+					sBackgroundColor = "\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY + "\"";
 				}else{
 					sBackgroundColor = "\"" + "" + SMMasterStyleSheetDefinitions.BACKGROUND_WHITE + "" + "\"";
 				}

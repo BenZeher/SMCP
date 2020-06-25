@@ -867,7 +867,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 
 		pwOut.println(
 				"div.additionalentryinfo {"
-				+ " background-color: " + "#ff9999" + ";"
+				+ " background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_PEACH + ";"
 				+ "}"	
 		);
 

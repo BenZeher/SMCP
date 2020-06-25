@@ -341,7 +341,7 @@ public class OHDirectFinderResults extends HttpServlet {
 		String s = "";
 		int iFirstPosition = sResult.toUpperCase().indexOf(sSearchString.toUpperCase());
 		if (iFirstPosition >= 0){
-			s = sResult.substring(0, iFirstPosition) + "<span style=\"background-color: #FFFF66\">"
+			s = sResult.substring(0, iFirstPosition) + "<span style=\"background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_YELLOW + "\">"
 			+ sResult.substring(iFirstPosition, iFirstPosition + sSearchString.length()) 
 			+ "</span>"
 			+ sResult.substring(iFirstPosition + sSearchString.length(), sResult.length())

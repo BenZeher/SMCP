@@ -35,8 +35,6 @@ import ServletUtilities.clsManageBigDecimals;
 
 public class SMPreInvoiceReport extends java.lang.Object{
 
-	private final static String CURRENT_USER_COMMENT_COLOR = "GREEN";
-	private final static String OTHER_USER_COMMENT_COLOR = "#8F008F";
 	private static final String NONSTOCK_ITEM_FLAG = "<DIV style = \" color:red; font-weight:bold; \" >N/A</DIV>";
 	
 	private String m_sErrorMessage;
@@ -1371,9 +1369,9 @@ public class SMPreInvoiceReport extends java.lang.Object{
 
 						//If the comment is from THIS user, show it in GREEN, otherwise, show it
 						//in red:
-						String sAlertColor = OTHER_USER_COMMENT_COLOR;
+						String sAlertColor = SMMasterStyleSheetDefinitions.GOOGLE_RED;
 						if (sCurrentUserID.compareToIgnoreCase(sCommenterID) == 0){
-							sAlertColor = CURRENT_USER_COMMENT_COLOR;
+							sAlertColor = SMMasterStyleSheetDefinitions.GOOGLE_GREEN;
 						}
 						
 						//Print a bookmark for this comment:

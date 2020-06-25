@@ -8,9 +8,9 @@ public class SMBatchStatuses {
 	public static final int IMPORTED = 1;
 	public static final int DELETED = 2;
 	public static final int POSTED = 3;
-	public static final String STATUS_COLOR_ENTERED = "#8BFF8B";
-	public static final String STATUS_COLOR_IMPORTED = "#8BAAFF";
-	public static final String STATUS_COLOR_DELETED = "#FCA8A8";
+	public static final String STATUS_COLOR_ENTERED = SMMasterStyleSheetDefinitions.BACKGROUND_BRIGHT_GREEN;
+	public static final String STATUS_COLOR_IMPORTED =SMMasterStyleSheetDefinitions.BACKGROUND_BLUE;
+	public static final String STATUS_COLOR_DELETED = SMMasterStyleSheetDefinitions.BACKGROUND_PEACH;
 	public static final String STATUS_COLOR_POSTED =  SMMasterStyleSheetDefinitions.BACKGROUND_WHITE;
 	
 	public static String Get_Transaction_Status(int iStatus){

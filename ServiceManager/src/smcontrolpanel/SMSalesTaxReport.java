@@ -971,15 +971,15 @@ public class SMSalesTaxReport {
 			+ "<TD class = \" leftjustifiedheading \" >" + "SUPPRESS<BR>ON<BR>INVOICE?" + "</TD>"
 			+ "<TD class = \" leftjustifiedheading \" >" + "TAXABLE?" + "</TD>"
 			+ "<TD class = \" leftjustifiedheading \" >" + "CATEGORY" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "INVENTORY<BR>COST<SUP><a href=\"#inventorycost\"><font color=\"#80ccff\">1</font></a></SUP>" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "TAXABLE<BR>INVENTORY<BR>COST<SUP><a href=\"#taxablecost\"><font color=\"#80ccff\">2</font></a></SUP>" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "SALES<BR>PRICE<SUP><a href=\"#saleprice\"><font color=\"#80ccff\">3</font></a></SUP>" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "TAXABLE<BR>SALES<BR>PRICE<SUP><a href=\"#taxablesalesprice\"><font color=\"#80ccff\">4</font></a></SUP>" + "</TD>" //
-			+ "<TD class = \" rightjustifiedheading \" >" + "PURCHASE<BR>TAX<BR>DUE<SUP><a href=\"#purchasetaxdue\"><font color=\"#80ccff\">5</font></a></SUP>" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "SALES<BR>TAX<BR>DUE<SUP><a href=\"#salestaxdue\"><font color=\"#80ccff\">6</font></a></SUP>" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "TOTAL<BR>TAX<BR>DUE<SUP><a href=\"#totaltaxdue\"><font color=\"#80ccff\">7</font></a></SUP>" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "TAX<BR>COLLECTED<SUP><a href=\"#taxcollected\"><font color=\"#80ccff\">8</font></a></SUP>" + "</TD>"
-			+ "<TD class = \" rightjustifiedheading \" >" + "TAX<BR>OWED<SUP><a href=\"#taxowed\"><font color=\"#80ccff\">9</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "INVENTORY<BR>COST<SUP><a href=\"#inventorycost\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">1</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "TAXABLE<BR>INVENTORY<BR>COST<SUP><a href=\"#taxablecost\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">2</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "SALES<BR>PRICE<SUP><a href=\"#saleprice\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">3</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "TAXABLE<BR>SALES<BR>PRICE<SUP><a href=\"#taxablesalesprice\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">4</font></a></SUP>" + "</TD>" //
+			+ "<TD class = \" rightjustifiedheading \" >" + "PURCHASE<BR>TAX<BR>DUE<SUP><a href=\"#purchasetaxdue\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">5</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "SALES<BR>TAX<BR>DUE<SUP><a href=\"#salestaxdue\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">6</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "TOTAL<BR>TAX<BR>DUE<SUP><a href=\"#totaltaxdue\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">7</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "TAX<BR>COLLECTED<SUP><a href=\"#taxcollected\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">8</font></a></SUP>" + "</TD>"
+			+ "<TD class = \" rightjustifiedheading \" >" + "TAX<BR>OWED<SUP><a href=\"#taxowed\"><font color=\"" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE + "\">9</font></a></SUP>" + "</TD>"
 			+ "</TR></THEAD>"
 		;
 		//INVENTORY COST<BR>(TAXABLE COST)

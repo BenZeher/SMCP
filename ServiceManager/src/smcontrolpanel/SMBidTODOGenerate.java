@@ -23,7 +23,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 
 public class SMBidTODOGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String CELL_BORDER_COLOR = "#808080";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -347,7 +346,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 			+ "height: " + sRowHeight + "; "
 			+ "border: 0px solid; "
 			+ "padding: 2px; "
-			+ "border-color: " + CELL_BORDER_COLOR + "; "
+			+ "border-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_GREY + "; "
 			+ "vertical-align: top;"
 			+ "font-family : Arial; "
 			+ "font-weight: normal; "

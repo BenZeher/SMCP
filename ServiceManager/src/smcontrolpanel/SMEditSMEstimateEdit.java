@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.OHDirectFinderResults;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTableorderheaders;
@@ -106,6 +107,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String EMPTY_VENDOR_QUOTE_LABEL = "(NONE)";
 	public static final String FIELD_REPLACE_QUOTE_WITH_NUMBER = "PARAMREPLACEQUOTEWITHNUMBER";
 	public static final String FIELD_REPLACE_QUOTE_LINE = "PARAMREPLACEQUOTELINE";
+	public static final String FINDER_RETURN_QUOTE_AND_LINE = "FINDERRETURNQUOTEANDLINE";
+	
 	public static final String ESTIMATE_LINE_PREFIX = "ESTLINEPREFIX";
 	public static final String TOTALS_FIELD_WIDTH_FOR_LABELS = "100px";
 	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
@@ -1211,6 +1214,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		s += "<BR>" + "\n";
 		
+		String sSplitQuoteNumberAndLine[];
+		String sFoundQuoteNumber = "";
+		String sFoundQuoteLineNumber = "";
+		try {
+			sSplitQuoteNumberAndLine = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(
+				FINDER_RETURN_QUOTE_AND_LINE, req).split(OHDirectFinderResults.QUOTE_LINE_SEPARATOR);
+			sFoundQuoteNumber = sSplitQuoteNumberAndLine[0];
+			sFoundQuoteLineNumber = sSplitQuoteNumberAndLine[1];
+		} catch (Exception e) {
+			//Nothing to trap here - just leave the quote number and line blank...
+		}
+
 		s += createRefreshVendorQuoteLineButton()
 			+ "&nbsp;&nbsp;"
 			+ createReplaceVendorQuoteLineButton()
@@ -1220,7 +1235,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID = \"" + FIELD_REPLACE_QUOTE_WITH_NUMBER + "\""
 			+ " style = \" text-align:left; width:150px;\""
 			+ " VALUE = \"" 
-				+ ServletUtilities.clsManageRequestParameters.get_Request_Parameter(FIELD_REPLACE_QUOTE_WITH_NUMBER, req) 
+				+ sFoundQuoteNumber
 			+ "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
@@ -1231,7 +1246,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " NAME = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
 			+ " ID = \"" + FIELD_REPLACE_QUOTE_LINE + "\""
 			+ " style = \" text-align:left; width:60px;\""
-			+ " VALUE = \"" + "" + "\""
+			+ " VALUE = \"" + sFoundQuoteLineNumber + "\""
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>" + "\n"

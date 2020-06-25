@@ -267,7 +267,7 @@ public class SMEditSMEstimateAction extends HttpServlet{
 				+ "?" + "EndpointName=" + SMOHDirectFieldDefinitions.ENDPOINT_QUOTE
 				+ "&" + OHDirectFinderResults.FINDER_LIST_FORMAT_PARAM + "=" + OHDirectFinderResults.FINDER_LIST_FORMAT_QUOTE_LINES_VALUE
 				+ "&SearchingClass=" + "smcontrolpanel.SMEditSMEstimateEdit"
-				+ "&ReturnField=" + SMEditSMEstimateEdit.FIELD_REPLACE_QUOTE_WITH_NUMBER
+				+ "&ReturnField=" + SMEditSMEstimateEdit.FINDER_RETURN_QUOTE_AND_LINE
 				+ "&ResultListField1=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER
 				+ "&ResultListField2=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_NAME
 				+ "&ResultListField3=" + SMOHDirectFieldDefinitions.QUOTE_FIELD_CREATEDDATE
@@ -276,7 +276,7 @@ public class SMEditSMEstimateAction extends HttpServlet{
 				+ "&ResultHeading2=Job%20Name"
 				+ "&ResultHeading3=Created%20Date"
 				+ "&ResultHeading4=Last%20Modified%20Date"
-				+ "&" + OHDirectFinderResults.FINDER_RETURN_PARAM + "="
+				+ "&" + OHDirectFinderResults.FINDER_RETURN_ADDITIONAL_PARAMS + "="
 					+ SMTablesmestimates.lid + "=" + estimate.getslid()
     		;
 	    				

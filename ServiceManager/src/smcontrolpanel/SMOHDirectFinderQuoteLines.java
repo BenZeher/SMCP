@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.SMOHDirectQuoteLineDetailList;
+import SMClasses.OHDirectFinderResults;
 import SMClasses.SMOHDirectQuoteLineList;
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
@@ -45,7 +45,9 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sQuoteNumber = clsManageRequestParameters.get_Request_Parameter(SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER, request);
 		String sRequestedQuoteLine = clsManageRequestParameters.get_Request_Parameter(SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER, request);
-
+		String sReturnField = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM, request);
+		String sSearchingClass = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_SEARCHING_CLASS_PARAM, request);
+		String sAdditionalReturnParams = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_ADDITIONAL_PARAMS, request);	
 		/*******************************************************/
 
 		out.println(SMUtilities.getMasterStyleSheetLink());
@@ -68,7 +70,15 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		out.println( printQuoteHeadings());
 		long lStartingTime = System.currentTimeMillis();
 		try {
-			out.println(printQuote(sDBID, sUserID, sQuoteNumber, sRequestedQuoteLine, sLicenseModuleLevel));
+			out.println(printQuote(
+				sDBID, 
+				sUserID, 
+				sQuoteNumber, 
+				sRequestedQuoteLine, 
+				sSearchingClass,
+				sReturnField,
+				sAdditionalReturnParams,
+				sLicenseModuleLevel));
 		} catch (Exception e2) {
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -132,7 +142,16 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		
 		return s;
 	}
-	private String printQuote(String sDBID, String sUserID, String sQuoteNumber, String sRequestedQuoteLine, String sLicenseModuleLevel) throws Exception{
+	private String printQuote(
+			String sDBID, 
+			String sUserID, 
+			String sQuoteNumber, 
+			String sRequestedQuoteLine,
+			String sSearchingClass,
+			String sReturnField,
+			String sAdditionalReturnParams,
+			String sLicenseModuleLevel
+			) throws Exception{
 		
 		String s = "";
 		
@@ -149,7 +168,15 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		}
 		
 		try {
-			s += printQuoteTable(sDBID, sUserID, sQuoteNumber, sRequestedQuoteLine, conn, sLicenseModuleLevel);
+			s += printQuoteTable(
+				sDBID, 
+				sUserID, 
+				sQuoteNumber, 
+				sRequestedQuoteLine, 
+				sSearchingClass,
+				sReturnField,
+				sAdditionalReturnParams,
+				conn, sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588088197]");
 			throw new Exception("Error [202004283532] - Error printing quote row - " + e.getMessage());
@@ -162,6 +189,9 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 			String sUserID, 
 			String sQuoteNumber, 
 			String sRequestedQuoteLine,
+			String sSearchingClass,
+			String sReturnField,
+			String sAdditionalReturnParams,
 			Connection conn, 
 			String sLicenseModuleLevel) throws Exception{
 		String s = "";
@@ -180,42 +210,44 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588019677]");
 		
-		for(int i = 0; i < ql.getQuoteNumbers().size(); i++) {
-			//Print a row:
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\" >" + "\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ "<B>" + ql.getQuoteNumbers().get(i) + "</B"
-				+ "</TD>" + "\n"
-			;
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ "<B>" + ql.getCreatedDates().get(i) + "</B"
-				+ "</TD>" + "\n"
-			;
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getCreatedBys().get(i) + "</B"
-					+ "</TD>" + "\n"
-				;
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getLastModifiedDates().get(i) + "</B"
-					+ "</TD>" + "\n"
-				;
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getLastModifiedBys().get(i) + "</B"
-					+ "</TD>" + "\n"
-				;
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getQuoteNames().get(i) + "</B"
-					+ "</TD>" + "\n"
-				;
-			
-			s += "  </TR>" + "\n";
+		if (ql.getQuoteNumbers().size() == 0) {
+			throw new Exception("Error [202006250646] - no quotes read with quote number '" + sQuoteNumber + "' - " );
 		}
+		
+		//Print the row:
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\" >" + "\n";
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
+			+ "<B>" + ql.getQuoteNumbers().get(0) + "</B"
+			+ "</TD>" + "\n"
+		;
+
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
+			+ "<B>" + ql.getCreatedDates().get(0) + "</B"
+			+ "</TD>" + "\n"
+		;
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
+				+ "<B>" + ql.getCreatedBys().get(0) + "</B"
+				+ "</TD>" + "\n"
+			;
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
+				+ "<B>" + ql.getLastModifiedDates().get(0) + "</B"
+				+ "</TD>" + "\n"
+			;
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
+				+ "<B>" + ql.getLastModifiedBys().get(0) + "</B"
+				+ "</TD>" + "\n"
+			;
+
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
+				+ "<B>" + ql.getQuoteNames().get(0) + "</B"
+				+ "</TD>" + "\n"
+			;
+		
+		s += "  </TR>" + "\n";
 		
 		s += "</TABLE>\n";
 		s += "<BR>\n";
@@ -225,7 +257,17 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		s += printQuoteLineHeader();
 		
 		try {
-			s += printQuoteLines(conn, sDBID, sUserID, ql.getQuoteIDs().get(0), sRequestedQuoteLine, sLicenseModuleLevel);
+			s += printQuoteLines(
+				conn, 
+				sDBID, 
+				sUserID, 
+				ql.getQuoteIDs().get(0), 
+				sRequestedQuoteLine,
+				sSearchingClass,
+				sReturnField,
+				sAdditionalReturnParams,
+				ql.getQuoteNumbers().get(0),
+				sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588088198]");
 			throw new Exception("Error [202004283554] - Error printing quote lines - " + e.getMessage());
@@ -287,6 +329,10 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		String sUserID, 
 		String sQuoteID,
 		String sRequestedQuoteLine,
+		String sSearchingClass,
+		String sReturnField,
+		String sAdditionalReturnParams,
+		String sQuoteNumber,
 		String sLicenseModuleLevel) throws Exception{
 		String s = "";
 		
@@ -331,7 +377,8 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 			//Print a row:
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + "\" >" + "\n";
 			
-			String sQuoteLineLink = "";			String sItemNumberLink = ql.getLabels().get(i);
+			String sQuoteLine = clsStringFunctions.PadLeft(ql.getLineNumbers().get(i).toString(), "0", 5);			
+			String sItemNumberLink = ql.getLabels().get(i);
 			//Not worried about linking further to items because this is a FINDER function:
 			//if (bAllowDisplayItemInformation) {
 			//	sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
@@ -344,15 +391,16 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 			//}else {
 				sItemNumberLink = "<B>" + sItemNumberLink + "</B>";
 			//}
-			sQuoteLineLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-				+ "smic.ICDisplayItemInformation"
-				+ "?ItemNumber=" + sQuoteLineLink
+			String sQuoteLineLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+				+ sSearchingClass
+				+ "?" + OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM + "=" + sReturnField 
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + sReturnField + "=" + sQuoteNumber + OHDirectFinderResults.QUOTE_LINE_SEPARATOR + ql.getLineNumbers().get(i).toString()
 				+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "\">" 
-				+ clsStringFunctions.PadLeft(ql.getLineNumbers().get(i).toString(), "0", 4)
-				+ "</A>"
-			; 
+				+ "&" + sAdditionalReturnParams.replace("*", "&")
+				+ "\">" + sQuoteLine + "</A>"
+			;
+			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 				//Create a link BACK to the original calling class that will populate the quote number and line number:
 					
@@ -419,6 +467,7 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		return s;
 	}
 	
+	/* - Don't need this for finder:
 	private String printQuoteLineDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
 		String s = "";
 		//Get the OHDirect connection settings:
@@ -471,6 +520,7 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 		
 		return s;
 	}
+	*/
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

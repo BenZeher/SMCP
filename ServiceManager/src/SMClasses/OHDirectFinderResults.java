@@ -29,9 +29,10 @@ public class OHDirectFinderResults extends HttpServlet {
 	public static final String FINDER_LIST_FORMAT_QUOTE_LINES_VALUE = "FinderListFormatQuoteLines";
 	public static final String FINDER_SEARCHING_CLASS_PARAM = "SearchingClass";
 	public static final String FINDER_RETURN_FIELD_PARAM = "ReturnField";
-	public static final String FINDER_RETURN_PARAM = "ReturnParams";
+	public static final String FINDER_RETURN_ADDITIONAL_PARAMS = "ReturnParams";
 	public static final String RESULT_LIST_FIELD = "ResultListField";
 	public static final String RESULT_LIST_HEADING = "ResultHeading";
+	public static final String QUOTE_LINE_SEPARATOR = ",";
 
 	//This is used to give the finder box a special title'
 	public static final String FINDER_BOX_TITLE = "FINDERBOXTITLE";
@@ -65,7 +66,7 @@ public class OHDirectFinderResults extends HttpServlet {
 		String sListFormat = clsManageRequestParameters.get_Request_Parameter(FINDER_LIST_FORMAT_PARAM, request);
 		String sReturnField = clsManageRequestParameters.get_Request_Parameter(FINDER_RETURN_FIELD_PARAM, request);
 		String sSearchingClass = clsManageRequestParameters.get_Request_Parameter(FINDER_SEARCHING_CLASS_PARAM, request);
-		String sAdditionalReturnParams= clsManageRequestParameters.get_Request_Parameter(FINDER_RETURN_PARAM, request);	
+		String sAdditionalReturnParams= clsManageRequestParameters.get_Request_Parameter(FINDER_RETURN_ADDITIONAL_PARAMS, request);	
 		String sSearchLastModifiedStartDate= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.LAST_MODIFIED_START_DATE_PARAM, request);
 		String sSearchLastModifiedEndDate= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.LAST_MODIFIED_END_DATE_PARAM, request);
 		String sSearchCreatedStartDate= clsManageRequestParameters.get_Request_Parameter(OHDirectFinder.CREATED_START_DATE_PARAM, request);
@@ -282,7 +283,9 @@ public class OHDirectFinderResults extends HttpServlet {
 							+ "?" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "=" + sQuoteNumberLink 
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 							+ "&" + "CallingClass=" + SMUtilities.getFullClassName(this.toString())
-							+ "&" + sAdditionalReturnParams.replace("*", "&")
+							+ "&" + OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM + "=" + sReturnField
+							+ "&" + OHDirectFinderResults.FINDER_SEARCHING_CLASS_PARAM + "=" + sSearchingClass
+							+ "&" + OHDirectFinderResults.FINDER_RETURN_ADDITIONAL_PARAMS + "=" + sAdditionalReturnParams.replace("*", "&")
 							+ "\">" + sQuoteNumberLink + "</A>"
 						;
 					}

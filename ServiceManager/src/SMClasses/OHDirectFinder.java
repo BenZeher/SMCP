@@ -100,7 +100,7 @@ public class OHDirectFinder extends HttpServlet {
 	    String sListFormat = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_LIST_FORMAT_PARAM, request);
 	    String sSearchingClass = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_SEARCHING_CLASS_PARAM, request);
 	    String sReturnField = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM, request);
-	    String sParameterString = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_PARAM, request);
+	    String sAdditionalParameterString = clsManageRequestParameters.get_Request_Parameter(OHDirectFinderResults.FINDER_RETURN_ADDITIONAL_PARAMS, request);
 	    
 	    String sDBID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request);
 	    //The DBID should always be passed in by the request, so there's no conflict with an existing session.
@@ -125,7 +125,7 @@ public class OHDirectFinder extends HttpServlet {
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_ENDPOINT_NAME_PARAM + "\" VALUE=\"" + sEndPointName + "\">");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_SEARCHING_CLASS_PARAM + "\" VALUE=\"" + sSearchingClass + "\">");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_RETURN_FIELD_PARAM + "\" VALUE=\"" + sReturnField + "\">");
-	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_RETURN_PARAM + "\" VALUE=\"" + sParameterString + "\">");
+	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_RETURN_ADDITIONAL_PARAMS + "\" VALUE=\"" + sAdditionalParameterString + "\">");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + OHDirectFinderResults.FINDER_LIST_FORMAT_PARAM + "\" VALUE=\"" + sListFormat + "\">");
 	    
 	    //Store the display fields and headings for the results page:

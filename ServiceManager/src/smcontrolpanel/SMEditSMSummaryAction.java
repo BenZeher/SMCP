@@ -199,7 +199,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 				+ "&ResultHeading2=Job%20Name"
 				+ "&ResultHeading3=Created%20Date"
 				+ "&ResultHeading4=Last%20Modified%20Date"
-				+ "&" + OHDirectFinderResults.FINDER_RETURN_PARAM + "="
+				+ "&" + OHDirectFinderResults.FINDER_RETURN_ADDITIONAL_PARAMS + "="
 					+ SMTablesmestimatesummaries.lid + "=" + summary.getslid()
     		;
 	    				

@@ -109,7 +109,6 @@ public class SMMasterStyleSheetDefinitions {
 
 	public static final String BACKGROUND_YELLOW = "#FFFF66";
 	public static final String BACKGROUND_GOLD = "#E8C355";
-	public static final String BACKGROUND_ORANGE = "#EE9A4D";
 	public static final String BACKGROUND_DARK_ORANGE = "#CF6031";
 	
 	public static final String BACKGROUND_BLUE = "#99CCFF";

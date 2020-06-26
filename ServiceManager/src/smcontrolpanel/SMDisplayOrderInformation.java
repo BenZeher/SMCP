@@ -1792,7 +1792,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += sLinks + "<BR>";
 			
 			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
-			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.BACKGROUND_ORANGE + "; \" >";
+			s += "<TR STYLE=\"background-color: " +SMMasterStyleSheetDefinitions.GOOGLE_ORANGE + "; \" >";
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Initiated date</TD>";		
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Delivery Ticket #</TD>";
 			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +" \" >View?</TD>";

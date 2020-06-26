@@ -22,9 +22,11 @@ public class SMOHDirectQuoteLineCostDetailList {
 	ArrayList<BigDecimal> arrQtys;
 	ArrayList<String> arrDescriptions;
 	ArrayList<BigDecimal> arrListPrices;
-	ArrayList<BigDecimal> arrDiscountMultipliers;
+	ArrayList<String> arrDiscountMultipliers;
 	ArrayList<BigDecimal> arrBasePrices;
-	ArrayList<BigDecimal> arrOptionPrices;
+	ArrayList<BigDecimal> arrOptionsPrices;
+	BigDecimal bdTotalBasePrices = new BigDecimal("0.00");
+	BigDecimal bdTotalOptionsPrice = new BigDecimal("0.00");
 	
 	public SMOHDirectQuoteLineCostDetailList() {
 		
@@ -37,9 +39,9 @@ public class SMOHDirectQuoteLineCostDetailList {
 		arrQtys = new ArrayList<BigDecimal>(0);
 		arrDescriptions = new ArrayList<String>(0);
 		arrListPrices = new ArrayList<BigDecimal>(0);
-		arrDiscountMultipliers = new ArrayList<BigDecimal>(0);
+		arrDiscountMultipliers = new ArrayList<String>(0);
 		arrBasePrices = new ArrayList<BigDecimal>(0);
-		arrOptionPrices = new ArrayList<BigDecimal>(0);
+		arrOptionsPrices = new ArrayList<BigDecimal>(0);
 		
 		//Try to read the list:
 		String sJSONResult = "";
@@ -90,9 +92,9 @@ public class SMOHDirectQuoteLineCostDetailList {
 				}
 				
 				if (objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_DISCOUNT_MULTIPLIER) == null) {
-					arrDiscountMultipliers.add(new BigDecimal("0.0000"));
+					arrDiscountMultipliers.add("");
 				}else {
-					arrDiscountMultipliers.add(BigDecimal.valueOf((Double)objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_DISCOUNT_MULTIPLIER)));
+					arrDiscountMultipliers.add((String)objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_DISCOUNT_MULTIPLIER));
 				}
 				
 				if (objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_BASE_PRICE) == null) {
@@ -102,13 +104,19 @@ public class SMOHDirectQuoteLineCostDetailList {
 				}
 				
 				if (objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_OPTION_PRICE) == null) {
-					arrOptionPrices.add(new BigDecimal("0.0000"));
+					arrOptionsPrices.add(new BigDecimal("0.0000"));
 				}else {
-					arrOptionPrices.add(BigDecimal.valueOf((Double)objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_OPTION_PRICE)));
+					arrOptionsPrices.add(BigDecimal.valueOf((Double)objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_OPTION_PRICE)));
 				}
 			}
 		}catch(Exception e) {
 			throw new Exception("Error [202004232240] - " + e.getMessage());
+		}
+		
+		//Get the totals:
+		for (int i = 0; i < arrQuoteLineIDs.size(); i++) {
+			bdTotalBasePrices = bdTotalBasePrices.add(arrBasePrices.get(i));
+			bdTotalOptionsPrice = bdTotalOptionsPrice.add(arrOptionsPrices.get(i));
 		}
 		
 		return;
@@ -131,7 +139,7 @@ public class SMOHDirectQuoteLineCostDetailList {
 		return arrListPrices;
 	}
 	
-	public ArrayList<BigDecimal> getDiscountMultipliers(){
+	public ArrayList<String> getDiscountMultipliers(){
 		return arrDiscountMultipliers;
 	}
 	
@@ -140,7 +148,13 @@ public class SMOHDirectQuoteLineCostDetailList {
 	}
 	
 	public ArrayList<BigDecimal> getOptionPrices(){
-		return arrOptionPrices;
+		return arrOptionsPrices;
+	}
+	public BigDecimal getTotalBasePrice() {
+		return bdTotalBasePrices;
+	}
+	public BigDecimal getTotalOptionsPrice() {
+		return bdTotalOptionsPrice;
 	}
 	
 }

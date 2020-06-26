@@ -270,7 +270,7 @@ public class SMOHDirectFinderQuoteLines extends HttpServlet {
 				sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588088198]");
-			throw new Exception("Error [202004283554] - Error printing quote lines - " + e.getMessage());
+			throw new Exception("Error [202004283654] - Error printing quote lines - " + e.getMessage());
 		}
 		
 		s += "</TABLE>" + "\n";

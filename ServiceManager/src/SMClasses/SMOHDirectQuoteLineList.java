@@ -24,7 +24,7 @@ public class SMOHDirectQuoteLineList {
 	ArrayList<String> arrLastConfigurationDescriptions;
 	ArrayList<BigDecimal> arrQuantities;
 	ArrayList<BigDecimal> arrUnitCosts;
-	ArrayList<BigDecimal> arrSellingPrices;
+	ArrayList<BigDecimal> arrUnitSellingPrices;
 	ArrayList<BigDecimal> arrTotalCosts;
 	ArrayList<BigDecimal> arrTotalSellingPrices;
 	ArrayList<String> arrLabels;
@@ -41,7 +41,7 @@ public class SMOHDirectQuoteLineList {
 		arrLastConfigurationDescriptions = new ArrayList<String>(0);
 		arrQuantities = new ArrayList<BigDecimal>(0);
 		arrUnitCosts = new ArrayList<BigDecimal>(0);
-		arrSellingPrices = new ArrayList<BigDecimal>(0);
+		arrUnitSellingPrices = new ArrayList<BigDecimal>(0);
 		arrTotalCosts = new ArrayList<BigDecimal>(0);
 		arrTotalSellingPrices = new ArrayList<BigDecimal>(0);
 		arrLabels = new ArrayList<String>(0);
@@ -99,9 +99,9 @@ public class SMOHDirectQuoteLineList {
 					arrQuoteNumbers.add((String)objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER));
 				}
 				if (objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINE_FIELD_SELLINGPRICE) == null) {
-					arrSellingPrices.add(new BigDecimal("0.00"));
+					arrUnitSellingPrices.add(new BigDecimal("0.00"));
 				}else {
-					arrSellingPrices.add(BigDecimal.valueOf((Double)objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINE_FIELD_SELLINGPRICE)));
+					arrUnitSellingPrices.add(BigDecimal.valueOf((Double)objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINE_FIELD_SELLINGPRICE)));
 				}
 				if (objQuoteLine.get(SMOHDirectFieldDefinitions.QUOTELINE_FIELD_TOTALCOST) == null) {
 					arrTotalCosts.add(new BigDecimal("0.00"));
@@ -146,8 +146,8 @@ public class SMOHDirectQuoteLineList {
 	public ArrayList<BigDecimal> getUnitCosts(){
 		return arrUnitCosts;
 	}
-	public ArrayList<BigDecimal> getSellingPrices(){
-		return arrSellingPrices;
+	public ArrayList<BigDecimal> getUnitSellingPrices(){
+		return arrUnitSellingPrices;
 	}
 	public ArrayList<BigDecimal> getTotalCosts(){
 		return arrTotalCosts;

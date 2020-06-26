@@ -76,7 +76,7 @@ public class SMOHDirectFieldDefinitions {
 	public static final String QUOTELINE_FIELD_LASTCONFIGURATIONDESCRIPTION = "C_LastConfigurationDescription"; // "521, 14'2\" x 14'1\""
 	public static final String QUOTELINE_FIELD_QUANTITY = "C_Quantity"; // Long integer
 	public static final String QUOTELINE_FIELD_UNITCOST = "C_UnitCost"; // Decimal
-	public static final String QUOTELINE_FIELD_SELLINGPRICE = "C_SellingPrice"; // Decimal
+	public static final String QUOTELINE_FIELD_SELLINGPRICE = "C_SellingPrice"; // Decimal - unit sell price
 	public static final String QUOTELINE_FIELD_TOTALCOST = "C_TotalCost"; // Decimal
 	public static final String QUOTELINE_FIELD_TOTALSELLINGPRICE = "C_TotalSellingPrice"; // Decimal
 	public static final String QUOTELINE_FIELD_LABEL = "C_Label"; // ""

@@ -494,7 +494,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		//Description:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 				+ "<SPAN style = \" font-weight:bold; color:white; \" >"
-				+ "Description"
+				+ "Detail Description"
 				+ "</SPAN>"
 				+ "</TD>" + "\n"
 			;

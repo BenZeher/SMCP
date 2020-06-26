@@ -17,13 +17,6 @@ https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/Enterpri
 
 public class SMOHDirectQuoteLineDetailList {
 
-	public static final String QUOTELINEDETAIL_ARRAY_NAME = "items";
-	public static final String QUOTELINEDETAIL_FIELD_ID = "ID"; //Unique ID for this quote line detail
-	public static final String QUOTELINEDETAIL_FIELD_QUOTELINEID = "C_QuoteLine"; // the ID of the parent quote line
-	public static final String QUOTELINEDETAIL_FIELD_DESCRIPTION = "C_Description"; // the label of the detail
-	public static final String QUOTELINEDETAIL_FIELD_VALUE = "C_Value"; // the actual text value of the detail
-	public static final String QUOTELINEDETAIL_FIELD_SORTORDER = "C_SortOrder"; // order in which the details appear on the entry screens
-	
 	ArrayList<String> arrQuoteLineDetailIDs;
 	ArrayList<String> arrQuoteLineIDs;
 	ArrayList<String> arrDescriptions;

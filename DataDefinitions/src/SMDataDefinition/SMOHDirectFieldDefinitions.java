@@ -19,6 +19,10 @@ public class SMOHDirectFieldDefinitions {
 	REQUEST ALL THE QUOTE LINE DETAILS FOR A QUOTE LINE:
 	https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuoteLineDetail?%24filter=Id%20eq%20'ea51bac1-b858-ea11-82f9-98456f859bd9'	
 	
+	REQUEST ALL THE LINE COST DETAILS FOR A QUOTE LINE:
+	https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerQuoteLineCostDetail?%24filter=C_QuoteLine%20eq%20'ea51bac1-b858-ea11-82f9-98456f859bd9'	
+	
+	
 	Useful link for syntax information: https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#_45_filter_system_query_option_filter_13
 	
 	
@@ -30,18 +34,21 @@ public class SMOHDirectFieldDefinitions {
 	public static final String ENDPOINT_QUOTE_NAME = "Dealer Quote";
 	public static final String ENDPOINT_QUOTELINE_NAME = "Dealer Quote Line";
 	public static final String ENDPOINT_QUOTELINEDETAIL_NAME = "Dealer Quote Line Detail";
+	public static final String ENDPOINT_QUOTELINECOSTDETAIL_NAME = "Dealer Quote Line Cost Detail";
 	public static final String ENDPOINT_ORDER_NAME = "Dealer Order";
 	public static final String ENDPOINT_ORDERLINE_NAME = "Dealer Order Line";
 	public static final String ENDPOINT_ORDERLINEDETAIL_NAME = "Dealer Order Line Detail";
+	public static final String ENDPOINT_ORDERLINECOSTDETAIL_NAME = "Dealer Order Line Cost Detail";
 	
 	//'Endpoint definitions':
 	public static final String ENDPOINT_QUOTE = "C_DealerQuote";
 	public static final String ENDPOINT_QUOTELINE = "C_DealerQuoteLine";
 	public static final String ENDPOINT_QUOTELINEDETAIL = "C_DealerQuoteLineDetail";
+	public static final String ENDPOINT_QUOTELINECOSTDETAIL = "C_DealerQuoteLineCostDetail";
 	public static final String ENDPOINT_ORDER = "C_DealerOrder";
 	public static final String ENDPOINT_ORDERLINE = "C_DealerOrderline";
 	public static final String ENDPOINT_ORDERLINEDETAIL = "C_DealerOrderlineDetail";
-	
+	public static final String ENDPOINT_ORDERLINECOSTDETAIL = "C_DealerOrderLineCostDetail";
 	
 	//Fields returned from the queries:
 	//QUOTE:
@@ -82,6 +89,17 @@ public class SMOHDirectFieldDefinitions {
 	public static final String QUOTELINEDETAIL_FIELD_VALUE = "C_Value"; // the actual text value of the detail
 	public static final String QUOTELINEDETAIL_FIELD_SORTORDER = "C_SortOrder"; // order in which the details appear on the entry screens
 	
+	//QUOTE LINE COST DETAILS:
+	public static final String QUOTELINECOSTDETAIL_ARRAY_NAME = "items";
+	public static final String QUOTELINECOSTDETAIL_ID = "ID"; //The unique Id of the line
+	public static final String QUOTELINECOSTDETAIL_QUOTE_LINE_ID = "C_QuoteLine"; // The ID from C_DealerQuoteLine
+	public static final String QUOTELINECOSTDETAIL_DESCRIPTION = "C_Description"; //The description from the pricing line.
+	public static final String QUOTELINECOSTDETAIL_QUANTITY = "C_Quantity"; //The quantity of the priced item.
+	public static final String QUOTELINECOSTDETAIL_LIST_PRICE = "C_ListPrice"; //The list price and unit of measure for the item.
+	public static final String QUOTELINECOSTDETAIL_DISCOUNT_MULTIPLIER = "C_DiscountMultiplier"; //The value of either the multiplier or discount applied.
+	public static final String QUOTELINECOSTDETAIL_BASE_PRICE = "C_BasePrice"; //Pricing related to the base system.
+	public static final String QUOTELINECOSTDETAIL_OPTION_PRICE = "C_OptionPrice"; //Pricing related to options to the system.
+
 	
 	
 	

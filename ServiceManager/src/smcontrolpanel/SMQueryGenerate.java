@@ -78,6 +78,8 @@ public class SMQueryGenerate extends HttpServlet {
 		String sRawQueryString = clsServletUtilities.URLDecode(clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_RAWQUERYSTRING, request));
 		String sFontSize = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_FONTSIZE, request);
 		String sComment = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYCOMMENT, request);
+		String sQueryPrivate = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYPRIVATE, request);
+
 		boolean bIncludeBorder = (request.getParameter(SMQuerySelect.PARAM_INCLUDEBORDER) != null);
     	String sReportTitle = "Service Manager Query: " + sQueryTitle;  
     	String sCriteria = getParameterPromptsAndValues(request);
@@ -236,6 +238,21 @@ public class SMQueryGenerate extends HttpServlet {
 				out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PRIVATE_BUTTON 
 						+ "' VALUE='" + SAVE_AS_PRIVATE_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
 				);
+				if (SMSystemFunctions.isFunctionPermitted(
+						SMSystemFunctions.SMEditQuerySelectorPrivate, 
+						sUserID, 
+						getServletContext(), 
+						sDBID,
+						(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)) && 
+						sQueryPrivate.compareToIgnoreCase("1")==0){
+					if(sQueryID.compareToIgnoreCase("") != 0) {
+						out.println("<INPUT TYPE=Button NAME='" + UPDATE_EXISTING_QUERY_BUTTON 
+								+ "' ID='" + UPDATE_EXISTING_QUERY_BUTTON + "' VALUE='" + UPDATE_EXISTING_QUERY_BUTTON_LABEL + "' STYLE='height: 0.24in' "
+										+ "onclick=confirmUpdateQuery()>"
+						);
+					}
+				}
+				
 				if (SMSystemFunctions.isFunctionPermitted(
 						SMSystemFunctions.SMManagePublicQueries, 
 						sUserID, 

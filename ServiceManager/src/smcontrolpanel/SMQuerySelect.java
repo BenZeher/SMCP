@@ -31,6 +31,7 @@ public class SMQuerySelect  extends HttpServlet {
 	public static String PARAM_QUERYID = "QUERYID";
 	public static String PARAM_QUERYTITLE = "QUERYTITLE";
 	public static String PARAM_QUERYCOMMENT = "QUERYCOMMENT";
+	public static String PARAM_QUERYPRIVATE = "QUERYPRIVATE";
 	public static String PARAM_QUERYSTRING = "QUERYSTRING";
 	public static String PARAM_RAWQUERYSTRING = "RAWQUERYSTRING";
 	public static String PARAM_SYSTEMQUERYID = "SYSTEMQUERYID";
@@ -103,6 +104,7 @@ public class SMQuerySelect  extends HttpServlet {
 		String sQueryTitle = clsManageRequestParameters.get_Request_Parameter(PARAM_QUERYTITLE, request);
 		String sQueryString = clsManageRequestParameters.get_Request_Parameter(PARAM_QUERYSTRING, request);
 		String sQueryComment = clsManageRequestParameters.get_Request_Parameter(PARAM_QUERYCOMMENT, request);
+		String sQueryPrivate = clsManageRequestParameters.get_Request_Parameter(PARAM_QUERYPRIVATE, request);
 
 		//If we are handling a request to delete a query:
 	    String sDeleteQueryID = clsManageRequestParameters.get_Request_Parameter(SMSavedQueriesSelect.DELETE_QUERY_ID_PARAM, request);
@@ -131,6 +133,7 @@ public class SMQuerySelect  extends HttpServlet {
 				+ " " + SMTablesavedqueries.ssql
 				+ ", " + SMTablesavedqueries.stitle
 				+ ", " + SMTablesavedqueries.scomment
+				+ ", " + SMTablesavedqueries.iprivate
 				+ " FROM " + SMTablesavedqueries.TableName
 				+ " WHERE ("
 					+ "(" + SMTablesavedqueries.id + " = " + sQueryID + ")"
@@ -150,6 +153,7 @@ public class SMQuerySelect  extends HttpServlet {
 					sQueryTitle = rs.getString(SMTablesavedqueries.stitle);
 					sQueryString = rs.getString(SMTablesavedqueries.ssql);
 					sQueryComment = rs.getString(SMTablesavedqueries.scomment);
+					sQueryPrivate = String.valueOf((rs.getInt(SMTablesavedqueries.iprivate)));
 				}
 				rs.close();
 			} catch (SQLException e) {
@@ -162,6 +166,8 @@ public class SMQuerySelect  extends HttpServlet {
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + PARAM_QUERYID + "' VALUE='" + sQueryID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + PARAM_QUERYCOMMENT + "' VALUE='" + sQueryComment + "'>");
+		out.println("<INPUT TYPE=HIDDEN NAME='" + PARAM_QUERYPRIVATE + "' VALUE='" + sQueryPrivate + "'>");
+		
 		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" 
 				+ SMUtilities.getFullClassName(this.toString()) + "\">");
 		out.println("<TABLE WIDTH=100% CELLPADDING=10 border=4>");

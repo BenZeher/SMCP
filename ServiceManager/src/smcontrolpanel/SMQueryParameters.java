@@ -85,6 +85,7 @@ public class SMQueryParameters  extends HttpServlet {
 		String sQueryString = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYSTRING, sm.getRequest());
 		String sSystemQueryID = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_SYSTEMQUERYID, sm.getRequest());
 		String sQueryComment = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYCOMMENT, sm.getRequest());
+		String sQueryPrivate = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYPRIVATE, sm.getRequest());
 		
 		//If we've passed in a 'system query' ID, then that means we aren't passing in a query string, but instead
 		// we are calling for a pre-built ('system') query from within the program:
@@ -145,6 +146,11 @@ public class SMQueryParameters  extends HttpServlet {
 			+ SMQuerySelect.PARAM_QUERYTITLE
 			+ "\" VALUE=\"" + clsStringFunctions.filter(sQueryTitle)
 			+ "\">" + "\n\n";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" 
+				+ SMQuerySelect.PARAM_QUERYPRIVATE
+				+ "\" VALUE=\"" + clsStringFunctions.filter(sQueryPrivate)
+				+ "\">" + "\n\n";
 		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" 
 				+ SMQuerySelect.PARAM_QUERYCOMMENT

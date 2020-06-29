@@ -153,6 +153,9 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 	    			+ SMTableicitems.sItemNumber 
 	    			+ ", " + SMTableicitems.sItemDescription
 	    			+ " FROM " + SMTableicitems.TableName
+	    			+ " WHERE ("
+	    				+ "(" + SMTableicitems.ilaboritem + " = 1)"
+	    			+ ")"
 	    			+ " ORDER BY " + SMTableicitems.sItemNumber
 	    		;
 

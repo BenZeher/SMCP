@@ -293,7 +293,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			String sOrderNumber = clsManageRequestParameters.get_Request_Parameter(
 					SMEditSMSummaryEdit.FIELD_INCORPORATE_INTO_ORDER_NUMBER, request);
 			try {
-				summary.createEstimatesFromVendorQuote(
+				summary.incorporateIntoOrder(
 						conn, 
 						sOrderNumber, 
 						smaction.getsDBID(), 

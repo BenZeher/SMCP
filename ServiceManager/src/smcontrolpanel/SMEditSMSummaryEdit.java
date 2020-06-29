@@ -1491,7 +1491,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ " MAXLENGTH=" + Integer.toString(9)
 				+ " STYLE=\"width: 1.5in; height: 0.25in\""
 			+ ">" 
-					
+			+ "&nbsp;"
 			+ "<button type=\"button\""
 				+ " value=\"" + FIND_ORDER_BUTTON_CAPTION + "\""
 				+ " name=\"" + FIND_ORDER_BUTTON_CAPTION + "\""
@@ -1499,7 +1499,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ FIND_ORDER_BUTTON_CAPTION
 			+ "</button>\n"
 		;
-	
 	}
 	
 	private String buildRemoveEstimateButton(String sSummaryLineNumber) {
@@ -1785,6 +1784,12 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Incorporate into an order:
 			//Find vendor quote:
 			s += "function incorporateintoorder(){\n"
+					+ "    var ordernumber = (document.getElementById(\"" + SMTablesmestimatesummaries.strimmedordernumber + "\").value).replace(',','');\n"
+					+ "    if(ordernumber.localeCompare('') != 0){ \n"
+					+ "        alert('This summary has already been incorporated into order number ' + ordernumber + ', so it cannot be"
+						+ " incorporated into another order.'); \n"
+					+ "        return; \n"
+					+ "    } \n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + INCORPORATE_INTO_ORDER_COMMAND_VALUE + "\";\n"
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"

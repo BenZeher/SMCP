@@ -948,8 +948,9 @@ public class SMEstimateSummary {
 			ServletContext context) throws Exception{
 			
 			//TODO - rebuild all this:
-			
-		
+			throw new Exception("Error [202006292341] - This function is not built yet.");
+
+			/*
 			//Get the vendor quote:
 			SMOHDirectQuoteList quotelist = new SMOHDirectQuoteList();
 			
@@ -1027,7 +1028,7 @@ public class SMEstimateSummary {
 			}
 			
 			return;
-			
+			*/
 		}
 	public String getsdatetimecreatedInSQLFormat() throws Exception{
 		if (m_datetimecreated.compareToIgnoreCase("") == 0){

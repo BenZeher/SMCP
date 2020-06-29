@@ -28,6 +28,7 @@ public class SMTablesmestimatesummaries {
 	public static String ipricelevel = "ipricelevel";
 	public static String sadditionalpostsalestaxcostlabel = "sadditionalpostsalestaxcostlabel";
 	public static String bdadditionalpostsalestaxcostamt = "bdadditionalpostsalestaxcostamt";
+	public static String strimmedordernumber = "strimmedordernumber";
 	
 	//Field Lengths:
 	public static final int spricelistcodeLength = 6;
@@ -43,4 +44,5 @@ public class SMTablesmestimatesummaries {
 	public static int spricelistLength = 6;
 	public static int sadditionalpostsalestaxcostlabelLength = 32;
 	public static int bdadditionalpostsalestaxcostamtScale = 2;
+	public static int strimmedordernumberLength = 22;
 }

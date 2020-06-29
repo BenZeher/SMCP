@@ -1202,6 +1202,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			    		+ "&" + SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER + "=" + estimate.getsvendorquotenumber()
 			    		+ "&" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "=" + estimate.getsivendorquotelinenumber()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+			    		+ "&" + SMDisplayOHDirectQuote.ADDITIONAL_PARAMETERS + "=" + SMTablesmestimates.lid + "=" + estimate.getslid()
 			    		+ "\">" + sVendorQuoteLink + "</A>"
 			    		+ ", line #" + estimate.getsivendorquotelinenumber()
 				;

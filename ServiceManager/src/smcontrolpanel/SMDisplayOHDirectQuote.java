@@ -24,6 +24,9 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMDisplayOHDirectQuote extends HttpServlet {
 
+	public static final String ADDITIONAL_PARAMETERS = "ADDITIONALPARAMETERS";
+	public static final String ADDITIONAL_PARAMETERS_DELIMITER = "*";
+	
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest request,
@@ -47,6 +50,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sQuoteNumber = clsManageRequestParameters.get_Request_Parameter(SMOHDirectFieldDefinitions.QUOTE_FIELD_QUOTENUMBER, request);
 		String sRequestedQuoteLine = clsManageRequestParameters.get_Request_Parameter(SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER, request);
+		String sAdditionalParameters = clsManageRequestParameters.get_Request_Parameter(ADDITIONAL_PARAMETERS, request);
 
 		/*******************************************************/
 
@@ -76,7 +80,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "Warning=" + ServletUtilities.clsServletUtilities.URLEncode(e2.getMessage())
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					//+ sParamString
+					+ "&" + sAdditionalParameters.replace(ADDITIONAL_PARAMETERS_DELIMITER, "&")
 			);			
 			return;
 		}

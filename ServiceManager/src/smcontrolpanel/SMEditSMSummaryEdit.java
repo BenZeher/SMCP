@@ -39,6 +39,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
 	public static final String INCORPORATE_INTO_ORDER_BUTTON_CAPTION = "<B><FONT COLOR=RED>I</FONT></B>ncorporate into order";
 	public static final String INCORPORATE_INTO_ORDER_COMMAND_VALUE = "INCORPORATEINTOORDER";
+	public static final String UNINCORPORATED_LABEL = "(NONE)";
 	public static final String FIELD_INCORPORATE_INTO_ORDER_NUMBER = "FIELDINCORPORATEORDERNUMBER";
 	public static final String FIND_ORDER_BUTTON_CAPTION = "Find <B><FONT COLOR=RED>o</FONT></B>rder";
 	public static final String FIND_ORDER_COMMAND_VALUE = "FINDORDER";
@@ -279,7 +280,6 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ ">"
 			);
 		
-		
 		//Create HTML Fields
 		try {
 			pwOut.println(sEditHTML);
@@ -347,6 +347,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		if (sm.getAddingNewEntryFlag()){
 			sLid = UNSAVED_SUMMARY_LABEL;
 		}
+		
+		String sIncorporatedIntoOrder = summary.getstrimmedordernumber();
+		if (sIncorporatedIntoOrder.compareToIgnoreCase("") == 0){
+			sIncorporatedIntoOrder = UNINCORPORATED_LABEL;
+		}
 
 		s += "<B>Summary ID</B>: " + sLid + "\n" 
 			+ "<INPUT TYPE=HIDDEN"
@@ -354,6 +359,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + summary.getslid() + "\""
 			+ " ID=\"" + SMTablesmestimatesummaries.lid + "\""
 			+ ">"
+			+ "&nbsp;"
+			+"<B>Incorporated into order number</B>: " + sIncorporatedIntoOrder + "\n" 
+			+ "<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + SMTablesmestimatesummaries.strimmedordernumber + "\""
+			+ " VALUE=\"" + summary.getstrimmedordernumber() + "\""
+			+ " ID=\"" + SMTablesmestimatesummaries.strimmedordernumber + "\""
+			+ ">"
+			+ "<BR>"
 			+ "\n"
 		;
 			

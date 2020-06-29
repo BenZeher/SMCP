@@ -55,6 +55,7 @@ public class SMEstimateSummary {
 	private String m_ipricelevel;
 	private String m_sadditionalpostsalestaxcostlabel;
 	private String m_bdadditionalpostsalestaxcostamt;
+	private String m_strimmedordernumber;
 	
 	private ArrayList<SMEstimate>arrEstimates;
 	
@@ -132,6 +133,8 @@ public class SMEstimateSummary {
 		m_ipricelevel = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.ipricelevel, req).replace("&quot;", "\"");
 		m_sadditionalpostsalestaxcostlabel = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel, req).replace("&quot;", "\"");
 		m_bdadditionalpostsalestaxcostamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt, req).replace("&quot;", "\"");
+		m_strimmedordernumber = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.strimmedordernumber, req).replace("&quot;", "\"");
+		
 	}
 	public void saveAsNewSummaryWrapper(Connection conn, String sUserID, String sUserFullName) throws Exception{
 		
@@ -231,6 +234,7 @@ public class SMEstimateSummary {
 				+ ", " + SMTablesmestimatesummaries.sjobname
 				+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname
 				+ ", " + SMTablesmestimatesummaries.spricelistcode
+				+ ", " + SMTablesmestimatesummaries.strimmedordernumber
 				+ ", " + SMTablesmestimatesummaries.ipricelevel
 				+ ", " + SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel
 				+ ", " + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt
@@ -256,6 +260,7 @@ public class SMEstimateSummary {
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sjobname) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_spricelistcode) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_strimmedordernumber) + "'"
 				+ ", " + m_ipricelevel
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sadditionalpostsalestaxcostlabel) + "'"
 				+ ", " + m_bdadditionalpostsalestaxcostamt.replace(",", "")
@@ -280,6 +285,7 @@ public class SMEstimateSummary {
 				+ ", " + SMTablesmestimatesummaries.sjobname + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sjobname) + "'"
 				+ ", " + SMTablesmestimatesummaries.slastmodifiedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 				+ ", " + SMTablesmestimatesummaries.spricelistcode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_spricelistcode) + "'"
+						+ ", " + SMTablesmestimatesummaries.strimmedordernumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_strimmedordernumber) + "'"
 				+ ", " + SMTablesmestimatesummaries.ipricelevel + " = " + m_ipricelevel
 				+ ", " + SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sadditionalpostsalestaxcostlabel) + "'"
 				+ ", " + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + " = " + m_bdadditionalpostsalestaxcostamt.replace(",", "")
@@ -572,6 +578,17 @@ public class SMEstimateSummary {
 		}
 		
 		try {
+			m_strimmedordernumber = clsValidateFormFields.validateStringField(
+				m_strimmedordernumber, 
+				SMTablesmestimatesummaries.strimmedordernumberLength, 
+				"Incorporated into order number", 
+				true
+			);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
 			m_bdadditionalpostsalestaxcostamt = clsValidateFormFields.validateBigdecimalField(
 				m_bdadditionalpostsalestaxcostamt.replace(",", ""), 
 				"Additional cost after sales tax", 
@@ -671,6 +688,7 @@ public class SMEstimateSummary {
 				m_sadditionalpostsalestaxcostlabel = rs.getString(SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel);
 				m_bdadditionalpostsalestaxcostamt = clsManageBigDecimals.BigDecimalToScaledFormattedString(
 					SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamtScale, rs.getBigDecimal(SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt));
+				m_strimmedordernumber = rs.getString(SMTablesmestimatesummaries.strimmedordernumber);
 			}else{
 				rs.close();
 				throw new Exception("Error [1590509859] - No Estimate Summary found with lid = " + m_lid + ".");
@@ -930,6 +948,7 @@ public class SMEstimateSummary {
 			ServletContext context) throws Exception{
 			
 			//TODO - rebuild all this:
+			
 		
 			//Get the vendor quote:
 			SMOHDirectQuoteList quotelist = new SMOHDirectQuoteList();
@@ -1193,6 +1212,13 @@ public class SMEstimateSummary {
 		m_bdadditionalpostsalestaxcostamt = sbdadditionalpostsalestaxcostamt;
 	}
 	
+	public String getstrimmedordernumber(){
+		return m_strimmedordernumber;
+	}
+	public void setstrimmedordernumber(String strimmedordernumber){
+		m_strimmedordernumber = strimmedordernumber;
+	}
+	
 	//Calculated values - these aren't valid until the summary is loaded:
 	public BigDecimal getbdtotalmaterialcostonestimates() {
 		return m_bdtotalmaterialcostonestimates;
@@ -1414,6 +1440,8 @@ public class SMEstimateSummary {
 		sQueryString += "&" + SMTablesmestimatesummaries.ipricelevel + "=" + clsServletUtilities.URLEncode(getsipricelevel());
 		sQueryString += "&" + SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel + "=" + clsServletUtilities.URLEncode(getsadditionalpostsalestaxcostlabel());
 		sQueryString += "&" + SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt + "=" + clsServletUtilities.URLEncode(getsbdadditionalpostsalestaxcostamt());
+		sQueryString += "&" + SMTablesmestimatesummaries.strimmedordernumber + "=" + clsServletUtilities.URLEncode(getstrimmedordernumber());
+		
 		return sQueryString;
 	}
 	
@@ -1444,6 +1472,7 @@ public class SMEstimateSummary {
 		s += "&" + "Price level: " + getsipricelevel() + "\n";
 		s += "&" + "Additional post sales tax cost label: " + getsadditionalpostsalestaxcostlabel() + "\n";
 		s += "&" + "Additional post sales tax cost amt: " + getsbdadditionalpostsalestaxcostamt() + "\n";
+		s += "&" + "Incorporated into order number: " + getstrimmedordernumber() + "\n";
 		
 		s += "  -- Number of estimates: " + arrEstimates.size() + "\n";
 		
@@ -1515,6 +1544,7 @@ public class SMEstimateSummary {
 		m_ipricelevel = "0";
 		m_sadditionalpostsalestaxcostlabel = "";
 		m_bdadditionalpostsalestaxcostamt = "0.00";
+		m_strimmedordernumber = "";
 		arrEstimates = new ArrayList<SMEstimate>(0);
 	}
 }

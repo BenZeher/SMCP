@@ -432,6 +432,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "  </TR>" + "\n";
 		s += "</TABLE>" + "\n";
 		
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593446022]");
+		
 		return s;
 	}
 

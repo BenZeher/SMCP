@@ -37,6 +37,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String SAVE_AS_NEW_COMMAND_VALUE = "SAVESUMMARYASNEW";
 	public static final String DELETE_BUTTON_CAPTION = "Delete estimate s<B><FONT COLOR=RED>u</FONT></B>mmary";
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
+	public static final String INCORPORATE_INTO_ORDER_BUTTON_CAPTION = "<B><FONT COLOR=RED>I</FONT></B>ncorporate into order";
+	public static final String INCORPORATE_INTO_ORDER_COMMAND_VALUE = "INCORPORATEINTOORDER";
+	public static final String FIELD_INCORPORATE_INTO_ORDER_NUMBER = "FIELDINCORPORATEORDERNUMBER";
+	public static final String FIND_ORDER_BUTTON_CAPTION = "Find <B><FONT COLOR=RED>o</FONT></B>rder";
+	public static final String FIND_ORDER_COMMAND_VALUE = "FINDORDER";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
@@ -198,12 +203,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    		getEditHTML(
 	    			smedit, 
 	    			summary, 
-	    			ServletUtilities.clsManageRequestParameters.get_Request_Parameter(FIELD_VENDOR_QUOTE, request)
+	    			ServletUtilities.clsManageRequestParameters.get_Request_Parameter(FIELD_VENDOR_QUOTE, request),
+	    			request
 	    		), 
 	    		FORM_NAME,
 				smedit.getPWOut(),
 				smedit,
-				summary
+				summary,
+				request
 			);
 		} catch (Exception e) {
     		String sError = "Could not create edit page - " + e.getMessage();
@@ -224,7 +231,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			String sFormClassName,
 			PrintWriter pwOut,
 			SMMasterEditEntry sm,
-			SMEstimateSummary summary
+			SMEstimateSummary summary,
+			HttpServletRequest req
 	) throws Exception{
 		//Create HTML Form
 		String sFormString = "<FORM ID='" + sFormClassName + "' NAME='" + sFormClassName + "' ACTION='" 
@@ -281,13 +289,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		//Add save and delete buttons
 		String sSaveAndDeleteButtons = createSaveButton();
 		if (summary.getslid().compareToIgnoreCase("-1") != 0) {
-			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
+			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton() + "&nbsp;" + incorporateintoorderButton(req);
 		}
 		pwOut.println("<BR>" + sSaveAndDeleteButtons);
 		pwOut.println("</FORM>");
 	}
 
-	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary, String sVendorQuoteIdentifier) throws Exception{
+	private String getEditHTML(SMMasterEditEntry sm, SMEstimateSummary summary, String sVendorQuoteIdentifier, HttpServletRequest request) throws Exception{
 		
 		String sControlHTML = "";
 		
@@ -315,7 +323,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		String sSaveAndDeleteButtons = createSaveButton();
 		if (summary.getslid().compareToIgnoreCase("-1") != 0) {
-			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton();
+			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton() + "&nbsp;" + incorporateintoorderButton(request);
 		}
 		s += "<BR>" + sSaveAndDeleteButtons;
 		
@@ -543,7 +551,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			}
 			rsServiceType.close();
 		} catch (Exception e1) {
-			throw new Exception("Error [202006225035] - reading service types with SQL: '" + SQL + "' - " + e1.getMessage());
+			s += "<B>Error [1590530298] reading service types with SQL: '" + SQL + "' - " + e1.getMessage() + "</B><BR>";
 		}
 		
 		for (int i = 0; i < arrServiceTypes.size(); i++){
@@ -699,6 +707,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		s += "</TABLE>" + "\n";
 
 		s += printBackIntoControls();
+		
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593446021]");
 		
 		return s;
 	}
@@ -1451,6 +1461,34 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		return s;
 	}
+	
+	private String incorporateintoorderButton(HttpServletRequest request){
+		return "<button type=\"button\""
+			+ " value=\"" + INCORPORATE_INTO_ORDER_BUTTON_CAPTION + "\""
+			+ " name=\"" + INCORPORATE_INTO_ORDER_BUTTON_CAPTION + "\""
+			+ " onClick=\"incorporateintoorder();\">"
+			+ INCORPORATE_INTO_ORDER_BUTTON_CAPTION
+			+ "</button>\n"
+			+ "<INPUT TYPE = TEXT"
+				+ " NAME = \"" + FIELD_INCORPORATE_INTO_ORDER_NUMBER + "\""
+				+ " ID = \"" + FIELD_INCORPORATE_INTO_ORDER_NUMBER + "\""
+				+ " VALUE=\"" 
+					+ clsManageRequestParameters.get_Request_Parameter(FIELD_INCORPORATE_INTO_ORDER_NUMBER, request)
+				+ "\""
+				+ " MAXLENGTH=" + Integer.toString(9)
+				+ " STYLE=\"width: 1.5in; height: 0.25in\""
+			+ ">" 
+					
+			+ "<button type=\"button\""
+				+ " value=\"" + FIND_ORDER_BUTTON_CAPTION + "\""
+				+ " name=\"" + FIND_ORDER_BUTTON_CAPTION + "\""
+				+ " onClick=\"findorder();\">"
+				+ FIND_ORDER_BUTTON_CAPTION
+			+ "</button>\n"
+		;
+	
+	}
+	
 	private String buildRemoveEstimateButton(String sSummaryLineNumber) {
 		String s = "";
 		s += "<button type=\"button\""
@@ -1729,6 +1767,21 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "        }\n"
 				+ "    }\n"
 				+ "}\n\n"
+			;
+			
+			//Incorporate into an order:
+			//Find vendor quote:
+			s += "function incorporateintoorder(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + INCORPORATE_INTO_ORDER_COMMAND_VALUE + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
+			//Find an order:
+			s += "function findorder(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_ORDER_COMMAND_VALUE + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
 			;
 			
 			//Find vendor quote:
@@ -2269,6 +2322,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			;
 				
 			s += "function initShortcuts() {\n";
+				
+			s += "    shortcut.add(\"Alt+i\",function() {\n";
+			s += "        incorporateintoorder();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
 			
 			s += "    shortcut.add(\"Alt+m\",function() {\n";
 			s += "        addmanualestimate();\n";
@@ -2280,6 +2341,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				
 			s += "    shortcut.add(\"Alt+n\",function() {\n";
 			s += "        addvendorquote();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+o\",function() {\n";
+			s += "        findorder();\n";
 			s += "    },{\n";
 			s += "        'type':'keydown',\n";
 			s += "        'propagate':false,\n";

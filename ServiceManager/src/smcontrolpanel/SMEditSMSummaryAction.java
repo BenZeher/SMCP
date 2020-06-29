@@ -8,12 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMClasses.FinderResults;
 import SMClasses.OHDirectFinderResults;
+import SMClasses.SMFinderFunctions;
+import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
+import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 
@@ -206,6 +211,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			try {
 				redirectProcess(sRedirectString, response);
 			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689521]");
 				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
 				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
 		    	smaction.redirectAction(
@@ -233,6 +239,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			try {
 				redirectProcess(sRedirectString, response);
 			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689511]");
 				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
 				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
 		    	smaction.redirectAction(
@@ -269,7 +276,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			    		);
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689971]");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689871]");
 			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
 			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Estimates added from vendor quote number " 
 					+ sVendorQuoteNumber + " added successfully");
@@ -281,6 +288,101 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			return;
 		}
 		
+		//If INCORPORATE INTO ORDER, then:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.INCORPORATE_INTO_ORDER_COMMAND_VALUE) == 0){
+			String sOrderNumber = clsManageRequestParameters.get_Request_Parameter(
+					SMEditSMSummaryEdit.FIELD_INCORPORATE_INTO_ORDER_NUMBER, request);
+			try {
+				summary.createEstimatesFromVendorQuote(
+						conn, 
+						sOrderNumber, 
+						smaction.getsDBID(), 
+						smaction.getUserID(), 
+						smaction.getFullUserName(), 
+						getServletContext()
+				);
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773559]");
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			    		);
+				return;
+			}
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689571]");
+			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
+			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Summary was incorporated into order number " 
+					+ sOrderNumber + " successfully");
+	    	smaction.redirectAction(
+		    		"", 
+		    		"", 
+		    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+		    		);
+			return;
+		}
+		
+		//If FIND ORDER, then:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.FIND_ORDER_COMMAND_VALUE) == 0){
+			String sRedirectString =
+			SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
+			+ "?ObjectName=Order"
+			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+			+ "&ResultClass=FinderResults"
+			+ "&SearchingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
+			+ "&ReturnField=" + SMEditSMSummaryEdit.FIELD_INCORPORATE_INTO_ORDER_NUMBER
+			+ "&SearchField1=" + SMTableorderheaders.sBillToName
+			+ "&SearchFieldAlias1=Bill%20To%20Name"
+			+ "&SearchField2=" + SMTableorderheaders.sShipToName
+			+ "&SearchFieldAlias2=Ship%20To%20Name"
+			+ "&SearchField3=" + SMTableorderheaders.sBillToAddressLine1
+			+ "&SearchFieldAlias3=Bill%20To%20Address%20Line%201"
+			+ "&SearchField4=" + SMTableorderheaders.sShipToAddress1
+			+ "&SearchFieldAlias4=Ship%20To%20Address%20Line%201"
+			+ "&ResultListField1="  + SMTableorderheaders.sOrderNumber
+			+ "&ResultHeading1=Order%20Number"
+			+ "&ResultListField2="  + SMTableorderheaders.sBillToName
+			+ "&ResultHeading2=Bill%20To%20Name"
+			+ "&ResultListField3="  + SMTableorderheaders.sShipToName
+			+ "&ResultHeading3=Ship%20To%20Name"
+			+ "&ResultListField4="  + SMTableorderheaders.sServiceTypeCodeDescription
+			+ "&ResultHeading4=Service%20Type"
+			+ "&ResultListField5="  + SMTableorderheaders.sSalesperson
+			+ "&ResultHeading5=Salesperson"
+			+ "&ResultListField6="  + SMTableorderheaders.datOrderDate
+			+ "&ResultHeading6=Order%20Date"
+			+ "&ResultListField7="
+				+ clsServletUtilities.URLEncode("IF(" + SMTableorderheaders.datOrderCanceledDate + "<'1950-01-01','N/A'," 
+				+ "CONCAT('<FONT COLOR=RED>', DATE_FORMAT(" + SMTableorderheaders.datOrderCanceledDate + ",'%c/%e/%Y'), '</FONT>')) AS 'CANCELEDDATE'")
+			+ "&" + FinderResults.RESULT_FIELD_ALIAS + "7=CANCELEDDATE"
+			+ "&ResultHeading7=Canceled"
+			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+			+ "*" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			+ "*" + SMEditOrderDetailEdit.RECORDWASCHANGED_FLAG + "=" 
+				+ clsManageRequestParameters.get_Request_Parameter(SMEditSMSummaryEdit.RECORDWASCHANGED_FLAG_VALUE, request)
+			+ "*CallingClass=" + smaction.getCallingClass()
+			;
+
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1591633740]");
+			smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+			try {
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689171]");
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			    		);
+				return;
+			}
+		}
+		
+		return;
 	}
 	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{
 		try {

@@ -1392,7 +1392,7 @@ public class SMEstimateSummary {
 				+ "&SearchField3=" + SMTablesmestimatesummaries.scomments
 				+ "&SearchFieldAlias3=Description"
 				+ "&ResultListField1="  + SMTablesmestimatesummaries.lid
-				+ "&ResultHeading1=Summaryt%20No."
+				+ "&ResultHeading1=Summary%20No."
 				+ "&ResultListField2="  + SMTablesmestimatesummaries.sjobname
 				+ "&ResultHeading2=Project%20Name"
 				

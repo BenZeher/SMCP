@@ -147,6 +147,14 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s+= summary.getscomments();
 		s+= "</TD></TR>";
 		s+= "</TABLE>";
+		s+= "<TABLE>";
+		s+="<TR><TD> ";
+		s+= "Estimates: ";
+		s+= "</TD></TR>";
+		s+="<TR><TD> ";
+		s+= summary.getEstimateArray().toString();
+		s+= "</TD></TR>";
+		s+= "</TABLE>";
 		out.println(s);
 		return false;
 	}

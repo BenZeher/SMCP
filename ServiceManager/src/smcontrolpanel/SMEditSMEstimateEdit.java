@@ -446,7 +446,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		) throws Exception{
 		
 		String s = "";
-		int iNumberOfColumns = 11;
+		//int iNumberOfColumns = 11;
 		
 		//s += "<BR>";
 		

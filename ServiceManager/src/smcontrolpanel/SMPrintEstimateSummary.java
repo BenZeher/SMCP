@@ -15,10 +15,8 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMPrintEstimateSummary extends java.lang.Object {
 
-	private String m_sErrorMessage;
 	public SMPrintEstimateSummary(
 			){
-		m_sErrorMessage = "";
 	}
 
 	public boolean processReport(

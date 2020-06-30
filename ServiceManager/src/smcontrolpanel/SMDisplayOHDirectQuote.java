@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMOHDirectQuoteLineCostDetailList;
-import SMClasses.SMOHDirectQuoteLineDetailList;
 import SMClasses.SMOHDirectQuoteLineList;
 import SMClasses.SMOHDirectQuoteList;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
@@ -416,7 +414,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		
 		return s;
 	}
-	
+	/*
 	private String printQuoteLineDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
 		String s = "";
 		//Get the OHDirect connection settings:
@@ -469,6 +467,7 @@ public class SMDisplayOHDirectQuote extends HttpServlet {
 		
 		return s;
 	}
+	*/
 	private String printQuoteLineCostDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
 		String s = "";
 		//Get the OHDirect connection settings:

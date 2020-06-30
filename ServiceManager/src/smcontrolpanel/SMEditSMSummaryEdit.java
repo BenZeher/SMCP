@@ -31,11 +31,11 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMEditSMSummaryEdit extends HttpServlet {
 	
-	public static final String SAVE_BUTTON_CAPTION = "Sa<B><FONT COLOR=RED>v</FONT></B>e estimate summary";
+	public static final String SAVE_BUTTON_CAPTION = "Sa<B><FONT COLOR=RED>v</FONT></B>e summary";
 	public static final String SAVE_COMMAND_VALUE = "SAVESUMMARY";
-	public static final String SAVE_AS_NEW_BUTTON_CAPTION = "Save as NE<B><FONT COLOR=RED>W</FONT></B> estimate summary";
+	public static final String SAVE_AS_NEW_BUTTON_CAPTION = "Save as NE<B><FONT COLOR=RED>W</FONT></B> summary";
 	public static final String SAVE_AS_NEW_COMMAND_VALUE = "SAVESUMMARYASNEW";
-	public static final String DELETE_BUTTON_CAPTION = "Delete estimate s<B><FONT COLOR=RED>u</FONT></B>mmary";
+	public static final String DELETE_BUTTON_CAPTION = "Delete s<B><FONT COLOR=RED>u</FONT></B>mmary";
 	public static final String DELETE_COMMAND_VALUE = "DELETESUMMARY";
 	public static final String INCORPORATE_INTO_ORDER_BUTTON_CAPTION = "<B><FONT COLOR=RED>I</FONT></B>ncorporate into order";
 	public static final String INCORPORATE_INTO_ORDER_COMMAND_VALUE = "INCORPORATEINTOORDER";
@@ -43,6 +43,8 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String FIELD_INCORPORATE_INTO_ORDER_NUMBER = "FIELDINCORPORATEORDERNUMBER";
 	public static final String FIND_ORDER_BUTTON_CAPTION = "Find <B><FONT COLOR=RED>o</FONT></B>rder";
 	public static final String FIND_ORDER_COMMAND_VALUE = "FINDORDER";
+	public static final String PRINT_SUMMARY_BUTTON_CAPTION = "P<B><FONT COLOR=RED>r</FONT></B>int";
+	public static final String PRINT_SUMMARY_COMMAND_VALUE = "PRINTSUMMARY";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
@@ -289,7 +291,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		//Add save and delete buttons
 		String sSaveAndDeleteButtons = createSaveButton();
 		if (summary.getslid().compareToIgnoreCase("-1") != 0) {
-			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton() + "&nbsp;" + incorporateintoorderButton(req);
+			sSaveAndDeleteButtons += 
+				"&nbsp;" + createSaveAsNewButton()
+				+ "&nbsp;" + createPrintButton()
+				+ "&nbsp;" + createDeleteButton() 
+				+ "&nbsp;" + incorporateintoorderButton(req);
 		}
 		pwOut.println("<BR>" + sSaveAndDeleteButtons);
 		pwOut.println("</FORM>");
@@ -323,7 +329,11 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		String sSaveAndDeleteButtons = createSaveButton();
 		if (summary.getslid().compareToIgnoreCase("-1") != 0) {
-			sSaveAndDeleteButtons += "&nbsp;" + createSaveAsNewButton() + "&nbsp;" + createDeleteButton() + "&nbsp;" + incorporateintoorderButton(request);
+			sSaveAndDeleteButtons += 
+				"&nbsp;" + createSaveAsNewButton()
+				+ "&nbsp;" + createPrintButton()
+				+ "&nbsp;" + createDeleteButton() 
+				+ "&nbsp;" + incorporateintoorderButton(request);
 		}
 		s += "<BR>" + sSaveAndDeleteButtons;
 		
@@ -1474,6 +1484,17 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		return s;
 	}
+	private String createPrintButton(){
+		String s = "";
+		s = "<button type=\"button\""
+		+ " value=\"" + PRINT_SUMMARY_BUTTON_CAPTION + "\""
+		+ " name=\"" + PRINT_SUMMARY_BUTTON_CAPTION + "\""
+		+ " onClick=\"printsummary();\">"
+		+ PRINT_SUMMARY_BUTTON_CAPTION
+		+ "</button>\n";
+		
+		return s;
+	}
 	
 	private String incorporateintoorderButton(HttpServletRequest request){
 		return "<button type=\"button\""
@@ -1798,6 +1819,13 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			//Find an order:
 			s += "function findorder(){\n"
 					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + FIND_ORDER_COMMAND_VALUE + "\";\n"
+					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
+			
+			//Print the summary:
+			s += "function printsummary(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + PRINT_SUMMARY_COMMAND_VALUE + "\";\n"
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 				+ "}\n"
 			;
@@ -2383,6 +2411,14 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			
 			s += "    shortcut.add(\"Alt+q\",function() {\n";
 			s += "        findvendorquote();\n";
+			s += "    },{\n";
+			s += "        'type':'keydown',\n";
+			s += "        'propagate':false,\n";
+			s += "        'target':document\n";
+			s += "    });\n";
+			
+			s += "    shortcut.add(\"Alt+r\",function() {\n";
+			s += "        printsummary();\n";
 			s += "    },{\n";
 			s += "        'type':'keydown',\n";
 			s += "        'propagate':false,\n";

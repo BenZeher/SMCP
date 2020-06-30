@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import SMDataDefinition.SMTablesmestimates;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 
@@ -78,17 +77,7 @@ public class SMListCommonEstimateItemsAction extends HttpServlet{
 		return;
 
 	}
-	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{
-		try {
-			res.sendRedirect(sRedirectString);
-		} catch (IOException e1) {
-			throw new Exception("Error [1395236724] in " + this.toString() + ".redirectAction - IOException error redirecting with string: "
-					+ sRedirectString + " - " + e1.getMessage());
-		} catch (IllegalStateException e1) {
-			throw new Exception("Error [1395236725] in " + this.toString() + ".redirectAction - IllegalStateException error redirecting with string: "
-					+ sRedirectString + " - " + e1.getMessage());
-		}
-	}
+
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

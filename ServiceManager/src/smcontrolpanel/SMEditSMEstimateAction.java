@@ -13,7 +13,6 @@ import SMClasses.OHDirectFinderResults;
 import SMClasses.SMFinderFunctions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTablesmestimates;
-import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;

@@ -1,13 +1,9 @@
 package smar;
 import java.sql.DriverManager;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServlet;
 
-import SMClasses.SMOHDirectQuoteList;
-import SMDataDefinition.SMOHDirectFieldDefinitions;
 import smcontrolpanel.SMEstimate;
-import smcontrolpanel.SMEstimateSummary;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{

@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import SMClasses.FinderResults;
 import SMClasses.OHDirectFinderResults;
-import SMClasses.SMFinderFunctions;
-import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmestimates;
@@ -380,6 +378,31 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			    		);
 				return;
 			}
+		}
+		
+		//If PRINT SUMMARY:
+		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.PRINT_SUMMARY_COMMAND_VALUE) == 0){
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773219]");
+    		String sRedirectString = 
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMPrintEstimateSummaryGenerate"
+				+ "?" + SMTablesmestimates.lsummarylid + "=" + summary.getslid()
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&" + "CallingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
+				;
+			try {
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689781]");
+				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
+				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
+		    	smaction.redirectAction(
+			    		"", 
+			    		"", 
+			    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			    		);
+				return;
+			}
+			return;
 		}
 		
 		return;

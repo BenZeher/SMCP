@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import ServletUtilities.clsCreateHTMLFormFields;
-import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;

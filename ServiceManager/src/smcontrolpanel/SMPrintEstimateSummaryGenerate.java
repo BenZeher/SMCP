@@ -2,6 +2,7 @@ package smcontrolpanel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMTablesmestimatesummaries;
+import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
 public class SMPrintEstimateSummaryGenerate extends HttpServlet{
@@ -65,10 +67,31 @@ public class SMPrintEstimateSummaryGenerate extends HttpServlet{
 					);
 					return;
 			}
+		
+		//Retrieve information
+    	Connection conn = clsDatabaseFunctions.getConnection(
+    			getServletContext(), 
+    			sDBID, 
+    			"MySQL", 
+    			SMUtilities.getFullClassName(this.toString()) 
+    			+ " - user: " 
+    			+ sUserID
+    			+ " - "
+    			+ sUserFullName
+    			);
+    	if (conn == null){
+    		response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+				+ "Warning=" + "Unable to get data connection."
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    		);			
+        	return;
+    	}
 
 		//TODO SMPrintEstimateSummary -> Process Report
 		SMPrintEstimateSummary summaryreport = new SMPrintEstimateSummary();
 		if(!summaryreport.processReport(
+				conn,
 				summary, 
 				sDBID, 
 				sUserID,

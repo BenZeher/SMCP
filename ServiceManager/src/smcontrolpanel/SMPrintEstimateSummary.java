@@ -4,9 +4,12 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMTablepricelistcodes;
+import SMDataDefinition.SMTablepricelistlevellabels;
 import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsDatabaseFunctions;
 
@@ -109,8 +112,41 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		}
 		s+= sPriceList;
 		s+= "</TD><TD>";
+		//Price level:
+				ArrayList<String> arrPriceLevels = new ArrayList<String>(0);
+				ArrayList<String> arrPriceLevelDescriptions = new ArrayList<String>(0);
+				SQL = "SELECT"
+					+ " * FROM " + SMTablepricelistlevellabels.TableName
+				;
+				//First, add a blank item so we can be sure the user chose one:
+				for (int i = 0; i < SMTablepricelistlevellabels.NUMBER_OF_PRICE_LEVELS; i++) {
+					arrPriceLevels.add(Integer.toString(i));
+				}
+				
+				try {
+					ResultSet rsPriceLevels = clsDatabaseFunctions.openResultSet(SQL, conn);
+					while (rsPriceLevels.next()) {
+						arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.sbasepricelabel));
+						arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel1label));
+						arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel2label));
+						arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel3label));
+						arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel4label));
+						arrPriceLevelDescriptions.add(rsPriceLevels.getString(SMTablepricelistlevellabels.spricelevel5label));
+					}
+					rsPriceLevels.close();
+				} catch (SQLException e) {
+					s += "<B>Error [1590535953] reading price level labels - " + e.getMessage() + "</B><BR>";
+				}
 		s+= "Price level: ";
-		s+= summary.getsipricelevel();
+		s+=
+				arrPriceLevelDescriptions.get(
+						Integer.parseInt(summary.getsipricelevel())
+						)
+				;
+		s+= "</TD></TR>";
+		s+="<TR><TD> ";
+		s+="Comments:	";
+		s+= summary.getscomments();
 		s+= "</TD></TR>";
 		s+= "</TABLE>";
 		out.println(s);

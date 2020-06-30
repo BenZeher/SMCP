@@ -925,7 +925,7 @@ public class SMUserLogin extends HttpServlet {
 			String sLink = "";
 			while(rsCustomLinks.next()){
 				sLink ="<A HREF='" + rsCustomLinks.getString( SMTablecustomlinks.surl)+ "'>"
-						+ "<U><FONT SIZE=3 STYLE='font-size: 11pt'><FONT COLOR='" + SMMasterStyleSheetDefinitions.BACKGROUND_DARK_BLUE + "'>"
+						+ "<U><FONT SIZE=3 STYLE='font-size: 11pt'><FONT COLOR='" + SMMasterStyleSheetDefinitions.BACKGROUND_LINK_BLUE + "'>"
 						+ rsCustomLinks.getString( SMTablecustomlinks.surlname)
 						+ "</FONT></FONT></U></A><BR>"
 						;

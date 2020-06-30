@@ -116,6 +116,8 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String BACKGROUND_PALE_BLUE = "#DBEDFF";
 	public static final String BACKGROUND_LIGHT_BLUE = "#A3D1FF";
 	public static final String BACKGROUND_DARK_BLUE = "#145394";
+	public static final String BACKGROUND_LINK_BLUE = "#120991";
+	
 	public static final String BACKGROUND_LIGHT_PURPLE = "#C0C0FF";
 	public static final String BACKGROUND_DARK_PURPLE = "#8F008F";
 	

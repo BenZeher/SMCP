@@ -2065,10 +2065,15 @@
         <servlet-class>smcontrolpanel.SMOrderSourceListingCriteriaSelection</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>SMOrderSourceListingGenerate</servlet-name>
-        <servlet-class>smcontrolpanel.SMOrderSourceListingGenerate</servlet-class>
-    </servlet>
+  <servlet>
+	<servlet-name>SMOrderSourceListingGenerate</servlet-name>
+	<servlet-class>smcontrolpanel.SMOrderSourceListingGenerate</servlet-class>
+</servlet>
+
+	<servlet>
+		<servlet-name>SMPrintEstimateSummaryGenerate</servlet-name>
+		<servlet-class>smcontrolpanel.SMPrintEstimateSummaryGenerate</servlet-class>
+	</servlet>
 
     <servlet>
         <servlet-name>SMPrintInstallationTicketGenerate</servlet-name>
@@ -5437,6 +5442,11 @@
         <servlet-name>SMOrderSourceListingGenerate</servlet-name>
         <url-pattern>/smcontrolpanel.SMOrderSourceListingGenerate</url-pattern>
     </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SMPrintEstimateSummaryGenerate</servlet-name>
+		<url-pattern>/smcontrolpanel.SMPrintEstimateSummaryGenerate</url-pattern>
+	</servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>SMPrintInstallationTicketGenerate</servlet-name>

@@ -1,0 +1,91 @@
+package smcontrolpanel;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import SMDataDefinition.SMTablesmestimatesummaries;
+import ServletUtilities.clsManageRequestParameters;
+
+public class SMPrintEstimateSummaryGenerate extends HttpServlet{
+	
+	private static final long serialVersionUID = 1L;
+
+	public void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		
+	    response.setContentType("text/html");
+			PrintWriter out = response.getWriter();
+			if (!SMAuthenticate.authenticateSMCPCredentials(
+					request, 
+					response, 
+					getServletContext(), 
+					SMSystemFunctions.SMEditSMEstimates))
+			{
+				return;
+			}
+
+		    //Get the session info:
+		    HttpSession CurrentSession = request.getSession(true);
+		    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		    				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		    
+		    String sCallingClass = "";
+		    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
+		    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		
+		
+		SMEstimateSummary summary = new SMEstimateSummary(request);
+		try {
+			summary.load(getServletContext(), sDBID, sUserID);
+		} catch (Exception e1) {
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+					+ "&Warning=" + SMUtilities.URLEncode(e1.getMessage())
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);
+		}
+		
+		try {
+	    		summary.loadEstimates(summary.getslid(), sDBID, getServletContext(), sUserFullName);
+			} catch (Exception e) {
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+						+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+						+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					);
+					return;
+			}
+
+		//TODO SMPrintEstimateSummary -> Process Report
+		SMPrintEstimateSummary summaryreport = new SMPrintEstimateSummary();
+		if(!summaryreport.processReport(
+				summary, 
+				sDBID, 
+				sUserID,
+				sUserFullName, 
+				out, 
+				getServletContext(), 
+				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
+				) {
+			out.println("SUCCESS");
+		}
+
+	}
+
+	public void doGet(HttpServletRequest request,
+			HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		doPost(request, response);
+	}
+}

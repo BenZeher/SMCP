@@ -69,6 +69,7 @@ public class SMEstimateSummary {
 	private BigDecimal m_bdtotalmarkuponestimates;
 	private BigDecimal m_bdbdtotaladdlcostnoteligibleforusetax;
 	private BigDecimal m_bdadjustedtotalprice;
+	private BigDecimal m_bdmarkupperlaborunitfromlabortype;
 	
 	private String m_staxdescription;
 
@@ -135,7 +136,6 @@ public class SMEstimateSummary {
 		m_sadditionalpostsalestaxcostlabel = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel, req).replace("&quot;", "\"");
 		m_bdadditionalpostsalestaxcostamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt, req).replace("&quot;", "\"");
 		m_strimmedordernumber = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.strimmedordernumber, req).replace("&quot;", "\"");
-		
 	}
 	public void saveAsNewSummaryWrapper(Connection conn, String sUserID, String sUserFullName) throws Exception{
 		
@@ -707,6 +707,13 @@ public class SMEstimateSummary {
 			throw new Exception("Error [202006081535] - loading tax data - " + e1.getMessage());
 		}
 		
+		//Load the labor type data:
+		try {
+			loadLaborTypeData(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [202006081735] - loading labor type data - " + e1.getMessage());
+		}
+		
 		//Load the estimates:
 		try {
 			loadEstimates(conn, m_lid);
@@ -736,6 +743,27 @@ public class SMEstimateSummary {
 			}
 		} catch (Exception e) {
 			throw new Exception("Error [202006045260] - error loading tax type with SQL: '" + SQL + "'.");
+		}
+	}
+	private void loadLaborTypeData(Connection conn) throws Exception{
+		String SQL = "SELECT"
+			+ " " + SMTablelabortypes.dMarkupAmount
+			+ " FROM " + SMTablelabortypes.TableName
+			+ " WHERE ("
+				+ "(" + SMTablelabortypes.sID + "=" + m_ilabortype + ")"
+			+ ")"
+		;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()) {
+				m_bdmarkupperlaborunitfromlabortype = new BigDecimal(rs.getDouble(SMTablelabortypes.dMarkupAmount));
+				rs.close();
+			}else {
+				rs.close();
+				throw new Exception("Error [202006045343] - no labor type found with ID '" + m_ilabortype + "'.");
+			}
+		} catch (Exception e) {
+			throw new Exception("Error [202006045360] - error loading labor type with SQL: '" + SQL + "'.");
 		}
 	}
 	public void loadEstimates(String sSummaryID, String sDBID, ServletContext context, String sUserFullName) throws Exception{
@@ -1252,7 +1280,9 @@ public class SMEstimateSummary {
 	public BigDecimal getbdadjustedtotalprice() {
 		return m_bdadjustedtotalprice;
 	}
-	
+	public BigDecimal getslabortypemuperlaborunit() {
+		return m_bdmarkupperlaborunitfromlabortype;
+	}
 	
 	public BigDecimal getTotalPrice() {
 		BigDecimal bdTotalPrice = new BigDecimal("0.00");
@@ -1579,6 +1609,7 @@ public class SMEstimateSummary {
 		m_sadditionalpostsalestaxcostlabel = "";
 		m_bdadditionalpostsalestaxcostamt = "0.00";
 		m_strimmedordernumber = "";
+		m_bdmarkupperlaborunitfromlabortype = new BigDecimal("0.00");
 		arrEstimates = new ArrayList<SMEstimate>(0);
 	}
 }

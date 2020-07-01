@@ -61,6 +61,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION = "LABOR SELL PRICE PER UNIT:";
 	public static final String LABEL_PRODUCT_UNIT_COST = "LABELPRODUCTUNITCOST";
 	
+	public static final String LABOR_TYPE_MARKUP_PER_LABOR_UNIT = "LABORTYPEMARKUPPERLABORUNIT";
 	public static final String LABEL_LABOR_SELL_PRICE_CAPTION = "LABOR SELL PRICE:";
 	public static final String LABEL_LABOR_SELL_PRICE = "LABORSELLPRICE";
 	public static final String LABEL_MATERIAL_SELL_PRICE_CAPTION = "MATERIAL SELL PRICE:";
@@ -412,6 +413,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ ">" + "\n"
 			;
 		
+		//This is the specified amount of markup per labor unit, based on the labor type:
+		s += "<INPUT TYPE=HIDDEN"
+			+ " NAME=\"" + LABOR_TYPE_MARKUP_PER_LABOR_UNIT + "\""
+			+ " ID=\"" + LABOR_TYPE_MARKUP_PER_LABOR_UNIT + "\""
+			+ " VALUE=\"" + estimate.getsummary().getslabortypemuperlaborunit() + "\""
+			+ ">" + "\n"
+			;
+		
 		//Include an outer table:
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >" + "\n";
 		s += "  <TR>" + "\n";
@@ -523,14 +532,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		//Unit cost:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
 			+ " style = \" font-weight:bold; font-style:underline; \" >"
-			+ "Unit cost"
+			+ "Material<BR>Unit cost"
 			+ "</TD>" + "\n"
 		;
 		
 		//Extended cost:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
 			+ " style = \" font-weight:bold; font-style:underline; \" >"
-			+ "Extended cost"
+			+ "Material<BR>Extended cost"
 			+ "</TD>" + "\n"
 		;
 		
@@ -1720,8 +1729,9 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
 			+ " ID = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
-			+ " style = \" text-align:right; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
+			+ " style = \" text-align:right; font-weight: bold; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
 			+ " VALUE = \"" + estimate.getsbdlaborsellpriceperunit() + "\""
+			+ " readonly "
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
@@ -2448,15 +2458,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    document.getElementById(\"" + LABEL_TOTAL_COST_AND_MARKUP + "\").innerText=formatNumber(totalcostandmarkup);\n"
 				+ "    \n\n"
 				
-				+ "    var laborsellprice = parseFloat(\"0.00\");\n"
+				+ "    //Calculate the labor sell price per unit based on the labor type: \n"
 				+ "    var laborsellpriceperunit = parseFloat(\"0.00\");\n"
-				
-				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdlaborsellpriceperunit + "\").value);\n"
+				+ "    var labormarkupperunitfromlabortype = parseFloat(\"0.00\"); \n"
+				+ "    var temp = (document.getElementById(\"" + LABOR_TYPE_MARKUP_PER_LABOR_UNIT + "\").value);\n"
 				+ "    if (temp == ''){\n"
-				+ "        laborsellpriceperunit = parseFloat(\"0\");\n"
+				+ "        labormarkupperunitfromlabortype = parseFloat(\"0\");\n"
 				+ "    }else{\n"
-				+ "        laborsellpriceperunit = parseFloat(temp); \n"
+				+ "        labormarkupperunitfromlabortype = parseFloat(temp); \n"
 				+ "    }\n"
+				+ "    laborsellpriceperunit = laborcostperunit + labormarkupperunitfromlabortype; \n"
+				+ "    document.getElementById(\"" + SMTablesmestimates.bdlaborsellpriceperunit + "\").value = formatNumber(laborsellpriceperunit); \n"
+				+ "    var laborsellprice = parseFloat(\"0.00\");\n"
 				+ "    laborsellprice = laborunits * laborsellpriceperunit; \n"
 				+ "    document.getElementById(\"" + LABEL_LABOR_SELL_PRICE + "\").innerText=formatNumber(laborsellprice);\n"
 				+ "    \n"

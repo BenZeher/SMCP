@@ -887,17 +887,20 @@ public class SMEstimate {
 		}else {
 			arrEstimateLines.get(iLineNumber - 1).setslinedescription(item.getItemDescription());
 			arrEstimateLines.get(iLineNumber - 1).setsunitofmeasure(item.getCostUnitOfMeasure());
-			BigDecimal bdExtendedCost = new BigDecimal("0.00");
+			BigDecimal bdExtendedMaterialCost = new BigDecimal("0.00");
 			BigDecimal bdQuantity = new BigDecimal(arrEstimateLines.get(iLineNumber - 1).getsbdquantity().replace(",", ""));
-			BigDecimal bdUnitCost = new BigDecimal(item.getMostRecentCost());
+			BigDecimal bdUnitMaterialCost = new BigDecimal(item.getMostRecentCost());
+			if (item.getLaborItem().compareToIgnoreCase("1") == 0) {
+				bdUnitMaterialCost = BigDecimal.ZERO;
+			}
 			
 			//If it's a real inventory item that we'll need to calculate an extended cost for, we need a quantity:
 			if (bdQuantity.compareTo(BigDecimal.ZERO) <= 0) {
 				throw new Exception("Error [202006103041] - Quantity for line number " + Integer.toString(iLineNumber) + ", item number '" + sItemNumber + "' cannot be zero.");
 			}
-			bdExtendedCost = bdQuantity.multiply(bdUnitCost).setScale(SMTablesmestimatelines.bdextendedcostScale, BigDecimal.ROUND_HALF_UP);
-			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedCost));
-			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdUnitCost));
+			bdExtendedMaterialCost = bdQuantity.multiply(bdUnitMaterialCost).setScale(SMTablesmestimatelines.bdextendedcostScale, BigDecimal.ROUND_HALF_UP);
+			arrEstimateLines.get(iLineNumber - 1).setsbdextendedcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedMaterialCost));
+			arrEstimateLines.get(iLineNumber - 1).setsbdunitcost(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdUnitMaterialCost));
 			
 			//We'll need to read the established sell price for this item, if it's a real inventory item:
 			try {

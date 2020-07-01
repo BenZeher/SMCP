@@ -1373,10 +1373,6 @@ public class SMEditOrderEdit  extends HttpServlet {
 		//Default item category:
 		s += "<TR>";
 		s += "<TD style=\"font-weight: bold; text-align: right; \">\n<B>Default item <br>category:</B>&nbsp;</TD>\n";
-		//s += "<TD style=\"font-weight: bold; text-align: right; \" ><B>Default</B>&nbsp;</TD>\n";
-		//s += "<TD style=\"font-weight: bold; text-align: left; \" ><B> item category:</B></TD>\n";
-	//	s += "</TR>\n";
-	//	s += "<TR>";
 		s += "<TD style = \" text-align: left; \" COLSPAN = 2>"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamsDefaultItemCategory + "\"" 
 			+ " id = \"" + SMOrderHeader.ParamsDefaultItemCategory + "\""

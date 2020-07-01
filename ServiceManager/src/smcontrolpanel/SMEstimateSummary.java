@@ -68,6 +68,7 @@ public class SMEstimateSummary {
 	private BigDecimal m_bdcalculatedtotalprice;
 	private BigDecimal m_bdtotalmarkuponestimates;
 	private BigDecimal m_bdbdtotaladdlcostnoteligibleforusetax;
+	private BigDecimal m_bdadjustedtotalprice;
 	
 	private String m_staxdescription;
 
@@ -1248,6 +1249,29 @@ public class SMEstimateSummary {
 	public BigDecimal getbdtotaladdlcostnoteligibleforusetax() {
 		return m_bdbdtotaladdlcostnoteligibleforusetax;
 	}
+	public BigDecimal getbdadjustedtotalprice() {
+		return m_bdadjustedtotalprice;
+	}
+	
+	
+	public BigDecimal getTotalPrice() {
+		BigDecimal bdTotalPrice = new BigDecimal("0.00");
+		
+		//If there are NO adjusted values, then the total price is just the total
+		//from each of the estimates:
+		if (
+				(new BigDecimal(getsbdadjustedfreight().replace(",", "")).compareTo(BigDecimal.ZERO) == 0)
+				&& (new BigDecimal(getsbdadjustedlaborcostperunit().replace(",", "")).compareTo(BigDecimal.ZERO) == 0)
+				&& (new BigDecimal(getsbdadjustedlaborunitqty().replace(",", "")).compareTo(BigDecimal.ZERO) == 0)
+				&& (new BigDecimal(getsbdadjustedmarkupamt().replace(",", "")).compareTo(BigDecimal.ZERO) == 0)
+		) {
+			bdTotalPrice = getbdcalculatedtotalprice();
+		}else {
+			bdTotalPrice = getbdadjustedtotalprice();
+		}
+		
+		return bdTotalPrice;
+	}
 	
 	public void addEstimate(SMEstimate estimate){
 		arrEstimates.add(estimate);
@@ -1393,6 +1417,15 @@ public class SMEstimateSummary {
 						m_bdtotalmarkuponestimates).add(
 							m_bdtotaltaxonmaterial).add(
 								m_bdbdtotaladdlcostnoteligibleforusetax);
+		
+		m_bdadjustedtotalprice = m_bdtotalmaterialcostonestimates;
+		m_bdadjustedtotalprice = m_bdadjustedtotalprice.add(m_bdbdtotaladdlcostnoteligibleforusetax);
+		m_bdadjustedtotalprice = m_bdadjustedtotalprice.add(new BigDecimal(m_bdadjustedfreight.replace(",", "")));
+		m_bdadjustedtotalprice = m_bdadjustedtotalprice.add(
+			new BigDecimal(m_bdadjustedlaborcostperunit.replace(",", "")).multiply(new BigDecimal(m_bdadjustedlaborunitqty.replace(",", "")))
+		);
+		m_bdadjustedtotalprice = m_bdadjustedtotalprice.add(new BigDecimal(m_bdadjustedmarkupamt.replace(",", "")));
+		m_bdadjustedtotalprice = m_bdadjustedtotalprice.add(m_bdtotaltaxonmaterial);
 		
 		return;
 	}

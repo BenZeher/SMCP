@@ -288,19 +288,21 @@ public class SMEditSMSummaryAction extends HttpServlet{
 		
 		//If INCORPORATE INTO ORDER, then:
 		if(sCommandValue.compareToIgnoreCase(SMEditSMSummaryEdit.INCORPORATE_INTO_ORDER_COMMAND_VALUE) == 0){
-			String sOrderNumber = clsManageRequestParameters.get_Request_Parameter(
+			String sTrimmedOrderNumber = clsManageRequestParameters.get_Request_Parameter(
 					SMEditSMSummaryEdit.FIELD_INCORPORATE_INTO_ORDER_NUMBER, request);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773919]");
+    		String sRedirectString = 
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMIncorporateSummaryEdit"
+				+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+				+ "&" + SMTablesmestimatesummaries.strimmedordernumber + "=" + sTrimmedOrderNumber
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&" + "CallingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
+				;
+	    	//System.out.println("[202006044427] - sRedirectString = '" + sRedirectString + "'");			
 			try {
-				summary.incorporateIntoOrder(
-						conn, 
-						sOrderNumber, 
-						smaction.getsDBID(), 
-						smaction.getUserID(), 
-						smaction.getFullUserName(), 
-						getServletContext()
-				);
+				redirectProcess(sRedirectString, response);
 			} catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773559]");
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689911]");
 				smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, e.getMessage());
 				smaction.getCurrentSession().setAttribute(SMEstimateSummary.OBJECT_NAME, summary);
 		    	smaction.redirectAction(
@@ -310,15 +312,6 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			    		);
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590689571]");
-			smaction.getCurrentSession().removeAttribute(SMEstimateSummary.OBJECT_NAME);
-			smaction.getCurrentSession().setAttribute(SMEditSMSummaryEdit.RESULT_STATUS_OBJECT, "Summary was incorporated into order number " 
-					+ sOrderNumber + " successfully");
-	    	smaction.redirectAction(
-		    		"", 
-		    		"", 
-		    		SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-		    		);
 			return;
 		}
 		

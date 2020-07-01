@@ -1,7 +1,6 @@
 package smcontrolpanel;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,8 +19,9 @@ import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
-import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
@@ -38,8 +38,8 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 	public static String BUILDITEMS_BUTTON_LABEL = "Build inventory items";
 	public static String ADDITEMSTOORDER_BUTTON_NAME = "ADDITEMS";
 	public static String ADDITEMSTOORDER_BUTTON_LABEL = "Create items and add to order";
-	public static String ADDBLANKLINE_BUTTON_NAME = "ADDBLANKLINE";
-	public static String ADDBLANKLINE_BUTTON_LABEL = "Add a blank line";
+	//public static String ADDBLANKLINE_BUTTON_NAME = "ADDBLANKLINE";
+	//public static String ADDBLANKLINE_BUTTON_LABEL = "Add a blank line";
 	public static String FIRST_ENTRY_INTO_CLASS = "FIRSTENTRYINTOCLASS";
 	public static String CHOOSE_CATEGORY_METHOD_PARAM = "CHOOSECATEGORYMETHOD";
 	public static String CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL = "Choose categories for each line";
@@ -56,23 +56,26 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		//PrintWriter debug_out = new PrintWriter(System.out);
 		//SMUtilities.printRequestParameters(debug_out, request);
 		
-		SMDirectOrderDetailEntry entry = new SMDirectOrderDetailEntry();
+		SMIncorporateSummary entry = new SMIncorporateSummary();
 		SMMasterEditEntry smedit = new SMMasterEditEntry(
 				request,
 				response,
 				getServletContext(),
 				entry.getObjectName(),
 				SMUtilities.getFullClassName(this.toString()),
-				"smcontrolpanel.SMEditDirectOrderDetailEntryAction",
+				"smcontrolpanel.SMIncorporateSummaryAction",
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
-				SMSystemFunctions.SMDirectItemEntry
+				SMSystemFunctions.SMEditSMEstimates
 				);
 		
 		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMDirectItemEntry)){
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
 		}
+		
+		String sSummaryID = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.lid, request);
+		String sTrimmedOrderNumber = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.strimmedordernumber, request);
 		
 		//If this is a 'resubmit', meaning it's being called by the action class, then
 		//the session will have a job cost entry object in it, and that's what we'll pick up.
@@ -82,23 +85,23 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		//make sure to get rid of any session object:
 		
 		//If there is an object in the current session:
-		if (currentSession.getAttribute(SMDirectOrderDetailEntry.ParamObjectName) != null){
-			entry = (SMDirectOrderDetailEntry) currentSession.getAttribute(SMDirectOrderDetailEntry.ParamObjectName);
+		if (currentSession.getAttribute(SMIncorporateSummary.ParamObjectName) != null){
+			entry = (SMIncorporateSummary) currentSession.getAttribute(SMIncorporateSummary.ParamObjectName);
 			if (bDebugMode){
-				System.out.println("[1579269520] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
+				System.out.println("[1579269590] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
 			}
 			//Remove the object from the session:
-			currentSession.removeAttribute(SMDirectOrderDetailEntry.ParamObjectName);
+			currentSession.removeAttribute(SMIncorporateSummary.ParamObjectName);
 		}else{
 			//Read the entry from the request instead:
-		    entry = new SMDirectOrderDetailEntry(smedit.getRequest());
+		    entry = new SMIncorporateSummary(smedit.getRequest());
 		}
 		if (bDebugMode){
-			System.out.println("[1579269524] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
+			System.out.println("[1579269724] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
 		}
-	    
 	    smedit.printHeaderTable();
 	    
+	    /*
 		boolean bDirectEntryAllowed = SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMDirectItemEntry, 
 				smedit.getUserID(), 
@@ -106,38 +109,56 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				smedit.getsDBID(),
 				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 		);
-		
-		//Add a link to go back to the order:
+		*/
+	    
+		//Add a link to go back to the summary:
 		smedit.getPWOut().println(
 				"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-			+ "smcontrolpanel.SMOrderDetailList"
+			+ "smcontrolpanel.SMEditSMSummaryEdit"
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
-			+ "&" + SMTableorderheaders.strimmedordernumber + "=" + entry.getM_ordernumber()
-				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString()) + "\">" + "Return to order details" + "</A>"
+			+ "&" + SMTablesmestimatesummaries.lid + "=" + sSummaryID
+				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString()) + "\">" + "Return to summary #" + sSummaryID + "</A>"
 		);
 		
 		smedit.setbIncludeUpdateButton(false);
 		smedit.setbIncludeDeleteButton(false);
 		if (bDebugMode){
-			System.out.println("[1579269534] In " + this.toString() + " just before createEditPage.");
+			System.out.println("[1593612679] In " + this.toString() + " just before createEditPage.");
 		}
+		
+		//Try to load the summary:
+		SMEstimateSummary summary = new SMEstimateSummary();
+		summary.setslid(sSummaryID);
+		try {
+			summary.load(getServletContext(), smedit.getsDBID(), smedit.getUserID());
+		} catch (Exception e1) {
+			currentSession.setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, (String)e1.getMessage());
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+					+ "?" + SMTablesmestimatesummaries.lid + "=" + sSummaryID
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+				);
+					return;
+		}
+		
+		entry.setM_ordernumber(sTrimmedOrderNumber);
+		
 	    try {
 			smedit.createEditPage(
 					getEditHTML(
-							smedit, 
-							entry, 
-							bDirectEntryAllowed), 
+							smedit,
+							entry,
+							summary), 
 							""
 					);
-		} catch (SQLException e) {
-    		String sError = "Could not create edit page - " + e.getMessage();
+		} catch (Exception e) {
+			currentSession.setAttribute(SMEditSMSummaryEdit.WARNING_OBJECT, (String)"Could not create edit page - " + e.getMessage());
 			response.sendRedirect(
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.getFullClassName(this.toString())
-				+ "?" + SMDirectOrderDetailEntry.Paramsordernumber + "=" + entry.getM_ordernumber()
-				+ "&Warning=Error building direct entry page - " + sError
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+				+ "?" + SMTablesmestimatesummaries.lid + "=" + sSummaryID
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
 			);
-				return;
+			return;
 		}
 		if (bDebugMode){
 			System.out.println("[1579269537] In " + this.toString() + " just after createEditPage.");
@@ -149,14 +170,14 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		
 		s += "<BR>";
 		
-		s += "<INPUT TYPE=SUBMIT NAME='" 
-			+ ADDBLANKLINE_BUTTON_NAME
-			+ "'" 
-			+ "' VALUE='"
-			+ ADDBLANKLINE_BUTTON_LABEL
-			+ "'" + " STYLE='height: 0.24in'>"
-			+ "&nbsp;"
-		;
+		//s += "<INPUT TYPE=SUBMIT NAME='" 
+		//	+ ADDBLANKLINE_BUTTON_NAME
+		//	+ "'" 
+		//	+ "' VALUE='"
+		//	+ ADDBLANKLINE_BUTTON_LABEL
+		//	+ "'" + " STYLE='height: 0.24in'>"
+		//	+ "&nbsp;"
+		//;
 		
 		s += "<INPUT TYPE=SUBMIT NAME='" 
 			+ CALCULATE_BUTTON_NAME
@@ -206,7 +227,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		s += "<BR><FONT SIZE=2>"
 			+ "<B>NOTE:&nbsp;</B>To add the <I><B>material</B></I> items using a NON-STOCK item,"
 			+ " enter that item number here (otherwise new dedicated items will be created):</B></FONT>"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectOrderDetailEntry.Paramsnonstockmaterialitem + "\""
+			+ "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsnonstockmaterialitem + "\""
 			+ " VALUE=\"" + sNonStockMaterialItem + "\" SIZE=13 MAXLENGTH=" + Integer.toString(SMTableicitems.sItemNumberLength) + ">"
 		;
 		
@@ -214,9 +235,9 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 	}
 	private String getEditHTML(
 			SMMasterEditEntry sm, 
-			SMDirectOrderDetailEntry entry, 
-			boolean bDirectEntryAllowed
-	) throws SQLException{
+			SMIncorporateSummary entry,
+			SMEstimateSummary summary
+	) throws Exception{
 
 		//First, load the locations:
 		ArrayList<String> arrLocations = new ArrayList<String>(0);
@@ -225,49 +246,68 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		ArrayList<String> arrLaborTypeNames = new ArrayList<String>(0);
 		ArrayList<String> arrItemCategories = new ArrayList<String>(0);
 		ArrayList<String> arrItemCategoryNames = new ArrayList<String>(0);
-		Connection conn = clsDatabaseFunctions.getConnection(
-				getServletContext(), 
-				sm.getsDBID(), 
-				"MySQL", 
-				SMUtilities.getFullClassName(this.toString()) + ".getEditHTML - user: " + sm.getUserID()
-				+ " - " + sm.getFullUserName()
-		);
-		
-		if (conn == null){
-			throw new SQLException();
+		Connection conn;
+		try {
+			conn = clsDatabaseFunctions.getConnectionWithException(
+					getServletContext(), 
+					sm.getsDBID(), 
+					"MySQL", 
+					SMUtilities.getFullClassName(this.toString()) + ".getEditHTML - user: " + sm.getUserID()
+					+ " - " + sm.getFullUserName()
+			);
+		} catch (Exception e1) {
+			throw new Exception("Error [202007013951] - getting connection - " + e1.getMessage());
 		}
+		
 		try {
 			loadLocations(arrLocations, arrLocationNames, conn);
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080489]");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080419]");
 			throw e;
 		}
 		try {
 			loadLaborTypes(arrLaborTypes, arrLaborTypeNames, conn);
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080490]");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080410]");
 			throw e;
 		}
 		try {
 			loadItemCategories(arrItemCategories, arrItemCategoryNames, conn);
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080491]");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080411]");
 			throw e;
 		}
 		//Load the order:
 		SMOrderHeader order = new SMOrderHeader();
 		order.setM_strimmedordernumber(entry.getM_ordernumber());
 		if (!order.load(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080492]");
-			throw new SQLException("Could not load order number " + entry.getM_ordernumber() + " - " + order.getErrorMessages());
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080412]");
+			throw new Exception("Could not load order number " + entry.getM_ordernumber() + " - " + order.getErrorMessages());
 		}
+		
+		if (summary.getsitaxid().compareToIgnoreCase(order.getitaxid()) != 0) {
+			throw new Exception("Error [202007014404] - the tax selected on the summary does not match the tax on this order (" 
+				+ order.getstaxjurisdiction() + " - " + order.getstaxtype() + ") - modify"
+				+ " and save the summary, then try again."
+			);
+		}
+		
+		//TODO - re-work this remaining code:
+		
 		entry.setstaxjurisdiction(order.getstaxjurisdiction());
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080493]");		
+		
+		//Load the incorporation object with the values from the summary:
+		for (int iEstimateCounter = 0; iEstimateCounter < summary.getEstimateArray().size(); iEstimateCounter++) {
+			
+		}
+		
+		
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080913]");		
 		String s = "";
 		//Store the entry variables that we know at this point:
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectOrderDetailEntry.Paramsordernumber + "\" VALUE=\"" 
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMIncorporateSummary.Paramsordernumber + "\" VALUE=\"" 
 				+ entry.getM_ordernumber() + "\"" + "\">";
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectOrderDetailEntry.Paramstaxjurisdiction + "\" VALUE=\"" 
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMIncorporateSummary.Paramstaxjurisdiction + "\" VALUE=\"" 
 				+ entry.getstaxjurisdiction() + "\"" + "\">";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + CHOOSE_CATEGORY_METHOD_PARAM + "\" VALUE=\"" 
 				+ clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()) + "\"" + "\">";
@@ -276,42 +316,28 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		s += "<B>Order #:</B>&nbsp;" + entry.getM_ordernumber()
 			+ "&nbsp;<B>Bill to:</B>&nbsp;" + order.getM_sBillToName()
 			+ "&nbsp;<B>Ship to:</B>&nbsp;" + order.getM_sShipToName()
-			+ "&nbsp;<B>Total contract amount:</B>&nbsp;" + order.getM_bdtotalcontractamount()
+			+ "&nbsp;<B>Total order contract amount:</B>&nbsp;" + order.getM_bdtotalcontractamount()
         ;
 
-		String sTotalBillingAmount = ""; 
-        try {
-			if (entry.getbdTotalBillingAmount().compareTo(BigDecimal.ZERO) <= 0){
-				sTotalBillingAmount = order.getM_bdtotalcontractamount();
-			}else{
-				sTotalBillingAmount = entry.getM_stotalbillingamount();
-			}
-		} catch (NumberFormatException e) {
-			throw new SQLException("Error [1425936682] - error reading total billing amount: '" 
-				+ entry.getM_stotalbillingamount() + " - " + e.getMessage());
-		}
-        s += "<BR><B>Total billing amt"
+        s += "<BR><B>Total billing amt for summary"
         	+ "<a href=\"#totalbillingamt\"><SUP>1</SUP></a>"
         	+ ":</B>&nbsp;"
-        	+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectOrderDetailEntry.Paramtotalbillingamount + "\""
-	    	+ " VALUE=\"" + sTotalBillingAmount.replace("\"", "&quot;") + "\""
-	    	+ " SIZE=" + "9"
-	    	+ " MAXLENGTH=" + "15"
-	    	+ ">"
+        	+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(summary.getTotalPrice());
     	;
         
+    	/*
 		s += "&nbsp;<B>Unit labor cost"
 			+ "<a href=\"#unitlaborcost\"><SUP>2</SUP></a>"
 			+ ":</B>";
-        s += "<INPUT TYPE=TEXT NAME=\"" + SMDirectOrderDetailEntry.Paramsunitlaborcost + "\""
+        s += "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsunitlaborcost + "\""
     	+ " VALUE=\"" + entry.getM_sunitlaborcost().replace("\"", "&quot;") + "\""
     	+ " SIZE=" + "9"
     	+ " MAXLENGTH=" + "15"
     	+ ">"
         ;
-
+		*/
 		s += "<BR><B>Labor type:</B>";
-		s += "<SELECT NAME=\"" + SMDirectOrderDetailEntry.Paramslabortype + "\"" + ">";
+		s += "<SELECT NAME=\"" + SMIncorporateSummary.Paramslabortype + "\"" + ">";
 		//Add one for the 'Other':
 		s += "<OPTION";
 		if (entry.getM_slabortype().compareToIgnoreCase("") == 0){
@@ -336,7 +362,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		if (sLocation.compareToIgnoreCase("") == 0){
 			sLocation = order.getM_sLocation();
 		}
-		s += "<SELECT NAME=\"" + SMDirectOrderDetailEntry.Paramslocation + "\"" + ">";
+		s += "<SELECT NAME=\"" + SMIncorporateSummary.Paramslocation + "\"" + ">";
 		//Add one for the 'Other':
 		s += "<OPTION";
 		if (sLocation.compareToIgnoreCase("") == 0){
@@ -364,7 +390,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			if (sItemCategory.compareToIgnoreCase("") == 0){
 				sItemCategory = order.getM_sDefaultItemCategory();
 			}
-			s += "<SELECT NAME=\"" + SMDirectOrderDetailEntry.Paramsitemcategory + "\"" + ">";
+			s += "<SELECT NAME=\"" + SMIncorporateSummary.Paramsitemcategory + "\"" + ">";
 			//Add one for the 'Other':
 			s += "<OPTION";
 			if (sItemCategory.compareToIgnoreCase("") == 0){
@@ -404,7 +430,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			ServletContext context, 
 			String sDBID, 
 			String sUserName,
-			SMDirectOrderDetailEntry entry,
+			SMIncorporateSummary entry,
 			ArrayList <String>arrCategories,
 			ArrayList <String>arrItemCategoryNames,
 			String sDefaultCategory,
@@ -419,17 +445,19 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Item category</B></FONT></TD>";
 		}
 		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Estimated<BR>extended<BR>material&nbsp;cost"
-			+ "<a href=\"#estimatedextendedmaterialcost\"><SUP>3</SUP></a>"
+			+ "<a href=\"#estimatedextendedmaterialcost\"><SUP>2</SUP></a>"
 			+ "</B></FONT></TD>";
 		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Estimated<BR>extended<BR>labor&nbsp;units"
-			+ "<a href=\"#estimatedextendedlaborunits\"><SUP>4</SUP></a>"
+			+ "<a href=\"#estimatedextendedlaborunits\"><SUP>3</SUP></a>"
 			+ "</FONT></B></TD>";
+		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Cost&nbsp;per<BR>labor&nbsp;unit"
+				+ "</FONT></B></TD>";
 		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>U/M</B></FONT></TD>";
 		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Calculated<BR>extended<BR>material&nbsp;price"
-			+ "<a href=\"#extendedcalculatedprice\"><SUP>5</SUP></a>"	
+			+ "<a href=\"#extendedcalculatedprice\"><SUP>4</SUP></a>"	
 			+ "</B></FONT></TD>";
 		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Calculated<BR>extended<BR>labor&nbsp;price"
-			+ "<a href=\"#extendedcalculatedprice\"><SUP>5</SUP></a>"
+			+ "<a href=\"#extendedcalculatedprice\"><SUP>4</SUP></a>"
 			+ "</B></FONT></TD>";
 		
 		for (int i = 0; i < entry.getNumberOfLines(); i++){
@@ -439,8 +467,9 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			s += "<TD>" 
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsquantity + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
 				+ " VALUE=\"" + entry.getLine(i).getM_squantity().replace("\"", "&quot;") + "\""
-				+ " SIZE=" + "2"
+				+ " SIZE=" + "4"
 				+ " MAXLENGTH=" + "15"
+				+ " style = \" text-align:right; \""
 				+ ">"
 				+ "</TD>";
 				//s += "<TD>" 
@@ -463,7 +492,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 					sItemCategory = sDefaultCategory;
 				}
 				s += "<TD>";
-				s += "<SELECT NAME=\"" + SMDirectOrderDetailEntry.Paramsitemcategory +  clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\"" + ">";
+				s += "<SELECT NAME=\"" + SMIncorporateSummary.Paramsitemcategory +  clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\"" + ">";
 				//Add one for the 'Other':
 				s += "<OPTION";
 				if (sItemCategory.compareToIgnoreCase("") == 0){
@@ -489,6 +518,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ " VALUE=\"" + entry.getLine(i).getM_sestimatedextendedmaterialcost().replace("\"", "&quot;") + "\""
 				+ " SIZE=" + "7"
 				+ " MAXLENGTH=" + "15"
+				+ " style = \" text-align:right; \""
 				+ ">"
 				+ "</TD>";
 			s += "<TD>" 
@@ -496,8 +526,20 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ " VALUE=\"" + entry.getLine(i).getM_sextendedlaborunits().replace("\"", "&quot;") + "\""
 				+ " SIZE=" + "7"
 				+ " MAXLENGTH=" + "15"
+				+ " style = \" text-align:right; \""
 				+ ">"
 				+ "</TD>";
+			
+			//Cost per labor unit:
+			s += "<TD>" 
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsextendedlaborunits + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+				+ " VALUE=\"" + entry.getLine(i).getM_sextendedlaborunits().replace("\"", "&quot;") + "\""
+				+ " SIZE=" + "7"
+				+ " MAXLENGTH=" + "15"
+				+ " style = \" text-align:right; \""
+				+ ">"
+				+ "</TD>";
+
 			s += "<TD>" 
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsunitofmeasure + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
 				+ " VALUE=\"" + entry.getLine(i).getM_sunitofmeasure().replace("\"", "&quot;") + "\""
@@ -537,17 +579,19 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ "  If you are calculating billing values for the whole order, it would be the contract amount; or if you are calculating"
 				+ " the billing values for a change to an existing order, it would be the total billing value of that change order."
 			;
+		/*
 		s += "<BR><a name=\"unitlaborcost\"><SUP>2</SUP> <B>'Unit labor cost'</B> is the presumed labor COST per labor unit."
 			+ "  So, for example, if you use TRUCK DAYS, and you assume that each truck day COSTS your company about $180,"
 			+ " the Unit Labor Cost would be 180."
 		;
-		s += "<BR><a name=\"estimatedextendedmaterialcost\"><SUP>3</SUP> <B>'Estimated extended material cost'</B> is the estimated material"
+		*/
+		s += "<BR><a name=\"estimatedextendedmaterialcost\"><SUP>2</SUP> <B>'Estimated extended material cost'</B> is the estimated material"
 			+ " cost of the entire line, which is the estimated unit cost times the quantity on that line.";
 		
-		s += "<BR><a name=\"estimatedextendedlaborunits\"><SUP>4</SUP> <B>'Estimated extended labor units'</B> is the amount of labor,"
+		s += "<BR><a name=\"estimatedextendedlaborunits\"><SUP>3</SUP> <B>'Estimated extended labor units'</B> is the amount of labor,"
 			+ " in your customary unit, like hours or truck days, which you assume it will take to install all the items on that one line.";
 		
-		s += "<BR><a name=\"extendedcalculatedprice\"><SUP>5</SUP> <B>'Calculated prices'</B> are the EXTENDED prices for each line"
+		s += "<BR><a name=\"extendedcalculatedprice\"><SUP>4</SUP> <B>'Calculated prices'</B> are the EXTENDED prices for each line"
 			+ " in the grid for the labor and material.  These are ZERO until the '" + CALCULATE_BUTTON_LABEL + "'"
 			+ " is clicked.  This function's price calculation is detailed here:<BR>";
 		

@@ -538,14 +538,14 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		
 		s += "  <TR>" + "\n";
 		
-		String sReadOnlyValue = "";
 		String sFieldTheme = SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE;
 		String sLabelTheme = SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW;
 		
-		if (estimate.getsvendorquotenumber().compareToIgnoreCase("") != 0) {
-			sReadOnlyValue = "readonly";
-		}
 		//If it's a vendor quote, then we don't let the user change the qty, item, U/M, or costs:
+		boolean bIsVendorQuote = false;
+		if (estimate.getsvendorquotenumber().compareToIgnoreCase("") != 0) {
+			bIsVendorQuote = true;
+		}
 		
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 			+ ">"
@@ -554,9 +554,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.bdquantity + "\""
 			+ " VALUE=\"" + estimate.getsbdquantity() + "\""
 			+ " MAXLENGTH=15"
-			+ " style = \"" + sLabelTheme + " width:" + "65px; "  + "text-align:right;" + "\""
-			+ " " + sReadOnlyValue
-			+ " onchange=\"flagDirty();\""
+			;
+			if (bIsVendorQuote) {
+				s += " style = \"" + sLabelTheme + " width:" + "65px; "  + "text-align:right;" + "\"" + " readonly ";
+			}else {
+				s += " style = \"" + sFieldTheme + " width:" + "65px; "  + "text-align:right;" + "\"";
+			}
+			s += " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -565,10 +569,10 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME=\"" + SMTablesmestimates.sitemnumber + "\""
 			+ " ID=\"" + SMTablesmestimates.sitemnumber + "\""
-			+ " VALUE=\"" + estimate.getsitemnumber() + "\""
+			+ " VALUE=\"" + "(NONE)" + "\""
 			+ " MAXLENGTH=32"
 			+ " style = \"" + sLabelTheme + " width:" + "100"  + "\""
-			+ " " + sReadOnlyValue
+			+ " readonly "
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
@@ -610,9 +614,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.sunitofmeasure + "\""
 			+ " VALUE=\"" + estimate.getsunitofmeasure().replace("\"", "&quot;") + "\""
 			+ " MAXLENGTH=" + Integer.toString(SMTablesmestimates.sunitofmeasureLength)
-			+ " style = \"" + sFieldTheme + " width:" + "50px" + "\""
-			+ " " + sReadOnlyValue
-			+ " onchange=\"flagDirty();\""
+			;
+			if (bIsVendorQuote) {
+				s += " style = \"" + sLabelTheme + " width:" + "50px; " + "\"" + " readonly ";
+			}else {
+				s += " style = \"" + sFieldTheme + " width:" + "50px; " + "\"";
+			}
+			s += " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -654,9 +662,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ " ID=\"" + SMTablesmestimates.bdextendedcost + "\""
 			+ " VALUE=\"" + estimate.getsbdextendedcost() + "\""
 			+ " MAXLENGTH=32"
-			+ " style = \"" + sLabelTheme + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + "text-align:right;" + "\""
-			+ " " + sReadOnlyValue
-			+ " onchange=\"flagDirty();\""
+			;
+			if (bIsVendorQuote) {
+				s += " style = \"" + sLabelTheme + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; text-align:right; " + "\"" + " readonly ";
+			}else {
+				s += " style = \"" + sFieldTheme + " width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; text-align:right; " + "\"";
+			}
+			s += " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -810,7 +822,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
-						+ " width:" + "50px; " + "text-align:right;" + "\""
+						+ " width:" + "70px; " + "text-align:right;" + "\""
 					+ " onchange=\"multiplyCostForSellPrice(" + Integer.toString(iLineNumber) + ");\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -845,6 +857,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
 						+ " width:" + "80px; " + "text-align:right;" + "\""
+					+ " readonly "
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -947,7 +960,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
 						+ " width:" + "100px; " + "\""
-					+ " onchange=\"lookUpItem('" + clsStringFunctions.PadLeft("0", "0", ESTIMATE_LINE_NO_PAD_LENGTH) + "');\""
+					+ " onchange=\"lookUpItem('" + clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + "');\""
 					+ ">"
 					+ "</TD>" + "\n"
 				;
@@ -1007,7 +1020,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " VALUE=\"" + "0.00" + "\""
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE 
-						+ " width:" + "50px; " + "text-align:right;" + "\""
+						+ " width:" + "70px; " + "text-align:right;" + "\""
 						+ " onchange=\"multiplyCostForSellPrice(" + Integer.toString(iLineNumber) + ");\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -1042,6 +1055,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 					+ " MAXLENGTH=32"
 					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW 
 						+ " width:" + "80px; " + "text-align:right;" + "\""
+					+ " readonly "
 					+ " onchange=\"flagDirty();\""
 					+ ">"
 					+ "</TD>" + "\n"
@@ -2290,6 +2304,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "            var multiplier = parseFloat(\"0.00\"); \n"
 				+ "            if(compare2DecimalPlaceFloats(unitsellprice, parseFloat(\"0.00\"))){ \n"
 				+ "                // Multiplier is just zero \n"
+				+ "            } else if (compare2DecimalPlaceFloats(unitcost, parseFloat(\"0.00\"))){ \n"
+				+ "                //Multiplier is just zero \n"
 				+ "            } else { \n"
 				+ "                multiplier = unitsellprice / unitcost; \n"
 				+ "            } \n"

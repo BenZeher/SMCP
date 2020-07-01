@@ -136,6 +136,9 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s += "<B>Error [1590535953] reading price level labels - " + e.getMessage() + "</B><BR>";
 		}
 		s+= "Price level: ";
+		if(summary.getsipricelevel().compareToIgnoreCase("")==0 || summary.getsipricelevel().isEmpty()) {
+			summary.setsipricelevel("0");
+		}
 		s+=
 				arrPriceLevelDescriptions.get(
 						Integer.parseInt(summary.getsipricelevel())
@@ -365,7 +368,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ "0.00"
+			+ "0.00" // TODO - fill in this value with java
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -441,7 +444,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " ID = \"" + SMEditSMSummaryEdit.LABEL_CALCULATED_RETAIL_SALES_TAX + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 				+ ">"
-				+ "0.00"
+				+ "0.00" // TODO - fill in this value with java
 				+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -544,7 +547,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 				+ ">"
-				+ "0.00"  // TODO - fill in this value with javascript
+				+ "0.00"  // TODO - fill in this value with java
 				+ "</LABEL>"
 				+ "</TD>" + "\n"
 				;
@@ -563,7 +566,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ "0.00"
+				+ "0.00" // TODO - fill in this value with java
 				+ "</LABEL>"
 
 				//MU Pctge
@@ -576,7 +579,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ "0.00"
+				+ "0.00" // TODO - fill in this value with java
 				+ "</LABEL>"
 
 				+ "</TD>" + "\n"
@@ -592,7 +595,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ "0.00"
+				+ "0.00" // TODO - fill in this value with java
 				+ "</LABEL>"
 
 				+ "</TD>" + "\n"
@@ -628,7 +631,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ "0.00"
+			+ "0.00" // TODO - fill in this value with java
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -648,7 +651,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_FOR_SUMMARY + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ "0.00"  // TODO - fill in this value with java
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -673,7 +676,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_RETAIL_SALES_TAX + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ "0.00"  // TODO - fill in this value with javascript
+			+ "0.00"  // TODO - fill in this value with java
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"

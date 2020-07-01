@@ -1856,6 +1856,16 @@
     </servlet>
    
     <servlet>
+        <servlet-name>SMIncorporateSummaryAction</servlet-name>
+        <servlet-class>smcontrolpanel.SMIncorporateSummaryAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMIncorporateSummaryEdit</servlet-name>
+        <servlet-class>smcontrolpanel.SMIncorporateSummaryEdit</servlet-class>
+    </servlet>
+   
+    <servlet>
         <servlet-name>SMImportWorkOrdersAction</servlet-name>
         <servlet-class>smcontrolpanel.SMImportWorkOrdersAction</servlet-class>
     </servlet>
@@ -5228,6 +5238,16 @@
         <url-pattern>/smcontrolpanel.SMExecuteSQLSelect</url-pattern>
     </servlet-mapping>
    
+    <servlet-mapping>
+        <servlet-name>SMIncorporateSummaryAction</servlet-name>
+        <url-pattern>/smcontrolpanel.SMIncorporateSummaryAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMIncorporateSummaryEdit</servlet-name>
+        <url-pattern>/smcontrolpanel.SMIncorporateSummaryEdit</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>SMImportWorkOrdersAction</servlet-name>
         <url-pattern>/smcontrolpanel.SMImportWorkOrdersAction</url-pattern>

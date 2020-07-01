@@ -297,10 +297,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		entry.setstaxjurisdiction(order.getstaxjurisdiction());
 		
 		//Load the incorporation object with the values from the summary:
-		for (int iEstimateCounter = 0; iEstimateCounter < summary.getEstimateArray().size(); iEstimateCounter++) {
-			
-		}
-		
+		entry.loadSummaryValues(summary.getslid(), conn);
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080913]");		
 		String s = "";
@@ -440,6 +437,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		s += "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">";
 		s += "<TR>";
 		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Qty</B></FONT></TD>";
+		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Item number</B></FONT></TD>";
 		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Item description</B></FONT></TD>";
 		if (bChooseCategoryByLine){
 			s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Item category</B></FONT></TD>";
@@ -467,7 +465,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			s += "<TD>" 
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsquantity + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
 				+ " VALUE=\"" + entry.getLine(i).getM_squantity().replace("\"", "&quot;") + "\""
-				+ " SIZE=" + "4"
+				+ " SIZE=" + "6"
 				+ " MAXLENGTH=" + "15"
 				+ " style = \" text-align:right; \""
 				+ ">"
@@ -479,10 +477,20 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				//	+ " MAXLENGTH=" + SMTableorderdetails.sItemNumberLength
 				//	+ ">"
 				//	+ "</TD>";
+
+			s += "<TD>" 
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsitemnumber + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+					+ " VALUE=\"" + entry.getLine(i).getM_sitemnumber().replace("\"", "&quot;") + "\""
+					+ " SIZE=" + "8"
+					+ " MAXLENGTH=" + SMTableorderdetails.sItemNumberLength
+					+ ">"
+					+ "</TD>";
+
+			
 			s += "<TD>" 
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsitemdescription + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
 				+ " VALUE=\"" + entry.getLine(i).getM_sitemdescription().replace("\"", "&quot;") + "\""
-				+ " SIZE=" + "40"
+				+ " SIZE=" + "50"
 				+ " MAXLENGTH=" + SMTableorderdetails.sItemDescLength
 				+ ">"
 				+ "</TD>";

@@ -62,18 +62,20 @@ public class SMIncorporateSummary extends clsMasterEntry{
 	private String m_sunitlabormarkup;
 	private String m_sdescription;
 	private String m_snonstockmaterialitem;
-	private ArrayList<SMDirectEntryLine> m_arrLines;
+	private ArrayList<SMSummaryIncorporationLine> m_arrLines;
 	
 	private boolean bDebugMode =false;
 	
 	public SMIncorporateSummary() {
 		super();
-		initDirectEntryVariables();
+		initVariables();
+		initSummaryIncorporationVariables();
         }
 
 	SMIncorporateSummary (HttpServletRequest req){
 		super(req);
-		initDirectEntryVariables();
+		initVariables();
+		initSummaryIncorporationVariables();
 		
 		m_stotalbillingamount = clsManageRequestParameters.get_Request_Parameter(Paramtotalbillingamount, req);
 		if (m_stotalbillingamount.compareToIgnoreCase("") == 0){
@@ -95,10 +97,10 @@ public class SMIncorporateSummary extends clsMasterEntry{
 		m_arrLines.clear();
 		int iCounter = 0;
 		while (clsManageRequestParameters.get_Request_Parameter(
-			SMDirectEntryLine.Paramllinenumber 
+				SMSummaryIncorporationLine.Paramllinenumber 
 			+ clsStringFunctions.PadLeft(Integer.toString(iCounter), "0", 6), req).compareToIgnoreCase("") != 0){
 			//Read all the values into the lines:
-			SMDirectEntryLine line = new SMDirectEntryLine();
+			SMSummaryIncorporationLine line = new SMSummaryIncorporationLine();
 			line.setM_llinenumber(clsManageRequestParameters.get_Request_Parameter(SMDirectEntryLine.Paramllinenumber 
 					+ clsStringFunctions.PadLeft(Integer.toString(iCounter), "0", 6), req));
 			line.setM_sestimatedextendedlaborcost(clsManageRequestParameters.get_Request_Parameter(SMDirectEntryLine.Paramsestimatedextendedlaborcost
@@ -132,7 +134,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 		}
 		//We always want a minimum number of lines in the entry, so here we'll add more if we need them:
 		for (int i = m_arrLines.size(); i < NUMBER_OF_INITIAL_LINES; i++){
-			m_arrLines.add(new SMDirectEntryLine());
+			m_arrLines.add(new SMSummaryIncorporationLine());
 			m_arrLines.get(m_arrLines.size() - 1).setM_llinenumber(Integer.toString(m_arrLines.size()));
 		}
 		if (bDebugMode){
@@ -326,22 +328,22 @@ public class SMIncorporateSummary extends clsMasterEntry{
         }
     }
     private void removeZeroQtyLines(){
-    	ArrayList<SMDirectEntryLine> m_arrTempLines = new ArrayList<SMDirectEntryLine> (0);
+    	ArrayList<SMSummaryIncorporationLine> m_arrTempLines = new ArrayList<SMSummaryIncorporationLine> (0);
     	for (int i = 0; i < m_arrLines.size(); i++){
     		if (m_arrLines.get(i).getbdQuantity().compareTo(BigDecimal.ZERO) > 0){
-    			SMDirectEntryLine line = m_arrLines.get(i);
+    			SMSummaryIncorporationLine line = m_arrLines.get(i);
     			line.setM_llinenumber(Integer.toString(i + 1));
     			m_arrTempLines.add(line);
     		}
     	}
     	m_arrLines.clear();
     	for (int i = 0; i < m_arrTempLines.size(); i++){
-			SMDirectEntryLine line = m_arrTempLines.get(i);
+    		SMSummaryIncorporationLine line = m_arrTempLines.get(i);
 			m_arrLines.add(line);
     	}
     	//Now fill out the object to it has a minimum number of lines:
 		for (int i = m_arrLines.size(); i < NUMBER_OF_INITIAL_LINES; i++){
-			m_arrLines.add(new SMDirectEntryLine());
+			m_arrLines.add(new SMSummaryIncorporationLine());
 			m_arrLines.get(m_arrLines.size() - 1).setM_llinenumber(Integer.toString(m_arrLines.size()));
 		}
     }
@@ -614,7 +616,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 		}
     }
     public void addNewLine(){
-    	m_arrLines.add(new SMDirectEntryLine());
+    	m_arrLines.add(new SMSummaryIncorporationLine());
     	m_arrLines.get(m_arrLines.size() - 1).setM_llinenumber(Integer.toString(m_arrLines.size()));
     }
     public void createItemsAndAddToOrder(String sDBID, 
@@ -928,7 +930,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 	public void setM_snonstockmaterialitem(String sNonStockMaterialItem){
 		m_snonstockmaterialitem = sNonStockMaterialItem;
 	}
-	public SMDirectEntryLine getLine(int iLineNumber){
+	public SMSummaryIncorporationLine getLine(int iLineNumber){
 		try {
 			return m_arrLines.get(iLineNumber);
 		} catch (IndexOutOfBoundsException e) {
@@ -940,7 +942,58 @@ public class SMIncorporateSummary extends clsMasterEntry{
 		return m_arrLines.size();
 	}
 	
-	private void initDirectEntryVariables(){
+	public void loadSummaryValues(String sSummaryID, Connection conn) throws Exception{
+		//First load the summary:
+		SMEstimateSummary summary = new SMEstimateSummary();
+		summary.setslid(sSummaryID);
+		try {
+			summary.load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [202007011803] - could not load summary - " + e.getMessage());
+		}
+		
+		//Now load all the summary lines into this entry:
+		for (int iEstimateCounter = 0; iEstimateCounter < summary.getEstimateArray().size(); iEstimateCounter++ ) {
+			SMEstimate estimate = summary.getEstimateArray().get(iEstimateCounter);
+			SMSummaryIncorporationLine line = new SMSummaryIncorporationLine();
+			BigDecimal bdLaborQuantity = new BigDecimal(estimate.getsbdlaborquantity().replace(",", ""));
+			line.set_bdExtendedLaborUnits(bdLaborQuantity);
+			line.set_bdQuantity(new BigDecimal(estimate.getsbdquantity().replace(",", "")));
+			line.setbdEstimateExtendedLaborCost(new BigDecimal(estimate.getsbdlaborcostperunit()).multiply(bdLaborQuantity));
+			line.setbdEstimateExtendedMaterialCost(new BigDecimal(estimate.getsbdextendedcost().replace(",", "")));
+			BigDecimal bdLaborSellPricePerUnit = new BigDecimal(estimate.getsbdlaborsellpriceperunit().replace(",", ""));
+			BigDecimal bdTotalLaborBillingValue = bdLaborQuantity.multiply(bdLaborSellPricePerUnit);
+			line.setbdExtendedLaborBillingValue(bdTotalLaborBillingValue);
+			BigDecimal bdTotalMaterialBillingValue = estimate.getTotalPrice(conn).subtract(bdTotalLaborBillingValue);
+			line.setbdExtendedMaterialBillingValue(bdTotalMaterialBillingValue);
+			line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
+			line.setM_scategorycode("");
+			line.setM_sitemdescription(estimate.getsproductdescription());
+			line.setM_sitemnumber(estimate.getsitemnumber());
+			line.setM_squantity(estimate.getsbdquantity());
+			line.setM_sunitofmeasure(estimate.getsunitofmeasure());
+			m_arrLines.add(line);
+			
+			//Now add the estimate options without prices
+			for (int iEstimateOptioncounter = 0; iEstimateOptioncounter < estimate.getLineArray().size(); iEstimateOptioncounter++) {
+				SMEstimateLine option = estimate.getLineArray().get(iEstimateOptioncounter);
+				line.set_bdExtendedLaborUnits(BigDecimal.ZERO);
+				line.set_bdQuantity(new BigDecimal(option.getsbdquantity().replace(",", "")));
+				line.setbdEstimateExtendedLaborCost(BigDecimal.ZERO);
+				line.setbdEstimateExtendedMaterialCost(BigDecimal.ZERO);
+				line.setbdExtendedLaborBillingValue(BigDecimal.ZERO);
+				line.setbdExtendedMaterialBillingValue(BigDecimal.ZERO);
+				line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
+				line.setM_scategorycode("");
+				line.setM_sitemdescription(option.getslinedescription());
+				line.setM_sitemnumber(option.getsitemnumber());
+				line.setM_sunitofmeasure(option.getsunitofmeasure());
+				m_arrLines.add(line);
+			}
+		}
+	}
+	
+	private void initSummaryIncorporationVariables(){
 		m_ordernumber = "";
 		m_stotalbillingamount = "0.00";
 		m_sunitlaborcost = "0.00";
@@ -948,9 +1001,9 @@ public class SMIncorporateSummary extends clsMasterEntry{
 		m_slocation = "";
 		m_staxjurisdiction = "";
 		m_sitemcategory = "";
-		m_arrLines = new ArrayList<SMDirectEntryLine> (0);
+		m_arrLines = new ArrayList<SMSummaryIncorporationLine> (0);
 		for (int i = 0; i < NUMBER_OF_INITIAL_LINES; i++){
-			m_arrLines.add(new SMDirectEntryLine());
+			m_arrLines.add(new SMSummaryIncorporationLine());
 			m_arrLines.get(m_arrLines.size() - 1).setM_llinenumber(Integer.toString(m_arrLines.size()));
 		}
 		m_sunitlabormarkup = "";

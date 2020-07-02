@@ -102,7 +102,7 @@ public class SMOHDirectFieldDefinitions {
 	public static final String QUOTELINECOSTDETAIL_OPTION_PRICE = "C_OptionPrice"; //Pricing related to options to the system.
 
 	//ORDER:
-	public static final String ORDER_FIELD_ID = "Id";
+	public static final String ORDER_FIELD_ID = "ID";
 	public static final String ORDER_FIELD_QUOTEID = "C_QuoteID";
 	public static final String ORDER_FIELD_ORDERNUMBER = "C_OrderNumberString";
 	public static final String ORDER_FIELD_CREATEDBY = "C_CreatedBy";
@@ -118,4 +118,34 @@ public class SMOHDirectFieldDefinitions {
 	public static final String ORDER_FIELD_SOLDFROM = "C_SoldFrom";
 	public static final String ORDER_FIELD_PURCHASEDFROM = "C_PurchasedFrom";
 	
+	//ORDER LINES:
+	public static final String ORDERLINE_ARRAY_NAME = "items";
+	public static final String ORDERLINE_FIELD_ID = "ID"; 
+	public static final String ORDERLINE_FIELD_ORDER = "C_Order"; 
+	public static final String ORDERLINE_FIELD_LINENUMBER = "C_LineNumber"; // Long integer
+	public static final String ORDERLINE_FIELD_DESCRIPTION = "C_Description"; // "521 Series Commercial Aluminum Sectional Door"
+	public static final String ORDERLINE_FIELD_LASTCONFIGURATIONDESCRIPTION = "C_LastConfigurationDescription"; // "521, 14'2\" x 14'1\""
+	public static final String ORDERLINE_FIELD_QUANTITY = "C_Quantity"; // Long integer
+	public static final String ORDERLINE_FIELD_UNITCOST = "C_UnitCost"; // Decimal
+	public static final String ORDERLINE_FIELD_TOTALCOST = "C_TotalCost"; // Decimal
+	public static final String ORDERLINE_FIELD_LABEL = "C_Label"; // ""
+	
+	//ORDER LINE DETAILS:
+	public static final String ORDERLINEDETAIL_ARRAY_NAME = "items";
+	public static final String ORDERLINEDETAIL_FIELD_ID = "ID"; //Unique ID for this order line detail
+	public static final String ORDERLINEDETAIL_FIELD_ORDERLINEID = "C_OrderLine"; // the ID of the parent order line
+	public static final String ORDERLINEDETAIL_FIELD_DESCRIPTION = "C_Description"; // the label of the detail
+	public static final String ORDERLINEDETAIL_FIELD_VALUE = "C_Value"; // the actual text value of the detail
+	public static final String ORDERLINEDETAIL_FIELD_SORTORDER = "C_SortOrder"; // order in which the details appear on the entry screens
+	
+	//ORDER LINE COST DETAILS:
+	public static final String ORDERLINECOSTDETAIL_ARRAY_NAME = "items";
+	public static final String ORDERLINECOSTDETAIL_ID = "ID"; //The unique Id of the line
+	public static final String ORDERLINECOSTDETAIL_ORDER_LINE_ID = "C_OrderLine"; // The ID from C_DealerOrderLine
+	public static final String ORDERLINECOSTDETAIL_DESCRIPTION = "C_Description"; //The description from the pricing line.
+	public static final String ORDERLINECOSTDETAIL_QUANTITY = "C_Quantity"; //The quantity of the priced item.
+	public static final String ORDERLINECOSTDETAIL_LIST_PRICE = "C_ListPrice"; //The list price and unit of measure for the item.
+	public static final String ORDERLINECOSTDETAIL_DISCOUNT_MULTIPLIER = "C_DiscountMultiplier"; //The value of either the multiplier or discount applied.
+	public static final String ORDERLINECOSTDETAIL_BASE_PRICE = "C_BasePrice"; //Pricing related to the base system.
+	public static final String ORDERLINECOSTDETAIL_OPTION_PRICE = "C_OptionPrice"; //Pricing related to options to the system.
 }

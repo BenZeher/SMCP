@@ -378,7 +378,7 @@ public class SMEditSMSummaryAction extends HttpServlet{
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1590773219]");
     		String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMPrintEstimateSummaryGenerate"
-				+ "?" + SMTablesmestimates.lsummarylid + "=" + summary.getslid()
+				+ "?" + SMTablesmestimates.lid + "=" + summary.getslid()
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&" + "CallingClass=" + "smcontrolpanel.SMEditSMSummaryEdit"
 				;

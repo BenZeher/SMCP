@@ -540,11 +540,11 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 				;
 
+		BigDecimal bdAdjustLaborUnitQty = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborunitqty()));
+		BigDecimal bdAdjustLaborCostPerUnit = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborcostperunit()));
 		//Total labor cost
 		BigDecimal bdTotalLaborCost = new BigDecimal(0);
-		bdTotalLaborCost = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborunitqty())).multiply(
-				BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborcostperunit()))
-				);
+		bdTotalLaborCost = bdAdjustLaborUnitQty.multiply(bdAdjustLaborCostPerUnit);
 
 		
 		s += "    <TD style=\"text-align:right\">"
@@ -564,6 +564,12 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  </TR>" + "\n";
 
 		//MU per labor unit
+		
+		//adjustedmarkuptotal / adjustedlaborunits
+		
+		BigDecimal bdAdjustedMarkupAmmount = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedmarkupamt()));
+		BigDecimal bdAdjustedFreight = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedfreight()));
+		
 		s += "  <TR>" + "\n";
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT_CAPTION
@@ -576,10 +582,11 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ "0.00" // TODO - fill in this value with java
+				+ bdAdjustedMarkupAmmount.divide(bdAdjustLaborUnitQty)
 				+ "</LABEL>"
 
 				//MU Pctge
+				//adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost)
 				+ "&nbsp;"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE_CAPTION
 				+ "</TD>" + "\n"
@@ -589,8 +596,8 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ "0.00" // TODO - fill in this value with java
-				+ "</LABEL>"
+				+ bdAdjustedMarkupAmmount.divide(bdMaterialCost.add(bdTotalLaborCost).add(bdAdjustedFreight)).multiply(BigDecimal.valueOf(100))
+				+ "%</LABEL>"
 
 				+ "</TD>" + "\n"
 				;
@@ -621,7 +628,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ summary.getsbdadjustedmarkupamt()
+				+ bdAdjustedMarkupAmmount
 				+ "</LABEL>"
 
 				+ "</TD>" + "\n"

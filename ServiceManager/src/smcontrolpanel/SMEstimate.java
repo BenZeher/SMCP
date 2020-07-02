@@ -1526,8 +1526,10 @@ public class SMEstimate {
 		
 		try {
 			bdTotalPrice = bdTotalPrice.add(new BigDecimal(m_bdextendedcost.replace(",", "")));
-			
-			//TODO - add estimate line amts:
+			//Add estimate line material costs:
+			for (int iLineCounter = 0; iLineCounter < arrEstimateLines.size(); iLineCounter++) {
+				bdTotalPrice = bdTotalPrice.add(new BigDecimal(arrEstimateLines.get(iLineCounter).getsbdextendedcost().replace(",", "")));
+			}
 			
 			bdTotalPrice = bdTotalPrice.add(new BigDecimal(m_bdfreight.replace(",", "")));
 			BigDecimal bdLaborUnits = new BigDecimal(m_bdlaborquantity.replace(",", ""));
@@ -1562,8 +1564,8 @@ public class SMEstimate {
 			throw new Exception("Error [202005270128] - could not load tax with ID '" + summary.getsitaxid() + "' - " + e.getMessage());
 		}
 		
-		bdTaxOnMaterial = getTotalMaterialCostSubjectToUseTax(conn).multiply((new BigDecimal(tax.get_bdtaxrate().replace(",", ""))).divide(new BigDecimal("100.00"), BigDecimal.ROUND_HALF_UP));
 		
+		bdTaxOnMaterial = getTotalMaterialCostSubjectToUseTax(conn).multiply((new BigDecimal(tax.get_bdtaxrate().replace(",", ""))).divide(new BigDecimal("100.00"), BigDecimal.ROUND_HALF_UP));
 		return bdTaxOnMaterial;
 	}
 	public BigDecimal getTotalAddlMaterialCostNotSubjectToUseTax(Connection conn) throws Exception{
@@ -1578,9 +1580,9 @@ public class SMEstimate {
 		
 		bdTotalMaterialCost = bdTotalMaterialCost.add(new BigDecimal(m_bdextendedcost.replace(",", "")));
 		
-		//TODO - add in the estimate line costs:
+		//Add in the estimate line costs:
 		for (int i = 0; i < arrEstimateLines.size(); i++) {
-			bdTotalMaterialCost.add(new BigDecimal(arrEstimateLines.get(i).getsbdextendedcost().replace(",", "")));
+			bdTotalMaterialCost = bdTotalMaterialCost.add(new BigDecimal(arrEstimateLines.get(i).getsbdextendedcost().replace(",", "")));
 		}
 		
 		bdTotalMaterialCost = bdTotalMaterialCost.add(new BigDecimal(m_bdadditionalpretaxcostamount.replace(",", "")));

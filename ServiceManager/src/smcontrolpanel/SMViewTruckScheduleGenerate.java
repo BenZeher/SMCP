@@ -139,7 +139,8 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 		if (!bAllowedToViewAllSchedules){
 			//If he didn't CHOOSE to view only one mechanic's schedules, bump him out:
 			if (sMechanicInitials.compareToIgnoreCase("") == 0){
-				out.println("<HTML>WARNING: You do not currently have access to view ALL the schedules.</BODY></HTML>");
+				out.println("<HTML>WARNING: You do not currently have access to view ALL the schedules "
+						+ "or your user record is missing mechanics initials.</BODY></HTML>");
 				return;	
 			}
 			

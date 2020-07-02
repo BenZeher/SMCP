@@ -50,6 +50,7 @@ public class SMOHDirectFieldDefinitions {
 	public static final String ENDPOINT_ORDERLINEDETAIL = "C_DealerOrderlineDetail";
 	public static final String ENDPOINT_ORDERLINECOSTDETAIL = "C_DealerOrderLineCostDetail";
 	
+
 	//Fields returned from the queries:
 	//QUOTE:
 	public static final String QUOTE_FIELD_ID = "Id";
@@ -100,9 +101,21 @@ public class SMOHDirectFieldDefinitions {
 	public static final String QUOTELINECOSTDETAIL_BASE_PRICE = "C_BasePrice"; //Pricing related to the base system.
 	public static final String QUOTELINECOSTDETAIL_OPTION_PRICE = "C_OptionPrice"; //Pricing related to options to the system.
 
-	
-	
-	
-	
+	//ORDER:
+	public static final String ORDER_FIELD_ID = "Id";
+	public static final String ORDER_FIELD_QUOTEID = "C_QuoteID";
+	public static final String ORDER_FIELD_ORDERNUMBER = "C_OrderNumberString";
+	public static final String ORDER_FIELD_CREATEDBY = "C_CreatedBy";
+	public static final String ORDER_FIELD_CREATEDDATE = "C_CreatedDate"; // "2020-02-26T16:36:09.848058Z"
+	public static final String ORDER_FIELD_LASTMODIFIEDBY = "C_LastModifiedBy";
+	public static final String ORDER_FIELD_LASTMODIFIEDDATE = "C_LastModifiedDate";
+	public static final String ORDER_FIELD_SALESPERSON = "C_SalesPerson";
+	public static final String ORDER_FIELD_BILLTONAME = "C_BillToName";
+	public static final String ORDER_FIELD_SHIPTONAME = "C_ShipToName";
+	public static final String ORDER_FIELD_DEALERERPID = "C_DealerErpId";
+	public static final String ORDER_FIELD_STATUS = "C_Status";
+	public static final String ORDER_FIELD_BILLTOEXTERNALID = "C_BillToExternalID";
+	public static final String ORDER_FIELD_SOLDFROM = "C_SoldFrom";
+	public static final String ORDER_FIELD_PURCHASEDFROM = "C_PurchasedFrom";
 	
 }

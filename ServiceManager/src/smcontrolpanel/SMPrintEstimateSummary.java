@@ -639,7 +639,8 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ bdAdjustedMarkUpAmt.divide(bdMaterialCost.add(bdTotalLaborCost).add(bdAdjustedFreight)).multiply(BigDecimal.valueOf(100))
+				//+ bdAdjustedMarkUpAmt.divide(bdMaterialCost.add(bdTotalLaborCost).add(bdAdjustedFreight)).multiply(BigDecimal.valueOf(100))
+				+ "0.00"
 				+ "%</LABEL>"
 
 				+ "</TD>" + "\n"
@@ -786,6 +787,8 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 
 
 		s += "</TABLE>" + "\n";
+		
+		
 
 
 		out.println(s);

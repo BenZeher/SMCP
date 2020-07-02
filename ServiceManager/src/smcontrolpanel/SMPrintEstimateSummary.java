@@ -1,6 +1,7 @@
 package smcontrolpanel;
 
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -254,6 +255,9 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  </TR>" + "\n";
 
 		//total material cost:
+		BigDecimal bdMaterialCost = new BigDecimal(0);
+		bdMaterialCost = summary.getbdtotalmaterialcostonestimates();
+		
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -537,6 +541,12 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				;
 
 		//Total labor cost
+		BigDecimal bdTotalLaborCost = new BigDecimal(0);
+		bdTotalLaborCost = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborunitqty())).multiply(
+				BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborcostperunit()))
+				);
+
+		
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION
 				+ "</TD>" + "\n"
@@ -547,7 +557,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_LABOR_COST + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 				+ ">"
-				+ "0.00"  // TODO - fill in this value with java
+				+ bdTotalLaborCost
 				+ "</LABEL>"
 				+ "</TD>" + "\n"
 				;
@@ -619,6 +629,13 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  </TR>" + "\n";
 
 		//Total tax on material
+		
+		//materialcosttotal * (taxrateaspercentage / 100)).toFixed(2))
+		BigDecimal bdTaxOnMaterial = new BigDecimal(0);
+		BigDecimal bdTaxRate = BigDecimal.valueOf(Double.parseDouble(summary.getsbdtaxrate()));
+		bdTaxOnMaterial = bdMaterialCost.multiply(bdTaxRate.divide(BigDecimal.valueOf(100))).setScale(2);
+		
+		
 		s += "  <TR>" + "\n";
 		s += "    <TD "
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -631,7 +648,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ "0.00" // TODO - fill in this value with java
+			+ bdTaxOnMaterial.toString()
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"

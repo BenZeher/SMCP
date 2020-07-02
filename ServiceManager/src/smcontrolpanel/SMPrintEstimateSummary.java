@@ -256,7 +256,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//total material cost:
 		BigDecimal bdMaterialCost = new BigDecimal(0);
 		bdMaterialCost = summary.getbdtotalmaterialcostonestimates();
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -279,7 +279,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//total freight
 		BigDecimal bdFreightCost = new BigDecimal(0);
 		bdFreightCost = summary.getbdtotalfreightonestimates();
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -302,7 +302,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//total labor units:
 		BigDecimal bdLaborUnits = new BigDecimal(0);
 		bdLaborUnits = summary.getbdtotallaborunitsonestimates();
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 3) + " style=\"text-align:right\">"
@@ -324,7 +324,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//total labor cost:
 		BigDecimal bdLaborCost = new BigDecimal(0);
 		bdLaborCost = summary.getbdtotallaborcostonestimates();
-		
+
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_LABOR_COST_CAPTION
 				+ "</TD>" + "\n"
@@ -345,7 +345,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//total mark-up
 		BigDecimal bdMarkUp = new BigDecimal(0);
 		bdMarkUp = summary.getbdtotalmarkuponestimates();
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -369,10 +369,10 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//materialcosttotal * (taxrateaspercentage / 100
 		BigDecimal bdTaxPercentage = new BigDecimal(0);
 		bdTaxPercentage = BigDecimal.valueOf(Double.valueOf(summary.getsbdtaxrate()));
-		
+
 		BigDecimal bdTotalTax = new BigDecimal(0);
 		bdTotalTax = bdMaterialCost.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100)));
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -401,7 +401,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//ADDITIONAL COST NOT ELIGIBLE FOR USE TAX
 		BigDecimal bdCostNotEligibleForUseTax = new BigDecimal(0);
 		bdCostNotEligibleForUseTax = summary.getbdtotaladdlcostnoteligibleforusetax();
-				
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				//+ " style = \" font-size: large; \""
@@ -433,7 +433,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		}
 		BigDecimal bdCalculatedTotalPrice = new BigDecimal(0);
 		bdCalculatedTotalPrice = summary.getbdcalculatedtotalprice();
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				//+ " style = \" font-size: large; \""
@@ -494,7 +494,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//total adjusted material cost:
 		BigDecimal bdTotalMaterialCost = new BigDecimal(0);
 		bdTotalMaterialCost = summary.getbdtotalmaterialcostonestimates();
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -517,7 +517,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//total adjusted freight
 		BigDecimal bdAdjustedFreight = new BigDecimal(0);
 		bdAdjustedFreight = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedfreight()));
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -539,7 +539,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//Labor units
 		BigDecimal bdAdjustedLaborUnitQty = new BigDecimal(0);
 		bdAdjustedLaborUnitQty = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborunitqty()));
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_LABOR_UNITS_CAPTION
@@ -560,7 +560,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//Total cost per labor unit
 		BigDecimal bdAdjustedLaborCostPerUnit = new BigDecimal(0);
 		bdAdjustedLaborCostPerUnit = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborcostperunit()));
-		
+
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_COST_PER_LABOR_UNIT_CAPTION
 				+ "</TD>" + "\n"
@@ -581,7 +581,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		BigDecimal bdTotalLaborCost = new BigDecimal(0);
 		bdTotalLaborCost = bdAdjustedLaborUnitQty.multiply(bdAdjustedLaborCostPerUnit);
 
-		
+
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION
 				+ "</TD>" + "\n"
@@ -600,19 +600,19 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 
 		BigDecimal bdAdjustedMarkUpAmt = new BigDecimal(0);
 		bdAdjustedMarkUpAmt = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedmarkupamt()));
-		
-		
+
+
 		//Total tax on material
 		//materialcosttotal * (taxrateaspercentage / 100)).toFixed(2))
 		BigDecimal bdTaxOnMaterial = new BigDecimal(0);
 		bdTaxOnMaterial = bdMaterialCost.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100))).setScale(2);
-		
+
 		BigDecimal bdAdjustedTotalSummary = new BigDecimal(0);
 		bdAdjustedTotalSummary = bdTotalMaterialCost.add(bdAdjustedFreight).add(bdTotalLaborCost).add(bdAdjustedMarkUpAmt).add(bdTaxOnMaterial);
-		
+
 		//MU per labor unit
 		//adjustedmarkuptotal / adjustedlaborunits
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT_CAPTION
@@ -626,11 +626,16 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
 				+ bdAdjustedMarkUpAmt.divide(bdAdjustLaborUnitQty)
-				+ "</LABEL>"
+				+ "</LABEL>";
 
-				//MU Pctge
-				//adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost)
-				+ "&nbsp;"
+		//MU Pctge
+		//adjustedmarkuptotal / (materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost)
+		BigDecimal bdMUPctgeDivisor = new BigDecimal(0);
+		bdMUPctgeDivisor = bdMaterialCost.add(bdTotalLaborCost).add(bdAdjustedFreight);
+		BigDecimal bdMUPctge = new BigDecimal(0);
+		bdMUPctge=BigDecimal.valueOf(bdAdjustedMarkUpAmt.doubleValue()/bdMUPctgeDivisor.doubleValue());
+		
+		s+= "&nbsp;"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
@@ -639,8 +644,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				//+ bdAdjustedMarkUpAmt.divide(bdMaterialCost.add(bdTotalLaborCost).add(bdAdjustedFreight)).multiply(BigDecimal.valueOf(100))
-				+ "0.00"
+				+ bdMUPctge.scaleByPowerOfTen(2).setScale(2, BigDecimal.ROUND_HALF_UP)
 				+ "%</LABEL>"
 
 				+ "</TD>" + "\n"
@@ -649,7 +653,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//GP percentage
 		//adjustedgppercentage = adjustedmarkuptotal / adjustedtotalforsummary
 		BigDecimal bdGPPercentage =  bdAdjustedMarkUpAmt.divide(bdAdjustedTotalSummary,BigDecimal.ROUND_HALF_UP,1).multiply(BigDecimal.valueOf(100));
-		
+
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_GP_PERCENTAGE_CAPTION
 				+ "</TD>" + "\n"
@@ -666,7 +670,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				;
 
 		//Total MU
-		
+
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_MARKUP_CAPTION
 				+ "</TD>" + "\n"
@@ -684,7 +688,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  </TR>" + "\n";
 
 
-		
+
 		//Total tax on material
 		s += "  <TR>" + "\n";
 		s += "    <TD "
@@ -708,7 +712,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//Adjusted total
 		//adjustedtotalforsummary = materialcosttotal + adjustedtfreighttotal + adjustedlabortotalcost + adjustedmarkuptotal + taxonmaterial
 
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -734,7 +738,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		if(bdTaxPercentage.compareTo(BigDecimal.valueOf(0))!=0) {
 			bdRetailSalesTax = bdAdjustedTotalSummary.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100)));
 		}
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
@@ -787,8 +791,8 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 
 
 		s += "</TABLE>" + "\n";
-		
-		
+
+
 
 
 		out.println(s);

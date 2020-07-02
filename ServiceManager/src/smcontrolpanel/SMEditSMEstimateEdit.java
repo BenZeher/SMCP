@@ -19,6 +19,7 @@ import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
@@ -58,7 +59,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LABEL_COST_SUBTOTAL = "COSTSUBTOTAL";
 	public static final String FIELD_ADDITIONAL_TAXED_COST_CAPTION = "ADDITIONAL COST SUBJECT TO USE TAX: ";
 	public static final String FIELD_ADDITIONAL_UNTAXED_COST_CAPTION = "ADDITIONAL COST NOT SUBJECT TO USE TAX: ";
-	public static final String FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION = "LABOR SELL PRICE PER UNIT:";
+	public static final String FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION = "LABOR SELL PRICE PER UNIT";
 	public static final String LABEL_PRODUCT_UNIT_COST = "LABELPRODUCTUNITCOST";
 	
 	public static final String LABOR_TYPE_MARKUP_PER_LABOR_UNIT = "LABORTYPEMARKUPPERLABORUNIT";
@@ -1722,16 +1723,18 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " >"
 			+ FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION
+			+ " <I><FONT COLOR=RED>(MU/Labor unit from Labor Type = " 
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(estimate.getsummary().getslabortypemuperlaborunit()) 
+			+ ")</FONT></I>:"
 			+ "</TD>" + "\n"
-			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 			+ ">"
 			+ "<INPUT TYPE=TEXT"
 			+ " NAME = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
 			+ " ID = \"" + SMTablesmestimates.bdlaborsellpriceperunit + "\""
-			+ " style = \" text-align:right; font-weight: bold; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + "\""
+			+ " style = \" text-align:right; font-weight: normal; width:" + TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + "; " + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_BLUE + "\""
 			+ " VALUE = \"" + estimate.getsbdlaborsellpriceperunit() + "\""
-			+ " readonly "
+			//+ " readonly "
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ "</INPUT>"
@@ -2446,7 +2449,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				
 				+ "    if((icalculatetaxoncustomerinvoice == 0) && ((icalculatetaxonpurchaseorsale == " 
 					+ Integer.toString(SMTabletax.TAX_CALCULATION_BASED_ON_PURCHASE_COST) + "))){ \n"
-				+ "        taxonmaterial = parseFloat((materialcosttotal * (taxrateaspercentage / 100)).toFixed(2)); \n"
+				+ "        taxonmaterial = parseFloat(((materialcosttotal + additionalpretaxcost) * (taxrateaspercentage / 100)).toFixed(2)); \n"
 				+ "    }else{ \n"
 				+ "        taxonmaterial = parseFloat(\"0.00\"); \n"
 				+ "    } \n"
@@ -2458,6 +2461,7 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    document.getElementById(\"" + LABEL_TOTAL_COST_AND_MARKUP + "\").innerText=formatNumber(totalcostandmarkup);\n"
 				+ "    \n\n"
 				
+				/* - TJR - 7/2/2020 - took this out so that users, especially for service estimates, can modify the labor unit sell price:
 				+ "    //Calculate the labor sell price per unit based on the labor type: \n"
 				+ "    var laborsellpriceperunit = parseFloat(\"0.00\");\n"
 				+ "    var labormarkupperunitfromlabortype = parseFloat(\"0.00\"); \n"
@@ -2467,7 +2471,15 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ "    }else{\n"
 				+ "        labormarkupperunitfromlabortype = parseFloat(temp); \n"
 				+ "    }\n"
-				+ "    laborsellpriceperunit = laborcostperunit + labormarkupperunitfromlabortype; \n"
+				*/
+				+ "    var laborsellpriceperunit = parseFloat(\"0.00\");\n"
+				+ "    var temp = (document.getElementById(\"" + SMTablesmestimates.bdlaborsellpriceperunit + "\").value);\n"
+				+ "    if (temp == ''){\n"
+				+ "        laborsellpriceperunit = parseFloat(\"0\");\n"
+				+ "    }else{\n"
+				+ "        laborsellpriceperunit = parseFloat(temp); \n"
+				+ "    }\n"
+				
 				+ "    document.getElementById(\"" + SMTablesmestimates.bdlaborsellpriceperunit + "\").value = formatNumber(laborsellpriceperunit); \n"
 				+ "    var laborsellprice = parseFloat(\"0.00\");\n"
 				+ "    laborsellprice = laborunits * laborsellpriceperunit; \n"

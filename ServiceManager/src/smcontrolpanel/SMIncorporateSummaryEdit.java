@@ -92,9 +92,6 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			}
 			//Remove the object from the session:
 			currentSession.removeAttribute(SMIncorporateSummary.ParamObjectName);
-		}else{
-			//Read the entry from the request instead:
-		    entry = new SMIncorporateSummary(smedit.getRequest());
 		}
 		if (bDebugMode){
 			System.out.println("[1579269724] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());

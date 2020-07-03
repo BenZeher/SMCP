@@ -952,9 +952,29 @@ public class SMIncorporateSummary extends clsMasterEntry{
 			throw new Exception("Error [202007011803] - could not load summary - " + e.getMessage());
 		}
 		
+		m_arrLines.clear();
 		//Now load all the summary lines into this entry:
 		for (int iEstimateCounter = 0; iEstimateCounter < summary.getEstimateArray().size(); iEstimateCounter++ ) {
+			
 			SMEstimate estimate = summary.getEstimateArray().get(iEstimateCounter);
+			
+			//First, if there's a 'prefix label' to be added, add that now:
+			if (estimate.getsprefixlabelitem().compareToIgnoreCase("") != 0) {
+				SMSummaryIncorporationLine line = new SMSummaryIncorporationLine();
+				line.set_bdExtendedLaborUnits(BigDecimal.ZERO);
+				line.set_bdQuantity(BigDecimal.ONE);
+				line.setbdEstimateExtendedLaborCost(BigDecimal.ZERO);
+				line.setbdEstimateExtendedMaterialCost(BigDecimal.ZERO);
+				line.setbdExtendedLaborBillingValue(BigDecimal.ZERO);
+				line.setbdExtendedMaterialBillingValue(BigDecimal.ZERO);
+				line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
+				line.setM_scategorycode("");
+				line.setM_sitemdescription(estimate.getsdescription());
+				line.setM_sitemnumber(estimate.getsprefixlabelitem());
+				line.setM_sunitofmeasure("EA");
+				m_arrLines.add(line);
+			}
+			
 			SMSummaryIncorporationLine line = new SMSummaryIncorporationLine();
 			BigDecimal bdLaborQuantity = new BigDecimal(estimate.getsbdlaborquantity().replace(",", ""));
 			line.set_bdExtendedLaborUnits(bdLaborQuantity);
@@ -972,11 +992,13 @@ public class SMIncorporateSummary extends clsMasterEntry{
 			line.setM_sitemnumber(estimate.getsitemnumber());
 			line.setM_squantity(estimate.getsbdquantity());
 			line.setM_sunitofmeasure(estimate.getsunitofmeasure());
+			//System.out.println("[202007033922] - iEstimateCounter = " + iEstimateCounter + ", line dump: " + line.read_out_debug_data());
 			m_arrLines.add(line);
 			
 			//Now add the estimate options without prices
 			for (int iEstimateOptioncounter = 0; iEstimateOptioncounter < estimate.getLineArray().size(); iEstimateOptioncounter++) {
 				SMEstimateLine option = estimate.getLineArray().get(iEstimateOptioncounter);
+				line = new SMSummaryIncorporationLine();
 				line.set_bdExtendedLaborUnits(BigDecimal.ZERO);
 				line.set_bdQuantity(new BigDecimal(option.getsbdquantity().replace(",", "")));
 				line.setbdEstimateExtendedLaborCost(BigDecimal.ZERO);

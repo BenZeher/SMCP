@@ -550,7 +550,7 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 		super.setObjectName(ParamObjectName);
     }
     public String read_out_debug_data(){
-    	String sResult = "\n  ** Direct entry lines read out: ";
+    	String sResult = "\n  ** Summary incorporation lines read out: ";
     	sResult += "\nLine number: " + this.getM_llinenumber();
     	sResult += "\nItem number: " + this.getM_sitemnumber();
     	sResult += "\nItem description: " + this.getM_sitemdescription();

@@ -334,7 +334,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " ID = \"" + SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_LABOR_COST + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 				+ ">"
-				+ bdLaborCost.setScale(2)
+				+ bdLaborCost.setScale(2,BigDecimal.ROUND_HALF_UP)
 				+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -448,7 +448,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_FOR_SUMMARY + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ bdCalculatedTotalPrice.setScale(2)
+			+ bdCalculatedTotalPrice.setScale(2, BigDecimal.ROUND_HALF_UP)
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -507,7 +507,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_MATERIAL_COST + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ bdTotalMaterialCost.setScale(SMTablesmestimates.bdextendedcostScale)
+			+ bdTotalMaterialCost.setScale(SMTablesmestimates.bdextendedcostScale, BigDecimal.ROUND_HALF_UP)
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -605,7 +605,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//Total tax on material
 		//materialcosttotal * (taxrateaspercentage / 100)).toFixed(2))
 		BigDecimal bdTaxOnMaterial = new BigDecimal(0);
-		bdTaxOnMaterial = bdMaterialCost.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100))).setScale(2);
+		bdTaxOnMaterial = bdMaterialCost.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100))).setScale(2,BigDecimal.ROUND_HALF_UP);
 
 		BigDecimal bdAdjustedTotalSummary = new BigDecimal(0);
 		bdAdjustedTotalSummary = bdTotalMaterialCost.add(bdAdjustedFreight).add(bdTotalLaborCost).add(bdAdjustedMarkUpAmt).add(bdTaxOnMaterial);
@@ -663,7 +663,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_GP_PERCENTAGE + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+bdGPPercentage.setScale(2)
+				+bdGPPercentage.setScale(2, BigDecimal.ROUND_HALF_UP)
 				+ "</LABEL>"
 
 				+ "</TD>" + "\n"
@@ -680,7 +680,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " ID = \"" + SMTablesmestimatesummaries.bdadjustedmarkupamt + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ bdAdjustedMarkUpAmt.setScale(2)
+				+ bdAdjustedMarkUpAmt.setScale(2, BigDecimal.ROUND_HALF_UP)
 				+ "</LABEL>"
 
 				+ "</TD>" + "\n"
@@ -702,7 +702,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ bdTaxOnMaterial.setScale(2)
+			+ bdTaxOnMaterial.setScale(2, BigDecimal.ROUND_HALF_UP)
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"

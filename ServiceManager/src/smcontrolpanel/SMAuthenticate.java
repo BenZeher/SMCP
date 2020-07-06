@@ -253,6 +253,7 @@ public class SMAuthenticate{
 					"Logging in", 
 					sSessionTagAttribute + " OPTS='" + sOpts + "', "
 						+ " query string = '" + clsManageRequestParameters.getAllRequestParametersMaskingPassword(req) + "'"
+								+ " remote IP = " + req.getRemoteAddr()
 					, 
 					"[1376509305]");
 				if (bDebugMode){

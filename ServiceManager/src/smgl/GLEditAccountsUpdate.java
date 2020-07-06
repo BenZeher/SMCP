@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMModuleListing;
 import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
@@ -51,7 +52,17 @@ public class GLEditAccountsUpdate extends HttpServlet{
 			return;
 		}
 		
-		if(!glacct.save(conn)){
+		String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
+		long lLicenseModuleLevel = 0;
+		try {
+			lLicenseModuleLevel = Long.parseLong(sLicenseModuleLevel);
+		} catch (NumberFormatException e1) {
+			//Don't catch anything here....
+		}
+		
+		boolean bGLModuleIsLicensed = (lLicenseModuleLevel & SMModuleListing.MODULE_GENERALLEDGER) > 0;
+		
+		if(!glacct.save(conn, bGLModuleIsLicensed)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditAccountsEdit"
 					+ "?" + glacct.getQueryString()

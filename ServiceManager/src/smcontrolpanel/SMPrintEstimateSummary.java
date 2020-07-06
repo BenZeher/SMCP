@@ -390,7 +390,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ bdTotalTax.setScale(2)
+			+ bdTotalTax.setScale(2, BigDecimal.ROUND_HALF_UP)
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"
@@ -756,7 +756,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_RETAIL_SALES_TAX + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ bdRetailSalesTax.setScale(2)
+			+ bdRetailSalesTax.setScale(2,BigDecimal.ROUND_HALF_UP)
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"

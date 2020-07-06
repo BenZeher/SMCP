@@ -788,15 +788,90 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
+		s += "</TABLE>" + "\n";	
 
 
-		s += "</TABLE>" + "\n";
-
-
-
+		ArrayList<SMEstimate> Estimates = summary.getEstimateArray();
+		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
+			SMEstimate estimate = Estimates.get(i);
+			
+			s += "<TABLE style = \""
+					+ " width:100%; "
+					+ " \" >" + "\n";
+			
+			s += "  <TR> \n";
+			s+="<TD>";
+			s+="<B>Estimate ID:</B>" + estimate.getslid();
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Summary line #:</B>" + estimate.getslsummarylinenumber();
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Created:</B>" + estimate.getsdatetimecreated()
+			+ " by " + estimate.getscreatedbyfullname() 
+			+ " Last modified " + estimate.getsdatetimelastmodified()
+			+ " by " + estimate.getslastmodifiedbyfullname();
+			s+="</TD>";
+			s += "  </TR>" + "\n";
+			
+			s += "  <TR> \n";
+			s+="<TD>";
+			s+="<B>Insert as prefix label using item #:</B>" + estimate.getsprefixlabelitem();
+			s+="</TD>";
+			s+="<TD colspan=\"2\">";
+			s+="<B>Estimate description:</B>" + estimate.getsdescription();
+			s+="</TD>";
+			s += "  </TR>" + "\n";
+			
+			s += "  <TR> \n";
+			s+="<TD colspan=\"3\">";
+			if(estimate.getsvendorquotenumber().compareToIgnoreCase("")==0) {
+				s+="<B>Vendor quote #:</B> (NONE)";
+			}else {
+				s+="<B>Vendor quote #:</B>" + estimate.getsvendorquotenumber();
+			}
+			s+="</TD>";
+			s += "  </TR>" + "\n";
+			s += "</TABLE>" + "\n";
+			
+			
+			s += "<TABLE style = \""
+					+ " width:100%; "
+					+ " \" >" + "\n";
+			s += "  <TR> \n";
+			s+="<TD>";
+			s+="<B>Quantity</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Item #</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Product description</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>U/M</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Multiplier</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Unit sell price</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Extended sell price</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Material Unit cost</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Material Extended cost</B>";
+			s+="</TD>";
+			s += "  </TR>" + "\n";
+			s += "</TABLE>" + "\n";
+		}
 
 		out.println(s);
 		return false;
-	}
+	} 
 
 }

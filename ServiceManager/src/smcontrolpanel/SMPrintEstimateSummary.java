@@ -17,6 +17,7 @@ import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageBigDecimals;
 
 public class SMPrintEstimateSummary extends java.lang.Object {
 
@@ -899,47 +900,53 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s+="&nbsp;";
 			s+="</TD>";
 			s+="<TD>";
-			s+="<B>Material Unit cost</B>";
+			s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(estimate.getsbdextendedcost().replaceAll(",", ""))/Double.valueOf(estimate.getsbdquantity().replaceAll(",", ""))).setScale(2));
 			s+="</TD>";
 			s+="<TD>";
 			s+=estimate.getsbdextendedcost();
 			s+="</TD>";
 			s += "  </TR>" + "\n";
 			
-			//Other
+			//Options
 			s += "  <TR> \n";
-			s+="<TD>";
-			s+="<B>Quantity</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Item #</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Product description</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>U/M</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Multiplier</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Unit sell price</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Extended sell price</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Material Unit cost</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Material Extended cost</B>";
+			s+="<TD colspan=\"9\">";
+			s+="<B>OPTIONS</B>";
 			s+="</TD>";
 			s += "  </TR>" + "\n";
+			for (int iEstimateLineCounter = 0; iEstimateLineCounter < estimate.getLineArray().size(); iEstimateLineCounter++) {
+				SMEstimateLine line = estimate.getLineArray().get(iEstimateLineCounter);
+				s += "  <TR> \n";
+				s+="<TD>";
+				s+=line.getsbdquantity();
+				s+="</TD>";
+				s+="<TD>";
+				s+=line.getsitemnumber();
+				s+="</TD>";
+				s+="<TD>";
+				s+=line.getslinedescription();
+				s+="</TD>";
+				s+="<TD>";
+				s+=line.getsunitofmeasure();
+				s+="</TD>";
+				s+="<TD>";
+				//s+=;
+				s+="</TD>";
+				s+="<TD>";
+				s+=line.getsbdunitsellprice();
+				s+="</TD>";
+				s+="<TD>";
+				s+=line.getsbdextendedsellprice();
+				s+="</TD>";
+				s+="<TD>";
+				s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", ""))).setScale(2));
+				s+="</TD>";
+				s+="<TD>";
+				s+=line.getsbdextendedcost();
+				s+="</TD>";
+				s += "  </TR>" + "\n";
+			}
 			
 			s += "</TABLE>" + "\n";
-			
-			
 		}
 
 		out.println(s);

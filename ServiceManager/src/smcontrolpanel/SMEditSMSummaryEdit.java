@@ -112,6 +112,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	public static final String RESULT_STATUS_OBJECT = "SMEDITSMSUMMARYRESULTSTATUSOBJECT";
 	public static final String TOTALS_FIELD_WIDTH_FOR_LABELS = "100px";
 	public static final String TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS = "106px";
+	public static final String SALES_LEAD_LABEL = "SALESLEADLABEL";
 	
 	public static final String SUMMARY_HEADER_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_PALE_BLUE;
 	public static final String ESTIMATES_TABLE_BACKGROUND_COLOR = SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_GREY;
@@ -414,8 +415,29 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		
 		s += "  <TR>" + "\n";
 		//Sales Lead
+		String sSalesLeadLink = "<B>Sales Lead ID:</B>";
+		if (summary.getslsalesleadid().compareToIgnoreCase("") != 0) {
+			boolean bAllowEditSalesLeads = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMEditBids, sm.getUserID(), conn, sm.getLicenseModuleLevel());
+			if (bAllowEditSalesLeads) {
+				sSalesLeadLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry"
+			    	+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+			    	+ "&" + SMBidEntry.ParamID + "=" + summary.getslsalesleadid()
+			    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+			    	+ "\">" + sSalesLeadLink + "</A>"
+				;
+			}
+		}
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
-			+ "<B>Sales Lead ID:</B>"
+			//+ sSalesLeadLink
+			
+			+ "<LABEL"
+			+ " NAME = \"" + SALES_LEAD_LABEL + "\""
+			+ " ID = \"" + SALES_LEAD_LABEL + "\""
+			+ " >"
+			//+ sSalesLeadLink
+			+ ""
+			+ "</LABEL>"
+			
 			+ "</TD>" + "\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\" >"
 			+ "<INPUT TYPE=TEXT"
@@ -424,7 +446,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			+ " VALUE=\"" + summary.getslsalesleadid() + "\""
 			+ " MAXLENGTH=" + "15"
 			+ " STYLE=\"width: 1in; height: 0.25in\""
-			+ " onchange=\"flagDirty();\""
+			+ " onchange=\"updateSalesLeadLink();\""
 			+ ">"
 			+ "</TD>" + "\n"
 		;
@@ -1719,8 +1741,9 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    // The 'taxChange' function will trigger recalculatelivetotals() automatically: \n"
 				+ "    taxChange(document.getElementById(\"" + SMTablesmestimatesummaries.itaxid + "\")); \n"
 				+ "    initShortcuts();\n"
+				+ "    updateSalesLeadLink(); \n"
 				+ "    //Now reset the 'record changed' flag since the user hasn't done anything yet: \n"
-				+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = ''; \n" 
+				+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").innerText = ''; \n" 
 				+ "\n"
 				+ "}\n\n"
 			;
@@ -1884,6 +1907,21 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 					+ "    document.forms[\"" +FORM_NAME + "\"].submit();\n"
 					+ "}\n"
 				;
+			
+			//Update the sales lead link if the user changes it:
+			s += "function updateSalesLeadLink(){ \n"
+				+ "    var saleslead = document.getElementById(\"" + SMTablesmestimatesummaries.lsalesleadid + "\").value; \n"  
+				//+ "    alert('Updating sales lead link - ' + saleslead + '.'); \n"
+				+ "    var salesleadlink = '<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry' \n"
+				    	+ "        + '?CallingClass=" + SMUtilities.getFullClassName(this.toString()) + "' \n"
+				    	+ "        + '&" + SMBidEntry.ParamID + "=' + saleslead \n"
+				    	+ "        + '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() + "\">' \n"
+				    	+ "        + '<B>Sales Lead ID:</B></A>'; \n"
+				+ "    var salesleadlabel = document.getElementById(\"" + SMTablesmestimatesummaries.lsalesleadid + "\"); \n"
+				+ "    document.getElementById(\"" + SALES_LEAD_LABEL + "\").innerHTML = salesleadlink; \n"
+				+ "    flagDirty(); \n"
+				+ "} \n"
+			;
 			
 			s += "function backintoprice(){\n"
 					

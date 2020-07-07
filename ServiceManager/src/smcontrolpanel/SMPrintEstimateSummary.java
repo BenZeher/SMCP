@@ -929,7 +929,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				s+=line.getsunitofmeasure();
 				s+="</TD>";
 				s+="<TD>";
-				//s+=;
+				//s+=;TODO
 				s+="</TD>";
 				s+="<TD>";
 				s+=line.getsbdunitsellprice();
@@ -945,8 +945,17 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				s+="</TD>";
 				s += "  </TR>" + "\n";
 			}
-			
+			s += "  <TR> \n";
+			s+="<TD colspan=\"6\" style=\"text-align:right\">";
+			s+="<B>TOTAL PUBLISHED SELL PRICE:</B>";
+			s+="</TD>";
+			s+="<TD>";
+			//TODO
+			s+="0.00";
+			s+="</TD>";
+			s += "  </TR>" + "\n";
 			s += "</TABLE>" + "\n";
+
 		}
 
 		out.println(s);

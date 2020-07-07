@@ -612,6 +612,12 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 
 		//MU per labor unit
 		//adjustedmarkuptotal / adjustedlaborunits
+		BigDecimal bdTemp = new BigDecimal(0);
+		if(bdAdjustedMarkUpAmt.compareTo(BigDecimal.ZERO)==0 || bdAdjustLaborUnitQty.compareTo(BigDecimal.ZERO)==0) {
+			bdTemp= BigDecimal.ZERO.setScale(2);
+		}else {
+			bdTemp=bdAdjustedMarkUpAmt.divide(bdAdjustLaborUnitQty, BigDecimal.ROUND_HALF_UP).setScale(2,BigDecimal.ROUND_HALF_UP);
+		}
 
 		s += "  <TR>" + "\n";
 		s += "    <TD style=\"text-align:right\">"
@@ -625,7 +631,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " NAME = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " ID = \"" + SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT + "\""
 				+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_TEXT_INPUTS + ";" + "\">"
-				+ bdAdjustedMarkUpAmt.divide(bdAdjustLaborUnitQty)
+				+ bdTemp
 				+ "</LABEL>";
 
 		//MU Pctge
@@ -838,6 +844,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s += "<TABLE style = \""
 					+ " width:100%; "
 					+ " \" >" + "\n";
+			//Heading
 			s += "  <TR> \n";
 			s+="<TD>";
 			s+="<B>Quantity</B>";
@@ -867,7 +874,72 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s+="<B>Material Extended cost</B>";
 			s+="</TD>";
 			s += "  </TR>" + "\n";
+			
+			//Line
+			s += "  <TR> \n";
+			s+="<TD>";
+			s+="<B>Quantity</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Item #</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Product description</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>U/M</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Multiplier</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Unit sell price</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Extended sell price</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Material Unit cost</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Material Extended cost</B>";
+			s+="</TD>";
+			s += "  </TR>" + "\n";
+			
+			//Other
+			s += "  <TR> \n";
+			s+="<TD>";
+			s+="<B>Quantity</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Item #</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Product description</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>U/M</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Multiplier</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Unit sell price</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Extended sell price</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Material Unit cost</B>";
+			s+="</TD>";
+			s+="<TD>";
+			s+="<B>Material Extended cost</B>";
+			s+="</TD>";
+			s += "  </TR>" + "\n";
+			
 			s += "</TABLE>" + "\n";
+			
+			
 		}
 
 		out.println(s);

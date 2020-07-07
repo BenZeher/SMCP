@@ -86,6 +86,41 @@ public class TCPunchAction extends HttpServlet{
 			sGeoCode = sUserLatitude + "," + sUserLongitude;
 		}
 		
+		//Diagnostic logging:
+		TCLogEntry log = new TCLogEntry(sDBID, getServletContext());
+		String sPunchDesc = "";
+		if (sPunchType.compareToIgnoreCase(UserLogin.PARAM_PUNCH_TYPE_PUNCH_IN) == 0){
+			sPunchDesc = "IN";
+		}else{
+			sPunchDesc = "OUT";
+		}
+		log.writeEntry(
+			sEmployeeID,
+			TCLogEntry.LOG_OPERATION_RECORD_BROWSER_DATA, 
+			"Diagnostics for employee punch" + sPunchDesc,
+			TimeCardUtilities.now("MM/dd/yyyy hh:mm:ss z") + "\n"
+				+ clsBrowserReader.listPassedProperties(request)
+				+ "Geocode: '" + sGeoCode + "'\n"
+
+				+ "request.getLocalMethod() = '" + request.getMethod() + "'" + "\n"
+				+ "request.getPathInfo() = '" + request.getPathInfo() + "'" + "\n"
+				+ "request.getPathTranslated() = '" + request.getPathTranslated() + "'" + "\n"
+				+ "request.getProtocol() = '" + request.getProtocol() + "'" + "\n"
+				+ "request.getQueryString() = '" + request.getQueryString() + "'" + "\n"
+				+ "request.getRemoteAddr() = '" + request.getRemoteAddr() + "'" + "\n"
+				+ "request.getRemoteHost() = '" + request.getRemoteHost() + "'" + "\n"
+				+ "request.getRemotePort() = '" + request.getRemotePort() + "'" + "\n"
+				+ "request.getRemoteUser() = '" + request.getRemoteUser() + "'" + "\n"
+				+ "request.getRequestURI() = '" + request.getRequestURI() + "'" + "\n"
+				+ "request.getScheme() = '" + request.getScheme() + "'" + "\n"
+				+ "request.getServerName() = '" + request.getServerName() + "'" + "\n"
+				+ "request.getServerPort() = '" + request.getServerPort() + "'" + "\n"
+				+ "request.getServletPath() = '" + request.getServletPath() + "'" + "\n"
+				+ "request.getHeader(\"User-Agent\") = '" + request.getHeader("User-Agent") + "'" + "\n",
+			"1517538389"
+		);
+		
+		/*
 		//Debugging to catch 'phantom' punch ins:
 		//Special testing to catch 'phantom' punch ins for Jeff Treiber - TJR
 		if (sEmployeeID.compareToIgnoreCase("TRE001") == 0){
@@ -127,7 +162,7 @@ public class TCPunchAction extends HttpServlet{
 				"1517538189"
 			);
 		}
-		
+		*/
 		if (sPunchType.compareToIgnoreCase(UserLogin.PARAM_PUNCH_TYPE_PUNCH_IN) == 0){
 			try {
 				out.println(

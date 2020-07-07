@@ -20,26 +20,41 @@ public class clsBrowserReader {
 	public static final String FORM_FIELD_HOST = "BROWSER_READER_HOST";
 	public static final String FORM_FIELD_IP = "BROWSER_READER_IP";
 
-	public String listPassedProperties(HttpServletRequest request){
-		String s = "";
-		
-		s += "Screen width: " + readParam(request, FORM_FIELD_SCREEN_WIDTH) + "\n";
-		s += "Screen height: " + readParam(request, FORM_FIELD_SCREEN_HEIGHT) + "\n";
-		s += "Color: " + readParam(request, FORM_FIELD_COLOR) + "\n";
-		s += "Fonts: " + readParam(request, FORM_FIELD_FONTS) + "\n";
-		s += "Navigator: " + readParam(request, FORM_FIELD_NAVIGATOR) + "\n";
-		s += "Version: " + readParam(request, FORM_FIELD_VERSION) + "\n";
-		s += "Color depth: " + readParam(request, FORM_FIELD_COLORDEPTH) + "\n";
-		s += "Max width: " + readParam(request, FORM_FIELD_MAXWIDTH) + "\n";
-		s += "Max height: " + readParam(request, FORM_FIELD_MAXHEIGHT) + "\n";
-		s += "Codename: " + readParam(request, FORM_FIELD_CODENAME) + "\n";
-		s += "Java: " + readParam(request, FORM_FIELD_JAVA) + "\n";
-		s += "Platform: " + readParam(request, FORM_FIELD_PLATFORM) + "\n";
-		s += "Localhost: " + readParam(request, FORM_FIELD_LOCALHOST) + "\n";
-		s += "Host: " + readParam(request, FORM_FIELD_HOST) + "\n";
-		s += "IP: " + readParam(request, FORM_FIELD_IP) + "\n";
-		
-		//TODO...
+	public static String listPassedProperties(HttpServletRequest request){
+		String s =
+		"PROPERTIES FROM BROWSER: \n"
+		+ "Screen width: " + readParam(request, FORM_FIELD_SCREEN_WIDTH) + "\n"
+		+ "Screen height: " + readParam(request, FORM_FIELD_SCREEN_HEIGHT) + "\n"
+		+ "Color: " + readParam(request, FORM_FIELD_COLOR) + "\n"
+		+ "Fonts: " + readParam(request, FORM_FIELD_FONTS) + "\n"
+		+ "Navigator: " + readParam(request, FORM_FIELD_NAVIGATOR) + "\n"
+		+ "Version: " + readParam(request, FORM_FIELD_VERSION) + "\n"
+		+ "Color depth: " + readParam(request, FORM_FIELD_COLORDEPTH) + "\n"
+		+ "Max width: " + readParam(request, FORM_FIELD_MAXWIDTH) + "\n"
+		+ "Max height: " + readParam(request, FORM_FIELD_MAXHEIGHT) + "\n"
+		+ "Codename: " + readParam(request, FORM_FIELD_CODENAME) + "\n"
+		+ "Java: " + readParam(request, FORM_FIELD_JAVA) + "\n"
+		+ "Platform: " + readParam(request, FORM_FIELD_PLATFORM) + "\n"
+		+ "Localhost: " + readParam(request, FORM_FIELD_LOCALHOST) + "\n"
+		+ "Host: " + readParam(request, FORM_FIELD_HOST) + "\n"
+		+ "IP: " + readParam(request, FORM_FIELD_IP) + "\n"
+		+ "PROPERTIES FROM REQUEST: \n"
+		+ "request.getLocalMethod() = '" + request.getMethod() + "'" + "\n"
+		+ "request.getPathInfo() = '" + request.getPathInfo() + "'" + "\n"
+		+ "request.getPathTranslated() = '" + request.getPathTranslated() + "'" + "\n"
+		+ "request.getProtocol() = '" + request.getProtocol() + "'" + "\n"
+		+ "request.getQueryString() = '" + request.getQueryString() + "'" + "\n"
+		+ "request.getRemoteAddr() = '" + request.getRemoteAddr() + "'" + "\n"
+		+ "request.getRemoteHost() = '" + request.getRemoteHost() + "'" + "\n"
+		+ "request.getRemotePort() = '" + request.getRemotePort() + "'" + "\n"
+		+ "request.getRemoteUser() = '" + request.getRemoteUser() + "'" + "\n"
+		+ "request.getRequestURI() = '" + request.getRequestURI() + "'" + "\n"
+		+ "request.getScheme() = '" + request.getScheme() + "'" + "\n"
+		+ "request.getServerName() = '" + request.getServerName() + "'" + "\n"
+		+ "request.getServerPort() = '" + request.getServerPort() + "'" + "\n"
+		+ "request.getServletPath() = '" + request.getServletPath() + "'" + "\n"
+		+ "request.getHeader(\"User-Agent\") = '" + request.getHeader("User-Agent") + "'" + "\n"
+		;
 		
 		return s;
 	}
@@ -176,7 +191,7 @@ public class clsBrowserReader {
 		//return "onload=\"collectBrowserInfo()\"" + "\n";
 		return "collectBrowserInfo()";
 	}
-	private String readParam(HttpServletRequest request, String sParam){
+	private static String readParam(HttpServletRequest request, String sParam){
 		
 		if (request.getParameter(sParam) == null){
 			return "";

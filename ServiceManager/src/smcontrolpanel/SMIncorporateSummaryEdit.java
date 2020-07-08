@@ -320,7 +320,8 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
         s += "<BR><B>Total billing amt for summary"
         	+ "<a href=\"#totalbillingamt\"><SUP>1</SUP></a>"
         	+ ":</B>&nbsp;"
-        	+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(summary.getTotalPrice());
+        	+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(summary.getTotalPrice())
+        	+ "\n";
     	;
         
     	/*
@@ -334,7 +335,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
     	+ ">"
         ;
 		*/
-		s += "<BR><B>Labor type:</B>";
+		s += "<BR><B>Labor type: </B>";
 		s += "<SELECT NAME=\"" + SMIncorporateSummary.Paramslabortype + "\"" + ">";
 		//Add one for the 'Other':
 		s += "<OPTION";
@@ -355,7 +356,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
     	s += "</SELECT>";
 		
         //location
-		s += "&nbsp;<B>Location:</B>";
+		s += "&nbsp;<B>Location: </B>";
 		String sLocation = entry.getM_slocation();
 		if (sLocation.compareToIgnoreCase("") == 0){
 			sLocation = order.getM_sLocation();
@@ -383,7 +384,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
     	
     	if(!bChooseCategoryByLine){
 	        //item category
-			s += "&nbsp;<B>Item category:</B>";
+			s += "&nbsp;<B>Item category: </B>";
 			String sItemCategory = entry.getM_sitemcategory();
 			if (sItemCategory.compareToIgnoreCase("") == 0){
 				sItemCategory = order.getM_sDefaultItemCategory();
@@ -669,7 +670,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		
 		//Print a 'totals' line:
 		s += "  <TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_BLACK + "; color:white; \" >" + "\n";
-		s += "    <TD COLSPAN=" + Integer.toString(iColumnCounter - 2) + " ALIGN=RIGHT >"
+		s += "    <TD COLSPAN=" + Integer.toString(iColumnCounter - 1) + " ALIGN=RIGHT >"
 				+ "<B><I>TOTALS:</I></B>"
 				+ "</TD>" + "\n"
 				//+ "    <TD ALIGN=RIGHT>"

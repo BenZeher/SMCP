@@ -1302,7 +1302,28 @@ public class SMEstimateSummary {
 		
 		return bdTotalPrice;
 	}
-	
+	public String getLaborItemFromLaborType(Connection conn) throws Exception{
+		String s = "";
+		
+		String SQL = "SELECT"
+			+ " " + SMTablelabortypes.sItemNumber
+			+ " FROM " + SMTablelabortypes.TableName
+			+ " WHERE ("
+				+ "(" + SMTablelabortypes.sID + " = " + getsilabortype() + ")"
+			+ ")"
+		;
+		ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+		if (rs.next()) {
+			s = rs.getString(SMTablelabortypes.sItemNumber);
+			rs.close();
+		}else {
+			rs.close();
+			throw new Exception("Error [202007085147] - no labor type found with ID '" + getsilabortype() + "'.");
+		}
+		
+		return s;
+		
+	}
 	public void addEstimate(SMEstimate estimate){
 		arrEstimates.add(estimate);
 	}

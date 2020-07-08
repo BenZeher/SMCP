@@ -32,6 +32,8 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 	public static final String Paramsgrossprofit = "sgrossprofit";
 	public static final String Paramsextendedlaborunits = "sextendedlaborunits";
 	public static final String Paramsitemcategory = "sitemcategory";
+	public static final String Paramsestimateid = "sestimateid";
+	public static final String Paramslinetype = "slinetype";
 
 	public static final int squantityScale = 4;
 	public static final int sestimatedextendedmaterialcostScale = 2;
@@ -60,6 +62,8 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 	private String m_sextendedlaborbillingvalue;
 	private String m_sgrossprofit;
 	private String m_sextendedlaborunits;
+	private String m_sestimateid;
+	private String m_slinetype;
 	
 	public SMSummaryIncorporationLine() {
 		super();
@@ -116,6 +120,9 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 			m_sextendedlaborunits = clsManageBigDecimals.BigDecimalToScaledFormattedString(
 				sextendedlaborunitsScale, BigDecimal.ZERO);
 		}
+		
+		m_sestimateid = clsManageRequestParameters.get_Request_Parameter(SMSummaryIncorporationLine.Paramsestimateid, req);
+		m_slinetype = clsManageRequestParameters.get_Request_Parameter(SMSummaryIncorporationLine.Paramslinetype, req);
 	}
 
     public boolean validate_entry_fields(
@@ -158,6 +165,22 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 		}
     	if (lID < -1){
         	super.addErrorMessage("Invalid line number: '" + m_llinenumber + "'.");
+        	bEntriesAreValid = false;
+        	return bEntriesAreValid;
+    	}
+    	
+    	//Estimate ID:
+    	@SuppressWarnings("unused")
+		long lEstimateID;
+		try {
+			lEstimateID = Long.parseLong(m_sestimateid);
+		} catch (NumberFormatException e) {
+        	super.addErrorMessage("Invalid Estimate ID: '" + m_sestimateid + "'.");
+        	bEntriesAreValid = false;
+        	return bEntriesAreValid;
+		}
+    	if (lID <= 0L){
+        	super.addErrorMessage("Invalid Estimate ID: '" + m_sestimateid + "'.");
         	bEntriesAreValid = false;
         	return bEntriesAreValid;
     	}
@@ -378,7 +401,15 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 	public void setM_llinenumber(String mLlinenumber) {
 		m_llinenumber = mLlinenumber;
 	}
+	
+	public String getM_sestimateid() {
+		return m_sestimateid;
+	}
 
+	public void setM_sestimateid(String sEstimateid) {
+		m_sestimateid = sEstimateid;
+	}
+		
 	public String getM_sitemnumber() {
 		return m_sitemnumber;
 	}
@@ -409,6 +440,14 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 
 	public void setM_scategorycode(String mScategorycode) {
 		m_scategorycode = mScategorycode;
+	}
+	
+	public String getM_slinetype() {
+		return m_slinetype;
+	}
+
+	public void setM_slinetype(String mslinetype) {
+		m_slinetype = mslinetype;
 	}
 
 	public String getM_squantity() {
@@ -546,12 +585,15 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
     	m_sextendedlaborbillingvalue = "0.00";
     	m_sgrossprofit = "0.00";
     	m_sextendedlaborunits = "0.00";
+    	m_sestimateid = "0";
+    	m_slinetype = "";
 		super.initVariables();
 		super.setObjectName(ParamObjectName);
     }
     public String read_out_debug_data(){
     	String sResult = "\n  ** Summary incorporation lines read out: ";
     	sResult += "\nLine number: " + this.getM_llinenumber();
+    	sResult += "\nEstimate ID: " + this.getM_sestimateid();
     	sResult += "\nItem number: " + this.getM_sitemnumber();
     	sResult += "\nItem description: " + this.getM_sitemdescription();
     	sResult += "\nCategory code:" + this.getM_scategorycode();
@@ -563,6 +605,7 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
     	sResult += "\nLabor billing value: " + this.getM_sextendedlaborbillingvalue();
     	sResult += "\nGross profit: " + this.getM_sgrossprofit();
     	sResult += "\nLabor units: " + this.getM_sextendedlaborunits();
+    	sResult += "\nLine type: " + this.getM_slinetype();
     	return sResult;
     }
 	public String getQueryString(){
@@ -592,8 +635,13 @@ public class SMSummaryIncorporationLine extends clsMasterEntry{
 			+ clsServletUtilities.URLEncode(getM_squantity());
 		sQueryString += "&" + Paramsunitofmeasure + "=" 
 			+ clsServletUtilities.URLEncode(getM_sunitofmeasure());
+		sQueryString += "&" + Paramsestimateid + "=" 
+				+ clsServletUtilities.URLEncode(getM_sestimateid());
 		sQueryString += "&" + Paramsitemcategory + "=" 
 				+ clsServletUtilities.URLEncode(getM_scategorycode());
+		sQueryString += "&" + Paramslinetype + "=" 
+				+ clsServletUtilities.URLEncode(getM_slinetype());
+		
 		return sQueryString;
 	}
 }

@@ -24,7 +24,7 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.SMDirectItemEntry)){return;}
 
 		//If there is an object in the session, destroy it:
-		smaction.getCurrentSession().removeAttribute(SMDirectOrderDetailEntry.ParamObjectName);
+		smaction.getCurrentSession().removeAttribute(SMIncorporateSummary.ParamObjectName);
 		
 		if (bDebugMode){
 			System.out.println("[1579269679] In " + this.toString() + " - PRINTING PARAMS\n");
@@ -32,7 +32,7 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 			clsManageRequestParameters.printRequestParameters(debugout, request);
 		}
 		//Read the entry fields from the request:
-		SMDirectOrderDetailEntry entry = new SMDirectOrderDetailEntry(request);
+		SMIncorporateSummary entry = new SMIncorporateSummary(request);
 
 		if (bDebugMode){
 			//PrintWriter debugout = new PrintWriter(System.out);
@@ -42,30 +42,12 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 		
 		//Special cases:
 		//********************************
-       	//If it's a request to add a new blank line:
-    	if (clsManageRequestParameters.get_Request_Parameter(
-    			SMEditDirectOrderDetailEntry.ADDBLANKLINE_BUTTON_NAME, request).compareToIgnoreCase(
-    					SMEditDirectOrderDetailEntry.ADDBLANKLINE_BUTTON_LABEL) == 0){
-    		//Add a new line:
-    		entry.addNewLine();
-    		//Save the entry in a session object:
-    		smaction.getCurrentSession().setAttribute(SMDirectOrderDetailEntry.ParamObjectName, entry);
-    		//Now return to the edit screen:
-			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-				+ "smcontrolpanel.SMEditDirectOrderDetailEntry"
-				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
-					+ clsManageRequestParameters.get_Request_Parameter(SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM, request)
-			;
-			redirectProcess(sRedirectString, response);
-			return;
-    	}
     	
+		/*
        	//If it's a request to calculate the billing values:
     	if (clsManageRequestParameters.get_Request_Parameter(
-    			SMEditDirectOrderDetailEntry.CALCULATE_BUTTON_NAME, request).compareToIgnoreCase(
-    					SMEditDirectOrderDetailEntry.CALCULATE_BUTTON_LABEL) == 0){
+    			SMIncorporateSummaryEdit.CALCULATE_BUTTON_NAME, request).compareToIgnoreCase(
+    					SMIncorporateSummaryEdit.CALCULATE_BUTTON_LABEL) == 0){
     		String sRedirectString = "";
 
     		try {
@@ -76,38 +58,50 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 											smaction.getFullUserName()
 						);
 			} catch (Exception e) {
-    			smaction.getCurrentSession().setAttribute(SMDirectOrderDetailEntry.ParamObjectName, entry);
+    			smaction.getCurrentSession().setAttribute(SMIncorporateSummary.ParamObjectName, entry);
     			sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-    					+ "smcontrolpanel.SMEditDirectOrderDetailEntry"
+    					+ "smcontrolpanel.SMIncorporateSummaryEdit"
     					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
     					+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-    					+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
-    						+ clsManageRequestParameters.get_Request_Parameter(SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM, request)
+    					+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
+    						+ clsManageRequestParameters.get_Request_Parameter(SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM, request)
     					+ "&Warning=Error: " + clsStringFunctions.filter(e.getMessage())
     				;
     			redirectProcess(sRedirectString, response);
     			return;
 			}
     		//Save the entry in a session object:
-    		smaction.getCurrentSession().setAttribute(SMDirectOrderDetailEntry.ParamObjectName, entry);
+    		smaction.getCurrentSession().setAttribute(SMIncorporateSummary.ParamObjectName, entry);
     		//Now return to the edit screen:
 			sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-				+ "smcontrolpanel.SMEditDirectOrderDetailEntry"
+				+ "smcontrolpanel.SMIncorporateSummaryEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
-					+ clsManageRequestParameters.get_Request_Parameter(SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM, request)
+				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
+					+ clsManageRequestParameters.get_Request_Parameter(SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM, request)
 			;
 			redirectProcess(sRedirectString, response);
 			return;
     	}
+		*/
 		
     	//If it's a request to create the items and place them on the order:
     	if (clsManageRequestParameters.get_Request_Parameter(
-    			SMEditDirectOrderDetailEntry.ADDITEMSTOORDER_BUTTON_NAME, request).compareToIgnoreCase(
-    					SMEditDirectOrderDetailEntry.ADDITEMSTOORDER_BUTTON_LABEL) == 0){
+    			SMIncorporateSummaryEdit.ADDITEMSTOORDER_BUTTON_NAME, request).compareToIgnoreCase(
+    					SMIncorporateSummaryEdit.ADDITEMSTOORDER_BUTTON_LABEL) == 0){
     		String sRedirectString = "";
 
+			sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
+					+ "smcontrolpanel.SMIncorporateSummaryEdit"
+					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+					+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
+					+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
+						+ clsManageRequestParameters.get_Request_Parameter(SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM, request)
+					+ "&Warning=Error: " + SMUtilities.URLEncode("This function isn't working yet.")
+				;
+			redirectProcess(sRedirectString, response);
+			return;
+    		/*
     		try {
     			entry.createItemsAndAddToOrder(smaction.getsDBID(), 
     											getServletContext(), 
@@ -115,13 +109,13 @@ public class SMIncorporateSummaryAction extends HttpServlet{
     											smaction.getUserID(),
     											smaction.getFullUserName());
 			} catch (Exception e) {
-    			smaction.getCurrentSession().setAttribute(SMDirectOrderDetailEntry.ParamObjectName, entry);
+    			smaction.getCurrentSession().setAttribute(SMIncorporateSummary.ParamObjectName, entry);
     			sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-    					+ "smcontrolpanel.SMEditDirectOrderDetailEntry"
+    					+ "smcontrolpanel.SMIncorporateSummaryEdit"
     					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
     					+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-    					+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
-    						+ clsManageRequestParameters.get_Request_Parameter(SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM, request)
+    					+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
+    						+ clsManageRequestParameters.get_Request_Parameter(SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM, request)
     					+ "&Warning=Error: " + SMUtilities.URLEncode(e.getMessage())
     				;
     			redirectProcess(sRedirectString, response);
@@ -134,8 +128,26 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&" + SMTableorderheaders.strimmedordernumber + "=" + entry.getM_ordernumber()
 				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
-					+ clsManageRequestParameters.get_Request_Parameter(SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM, request)
+				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" 
+					+ clsManageRequestParameters.get_Request_Parameter(SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM, request)
+			;
+			redirectProcess(sRedirectString, response);
+			return;
+			*/
+    	}
+    	
+       	//If it's a request to change the category selection method:
+    	if (clsManageRequestParameters.get_Request_Parameter(
+    			SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME, request).compareToIgnoreCase(
+    					SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL) == 0){
+    		//Save the entry in a session object:
+    		smaction.getCurrentSession().setAttribute(SMIncorporateSummary.ParamObjectName, entry);
+    		//Now return to the edit screen:
+			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
+				+ "smcontrolpanel.SMIncorporateSummaryEdit"
+				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
+				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL
 			;
 			redirectProcess(sRedirectString, response);
 			return;
@@ -143,33 +155,16 @@ public class SMIncorporateSummaryAction extends HttpServlet{
     	
        	//If it's a request to change the category selection method:
     	if (clsManageRequestParameters.get_Request_Parameter(
-    			SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME, request).compareToIgnoreCase(
-    					SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL) == 0){
+    			SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_BUTTON_NAME, request).compareToIgnoreCase(
+    					SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL) == 0){
     		//Save the entry in a session object:
-    		smaction.getCurrentSession().setAttribute(SMDirectOrderDetailEntry.ParamObjectName, entry);
+    		smaction.getCurrentSession().setAttribute(SMIncorporateSummary.ParamObjectName, entry);
     		//Now return to the edit screen:
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-				+ "smcontrolpanel.SMEditDirectOrderDetailEntry"
+				+ "smcontrolpanel.SMIncorporateSummaryEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL
-			;
-			redirectProcess(sRedirectString, response);
-			return;
-    	}
-    	
-       	//If it's a request to change the category selection method:
-    	if (clsManageRequestParameters.get_Request_Parameter(
-    			SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_BY_HEADER_BUTTON_NAME, request).compareToIgnoreCase(
-    					SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL) == 0){
-    		//Save the entry in a session object:
-    		smaction.getCurrentSession().setAttribute(SMDirectOrderDetailEntry.ParamObjectName, entry);
-    		//Now return to the edit screen:
-			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
-				+ "smcontrolpanel.SMEditDirectOrderDetailEntry"
-				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "&" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMEditDirectOrderDetailEntry.CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL
+				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL
 			;
 			redirectProcess(sRedirectString, response);
 			return;

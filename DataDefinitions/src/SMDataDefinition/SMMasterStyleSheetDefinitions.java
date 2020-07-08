@@ -88,6 +88,7 @@ public class SMMasterStyleSheetDefinitions {
 	//Text input and label color themes:
 	public static final String LABEL_COLOR_THEME_YELLOW = "background-color: #f4f73b; border-style: inset; display:inline-block;";
 	public static final String LABEL_COLOR_THEME_BLUE = "background-color: #99ebff; border-style: inset; display:inline-block;" ;
+	public static final String LABEL_COLOR_THEME_GREY_BLUE = "background-color: #DAE6EE; border-style: inset; display:inline-block;" ;
 	
 	//General Colors
 	public static final String BACKGROUND_PALE_GREEN = "#E6FFE6";

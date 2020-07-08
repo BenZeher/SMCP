@@ -961,6 +961,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 			//First, if there's a 'prefix label' to be added, add that now:
 			if (estimate.getsprefixlabelitem().compareToIgnoreCase("") != 0) {
 				SMSummaryIncorporationLine line = new SMSummaryIncorporationLine();
+				line.setM_sestimateid(estimate.getslid());
 				line.set_bdExtendedLaborUnits(BigDecimal.ZERO);
 				line.set_bdQuantity(BigDecimal.ONE);
 				line.setbdEstimateExtendedLaborCost(BigDecimal.ZERO);
@@ -972,18 +973,22 @@ public class SMIncorporateSummary extends clsMasterEntry{
 				line.setM_sitemdescription(estimate.getsdescription());
 				line.setM_sitemnumber(estimate.getsprefixlabelitem());
 				line.setM_sunitofmeasure("EA");
+				line.setM_slinetype("Prefix Label");
 				m_arrLines.add(line);
 			}
 			
+			boolean bShowLaborBillingValue = true;
+			if (estimate.getsbdlaborsellpriceperunit().compareToIgnoreCase("0.00") == 0) {
+				bShowLaborBillingValue = false;
+			}
+			
+			//Add a material line for the product:
 			SMSummaryIncorporationLine line = new SMSummaryIncorporationLine();
-			BigDecimal bdLaborQuantity = new BigDecimal(estimate.getsbdlaborquantity().replace(",", ""));
-			line.set_bdExtendedLaborUnits(bdLaborQuantity);
-			line.set_bdQuantity(new BigDecimal(estimate.getsbdquantity().replace(",", "")));
-			line.setbdEstimateExtendedLaborCost(new BigDecimal(estimate.getsbdlaborcostperunit()).multiply(bdLaborQuantity));
+			line.setM_sestimateid(estimate.getslid());
 			line.setbdEstimateExtendedMaterialCost(new BigDecimal(estimate.getsbdextendedcost().replace(",", "")));
 			BigDecimal bdLaborSellPricePerUnit = new BigDecimal(estimate.getsbdlaborsellpriceperunit().replace(",", ""));
+			BigDecimal bdLaborQuantity = new BigDecimal(estimate.getsbdlaborquantity().replace(",", ""));
 			BigDecimal bdTotalLaborBillingValue = bdLaborQuantity.multiply(bdLaborSellPricePerUnit);
-			line.setbdExtendedLaborBillingValue(bdTotalLaborBillingValue);
 			BigDecimal bdTotalMaterialBillingValue = estimate.getTotalPrice(conn).subtract(bdTotalLaborBillingValue);
 			line.setbdExtendedMaterialBillingValue(bdTotalMaterialBillingValue);
 			line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
@@ -992,17 +997,52 @@ public class SMIncorporateSummary extends clsMasterEntry{
 			line.setM_sitemnumber(estimate.getsitemnumber());
 			line.setM_squantity(estimate.getsbdquantity());
 			line.setM_sunitofmeasure(estimate.getsunitofmeasure());
+			if (bShowLaborBillingValue) {
+				line.set_bdExtendedLaborUnits(bdLaborQuantity);
+				line.setbdEstimateExtendedLaborCost(new BigDecimal(estimate.getsbdlaborcostperunit()).multiply(bdLaborQuantity));
+			}
+			line.setbdExtendedLaborBillingValue(BigDecimal.ZERO);
+			line.setM_slinetype("Product");
 			//System.out.println("[202007033922] - iEstimateCounter = " + iEstimateCounter + ", line dump: " + line.read_out_debug_data());
 			m_arrLines.add(line);
 			
+			//Add a labor line, if called for:
+			if (bShowLaborBillingValue) {
+				//Then add a line for labor:
+				line = new SMSummaryIncorporationLine();
+				line.setM_sestimateid(estimate.getslid());
+				bdLaborQuantity = new BigDecimal(estimate.getsbdlaborquantity().replace(",", ""));
+				line.set_bdExtendedLaborUnits(bdLaborQuantity);
+				line.setbdEstimateExtendedLaborCost(new BigDecimal(estimate.getsbdlaborcostperunit()).multiply(bdLaborQuantity));
+				line.setbdEstimateExtendedMaterialCost(new BigDecimal(estimate.getsbdlaborcostperunit()).multiply(bdLaborQuantity));
+				bdLaborSellPricePerUnit = new BigDecimal(estimate.getsbdlaborsellpriceperunit().replace(",", ""));
+				bdTotalLaborBillingValue = bdLaborQuantity.multiply(bdLaborSellPricePerUnit);
+				line.setbdExtendedLaborBillingValue(BigDecimal.ZERO);
+				line.setbdExtendedMaterialBillingValue(bdTotalLaborBillingValue);
+				line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
+				line.setM_scategorycode("");
+				line.setM_squantity(estimate.getsbdquantity());
+				//Now get the labor item number from the labor type:
+				line.setM_sitemnumber(summary.getLaborItemFromLaborType(conn));
+				ICItem item = new ICItem(line.getM_sitemnumber());
+				if (!item.load(conn)){
+					throw new Exception("Error [202007085454] - could not load labor item '" + line.getM_sitemnumber() + "' - " + item.getErrorMessageString());
+				}
+				line.setM_sitemdescription(item.getItemDescription());
+				line.setM_sunitofmeasure(item.getCostUnitOfMeasure());
+				line.setM_slinetype("Labor");
+				m_arrLines.add(line);
+			}
+			/*
 			//Now add the estimate options without prices
 			for (int iEstimateOptioncounter = 0; iEstimateOptioncounter < estimate.getLineArray().size(); iEstimateOptioncounter++) {
 				SMEstimateLine option = estimate.getLineArray().get(iEstimateOptioncounter);
 				line = new SMSummaryIncorporationLine();
+				line.setM_sestimateid(estimate.getslid());
 				line.set_bdExtendedLaborUnits(BigDecimal.ZERO);
 				line.set_bdQuantity(new BigDecimal(option.getsbdquantity().replace(",", "")));
 				line.setbdEstimateExtendedLaborCost(BigDecimal.ZERO);
-				line.setbdEstimateExtendedMaterialCost(BigDecimal.ZERO);
+				line.setbdEstimateExtendedMaterialCost(new BigDecimal(option.getsbdextendedcost().replace(",", "")));
 				line.setbdExtendedLaborBillingValue(BigDecimal.ZERO);
 				line.setbdExtendedMaterialBillingValue(BigDecimal.ZERO);
 				line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
@@ -1010,8 +1050,10 @@ public class SMIncorporateSummary extends clsMasterEntry{
 				line.setM_sitemdescription(option.getslinedescription());
 				line.setM_sitemnumber(option.getsitemnumber());
 				line.setM_sunitofmeasure(option.getsunitofmeasure());
+				line.setM_slinetype("Option");
 				m_arrLines.add(line);
 			}
+			*/
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package smcontrolpanel;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,11 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableiccategories;
-import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
+import SMDataDefinition.SMTablesmestimates;
 import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
@@ -176,14 +178,14 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		//	+ "&nbsp;"
 		//;
 		
-		s += "<INPUT TYPE=SUBMIT NAME='" 
-			+ CALCULATE_BUTTON_NAME
-			+ "'" 
-			+ "' VALUE='"
-			+ CALCULATE_BUTTON_LABEL
-			+ "'" + " STYLE='height: 0.24in'>"
-			+ "&nbsp;"
-			;
+		//s += "<INPUT TYPE=SUBMIT NAME='" 
+		//	+ CALCULATE_BUTTON_NAME
+		//	+ "'" 
+		//	+ "' VALUE='"
+		//	+ CALCULATE_BUTTON_LABEL
+		//	+ "'" + " STYLE='height: 0.24in'>"
+		//	+ "&nbsp;"
+		//	;
 		
 		//s += "<INPUT TYPE=SUBMIT NAME='" 
 		//	+ BUILDITEMS_BUTTON_NAME
@@ -192,13 +194,15 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		//	+ BUILDITEMS_BUTTON_LABEL
 		//	+ "'" + " STYLE='height: 0.24in'>";
 		
+		s += "<BR>" + "\n";
+		
 		s += "<INPUT TYPE=SUBMIT NAME='" 
 			+ ADDITEMSTOORDER_BUTTON_NAME
 			+ "'" 
 			+ "' VALUE='"
 			+ ADDITEMSTOORDER_BUTTON_LABEL
 			+ "'" + " STYLE='height: 0.24in'>"
-			+ "&nbsp;"
+			+ "&nbsp;" + "\n"
 			;
 		
 		if (bChooseCategoryByLine){
@@ -208,7 +212,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ "' VALUE='"
 				+ CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL
 				+ "'" + " STYLE='height: 0.24in'>"
-				+ "&nbsp;"
+				+ "&nbsp;" + "\n"
 			;
 		}else{
 			s += "<INPUT TYPE=SUBMIT NAME='" 
@@ -217,16 +221,16 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ "' VALUE='"
 				+ CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL
 				+ "'" + " STYLE='height: 0.24in'>"
-				+ "&nbsp;"
+				+ "&nbsp;" + "\n"
 				;
 		}
 		
-		s += "<BR><FONT SIZE=2>"
-			+ "<B>NOTE:&nbsp;</B>To add the <I><B>material</B></I> items using a NON-STOCK item,"
-			+ " enter that item number here (otherwise new dedicated items will be created):</B></FONT>"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsnonstockmaterialitem + "\""
-			+ " VALUE=\"" + sNonStockMaterialItem + "\" SIZE=13 MAXLENGTH=" + Integer.toString(SMTableicitems.sItemNumberLength) + ">"
-		;
+		//s += "<BR><FONT SIZE=2>"
+		//	+ "<B>NOTE:&nbsp;</B>To add the <I><B>material</B></I> items using a NON-STOCK item,"
+		//	+ " enter that item number here (otherwise new dedicated items will be created):</B></FONT>"
+		//	+ "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsnonstockmaterialitem + "\""
+		//	+ " VALUE=\"" + sNonStockMaterialItem + "\" SIZE=13 MAXLENGTH=" + Integer.toString(SMTableicitems.sItemNumberLength) + ">"
+		//;
 		
 		return s;
 	}
@@ -342,7 +346,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		
 		for (int i = 0; i < arrLaborTypes.size(); i++){
 			s += "<OPTION";
-			if (arrLaborTypes.get(i).compareToIgnoreCase(entry.getM_slabortype()) == 0){
+			if (arrLaborTypes.get(i).compareToIgnoreCase(summary.getsilabortype()) == 0){
 				s += " selected=YES ";
 			}
 			s += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" + arrLaborTypeNames.get(i).toString();
@@ -415,6 +419,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				arrItemCategories,
 				arrItemCategoryNames,
 				order.getM_sDefaultItemCategory(),
+				summary,
 				bChooseCategoryByLine
 		);
     	s += sFootnotes();
@@ -428,83 +433,162 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			ArrayList <String>arrCategories,
 			ArrayList <String>arrItemCategoryNames,
 			String sDefaultCategory,
+			SMEstimateSummary summary,
 			boolean bChooseCategoryByLine
 	){
 		String s = "";
-		s += "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">";
-		s += "<TR>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Qty</B></FONT></TD>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Item number</B></FONT></TD>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Item description</B></FONT></TD>";
-		if (bChooseCategoryByLine){
-			s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Item category</B></FONT></TD>";
-		}
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Estimated<BR>extended<BR>material&nbsp;cost"
-			+ "<a href=\"#estimatedextendedmaterialcost\"><SUP>2</SUP></a>"
-			+ "</B></FONT></TD>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Estimated<BR>extended<BR>labor&nbsp;units"
-			+ "<a href=\"#estimatedextendedlaborunits\"><SUP>3</SUP></a>"
-			+ "</FONT></B></TD>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Cost&nbsp;per<BR>labor&nbsp;unit"
-				+ "</FONT></B></TD>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>U/M</B></FONT></TD>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Calculated<BR>extended<BR>material&nbsp;price"
-			+ "<a href=\"#extendedcalculatedprice\"><SUP>4</SUP></a>"	
-			+ "</B></FONT></TD>";
-		s += "<TD VALIGN=BOTTOM><FONT SIZE=2><B>Calculated<BR>extended<BR>labor&nbsp;price"
-			+ "<a href=\"#extendedcalculatedprice\"><SUP>4</SUP></a>"
-			+ "</B></FONT></TD>";
+		int iColumnCounter = 0;
 		
+		s += "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">" + "\n";
+		s += "  <TR>" + "\n";
+		s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>Line</B></FONT></TD>" + "\n";
+		iColumnCounter++;
+		s += "    <TD VALIGN=BOTTOM ALIGN=LEFT><FONT SIZE=2><B>Line&nbsp;type</B></FONT></TD>" + "\n";
+		iColumnCounter++;
+		s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>Qty</B></FONT></TD>" + "\n";
+		iColumnCounter++;
+		s += "    <TD VALIGN=BOTTOM><FONT SIZE=2><B>Item number</B></FONT></TD>" + "\n";
+		iColumnCounter++;
+		s += "    <TD VALIGN=BOTTOM><FONT SIZE=2><B>Item description</B></FONT></TD>" + "\n";
+		iColumnCounter++;
+		s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>U/M</B></FONT></TD>" + "\n";
+		iColumnCounter++;
+		if (bChooseCategoryByLine){
+			s += "    <TD VALIGN=BOTTOM><FONT SIZE=2><B>Item category</B></FONT></TD>" + "\n";
+			iColumnCounter++;
+		}
+		//s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>Estimated<BR>extended<BR>cost"
+		//	+ "<a href=\"#estimatedextendedcost\"><SUP>2</SUP></a>"
+		//	+ "</B></FONT></TD>" + "\n";
+		//iColumnCounter++;
+		
+		//s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>Estimated<BR>extended<BR>labor&nbsp;units"
+		//	+ "<a href=\"#estimatedextendedlaborunits\"><SUP>3</SUP></a>"
+		//	+ "</FONT></B></TD>";
+		//s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>Cost&nbsp;per<BR>labor&nbsp;unit"
+		//		+ "</FONT></B></TD>" + "\n";
+		s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>Calculated<BR>extended<BR>price"
+			+ "<a href=\"#extendedcalculatedprice\"><SUP>4</SUP></a>"	
+			+ "</B></FONT></TD>" + "\n";
+		iColumnCounter++;
+		//s += "    <TD VALIGN=BOTTOM ALIGN=RIGHT><FONT SIZE=2><B>Calculated<BR>extended<BR>labor&nbsp;price"
+		//	+ "<a href=\"#extendedcalculatedprice\"><SUP>4</SUP></a>"
+		//	+ "</B></FONT></TD>" + "\n";
+		
+		String sLastEstimateID = "";
+		BigDecimal bdTotalCost = new BigDecimal("0.00");
+		BigDecimal bdTotalPrice = new BigDecimal("0.00");
 		for (int i = 0; i < entry.getNumberOfLines(); i++){
-			s += "<TR>";
-			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectEntryLine.Paramllinenumber  + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
-					+ "\" VALUE=\"" + entry.getLine(i).getM_llinenumber().replace("\"", "&quot;") + "\"" + "\">";
-			s += "<TD>" 
-				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsquantity + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+			
+			if (entry.getLine(i).getM_sestimateid().compareToIgnoreCase(sLastEstimateID) != 0) {
+				//Print an estimate heading line:
+				String sEstimateLink = "&nbsp;"
+						+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSMEstimateEdit"
+			    		+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+			    		+ "&" + SMTablesmestimates.lid + "=" + entry.getLine(i).getM_sestimateid()
+			    		+ "&" + SMTablesmestimates.lsummarylid + "=" + summary.getslid()
+			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			    		+ "&" + "CallingClass = " + SMUtilities.getFullClassName(this.toString())
+			    		+ "\">" + entry.getLine(i).getM_sestimateid() + "</A>"
+			    		+ "&nbsp;"
+		    		;
+				
+				s += "  <TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_LIGHT_BLUE
+					+ "; color:black; \" >" + "\n";
+				s += "    <TD COLSPAN=" + Integer.toString(iColumnCounter) + " >"
+					+ "<B><I>ESTIMATE ID: " + sEstimateLink + "</I></B>"
+					+ "</TD>" + "\n"
+				;
+				s += "  </TR>" + "\n";
+				
+				sLastEstimateID = entry.getLine(i).getM_sestimateid();
+			}
+			
+			s += "  <TR>" + "\n";
+
+			s += "    <TD>" 
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramllinenumber + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+				+ " VALUE=\"" + entry.getLine(i).getM_llinenumber().replace("\"", "&quot;") + "\""
+				+ " SIZE=" + "3"
+				+ " MAXLENGTH=" + "8"
+				+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + " text-align:right; " + "\""
+				+ " readonly "
+				+ ">"
+				+ "</TD>" + "\n";
+			
+			s += "    <TD>" 
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramslinetype + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+				+ " VALUE=\"" + entry.getLine(i).getM_slinetype().replace("\"", "&quot;") + "\""
+				+ " SIZE=" + "8"
+				+ " MAXLENGTH=" + "8"
+				+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + " text-align:left; font-style:italic; " + "\""
+				+ " readonly "
+				+ ">"
+				+ "</TD>" + "\n";
+			
+			s += "    <TD>" 
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsquantity + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
 				+ " VALUE=\"" + entry.getLine(i).getM_squantity().replace("\"", "&quot;") + "\""
 				+ " SIZE=" + "6"
 				+ " MAXLENGTH=" + "15"
-				+ " style = \" text-align:right; \""
+				+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + " text-align:right; " + "\""
+				+ " readonly "
 				+ ">"
-				+ "</TD>";
+				+ "</TD>" + "\n";
 				//s += "<TD>" 
-				//	+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsitemnumber + SMUtilities.PadLeft(Integer.toString(i), "0", 6)+ "\""
+				//	+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsitemnumber + SMUtilities.PadLeft(Integer.toString(i), "0", 6)+ "\""
 				//	+ " VALUE=\"" + entry.getLine(i).getM_sitemnumber().replace("\"", "&quot;") + "\""
 				//	+ " SIZE=" + "12"
 				//	+ " MAXLENGTH=" + SMTableorderdetails.sItemNumberLength
 				//	+ ">"
-				//	+ "</TD>";
+				//	+ "</TD>" + "\n";
 
-			s += "<TD>" 
-					+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsitemnumber + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+			s += "    <TD>" 
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsitemnumber + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
 					+ " VALUE=\"" + entry.getLine(i).getM_sitemnumber().replace("\"", "&quot;") + "\""
 					+ " SIZE=" + "8"
 					+ " MAXLENGTH=" + SMTableorderdetails.sItemNumberLength
+					+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + "\""
+					+ " readonly "
 					+ ">"
-					+ "</TD>";
-
+					+ "</TD>" + "\n";
 			
-			s += "<TD>" 
-				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsitemdescription + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+			s += "    <TD>" 
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsitemdescription + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
 				+ " VALUE=\"" + entry.getLine(i).getM_sitemdescription().replace("\"", "&quot;") + "\""
 				+ " SIZE=" + "50"
 				+ " MAXLENGTH=" + SMTableorderdetails.sItemDescLength
+				+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + "\""
+				+ " readonly "
 				+ ">"
-				+ "</TD>";
+				+ "</TD>" + "\n";
+			
+			s += "    <TD>" 
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsunitofmeasure + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+				+ " VALUE=\"" + entry.getLine(i).getM_sunitofmeasure().replace("\"", "&quot;") + "\""
+				+ " SIZE=" + "5"
+				+ " MAXLENGTH=" + SMTableorderdetails.sOrderUnitOfMeasureLength
+				+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + "\""
+				+ " readonly "
+				+ ">"
+				+ "</TD>" + "\n";
+			
 			if (bChooseCategoryByLine){
 				String sItemCategory = entry.getLine(i).getM_scategorycode().replace("\"", "&quot;");
 				if (sItemCategory.compareToIgnoreCase("") == 0){
 					sItemCategory = sDefaultCategory;
 				}
-				s += "<TD>";
-				s += "<SELECT NAME=\"" + SMIncorporateSummary.Paramsitemcategory +  clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\"" + ">";
+				s += "    <TD>" + "\n";
+				s += "<SELECT"
+					+ " style = \" background-color: " + SMMasterStyleSheetDefinitions.BACKGROUND_GREY_BLUE + "; \""
+					+ " NAME=\"" + SMIncorporateSummary.Paramsitemcategory +  clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\"" + ">" + "\n";
 				//Add one for the 'Other':
 				s += "<OPTION";
 				if (sItemCategory.compareToIgnoreCase("") == 0){
 					s += " selected=YES ";
 				}
 				s += " VALUE=\"" + ITEMCATEGORY_LIST_OPTION_NOT_CHOSEN_VALUE 
-					+ "\">" + "** Select an item category ***</OPTION>";
+					+ "\">" + "** Select an item category ***</OPTION>" + "\n";
 				
 				for (int j = 0; j < arrCategories.size(); j++){
 					s += "<OPTION";
@@ -512,68 +596,92 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 						s += " selected=YES ";
 					}
 					s += " VALUE=\"" + arrCategories.get(j).toString() + "\">" + arrCategories.get(j).toString() + " - " + arrItemCategoryNames.get(j).toString();
-					s += "</OPTION>";
+					s += "</OPTION>" + "\n";
 				}
-		    	s += "</SELECT>";
-		    	s += "</TD>";
+		    	s += "</SELECT>" + "\n";
+		    	s += "    </TD>" + "\n";
 			}
 			
-			s += "<TD>" 
-				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsestimatedextendedmaterialcost + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
-				+ " VALUE=\"" + entry.getLine(i).getM_sestimatedextendedmaterialcost().replace("\"", "&quot;") + "\""
-				+ " SIZE=" + "7"
-				+ " MAXLENGTH=" + "15"
-				+ " style = \" text-align:right; \""
-				+ ">"
-				+ "</TD>";
-			s += "<TD>" 
-				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsextendedlaborunits + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
-				+ " VALUE=\"" + entry.getLine(i).getM_sextendedlaborunits().replace("\"", "&quot;") + "\""
-				+ " SIZE=" + "7"
-				+ " MAXLENGTH=" + "15"
-				+ " style = \" text-align:right; \""
-				+ ">"
-				+ "</TD>";
+			//s += "    <TD>" 
+			//	+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsestimatedextendedmaterialcost + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+			//	+ " VALUE=\"" + entry.getLine(i).getM_sestimatedextendedmaterialcost().replace("\"", "&quot;") + "\""
+			//	+ " SIZE=" + "7"
+			//	+ " MAXLENGTH=" + "15"
+			//	+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + " text-align:right; " + "\""
+			//	+ " readonly "
+			//	+ ">"
+			//	+ "</TD>" + "\n";
+			//s += "<TD>" 
+			//	+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsextendedlaborunits + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+			//	+ " VALUE=\"" + entry.getLine(i).getM_sextendedlaborunits().replace("\"", "&quot;") + "\""
+			//	+ " SIZE=" + "7"
+			//	+ " MAXLENGTH=" + "15"
+			//	+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " text-align:right; " + "\""
+			//	+ " readonly "
+			//	+ ">"
+			//	+ "</TD>" + "\n";
 			
 			//Cost per labor unit:
-			s += "<TD>" 
-				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsextendedlaborunits + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
-				+ " VALUE=\"" + entry.getLine(i).getM_sextendedlaborunits().replace("\"", "&quot;") + "\""
+			//s += "<TD>" 
+			//	+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsextendedlaborunits + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+			//	+ " VALUE=\"" + entry.getLine(i).getM_sextendedlaborunits().replace("\"", "&quot;") + "\""
+			//	+ " SIZE=" + "7"
+			//	+ " MAXLENGTH=" + "15"
+			//	+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_YELLOW + " text-align:right; " + "\""
+			//	+ " readonly "
+			//	+ ">"
+			//	+ "</TD>" + "\n";
+
+			//These following are calculated fields:
+
+			s += "    <TD>" 
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMSummaryIncorporationLine.Paramsestimatedextendedmaterialcost + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
+				+ " VALUE=\"" + entry.getLine(i).getM_sextendedmaterialbillingvalue().replace("\"", "&quot;") + "\""
 				+ " SIZE=" + "7"
 				+ " MAXLENGTH=" + "15"
-				+ " style = \" text-align:right; \""
+				+ " style = \"" + SMMasterStyleSheetDefinitions.LABEL_COLOR_THEME_GREY_BLUE + " text-align:right; " + "\""
+				+ " readonly "
 				+ ">"
-				+ "</TD>";
-
-			s += "<TD>" 
-				+ "<INPUT TYPE=TEXT NAME=\"" + SMDirectEntryLine.Paramsunitofmeasure + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)+ "\""
-				+ " VALUE=\"" + entry.getLine(i).getM_sunitofmeasure().replace("\"", "&quot;") + "\""
-				+ " SIZE=" + "5"
-				+ " MAXLENGTH=" + SMTableorderdetails.sOrderUnitOfMeasureLength
-				+ ">"
-				+ "</TD>";
-			//These following are calculated fields:
-			s += "<TD ALIGN=RIGHT>" + entry.getLine(i).getM_sextendedmaterialbillingvalue() + "</TD>"
-				+ "<TD ALIGN=RIGHT>" + entry.getLine(i).getM_sextendedlaborbillingvalue() + "</TD>"
+				+ "</TD>" + "\n";
+			//s += "<TD ALIGN=RIGHT>" + entry.getLine(i).getM_sextendedmaterialbillingvalue() + "</TD>"
+				//+ "<TD ALIGN=RIGHT>" + entry.getLine(i).getM_sextendedlaborbillingvalue() + "</TD>"
 				//+ "<TD ALIGN=RIGHT>" + entry.getLine(i).getM_slaborunitsperunit() + "</TD>"
 				//+ "<TD ALIGN=RIGHT>" + entry.getLine(i).getM_sgrossprofit() + "</TD>"
 			;
-			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectEntryLine.Paramsestimatedextendedlaborcost 
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMSummaryIncorporationLine.Paramsestimatedextendedlaborcost 
 					+ clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\" VALUE=\"" 
 					+ entry.getLine(i).getM_sestimatedextendedlaborcost() + "\"" + "\">";
-			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectEntryLine.Paramsextendedlaborbillingvalue
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMSummaryIncorporationLine.Paramsextendedlaborbillingvalue
 					+ clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\" VALUE=\"" 
 					+ entry.getLine(i).getM_sextendedlaborbillingvalue() + "\"" + "\">";
-			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectEntryLine.Paramsextendedmaterialbillingvalue
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMSummaryIncorporationLine.Paramsextendedmaterialbillingvalue
 					+ clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\" VALUE=\"" 
 					+ entry.getLine(i).getM_sextendedmaterialbillingvalue() + "\"" + "\">";
-			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectEntryLine.Paramsgrossprofit
+			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMSummaryIncorporationLine.Paramsgrossprofit
 					+ clsStringFunctions.PadLeft(Integer.toString(i), "0", 6) + "\" VALUE=\"" 
 					+ entry.getLine(i).getM_sgrossprofit() + "\"" + "\">";
 			
-			s += "</TR>";
+			bdTotalCost = bdTotalCost.add(new BigDecimal(entry.getLine(i).getM_sestimatedextendedmaterialcost().replace(",", "")));
+			bdTotalPrice = bdTotalPrice.add(new BigDecimal(entry.getLine(i).getM_sextendedmaterialbillingvalue().replace(",", "")));
+			
+			s += "  </TR>" + "\n";
 		}
-		s += "</TABLE>";
+		
+		//Print a 'totals' line:
+		s += "  <TR style = \" background-color:" + SMMasterStyleSheetDefinitions.BACKGROUND_BLACK + "; color:white; \" >" + "\n";
+		s += "    <TD COLSPAN=" + Integer.toString(iColumnCounter - 2) + " ALIGN=RIGHT >"
+				+ "<B><I>TOTALS:</I></B>"
+				+ "</TD>" + "\n"
+				//+ "    <TD ALIGN=RIGHT>"
+				//+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalCost) + "</B>"
+				//+ "</TD>" + "\n"
+				+ "    <TD ALIGN=RIGHT>"
+				+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalPrice) + "</B>"
+				+ "</TD>" + "\n"
+			;
+		s += "  </TR>" + "\n"; 
+		
+		s += "</TABLE>" + "\n";
 		return s;
 	}
 	private String sFootnotes(){
@@ -590,7 +698,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			+ " the Unit Labor Cost would be 180."
 		;
 		*/
-		s += "<BR><a name=\"estimatedextendedmaterialcost\"><SUP>2</SUP> <B>'Estimated extended material cost'</B> is the estimated material"
+		s += "<BR><a name=\"estimatedextendedcost\"><SUP>2</SUP> <B>'Estimated extended material cost'</B> is the estimated material"
 			+ " cost of the entire line, which is the estimated unit cost times the quantity on that line.";
 		
 		s += "<BR><a name=\"estimatedextendedlaborunits\"><SUP>3</SUP> <B>'Estimated extended labor units'</B> is the amount of labor,"

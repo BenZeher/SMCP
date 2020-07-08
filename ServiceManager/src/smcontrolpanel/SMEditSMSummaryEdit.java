@@ -1743,7 +1743,7 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 				+ "    initShortcuts();\n"
 				+ "    updateSalesLeadLink(); \n"
 				+ "    //Now reset the 'record changed' flag since the user hasn't done anything yet: \n"
-				+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").innerText = ''; \n" 
+				+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = ''; \n" 
 				+ "\n"
 				+ "}\n\n"
 			;

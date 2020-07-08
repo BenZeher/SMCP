@@ -491,6 +491,12 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  </TR>" + "\n";
 
 		s += "  <TR>" + "\n";
+		//totalcalculatedestimateprice * (taxrateaspercentage / 100)).toFixed(2
+		//RETAIL SALES TAX
+		BigDecimal bdRetailSalesTax = new BigDecimal(0);
+		if(summary.getsicalculatetaxoncustomerinvoice().compareToIgnoreCase("1")==0) {
+			bdRetailSalesTax = bdCalculatedTotalPrice.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100))).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 		try {
 			s += "    <TD"
 					//+ " style = \" font-size: large; \""
@@ -510,7 +516,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 					+ " ID = \"" + SMEditSMSummaryEdit.LABEL_CALCULATED_RETAIL_SALES_TAX + "\""
 					+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 					+ ">"
-					+ "0.00" // TODO - fill in this value with java
+					+ bdRetailSalesTax
 					+ "</LABEL>"
 
 				+ "</TD>" + "\n"
@@ -782,9 +788,9 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 
 		//Retail sales tax
 		//adjustedtotalforsummary * (taxrateaspercentage / 100)
-		BigDecimal bdRetailSalesTax = new BigDecimal(0);
-		if(bdTaxPercentage.compareTo(BigDecimal.valueOf(0))!=0 || summary.getsicalculatetaxoncustomerinvoice().compareToIgnoreCase("0")==0) {
-			bdRetailSalesTax = bdAdjustedTotalSummary.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100)));
+		BigDecimal bdAdjustedRetailSalesTax = new BigDecimal(0);
+		if(bdTaxPercentage.compareTo(BigDecimal.valueOf(0))!=0 || summary.getsicalculatetaxoncustomerinvoice().compareToIgnoreCase("1")==0) {
+			bdAdjustedRetailSalesTax = bdAdjustedTotalSummary.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100)));
 		}
 
 		s += "  <TR>" + "\n";
@@ -804,7 +810,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ " ID = \"" + SMEditSMSummaryEdit.LABEL_ADJUSTED_RETAIL_SALES_TAX + "\""
 			+ " width:" + SMEditSMSummaryEdit.TOTALS_FIELD_WIDTH_FOR_LABELS + ";" + "\""
 			+ ">"
-			+ bdRetailSalesTax.setScale(2,BigDecimal.ROUND_HALF_UP)
+			+ bdAdjustedRetailSalesTax.setScale(2,BigDecimal.ROUND_HALF_UP)
 			+ "</LABEL>"
 
 			+ "</TD>" + "\n"

@@ -801,165 +801,170 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		ArrayList<SMEstimate> Estimates = summary.getEstimateArray();
 		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
 			SMEstimate estimate = Estimates.get(i);
-			
-			s += "<TABLE style = \""
-					+ " width:100%; "
-					+ " \" >" + "\n";
-			
-			s += "  <TR> \n";
-			s+="<TD>";
-			s+="<B>Estimate ID:</B>" + estimate.getslid();
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Summary line #:</B>" + estimate.getslsummarylinenumber();
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Created:</B>" + estimate.getsdatetimecreated()
-			+ " by " + estimate.getscreatedbyfullname() 
-			+ " Last modified " + estimate.getsdatetimelastmodified()
-			+ " by " + estimate.getslastmodifiedbyfullname();
-			s+="</TD>";
-			s += "  </TR>" + "\n";
-			
-			s += "  <TR> \n";
-			s+="<TD>";
-			s+="<B>Insert as prefix label using item #:</B>" + estimate.getsprefixlabelitem();
-			s+="</TD>";
-			s+="<TD colspan=\"2\">";
-			s+="<B>Estimate description:</B>" + estimate.getsdescription();
-			s+="</TD>";
-			s += "  </TR>" + "\n";
-			
-			s += "  <TR> \n";
-			s+="<TD colspan=\"3\">";
-			if(estimate.getsvendorquotenumber().compareToIgnoreCase("")==0) {
-				s+="<B>Vendor quote #:</B> (NONE)";
-			}else {
-				s+="<B>Vendor quote #:</B>" + estimate.getsvendorquotenumber();
-			}
-			s+="</TD>";
-			s += "  </TR>" + "\n";
-			s += "</TABLE>" + "\n";
-			
-			
-			s += "<TABLE style = \""
-					+ " width:100%; "
-					+ " \" >" + "\n";
-			//Heading
-			s += "  <TR> \n";
-			s+="<TD>";
-			s+="<B>Quantity</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Item #</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Product description</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>U/M</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Multiplier</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Unit sell price</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Extended sell price</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Material Unit cost</B>";
-			s+="</TD>";
-			s+="<TD>";
-			s+="<B>Material Extended cost</B>";
-			s+="</TD>";
-			s += "  </TR>" + "\n";
-			
-			//Line
-			s += "  <TR> \n";
-			s+="<TD>";
-			s+=estimate.getsbdquantity();
-			s+="</TD>";
-			s+="<TD>";
-			s+=estimate.getsitemnumber();
-			s+="</TD>";
-			s+="<TD>";
-			s+=estimate.getsproductdescription();
-			s+="</TD>";
-			s+="<TD>";
-			s+=estimate.getsunitofmeasure();
-			s+="</TD>";
-			s+="<TD>";
-			s+="&nbsp;";
-			s+="</TD>";
-			s+="<TD>";
-			s+="&nbsp;";
-			s+="</TD>";
-			s+="<TD>";
-			s+="&nbsp;";
-			s+="</TD>";
-			s+="<TD>";
-			s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(estimate.getsbdextendedcost().replaceAll(",", ""))/Double.valueOf(estimate.getsbdquantity().replaceAll(",", ""))).setScale(2));
-			s+="</TD>";
-			s+="<TD>";
-			s+=estimate.getsbdextendedcost();
-			s+="</TD>";
-			s += "  </TR>" + "\n";
-			
-			//Options
-			s += "  <TR> \n";
-			s+="<TD colspan=\"9\">";
-			s+="<B>OPTIONS</B>";
-			s+="</TD>";
-			s += "  </TR>" + "\n";
-			for (int iEstimateLineCounter = 0; iEstimateLineCounter < estimate.getLineArray().size(); iEstimateLineCounter++) {
-				SMEstimateLine line = estimate.getLineArray().get(iEstimateLineCounter);
-				s += "  <TR> \n";
-				s+="<TD>";
-				s+=line.getsbdquantity();
-				s+="</TD>";
-				s+="<TD>";
-				s+=line.getsitemnumber();
-				s+="</TD>";
-				s+="<TD>";
-				s+=line.getslinedescription();
-				s+="</TD>";
-				s+="<TD>";
-				s+=line.getsunitofmeasure();
-				s+="</TD>";
-				s+="<TD>";
-				//s+=;TODO
-				s+="</TD>";
-				s+="<TD>";
-				s+=line.getsbdunitsellprice();
-				s+="</TD>";
-				s+="<TD>";
-				s+=line.getsbdextendedsellprice();
-				s+="</TD>";
-				s+="<TD>";
-				s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", ""))).setScale(2));
-				s+="</TD>";
-				s+="<TD>";
-				s+=line.getsbdextendedcost();
-				s+="</TD>";
-				s += "  </TR>" + "\n";
-			}
-			s += "  <TR> \n";
-			s+="<TD colspan=\"6\" style=\"text-align:right\">";
-			s+="<B>TOTAL PUBLISHED SELL PRICE:</B>";
-			s+="</TD>";
-			s+="<TD>";
-			//TODO
-			s+="0.00";
-			s+="</TD>";
-			s += "  </TR>" + "\n";
-			s += "</TABLE>" + "\n";
-
+			s+= BuildEstimates(estimate);
 		}
 
 		out.println(s);
 		return false;
 	} 
+	
+	public static String BuildEstimates(SMEstimate estimate) {
+
+		String s = "";
+		s += "<TABLE style = \""
+				+ " width:100%; "
+				+ " \" >" + "\n";
+		
+		s += "  <TR> \n";
+		s+="<TD>";
+		s+="<B>Estimate ID:</B>" + estimate.getslid();
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Summary line #:</B>" + estimate.getslsummarylinenumber();
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Created:</B>" + estimate.getsdatetimecreated()
+		+ " by " + estimate.getscreatedbyfullname() 
+		+ " Last modified " + estimate.getsdatetimelastmodified()
+		+ " by " + estimate.getslastmodifiedbyfullname();
+		s+="</TD>";
+		s += "  </TR>" + "\n";
+		
+		s += "  <TR> \n";
+		s+="<TD>";
+		s+="<B>Insert as prefix label using item #:</B>" + estimate.getsprefixlabelitem();
+		s+="</TD>";
+		s+="<TD colspan=\"2\">";
+		s+="<B>Estimate description:</B>" + estimate.getsdescription();
+		s+="</TD>";
+		s += "  </TR>" + "\n";
+		
+		s += "  <TR> \n";
+		s+="<TD colspan=\"3\">";
+		if(estimate.getsvendorquotenumber().compareToIgnoreCase("")==0) {
+			s+="<B>Vendor quote #:</B> (NONE)";
+		}else {
+			s+="<B>Vendor quote #:</B>" + estimate.getsvendorquotenumber();
+		}
+		s+="</TD>";
+		s += "  </TR>" + "\n";
+		s += "</TABLE>" + "\n";
+		
+		
+		s += "<TABLE style = \""
+				+ " width:100%; "
+				+ " \" >" + "\n";
+		//Heading
+		s += "  <TR> \n";
+		s+="<TD>";
+		s+="<B>Quantity</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Item #</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Product description</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>U/M</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Multiplier</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Unit sell price</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Extended sell price</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Material Unit cost</B>";
+		s+="</TD>";
+		s+="<TD>";
+		s+="<B>Material Extended cost</B>";
+		s+="</TD>";
+		s += "  </TR>" + "\n";
+		
+		//Line
+		s += "  <TR> \n";
+		s+="<TD>";
+		s+=estimate.getsbdquantity();
+		s+="</TD>";
+		s+="<TD>";
+		s+=estimate.getsitemnumber();
+		s+="</TD>";
+		s+="<TD>";
+		s+=estimate.getsproductdescription();
+		s+="</TD>";
+		s+="<TD>";
+		s+=estimate.getsunitofmeasure();
+		s+="</TD>";
+		s+="<TD>";
+		s+="&nbsp;";
+		s+="</TD>";
+		s+="<TD>";
+		s+="&nbsp;";
+		s+="</TD>";
+		s+="<TD>";
+		s+="&nbsp;";
+		s+="</TD>";
+		s+="<TD>";
+		s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(estimate.getsbdextendedcost().replaceAll(",", ""))/Double.valueOf(estimate.getsbdquantity().replaceAll(",", ""))).setScale(2));
+		s+="</TD>";
+		s+="<TD>";
+		s+=estimate.getsbdextendedcost();
+		s+="</TD>";
+		s += "  </TR>" + "\n";
+		
+		//Options
+		s += "  <TR> \n";
+		s+="<TD colspan=\"9\">";
+		s+="<B>OPTIONS</B>";
+		s+="</TD>";
+		s += "  </TR>" + "\n";
+		for (int iEstimateLineCounter = 0; iEstimateLineCounter < estimate.getLineArray().size(); iEstimateLineCounter++) {
+			SMEstimateLine line = estimate.getLineArray().get(iEstimateLineCounter);
+			s += "  <TR> \n";
+			s+="<TD>";
+			s+=line.getsbdquantity();
+			s+="</TD>";
+			s+="<TD>";
+			s+=line.getsitemnumber();
+			s+="</TD>";
+			s+="<TD>";
+			s+=line.getslinedescription();
+			s+="</TD>";
+			s+="<TD>";
+			s+=line.getsunitofmeasure();
+			s+="</TD>";
+			s+="<TD>";
+			//s+=;TODO
+			s+="</TD>";
+			s+="<TD>";
+			s+=line.getsbdunitsellprice();
+			s+="</TD>";
+			s+="<TD>";
+			s+=line.getsbdextendedsellprice();
+			s+="</TD>";
+			s+="<TD>";
+			s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", ""))).setScale(2));
+			s+="</TD>";
+			s+="<TD>";
+			s+=line.getsbdextendedcost();
+			s+="</TD>";
+			s += "  </TR>" + "\n";
+		}
+		s += "  <TR> \n";
+		s+="<TD colspan=\"6\" style=\"text-align:right\">";
+		s+="<B>TOTAL PUBLISHED SELL PRICE:</B>";
+		s+="</TD>";
+		s+="<TD>";
+		//TODO
+		s+="0.00";
+		s+="</TD>";
+		s += "  </TR>" + "\n";
+		s += "</TABLE>" + "\n";
+		return s;
+	}
 
 }

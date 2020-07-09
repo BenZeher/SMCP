@@ -954,6 +954,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s+="</TD>";
 		s += "  </TR>" + "\n";
 		
+		BigDecimal bdTotalPublishedSellPrice = BigDecimal.ZERO;
 		//Options
 		s += "  <TR> \n";
 		s+="<TD colspan=\"9\">";
@@ -982,6 +983,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s+=line.getsbdunitsellprice();
 			s+="</TD>";
 			s+="<TD>";
+			bdTotalPublishedSellPrice = bdTotalPublishedSellPrice.add(BigDecimal.valueOf(Double.valueOf(line.getsbdextendedsellprice().replaceAll(",", ""))));
 			s+=line.getsbdextendedsellprice();
 			s+="</TD>";
 			s+="<TD>";
@@ -998,10 +1000,19 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s+="</TD>";
 		s+="<TD>";
 		//TODO
-		s+="0.00";
+		s+=bdTotalPublishedSellPrice;
 		s+="</TD>";
 		s += "  </TR>" + "\n";
 		s += "</TABLE>" + "\n";
+		
+		s+= BuildEstimateTotals(estimate);
+		
+		return s;
+	}
+	
+	public static String BuildEstimateTotals(SMEstimate estimate) {
+		String s = "";
+		
 		return s;
 	}
 

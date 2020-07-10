@@ -21,6 +21,7 @@ import ServletUtilities.clsManageBigDecimals;
 
 public class SMPrintEstimateSummary extends java.lang.Object {
 
+	private static final String SMPrintEstimateSummary = "SMPrintEstimateSummary";
 	public SMPrintEstimateSummary(
 			){
 	}
@@ -40,7 +41,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		ArrayList<SMEstimate> Estimates = summary.getEstimateArray();
 		for (int i = 0; i < summary.getEstimateArray().size(); i++) {
 			SMEstimate estimate = Estimates.get(i);
-			s+= BuildEstimates(estimate);
+			s+= BuildEstimates(estimate,context,sDBID);
 		}
 
 		out.println(s);
@@ -55,9 +56,16 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			String sUserID,
 			String sLicenseModuleLevel) {
 		String s = "";
+		String sSummaryLink = "&nbsp;"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMEditSMSummaryEdit"
+				+ "?CallingClass=" + SMUtilities.getFullClassName(SMPrintEstimateSummary)
+				+ "&" + SMTablesmestimates.lid + "=" + summary.getslid()
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + "CallingClass = " + SMUtilities.getFullClassName(SMPrintEstimateSummary)
+				+ "\">" + summary.getslid() + "</A>";
 		s+= "<TABLE>";
 		s+="<TR><TD> ";
-		s+= "Summary ID: " +  summary.getslid();
+		s+= "Summary ID: " +  sSummaryLink;
 		s+= " Incorporated into order number: ";
 		if(summary.getstrimmedordernumber().compareToIgnoreCase("") ==0) {
 			s+="(none)";
@@ -863,16 +871,26 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		return s;
 	}
 
-	public static String BuildEstimates(SMEstimate estimate) {
+	public static String BuildEstimates(
+			SMEstimate estimate,
+			ServletContext context, 
+			String sDBID) {
 
 		String s = "";
 		s += "<TABLE style = \""
 				+ " width:100%; "
 				+ " \" >" + "\n";
-
+		String sEstimateLink = "&nbsp;"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMEditSMEstimateEdit"
+				+ "?CallingClass=" + SMUtilities.getFullClassName(SMPrintEstimateSummary)
+				+ "&" + SMTablesmestimates.lid + "=" + estimate.getslid()
+				+ "&" + SMTablesmestimates.lsummarylid + "=" + estimate.getslsummarylid()
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + "CallingClass = " + SMUtilities.getFullClassName(SMPrintEstimateSummary)
+				+ "\">" + estimate.getslid() + "</A>";
 		s += "  <TR> \n";
 		s+="<TD>";
-		s+="<B>Estimate ID:</B>" + estimate.getslid();
+		s+="<B>Estimate ID:</B>" + sEstimateLink;
 		s+="</TD>";
 		s+="<TD>";
 		s+="<B>Summary line #:</B>" + estimate.getslsummarylinenumber();

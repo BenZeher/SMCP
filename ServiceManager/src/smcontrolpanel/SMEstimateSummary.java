@@ -124,17 +124,110 @@ public class SMEstimateSummary {
 		}
 		m_slastmodifiedbyfullname = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.slastmodifiedbyfullname, req).replace("&quot;", "\"");
 		m_scomments = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.scomments, req).replace("&quot;", "\"");
-		m_bdadjustedfreight = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedfreight, req).replace("&quot;", "\"");
-		m_bdadjustedlaborunitqty = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborunitqty, req).replace("&quot;", "\"");
-		m_bdadjustedlaborcostperunit = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborcostperunit, req).replace("&quot;", "\"");
-		m_bdadjustedmarkupamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedmarkupamt, req).replace("&quot;", "\"");
-		m_bdtaxrate = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdtaxrate, req).replace("&quot;", "\"");
 		m_icalculatetaxonpurchaseorsale = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.icalculatetaxonpurchaseorsale, req).replace("&quot;", "\"");
 		m_icalculatetaxoncustomerinvoice = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.icalculatetaxoncustomerinvoice, req).replace("&quot;", "\"");
 		m_spricelistcode = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.spricelistcode, req).replace("&quot;", "\"");
 		m_ipricelevel = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.ipricelevel, req).replace("&quot;", "\"");
 		m_sadditionalpostsalestaxcostlabel = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.sadditionalpostsalestaxcostlabel, req).replace("&quot;", "\"");
+		
+		//Numeric fields - we'll validate these:
+		m_bdadjustedfreight = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedfreight, req).replace("&quot;", "\"");
+		m_bdadjustedlaborunitqty = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborunitqty, req).replace("&quot;", "\"");
+		m_bdadjustedlaborcostperunit = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedlaborcostperunit, req).replace("&quot;", "\"");
+		m_bdadjustedmarkupamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadjustedmarkupamt, req).replace("&quot;", "\"");
+		m_bdtaxrate = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdtaxrate, req).replace("&quot;", "\"");
 		m_bdadditionalpostsalestaxcostamt = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamt, req).replace("&quot;", "\"");
+		
+		if (m_bdadjustedfreight.compareToIgnoreCase("") == 0) {
+			m_bdadjustedfreight = "0.00";
+		}
+		try {
+			m_bdadjustedfreight = clsValidateFormFields.validateBigdecimalField(
+				m_bdadjustedfreight.replace(",", ""), 
+				"Adjusted freight", 
+				SMTablesmestimatesummaries.bdadjustedfreightScale, 
+				new BigDecimal("0.00"), 
+				new BigDecimal("999999999.99")
+			);
+		} catch (Exception e) {
+			m_bdadjustedfreight = "0.00";
+		}
+		
+		if (m_bdadjustedlaborunitqty.compareToIgnoreCase("") == 0) {
+			m_bdadjustedlaborunitqty = "0.0000";
+		}
+		try {
+			m_bdadjustedlaborunitqty = clsValidateFormFields.validateBigdecimalField(
+				m_bdadjustedlaborunitqty.replace(",", ""), 
+				"Adjusted labor unit qty", 
+				SMTablesmestimatesummaries.bdadjustedlaborunitqtyScale, 
+				new BigDecimal("0.0000"), 
+				new BigDecimal("999999999.9999")
+			);
+		} catch (Exception e) {
+			m_bdadjustedlaborunitqty = "0.0000";
+		}
+		
+		if (m_bdadjustedlaborcostperunit.compareToIgnoreCase("") == 0) {
+			m_bdadjustedlaborcostperunit = "0.0000";
+		}
+		try {
+			m_bdadjustedlaborcostperunit = clsValidateFormFields.validateBigdecimalField(
+				m_bdadjustedlaborcostperunit.replace(",", ""), 
+				"Adjusted labor cost per unit", 
+				SMTablesmestimatesummaries.bdadjustedlaborcostperunitScale, 
+				new BigDecimal("0.00"), 
+				new BigDecimal("999999999.99")
+			);
+		} catch (Exception e) {
+			m_bdadjustedlaborcostperunit = "0.0000";
+		}
+		
+		if (m_bdadjustedmarkupamt.compareToIgnoreCase("") == 0) {
+			m_bdadjustedmarkupamt = "0.0000";
+		}
+		try {
+			m_bdadjustedmarkupamt = clsValidateFormFields.validateBigdecimalField(
+				m_bdadjustedmarkupamt.replace(",", ""), 
+				"Adjusted mark-up amount", 
+				SMTablesmestimatesummaries.bdadjustedlmarkupamtScale, 
+				new BigDecimal("0.00"), 
+				new BigDecimal("999999999.99")
+			);
+		} catch (Exception e) {
+			m_bdadjustedmarkupamt = "0.0000";
+		}
+		
+		if (m_bdtaxrate.compareToIgnoreCase("") == 0) {
+			m_bdtaxrate = "0.00";
+		}
+		try {
+			m_bdtaxrate = clsValidateFormFields.validateBigdecimalField(
+				m_bdtaxrate.replace(",", ""), 
+				"Tax rate", 
+				SMTablesmestimatesummaries.bdtaxrateScale, 
+				new BigDecimal("0.0000"), 
+				new BigDecimal("999.0000")
+			);
+		} catch (Exception e) {
+			m_bdtaxrate = "0.00";
+		}
+		
+		if (m_bdadditionalpostsalestaxcostamt.compareToIgnoreCase("") == 0) {
+			m_bdadditionalpostsalestaxcostamt = "0.00";
+		}
+		try {
+			m_bdadditionalpostsalestaxcostamt = clsValidateFormFields.validateBigdecimalField(
+				m_bdadditionalpostsalestaxcostamt.replace(",", ""), 
+				"Additional cost after sales tax", 
+				SMTablesmestimatesummaries.bdadditionalpostsalestaxcostamtScale, 
+				new BigDecimal("0.00"), 
+				new BigDecimal("999999.00")
+			);
+		} catch (Exception e) {
+			m_bdadditionalpostsalestaxcostamt = "0.00";
+		}		
+		
 		m_strimmedordernumber = clsManageRequestParameters.get_Request_Parameter(SMTablesmestimatesummaries.strimmedordernumber, req).replace("&quot;", "\"");
 	}
 	public void saveAsNewSummaryWrapper(Connection conn, String sUserID, String sUserFullName) throws Exception{

@@ -155,13 +155,19 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 	    	try {
 	    		summary.loadEstimates(summary.getslid(), smedit.getsDBID(), getServletContext(), smedit.getFullUserName());
 			} catch (Exception e) {
-				response.sendRedirect(
-						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-						+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-						+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
-					);
-					return;
+				smedit.getPWOut().println("<BR><B><FONT COLOR=RED>Error loading estimates for this summary - "
+					+ e.getMessage()
+					+ "</FONT></B>"
+				);
+				return;
+				
+				//response.sendRedirect(
+				//		"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+				//		+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+				//		+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+				//		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+				//	);
+				//	return;
 			}
 	    	
 	    //But if it's NOT a 'resubmit', meaning this class was called for the first time to 
@@ -171,13 +177,18 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 		    	try {
 					summary.load(getServletContext(), smedit.getsDBID(), smedit.getUserID());
 				} catch (Exception e) {
-					response.sendRedirect(
-							"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-							+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-							+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+					smedit.getPWOut().println("<BR><B><FONT COLOR=RED>Error loading this summary - "
+							+ e.getMessage()
+							+ "</FONT></B>"
 						);
 						return;
+					//response.sendRedirect(
+					//		"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+					//		+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+					//		+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
+					//		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+					//	);
+					//	return;
 				}
 	    	}
 	    }
@@ -218,13 +229,18 @@ public class SMEditSMSummaryEdit extends HttpServlet {
 			);
 		} catch (Exception e) {
     		String sError = "Could not create edit page - " + e.getMessage();
-			response.sendRedirect(
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-				+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
-				+ "&Warning=Could not load Summary ID: " + summary.getslid() + " - " + SMUtilities.URLEncode(sError)
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
-			);
+			smedit.getPWOut().println("<BR><B><FONT COLOR=RED>"
+					+ "Could not load Summary ID: " + summary.getslid() + " - " + SMUtilities.URLEncode(sError)
+					+ "</FONT></B>"
+				);
 				return;
+			//response.sendRedirect(
+			//	"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+			//	+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
+			//	+ "&Warning=Could not load Summary ID: " + summary.getslid() + " - " + SMUtilities.URLEncode(sError)
+			//	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+			//);
+			//return;
 		}
 	    
 	    return;

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableiccategories;
+import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
@@ -408,6 +409,13 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			}
 	    	s += "</SELECT>";
     	}
+    	
+		s += "<BR><FONT SIZE=2>"
+				+ "<B>NOTE:&nbsp;</B>To add the <I><B>material</B></I> items using a NON-STOCK item,"
+				+ " enter that item number here (otherwise new dedicated items will be created):</B></FONT>"
+				+ "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsnonstockmaterialitem + "\""
+				+ " VALUE=\"" + entry.getM_snonstockmaterialitem() + "\" SIZE=13 MAXLENGTH=" + Integer.toString(SMTableicitems.sItemNumberLength) + ">"
+			;
     	
     	s += createControlButtons(entry.getM_snonstockmaterialitem(), 
     		clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()).compareToIgnoreCase(CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL) == 0);

@@ -68,9 +68,14 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s+= "Summary ID: " +  sSummaryLink;
 		s+= " Incorporated into order number: ";
 		if(summary.getstrimmedordernumber().compareToIgnoreCase("") ==0) {
-			s+="(none)";
+			s+="(NONE)";
 		}else {
-			s+= summary.getstrimmedordernumber();
+			s+=  "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation"
+					+ "?CallingClass=" + SMUtilities.getFullClassName(SMPrintEstimateSummary)
+					+ "&=OrderNumber" + summary.getstrimmedordernumber()
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&" + "CallingClass = " + SMUtilities.getFullClassName(SMPrintEstimateSummary)
+					+ "\">" + summary.getstrimmedordernumber() + "</A>";
 		}
 		s+= "</TD></TR>";
 
@@ -92,7 +97,12 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s+= "</TD></TR>";
 		s+="<TR>"
 				+ "<TD> ";
-		s+= "Sales Lead ID: " + summary.getslsalesleadid();
+		s+= "Sales Lead ID: " +  "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMEditBidEntry"
+				+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+				+ "&" + SMBidEntry.ParamID + "=" + summary.getslsalesleadid()
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "\">" + summary.getslsalesleadid() + "</A>"
+				;
 		s+= "</TD>"
 				+ "<TD>";
 		s+="Order Type: ";
@@ -692,7 +702,6 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "&" + SMTablesmestimates.lid + "=" + estimate.getslid()
 				+ "&" + SMTablesmestimates.lsummarylid + "=" + estimate.getslsummarylid()
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "&" + "CallingClass = " + SMUtilities.getFullClassName(SMPrintEstimateSummary)
 				+ "\">" + estimate.getslid() + "</A>";
 		s += "  <TR> \n";
 		s+="<TD>";
@@ -809,7 +818,15 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s+=line.getsbdquantity();
 			s+="</TD>";
 			s+="<TD>";
-			s+=line.getsitemnumber();
+			if(line.getsitemnumber().compareToIgnoreCase("	(NONE)")==0) {
+				s+=line.getsitemnumber();
+			}else {
+				s+="<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICDisplayItemInformation"
+						+ "?CallingClass=" + SMUtilities.getFullClassName(SMPrintEstimateSummary)
+						+ "&ItemNumber=" + line.getsitemnumber()
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "\">" + line.getsitemnumber() + "</A>";
+			}
 			s+="</TD>";
 			s+="<TD>";
 			s+=line.getslinedescription();

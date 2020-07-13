@@ -161,6 +161,15 @@ public class SMEstimate {
 				SMEstimateLine line = new SMEstimateLine();
 				line.setslestimatelinenumber(sLineNumber);
 				
+				//Include on order:
+				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.iincludeonorder;
+				String sIncludeOnOrder = "0";
+				if (request.getParameter(sLineParam) != null){
+					sIncludeOnOrder = "1";
+				}
+				line.setsiincludeonorder(sIncludeOnOrder);
+				
 				//Quantity
 				sLineParam = SMEditSMEstimateEdit.ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
 						Integer.toString(iLastLineRead + 1), "0", SMEditSMEstimateEdit.ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.bdquantity;

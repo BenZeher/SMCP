@@ -25,6 +25,7 @@ public class SMEstimateLine {
 	private String m_sbdunitcost;
 	private String m_sbdunitsellprice;
 	private String m_sbdextendedsellprice;
+	private String m_iincludeonorder;
 	
 	public SMEstimateLine() 
 	{
@@ -47,6 +48,7 @@ public class SMEstimateLine {
 			+ ", " + SMTablesmestimatelines.bdquantity
 			+ ", " + SMTablesmestimatelines.bdunitsellprice
 			+ ", " + SMTablesmestimatelines.bdextendedsellprice
+			+ ", " + SMTablesmestimatelines.iincludeonorder
 			+ ", " + SMTablesmestimatelines.lestimatelid
 			+ ", " + SMTablesmestimatelines.lestimatelinenumber
 			+ ", " + SMTablesmestimatelines.lsummarylid
@@ -60,6 +62,7 @@ public class SMEstimateLine {
 			+ ", " + m_sbdquantity.trim().replaceAll(",", "")
 			+ ", " + m_sbdunitsellprice.trim().replaceAll(",", "")
 			+ ", " + m_sbdextendedsellprice.trim().replaceAll(",", "")
+			+ ", " + m_iincludeonorder
 			+ ", " + m_slestimateid
 			+ ", " + m_slestimatelinenumber
 			+ ", " + m_slsummaryid
@@ -74,6 +77,7 @@ public class SMEstimateLine {
 			+ ", " + SMTablesmestimatelines.bdquantity + " = " + m_sbdquantity.trim().replaceAll(",", "")
 			+ ", " + SMTablesmestimatelines.bdunitsellprice + " = " + m_sbdunitsellprice.trim().replaceAll(",", "")
 			+ ", " + SMTablesmestimatelines.bdextendedsellprice + " = " + m_sbdextendedsellprice.trim().replaceAll(",", "")
+			+ ", " + SMTablesmestimatelines.iincludeonorder + " = " + m_iincludeonorder
 			+ ", " + SMTablesmestimatelines.lestimatelid + " = " + m_slestimateid
 			+ ", " + SMTablesmestimatelines.lestimatelinenumber + " = " + m_slestimatelinenumber
 			+ ", " + SMTablesmestimatelines.lsummarylid + " = " + m_slsummaryid
@@ -141,6 +145,16 @@ public class SMEstimateLine {
 				"Estimate ID", 
 				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
+			m_iincludeonorder = clsValidateFormFields.validateLongIntegerField(
+				m_iincludeonorder, 
+				"Include on order", 
+				-0L, 
+				1L);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -263,6 +277,7 @@ public class SMEstimateLine {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
 				m_slid = Long.toString(rs.getLong(SMTablesmestimatelines.lid));
+				m_iincludeonorder = Long.toString(rs.getLong(SMTablesmestimatelines.iincludeonorder));
 				m_slsummaryid = Long.toString(rs.getLong(SMTablesmestimatelines.lsummarylid));
 				m_slestimateid = Long.toString(rs.getLong(SMTablesmestimatelines.lestimatelid));
 				m_slestimatelinenumber = Long.toString(rs.getLong(SMTablesmestimatelines.lestimatelinenumber));
@@ -308,6 +323,13 @@ public class SMEstimateLine {
 	}
 	public void setslestimateid(String slestimateid){
 		m_slestimateid = slestimateid;
+	}
+	
+	public String getsiincludeonorder(){
+		return m_iincludeonorder;
+	}
+	public void setsiincludeonorder(String siincludeonorder){
+		m_iincludeonorder = siincludeonorder;
 	}
 	
 	public String getslestimatelinenumber(){
@@ -378,6 +400,7 @@ public class SMEstimateLine {
 		String s = "";
 		s += "    lid:" + getslid() + "\n";
 		s += "    Estimate ID:" + getslestimateid() + "\n";
+		s += "    Include on order:" + getsiincludeonorder() + "\n";
 		s += "    Estimate line number:" + getslestimatelinenumber() + "\n";
 		s += "    Qty:" + getsbdquantity() + "\n";
 		s += "    Item number:" + getsitemnumber() + "\n";
@@ -393,6 +416,7 @@ public class SMEstimateLine {
 		m_slid  = "-1";
 		m_slsummaryid = "-1";
 		m_slestimateid = "-1";
+		m_iincludeonorder = "0";
 		m_slestimatelinenumber = "0";
 		m_sbdquantity = "0.0000";
 		m_sitemnumber = "";

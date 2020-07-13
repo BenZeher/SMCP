@@ -31,7 +31,6 @@ import ServletUtilities.clsStringFunctions;
 public class SMIncorporateSummaryEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String LABORTYPE_LIST_OPTION_NOT_CHOSEN_VALUE = "";
 	public static String LOCATION_LIST_OPTION_NOT_CHOSEN_VALUE = "";
 	public static String TAX_LIST_OPTION_NOT_CHOSEN_VALUE = "";
 	public static String ITEMCATEGORY_LIST_OPTION_NOT_CHOSEN_VALUE = "";
@@ -104,16 +103,6 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 	    
-	    /*
-		boolean bDirectEntryAllowed = SMSystemFunctions.isFunctionPermitted(
-				SMSystemFunctions.SMDirectItemEntry, 
-				smedit.getUserID(), 
-				getServletContext(), 
-				smedit.getsDBID(),
-				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
-		);
-		*/
-	    
 		//Add a link to go back to the summary:
 		smedit.getPWOut().println(
 				"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
@@ -144,7 +133,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 					return;
 		}
 		
-		entry.setM_ordernumber(sTrimmedOrderNumber);
+		entry.setM_strimmedordernumber(sTrimmedOrderNumber);
 		
 	    try {
 			smedit.createEditPage(
@@ -208,8 +197,6 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		//First, load the locations:
 		ArrayList<String> arrLocations = new ArrayList<String>(0);
 		ArrayList<String> arrLocationNames = new ArrayList<String>(0);
-		ArrayList<String> arrLaborTypes = new ArrayList<String>(0);
-		ArrayList<String> arrLaborTypeNames = new ArrayList<String>(0);
 		ArrayList<String> arrItemCategories = new ArrayList<String>(0);
 		ArrayList<String> arrItemCategoryNames = new ArrayList<String>(0);
 		Connection conn;
@@ -231,12 +218,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080419]");
 			throw e;
 		}
-		try {
-			loadLaborTypes(arrLaborTypes, arrLaborTypeNames, conn);
-		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080410]");
-			throw e;
-		}
+
 		try {
 			loadItemCategories(arrItemCategories, arrItemCategoryNames, conn);
 		} catch (SQLException e) {
@@ -245,10 +227,10 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		}
 		//Load the order:
 		SMOrderHeader order = new SMOrderHeader();
-		order.setM_strimmedordernumber(entry.getM_ordernumber());
+		order.setM_strimmedordernumber(entry.getM_strimmedordernumber());
 		if (!order.load(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080412]");
-			throw new Exception("Could not load order number " + entry.getM_ordernumber() + " - " + order.getErrorMessages());
+			throw new Exception("Could not load order number " + entry.getM_strimmedordernumber() + " - " + order.getErrorMessages());
 		}
 		
 		if (summary.getsitaxid().compareToIgnoreCase(order.getitaxid()) != 0) {
@@ -257,8 +239,6 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ " and save the summary, then try again."
 			);
 		}
-		
-		//TODO - re-work this remaining code:
 		
 		entry.setstaxjurisdiction(order.getstaxjurisdiction());
 		
@@ -273,7 +253,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		
 		//Store the entry variables that we know at this point:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMIncorporateSummary.Paramsordernumber + "\" VALUE=\"" 
-				+ entry.getM_ordernumber() + "\"" + "\">";
+				+ entry.getM_strimmedordernumber() + "\"" + "\">";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMIncorporateSummary.Paramstaxjurisdiction + "\" VALUE=\"" 
 				+ entry.getstaxjurisdiction() + "\"" + "\">";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + CHOOSE_CATEGORY_METHOD_PARAM + "\" VALUE=\"" 
@@ -284,7 +264,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ " ID=\"" + COMMAND_FLAG + "\""+ "\">" + "\n";
 		
 		//Order number
-		s += "<B>Order #:</B>&nbsp;" + entry.getM_ordernumber()
+		s += "<B>Order #:</B>&nbsp;" + entry.getM_strimmedordernumber()
 			+ "&nbsp;<B>Bill to:</B>&nbsp;" + order.getM_sBillToName()
 			+ "&nbsp;<B>Ship to:</B>&nbsp;" + order.getM_sShipToName()
 			+ "&nbsp;<B>Total order contract amount:</B>&nbsp;" + order.getM_bdtotalcontractamount()
@@ -297,39 +277,12 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
         	+ "\n";
     	;
         
-    	/*
-		s += "&nbsp;<B>Unit labor cost"
-			+ "<a href=\"#unitlaborcost\"><SUP>2</SUP></a>"
-			+ ":</B>";
-        s += "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsunitlaborcost + "\""
-    	+ " VALUE=\"" + entry.getM_sunitlaborcost().replace("\"", "&quot;") + "\""
-    	+ " SIZE=" + "9"
-    	+ " MAXLENGTH=" + "15"
-    	+ ">"
-        ;
-		*/
-		s += "<BR><B>Labor type: </B>";
-		s += "<SELECT NAME=\"" + SMIncorporateSummary.Paramslabortype + "\"" + ">";
-		//Add one for the 'Other':
-		s += "<OPTION";
-		if (entry.getM_slabortype().compareToIgnoreCase("") == 0){
-			s += " selected=YES ";
-		}
-		s += " VALUE=\"" + LABORTYPE_LIST_OPTION_NOT_CHOSEN_VALUE 
-			+ "\">" + "** Select a labor type ***</OPTION>";
-		
-		for (int i = 0; i < arrLaborTypes.size(); i++){
-			s += "<OPTION";
-			if (arrLaborTypes.get(i).compareToIgnoreCase(summary.getsilabortype()) == 0){
-				s += " selected=YES ";
-			}
-			s += " VALUE=\"" + arrLaborTypes.get(i).toString() + "\">" + arrLaborTypeNames.get(i).toString();
-			s += "</OPTION>";
-		}
-    	s += "</SELECT>";
+		s += "&nbsp;<B>Labor type: </B>"
+			+ summary.getslabortypedescription(conn)
+		;
 		
         //location
-		s += "&nbsp;<B>Location: </B>";
+		s += "<BR><B>Location: </B>";
 		String sLocation = entry.getM_slocation();
 		if (sLocation.compareToIgnoreCase("") == 0){
 			sLocation = order.getM_sLocation();
@@ -762,30 +715,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		
 		return true;
 	}
-	private boolean loadLaborTypes(
-			ArrayList<String> arrLaborTypes,
-			ArrayList<String> arrLaborTypeNames,
-			Connection conn
-	) throws SQLException{
-		
-		String SQL = "SELECT *"
-			+ " FROM " + SMTablelabortypes.TableName
-			+ " ORDER BY " + SMTablelabortypes.sID
-			;
-		
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-			while (rs.next()){
-				arrLaborTypes.add(rs.getString(SMTablelabortypes.sID));
-				arrLaborTypeNames.add(rs.getString(SMTablelabortypes.sLaborName));
-			}
-			rs.close();
-		} catch (SQLException e) {
-			throw e;
-		}
-		
-		return true;
-	}
+
 	private String sCommandScripts(SMMasterEditEntry smedit) {
 		String s = "";
 		

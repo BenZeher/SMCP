@@ -21,6 +21,7 @@ import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 /**
@@ -100,6 +101,8 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 	public static final String LOOKUP_ITEM_COMMAND = "LOOKUPITEMCOMMAND";
 	public static final String PARAM_LOOKUP_ITEM_LINENUMBER = "LOOKUPITEMLINENUMBER";
 	public static final String RETURNING_FROM_FINDER = "RETURNINGFROMFINDER";
+	
+	public static final String CHECKBOX_PARAM_INCLUDE_ON_ORDER = "INCLUDEONORDER";
 	
 	//Cost multiplier fields:
 	public static final String FIELD_COST_MULTIPLIER_MARKER = "FIELDCOSTMULTIPLIER";
@@ -495,6 +498,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		//Include on order:
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ "Include<BR>on order?"
+			+ "</TD>" + "\n"
+		;
+		
 		//Product description:
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
 			+ " style = \" font-weight:bold; font-style:underline; \" >"
@@ -601,6 +611,13 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 				+ ""
 				+ "</TD>" + "\n"
 			;
+		
+		//Blank column for 'include on order':
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; font-style:underline; \" >"
+			+ ""
+			+ "</TD>" + "\n"
+		;
 		
 		//Desc
 		s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
@@ -788,6 +805,24 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 						+ buildItemFinderButton(Integer.toString(iLineNumber))
 						+ "</TD>" + "\n"
 					;
+				
+				//Checkboxes to 'include on order':
+				String sChecked = ""; 
+				if(estimate.getLineArray().get(iEstimateLineCounter).getsiincludeonorder().compareToIgnoreCase("1") == 0){
+					sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+				}
+				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\""
+					+ " >"
+					+ "<INPUT TYPE=\"CHECKBOX\""
+					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.iincludeonorder + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.iincludeonorder + "\""
+					+ sChecked
+					+ " VALUE=\"\""
+				+ ">"
+					+ "</TD>" + "\n"
+				;
 				
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 					+ ">"
@@ -986,6 +1021,24 @@ public class SMEditSMEstimateEdit extends HttpServlet {
 						+ buildItemFinderButton(Integer.toString(iLineNumber))
 						+ "</TD>" + "\n"
 					;
+				
+				//Include on order?
+				String sChecked = ""; 
+				//if(estimate.getLineArray().get(iEstimateLineCounter).getsiincludeonorder().compareToIgnoreCase("1") == 0){
+				//	sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+				//}
+				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\""
+					+ " >"
+					+ "<INPUT TYPE=\"CHECKBOX\""
+					+ " NAME=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.iincludeonorder + "\""
+					+ " ID=\"" + ESTIMATE_LINE_PREFIX + clsStringFunctions.PadLeft(
+							Integer.toString(iLineNumber), "0", ESTIMATE_LINE_NO_PAD_LENGTH) + SMTablesmestimatelines.iincludeonorder + "\""
+					+ sChecked
+					+ " VALUE=\"\""
+				+ ">"
+					+ "</TD>" + "\n"
+				;
 				
 				s += "    <TD  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + "\""
 					+ ">"

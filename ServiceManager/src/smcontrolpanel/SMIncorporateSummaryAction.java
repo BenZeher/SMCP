@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesmestimatesummaries;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
@@ -146,6 +147,8 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 				+ "smcontrolpanel.SMIncorporateSummaryEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&" + SMTablesmestimatesummaries.lid + "=" + entry.getM_ssummaryid()
+				+ "&" + SMTablesmestimatesummaries.strimmedordernumber + "=" + entry.getM_strimmedordernumber()
 				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
 				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL
 			;
@@ -163,6 +166,8 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 				+ "smcontrolpanel.SMIncorporateSummaryEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				+ "&" + SMTablesmestimatesummaries.lid + "=" + entry.getM_ssummaryid()
+				+ "&" + SMTablesmestimatesummaries.strimmedordernumber + "=" + entry.getM_strimmedordernumber()
 				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
 				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL
 			;

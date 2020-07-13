@@ -16,6 +16,7 @@ public class SMTablesmestimatelines {
 	public static String bdunitcost = "bdunitcost";
 	public static String bdextendedsellprice = "bdextendedsellprice";
 	public static String bdunitsellprice = "bdunitsellprice";
+	public static String iincludeonorder = "iincludeonorder";
 	
 	//String lengths:
 	public static int sitemnumberLength = 32;

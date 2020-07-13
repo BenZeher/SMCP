@@ -38,6 +38,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 	public static final String Paramstaxjurisdiction = "staxjurisdiction";
 	public static final String Paramsitemcategory = "sitemcategory";
 	public static final String Paramsnonstockmaterialitem = "snonstockmaterialitem";
+	public static final String Paramssummaryid = "ssummaryid";
 	//public static final String Paramsunitlabormarkup = "sunitlabormarkup";
 
 	public static final int scontractamountScale = 2;
@@ -52,7 +53,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 	//private static final String DEFAULT_UNIT_LABOR_AMOUNT = "200.00";
 	private static final int NUMBER_OF_INITIAL_LINES = 5;
 	
-	private String m_ordernumber;
+	private String m_strimmedordernumber;
 	private String m_stotalbillingamount;
 	private String m_sunitlaborcost;
 	private String m_slabortype;
@@ -62,6 +63,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 	private String m_sunitlabormarkup;
 	private String m_sdescription;
 	private String m_snonstockmaterialitem;
+	private String m_ssummaryid;
 	private ArrayList<SMSummaryIncorporationLine> m_arrLines;
 	
 	private boolean bDebugMode =false;
@@ -85,7 +87,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 		m_sitemcategory = clsManageRequestParameters.get_Request_Parameter(Paramsitemcategory, req);
 		m_slabortype = clsManageRequestParameters.get_Request_Parameter(Paramslabortype, req);
 		m_slocation = clsManageRequestParameters.get_Request_Parameter(Paramslocation, req);
-		m_ordernumber = clsManageRequestParameters.get_Request_Parameter(Paramsordernumber, req);
+		m_strimmedordernumber = clsManageRequestParameters.get_Request_Parameter(Paramsordernumber, req);
 		m_staxjurisdiction = clsManageRequestParameters.get_Request_Parameter(Paramstaxjurisdiction, req);
 		m_sunitlaborcost = clsManageRequestParameters.get_Request_Parameter(Paramsunitlaborcost, req);
 		if (m_sunitlaborcost.compareToIgnoreCase("") == 0){
@@ -93,6 +95,8 @@ public class SMIncorporateSummary extends clsMasterEntry{
 				sunitlaborcostScale, BigDecimal.ZERO);
 		}
 		m_snonstockmaterialitem = clsManageRequestParameters.get_Request_Parameter(Paramsnonstockmaterialitem, req);
+		m_ssummaryid = clsManageRequestParameters.get_Request_Parameter(Paramssummaryid, req);
+
 		//Now read each line of the entry:
 		m_arrLines.clear();
 		int iCounter = 0;
@@ -170,12 +174,12 @@ public class SMIncorporateSummary extends clsMasterEntry{
         //Validate the entries here:
     	boolean bEntriesAreValid = true;
 
-    	m_ordernumber = m_ordernumber.trim();
-        if (m_ordernumber.compareToIgnoreCase("") == 0){
+    	m_strimmedordernumber = m_strimmedordernumber.trim();
+        if (m_strimmedordernumber.compareToIgnoreCase("") == 0){
         	super.addErrorMessage("Order number cannot be blank.");
         	bEntriesAreValid = false;
         }
-        if (m_ordernumber.length() > sordernumberLength){
+        if (m_strimmedordernumber.length() > sordernumberLength){
         	super.addErrorMessage("Order number is too long.");
         	bEntriesAreValid = false;
         }
@@ -185,7 +189,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
     		+ " FROM " + SMTableorderheaders.TableName
     		+ " WHERE ("
     			+ SMTableorderheaders.strimmedordernumber + " = '" 
-    			+ m_ordernumber.trim() + "'" 
+    			+ m_strimmedordernumber.trim() + "'" 
     			//+ " AND (" + SMTableorderheaders.iOrderType + " != " + SMTableorderheaders.ORDERTYPE_QUOTE + ")"
     		+ ")"
     		;
@@ -625,12 +629,6 @@ public class SMIncorporateSummary extends clsMasterEntry{
     		String sUserID, 
     		String sUserFullName) throws Exception{
     	
-    	//try {
-		//	calculateBillingValues(context, sDBID, sUser);
-		//} catch (Exception e2) {
-		//	throw new Exception("Error calculating: " + e2.getMessage());
-		//}
-    	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
     			sDBID, 
@@ -671,7 +669,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
     		throw new Exception("Could not start data transaction.");
     	}
     	SMOrderHeader order = new SMOrderHeader();
-    	order.setM_strimmedordernumber(getM_ordernumber().trim());
+    	order.setM_strimmedordernumber(getM_strimmedordernumber().trim());
     	if (!order.load(conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
     		clsDatabaseFunctions.freeConnection(context, conn, "[1547080452]");
@@ -691,13 +689,13 @@ public class SMIncorporateSummary extends clsMasterEntry{
 					ICItem item;
 					if (getM_snonstockmaterialitem().compareToIgnoreCase("") == 0){
 				    	item = new ICItem("");
-				    	String sNewItemNumber = item.getNextDedicatedItemNumberForOrder(conn, getM_ordernumber().trim());
+				    	String sNewItemNumber = item.getNextDedicatedItemNumberForOrder(conn, getM_strimmedordernumber().trim());
 				    	m_arrLines.get(i).setM_sitemnumber(sNewItemNumber);
 				    	item.setItemNumber(sNewItemNumber);
 						item.setActive("1");
 						item.setCategoryCode(m_arrLines.get(i).getM_scategorycode());
 						item.setCostUnitOfMeasure(m_arrLines.get(i).getM_sunitofmeasure());
-						item.setDedicatedToOrderNumber(getM_ordernumber().trim());
+						item.setDedicatedToOrderNumber(getM_strimmedordernumber().trim());
 						item.setDefaultPriceListCode(order.getM_sDefaultPriceListCode());
 						item.setHideOnInvoiceDefault("0");
 						item.setItemDescription(m_arrLines.get(i).getM_sitemdescription());
@@ -752,7 +750,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 			    	detail.setM_sMechInitial("");
 			    	detail.setM_sMechID("0");
 			    	detail.setM_sOrderUnitOfMeasure(item.getCostUnitOfMeasure());
-			    	detail.setM_strimmedordernumber(getM_ordernumber().trim());
+			    	detail.setM_strimmedordernumber(getM_strimmedordernumber().trim());
 			    	arrOrderDetails.add(detail);
 
 			    	//Now add the labor item for this line, if there is labor in it:
@@ -788,7 +786,7 @@ public class SMIncorporateSummary extends clsMasterEntry{
 				    	labordetail.setM_sMechInitial("");
 				    	labordetail.setM_sMechID("0");
 				    	labordetail.setM_sOrderUnitOfMeasure(laboritem.getCostUnitOfMeasure());
-				    	labordetail.setM_strimmedordernumber(getM_ordernumber().trim());
+				    	labordetail.setM_strimmedordernumber(getM_strimmedordernumber().trim());
 				    	arrOrderDetails.add(labordetail);
 			    	}
 				}
@@ -824,12 +822,12 @@ public class SMIncorporateSummary extends clsMasterEntry{
     public void addErrorMessage(String sMsg){
     	super.addErrorMessage(sMsg);
     }
-    public String getM_ordernumber() {
-		return m_ordernumber;
+    public String getM_strimmedordernumber() {
+		return m_strimmedordernumber;
 	}
 
-	public void setM_ordernumber(String mOrdernumber) {
-		m_ordernumber = mOrdernumber;
+	public void setM_strimmedordernumber(String mOrdernumber) {
+		m_strimmedordernumber = mOrdernumber;
 	}
 
     public String getM_sdescription() {
@@ -908,6 +906,10 @@ public class SMIncorporateSummary extends clsMasterEntry{
 
 	public void setM_sitemcategory(String mSitemcategory) {
 		m_sitemcategory = mSitemcategory;
+	}
+	
+	public String getM_ssummaryid() {
+		return m_ssummaryid;
 	}
 	
 	public String getM_sunitlabormarkup() {
@@ -1033,32 +1035,32 @@ public class SMIncorporateSummary extends clsMasterEntry{
 				line.setM_slinetype("Labor");
 				m_arrLines.add(line);
 			}
-			/*
-			//Now add the estimate options without prices
+			//Now add the estimate options If they are flagged as 'include on order':
 			for (int iEstimateOptioncounter = 0; iEstimateOptioncounter < estimate.getLineArray().size(); iEstimateOptioncounter++) {
 				SMEstimateLine option = estimate.getLineArray().get(iEstimateOptioncounter);
-				line = new SMSummaryIncorporationLine();
-				line.setM_sestimateid(estimate.getslid());
-				line.set_bdExtendedLaborUnits(BigDecimal.ZERO);
-				line.set_bdQuantity(new BigDecimal(option.getsbdquantity().replace(",", "")));
-				line.setbdEstimateExtendedLaborCost(BigDecimal.ZERO);
-				line.setbdEstimateExtendedMaterialCost(new BigDecimal(option.getsbdextendedcost().replace(",", "")));
-				line.setbdExtendedLaborBillingValue(BigDecimal.ZERO);
-				line.setbdExtendedMaterialBillingValue(BigDecimal.ZERO);
-				line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
-				line.setM_scategorycode("");
-				line.setM_sitemdescription(option.getslinedescription());
-				line.setM_sitemnumber(option.getsitemnumber());
-				line.setM_sunitofmeasure(option.getsunitofmeasure());
-				line.setM_slinetype("Option");
-				m_arrLines.add(line);
+				if (option.getsiincludeonorder().compareToIgnoreCase("1") == 0) {
+					line = new SMSummaryIncorporationLine();
+					line.setM_sestimateid(estimate.getslid());
+					line.set_bdExtendedLaborUnits(BigDecimal.ZERO);
+					line.set_bdQuantity(new BigDecimal(option.getsbdquantity().replace(",", "")));
+					line.setbdEstimateExtendedLaborCost(BigDecimal.ZERO);
+					line.setbdEstimateExtendedMaterialCost(new BigDecimal(option.getsbdextendedcost().replace(",", "")));
+					line.setbdExtendedLaborBillingValue(BigDecimal.ZERO);
+					line.setbdExtendedMaterialBillingValue(BigDecimal.ZERO);
+					line.setM_llinenumber(Integer.toString(m_arrLines.size() + 1));
+					line.setM_scategorycode("");
+					line.setM_sitemdescription(option.getslinedescription());
+					line.setM_sitemnumber(option.getsitemnumber());
+					line.setM_sunitofmeasure(option.getsunitofmeasure());
+					line.setM_slinetype("Option");
+					m_arrLines.add(line);
+				}
 			}
-			*/
 		}
 	}
 	
 	private void initSummaryIncorporationVariables(){
-		m_ordernumber = "";
+		m_strimmedordernumber = "";
 		m_stotalbillingamount = "0.00";
 		m_sunitlaborcost = "0.00";
 		m_slabortype = "";
@@ -1073,12 +1075,14 @@ public class SMIncorporateSummary extends clsMasterEntry{
 		m_sunitlabormarkup = "";
 		m_sdescription = "";
 		m_snonstockmaterialitem = "";
+		m_ssummaryid = "0";
 		super.initVariables();
 		super.setObjectName(ParamObjectName);
     }
     public String read_out_debug_data(){
     	String sResult = "\n  ** Direct Entry read out: ";
-    	sResult += "\nOrder number: " + this.getM_ordernumber();
+    	sResult += "\nOrder number: " + this.getM_strimmedordernumber();
+    	sResult += "\nSummary ID: " + this.getM_ssummaryid();
     	sResult += "\nTotal billing amount: " + this.getM_stotalbillingamount();
     	sResult += "\nUnit labor cost: " + this.getM_sunitlaborcost();
     	sResult += "\nLabor type: " + this.getM_slabortype();

@@ -18,7 +18,6 @@ import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableiccategories;
 import SMDataDefinition.SMTableicitems;
-import SMDataDefinition.SMTablelabortypes;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTablesmestimates;
@@ -181,7 +180,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			s += "<button type=\"button\""
 				+ " value=\"" + CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME + "\""
 				+ " name=\"" + CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME + "\""
-				+ " onClick=\"addtoorder();\">"
+				+ " onClick=\"choosesinglecategorybyline();\">"
 				+ CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL
 				+ "</button>\n";
 		}
@@ -258,6 +257,8 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ entry.getstaxjurisdiction() + "\"" + "\">";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + CHOOSE_CATEGORY_METHOD_PARAM + "\" VALUE=\"" 
 				+ clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()) + "\"" + "\">";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMIncorporateSummary.Paramssummaryid + "\" VALUE=\"" 
+				+ summary.getslid() + "\"" + "\">";
 		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\""
 				+ " VALUE=\"" + "" + "\""+ " "
@@ -306,7 +307,8 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		}
     	s += "</SELECT>";
     	
-    	boolean bChooseCategoryByLine = clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()).compareToIgnoreCase(CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL) == 0;
+    	boolean bChooseCategoryByLine = clsManageRequestParameters.get_Request_Parameter(
+    		CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()).compareToIgnoreCase(CHOOSE_CATEGORY_BY_LINE_COMMAND) == 0;
     	
     	if(!bChooseCategoryByLine){
 	        //item category
@@ -751,7 +753,8 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			+ "}\n\n"
 		;
 		
-		s += "function choosesinglecategorybyline(){\n"		
+		s += "function choosesinglecategorybyline(){\n"	
+				+ "    alert('choose category by line'); \n"
 				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + CHOOSE_CATEGORY_BY_LINE_COMMAND + "\";\n"
 				+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
 			+ "}\n\n"

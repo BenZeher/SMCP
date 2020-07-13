@@ -68,6 +68,7 @@ public class SMPrintEstimateSummaryGenerate extends HttpServlet{
 					+ "?" + SMTablesmestimatesummaries.lid + "=" + summary.getslid()
 					+ "&Warning=" + SMUtilities.URLEncode(e.getMessage())
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&lid=" +  summary.getslid()
 					);
 			return;
 		}
@@ -88,6 +89,7 @@ public class SMPrintEstimateSummaryGenerate extends HttpServlet{
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 							+ "Warning=" + "Unable to get data connection."
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+							+ "&lid=" +  summary.getslid()
 					);			
 			return;
 		}
@@ -104,9 +106,16 @@ public class SMPrintEstimateSummaryGenerate extends HttpServlet{
 				getServletContext(), 
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
 				) {
-			out.println("SUCCESS");
+		}else {
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+							+ "Warning=" + "Error Processing Report"
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+							+ "&lid=" +  summary.getslid()
+					);			
+			return;
 		}
-
+		
 	}
 
 	public void doGet(HttpServletRequest request,

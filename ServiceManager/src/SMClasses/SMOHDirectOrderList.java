@@ -21,7 +21,6 @@ https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/Enterpri
 
 public class SMOHDirectOrderList {
 
-	ArrayList<String> arrNames;
 	ArrayList<String> arrOrderNumbers;
 	ArrayList<String> arrOrderIDs;
 	ArrayList<String> arrCreatedBys;
@@ -40,7 +39,6 @@ public class SMOHDirectOrderList {
 	public void getOrderList(String sRequestString, Connection conn, String sDBID, String sUserID) throws Exception{
 		arrOrderNumbers = new ArrayList<String>(0);
 		arrOrderIDs = new ArrayList<String>(0);
-		arrNames = new ArrayList<String>(0);
 		arrCreatedBys = new ArrayList<String>(0);
 		arrCreatedDates = new ArrayList<String>(0);
 		arrLastModifiedBys = new ArrayList<String>(0);
@@ -132,9 +130,6 @@ public class SMOHDirectOrderList {
 	}
 	public ArrayList<String> getOrderIDs(){
 		return arrOrderIDs;
-	}
-	public ArrayList<String> getOrderNames(){
-		return arrNames;
 	}
 	public ArrayList<String> getOrderNumbers(){
 		return arrOrderNumbers;

@@ -127,12 +127,6 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
-		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
-				+ "\" style = \" color:white; font-weight:bold; \" >"
-			+ "Name"
-			+ "</TD>" + "\n"
-		;
-		
 		s += "  </TR>" + "\n";
 		
 		return s;
@@ -186,6 +180,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593712667]");
 		
 		for(int i = 0; i < ol.getOrderNumbers().size(); i++) {
+
 			//Print a row:
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\" >" + "\n";
 			
@@ -213,11 +208,6 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 					+ "<B>" + ol.getLastModifiedBys().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ol.getOrderNames().get(i) + "</B"
-					+ "</TD>" + "\n"
-				;
 			
 			s += "  </TR>" + "\n";
 		}
@@ -233,7 +223,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			s += printOrderLines(conn, sDBID, sUserID, ol.getOrderIDs().get(0), sRequestedOrderLine, sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593712668]");
-			throw new Exception("Error [1593712669] - Error printing quote lines - " + e.getMessage());
+			throw new Exception("Error [1593712669] - Error printing order lines - " + e.getMessage());
 		}
 		
 		s += "</TABLE>" + "\n";
@@ -297,7 +287,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		Connection conn, 
 		String sDBID, 
 		String sUserID, 
-		String sQuoteID,
+		String sOrderID,
 		String sRequestedOrderLine,
 		String sLicenseModuleLevel) throws Exception{
 		String s = "";
@@ -312,7 +302,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		SMOHDirectOrderLineList oll = new SMOHDirectOrderLineList();
 		
 		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_ORDERLINE + "?$filter=" 
-			+ SMOHDirectFieldDefinitions.ORDERLINE_FIELD_ORDER + "%20eq%20'" + sQuoteID + "'"
+			+ SMOHDirectFieldDefinitions.ORDERLINE_FIELD_ORDER + "%20eq%20'" + sOrderID + "'"
 			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.ORDERLINE_FIELD_LINENUMBER + "%20asc"
 		;
 		
@@ -323,7 +313,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593712671]");
 		
-		BigDecimal bdTotalQuoteCost = new BigDecimal("0.00");
+		BigDecimal bdTotalOrderCost = new BigDecimal("0.00");
 		for(int i = 0; i < oll.getOrderNumbers().size(); i++) {
 			
 			//If this is a request to show only a particular line....
@@ -332,7 +322,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 				try {
 					bdRequestedOrderLine = new BigDecimal(sRequestedOrderLine);
 				} catch (Exception e) {
-					throw new Exception("Error [1593712672] - vendor quote line number '" + sRequestedOrderLine + "' is invalid.");
+					throw new Exception("Error [1593712672] - vendor order line number '" + sRequestedOrderLine + "' is invalid.");
 				}
 				//Then if this line is NOT the one, just keep looping:
 				if (oll.getLineNumbers().get(i).compareTo(bdRequestedOrderLine) != 0) {
@@ -391,9 +381,8 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 				;
 			
 			
-			bdTotalQuoteCost = bdTotalQuoteCost.add(oll.getTotalCosts().get(i));
+			bdTotalOrderCost = bdTotalOrderCost.add(oll.getTotalCosts().get(i));
 			
-			//s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i), sDBID, sUserID);
 			s += printOrderLineCostDetails(conn, oll.getOrderLineIDs().get(i), sDBID, sUserID);
 			
 			s += "  </TR>" + "\n";
@@ -402,14 +391,13 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		return s;
 	}
 
-	private String printOrderLineCostDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
+	private String printOrderLineCostDetails(Connection conn, String sOrderLineID, String sDBID, String sUserID) throws Exception{
 		String s = "";
 		//Get the OHDirect connection settings:
 		SMOHDirectOrderLineCostDetailList olcostdetails = new SMOHDirectOrderLineCostDetailList();
 		
-		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINECOSTDETAIL 
-			+ "?$filter=" + SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_QUOTE_LINE_ID + "%20eq%20'" + sQuoteLineID + "'"
-			//+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINEDETAIL_FIELD_SORTORDER + "%20asc"
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_ORDERLINECOSTDETAIL 
+			+ "?$filter=" + SMOHDirectFieldDefinitions.ORDERLINECOSTDETAIL_ORDER_LINE_ID + "%20eq%20'" + sOrderLineID + "'"
 		;
 		
 		try {

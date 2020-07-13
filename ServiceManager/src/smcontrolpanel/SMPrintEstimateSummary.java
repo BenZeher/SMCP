@@ -1059,13 +1059,18 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		//costsubtotal = materialcosttotal + freight + laborcosttotal + additionalpretaxcost
 		BigDecimal bdCostSubTotal = bdTotalMaterialCost.add(bdTotalFreight).add(bdTotalLaborCost).add(bdAdditionalPreTaxCost);
 
-		BigDecimal bdMarkupAmount = BigDecimal.valueOf(Double.valueOf(estimate.getsbdmarkupamount()));
+		BigDecimal bdMarkupAmount = BigDecimal.valueOf(Double.valueOf(estimate.getsbdmarkupamount().replaceAll(",", "")));
 
 		//markuppercentage = (markupamount / costsubtotal) * 100
-		BigDecimal bdMarkupPercentage = bdMarkupAmount.divide(bdCostSubTotal).multiply(BigDecimal.valueOf(100));
-
+		BigDecimal bdMarkupPercentage = BigDecimal.ZERO;
+		if(bdCostSubTotal.compareTo(BigDecimal.ZERO)!=0) {
+			bdMarkupPercentage  = BigDecimal.valueOf((bdMarkupAmount.doubleValue()/bdCostSubTotal.doubleValue())*100).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 		//markupperlaborunit = markupamount / laborunits
-		BigDecimal bdMarkupLaborUnit = bdMarkupAmount.divide(bdLaborQuantity);
+		BigDecimal bdMarkupLaborUnit = BigDecimal.ZERO;
+		if(bdLaborQuantity.compareTo(BigDecimal.ZERO)!=0) {
+			bdMarkupLaborUnit = BigDecimal.valueOf(bdMarkupAmount.doubleValue()/bdLaborQuantity.doubleValue()).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 		
 		//totalsellprice = totalcostandmarkup + additionalposttaxcost
 		

@@ -1299,6 +1299,11 @@
         <servlet-name>SMDisplayOHDirectQuote</servlet-name>
         <servlet-class>smcontrolpanel.SMDisplayOHDirectQuote</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>SMDisplayOHDirectOrder</servlet-name>
+        <servlet-class>smcontrolpanel.SMDisplayOHDirectOrder</servlet-class>
+    </servlet>
 
     <servlet>
         <servlet-name>SMDisplayOrderInformation</servlet-name>
@@ -4683,6 +4688,11 @@
         <url-pattern>/smcontrolpanel.SMDisplayOHDirectQuote</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>SMDisplayOHDirectOrder</servlet-name>
+        <url-pattern>/smcontrolpanel.SMDisplayOHDirectOrder</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>SMDisplayOrderInformation</servlet-name>
         <url-pattern>/smcontrolpanel.SMDisplayOrderInformation</url-pattern>

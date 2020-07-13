@@ -47,7 +47,7 @@ public class SMOHDirectOrderLineList {
 		try {
 			sJSONResult = ServletUtilities.clsOEAuthFunctions.requestOHDirectData(conn, sRequestString, sDBID, sUserID);
 		} catch (Exception e) {
-			throw new Exception("Error [202004232617] - " + e.getMessage());
+			throw new Exception("Error [1594641627] - " + e.getMessage());
 		}
 		
 		//Try to parse the list:
@@ -106,7 +106,7 @@ public class SMOHDirectOrderLineList {
 				}
 			}
 		}catch(Exception e) {
-			throw new Exception("Error [202004233740] - " + e.getMessage());
+			throw new Exception("Error [1594641628] - " + e.getMessage());
 		}
 		
 		return;

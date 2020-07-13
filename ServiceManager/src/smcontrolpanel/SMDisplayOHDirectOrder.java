@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMOHDirectOrderLineCostDetailList;
+import SMClasses.SMOHDirectOrderLineList;
 import SMClasses.SMOHDirectOrderList;
-import SMClasses.SMOHDirectQuoteLineCostDetailList;
-import SMClasses.SMOHDirectQuoteLineList;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMOHDirectFieldDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
@@ -99,7 +99,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		
 		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
 				+ "\" style = \" color:white; font-weight:bold; \" >"
-			+ "Quote #"
+			+ "Order #"
 			+ "</TD>" + "\n"
 		;
 		
@@ -227,10 +227,10 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">\n";
 		
-		s += printQuoteLineHeader();
+		s += printOrderLineHeader();
 		
 		try {
-			s += printQuoteLines(conn, sDBID, sUserID, ol.getOrderIDs().get(0), sRequestedOrderLine, sLicenseModuleLevel);
+			s += printOrderLines(conn, sDBID, sUserID, ol.getOrderIDs().get(0), sRequestedOrderLine, sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593712668]");
 			throw new Exception("Error [1593712669] - Error printing quote lines - " + e.getMessage());
@@ -240,7 +240,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		
 		return s;
 	}
-	private String printQuoteLineHeader() {
+	private String printOrderLineHeader() {
 		String s = "";
 		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_BLACK + "\" >" + "\n";
 		
@@ -274,11 +274,6 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
-		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL 
-				+ "\" style = \" color:white; font-weight:bold; \" >"
-			+ "Unit List"
-			+ "</TD>" + "\n"
-		;
 		
 		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL 
 				+ "\" style = \" color:white; font-weight:bold; \" >"
@@ -298,12 +293,12 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		return s;
 		
 	}
-	private String printQuoteLines(
+	private String printOrderLines(
 		Connection conn, 
 		String sDBID, 
 		String sUserID, 
 		String sQuoteID,
-		String sRequestedQuoteLine,
+		String sRequestedOrderLine,
 		String sLicenseModuleLevel) throws Exception{
 		String s = "";
 		
@@ -314,33 +309,33 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			sLicenseModuleLevel);
 		
 		//Get the OHDirect connection settings:
-		SMOHDirectQuoteLineList ql = new SMOHDirectQuoteLineList();
+		SMOHDirectOrderLineList oll = new SMOHDirectOrderLineList();
 		
-		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINE + "?$filter=" 
-			+ SMOHDirectFieldDefinitions.QUOTELINE_FIELD_QUOTENUMBER + "%20eq%20'" + sQuoteID + "'"
-			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINE_FIELD_LINENUMBER + "%20asc"
+		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_ORDERLINE + "?$filter=" 
+			+ SMOHDirectFieldDefinitions.ORDERLINE_FIELD_ORDER + "%20eq%20'" + sQuoteID + "'"
+			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.ORDERLINE_FIELD_LINENUMBER + "%20asc"
 		;
 		
 		try {
-			ql.getQuoteLineList(sRequest, conn, sDBID, sUserID);
+			oll.getOrderLineList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [1593712670] - " + e4.getMessage());
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593712671]");
 		
 		BigDecimal bdTotalQuoteCost = new BigDecimal("0.00");
-		for(int i = 0; i < ql.getQuoteNumbers().size(); i++) {
+		for(int i = 0; i < oll.getOrderNumbers().size(); i++) {
 			
 			//If this is a request to show only a particular line....
-			if (sRequestedQuoteLine.compareToIgnoreCase("") != 0) {
-				BigDecimal bdRequestedQuoteLine;
+			if (sRequestedOrderLine.compareToIgnoreCase("") != 0) {
+				BigDecimal bdRequestedOrderLine;
 				try {
-					bdRequestedQuoteLine = new BigDecimal(sRequestedQuoteLine);
+					bdRequestedOrderLine = new BigDecimal(sRequestedOrderLine);
 				} catch (Exception e) {
-					throw new Exception("Error [1593712672] - vendor quote line number '" + sRequestedQuoteLine + "' is invalid.");
+					throw new Exception("Error [1593712672] - vendor quote line number '" + sRequestedOrderLine + "' is invalid.");
 				}
 				//Then if this line is NOT the one, just keep looping:
-				if (ql.getLineNumbers().get(i).compareTo(bdRequestedQuoteLine) != 0) {
+				if (oll.getLineNumbers().get(i).compareTo(bdRequestedOrderLine) != 0) {
 					continue;
 				}
 			}
@@ -349,21 +344,21 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + "\" >" + "\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ "<B>" + ql.getLineNumbers().get(i) + "</B"
+				+ "<B>" + oll.getLineNumbers().get(i) + "</B"
 				+ "</TD>" + "\n"
 			;
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getDescriptions().get(i) + "</B"
+					+ "<B>" + oll.getDescriptions().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ql.getLastConfigurationDescriptions().get(i) + "</B"
+					+ "<B>" + oll.getLastConfigurationDescriptions().get(i) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
-			String sItemNumberLink = ql.getLabels().get(i);
+			String sItemNumberLink = oll.getLabels().get(i);
 			if (bAllowDisplayItemInformation) {
 				sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 				+ "smic.ICDisplayItemInformation"
@@ -381,98 +376,36 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
-				+ "<B>" + ql.getQuantities().get(i) + "</B"
+				+ "<B>" + oll.getQuantities().get(i) + "</B"
 				+ "</TD>" + "\n"
 			;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ql.getUnitSellingPrices().get(i)) + "</B"
+					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(oll.getUnitCosts().get(i)) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ql.getUnitCosts().get(i)) + "</B"
+					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(oll.getTotalCosts().get(i)) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ql.getTotalCosts().get(i)) + "</B"
-					+ "</TD>" + "\n"
-				;
 			
-			//s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
-			//		+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ql.getTotalSellingPrices().get(i)) + "</B"
-			//		+ "</TD>" + "\n"
-			//	;
-			
-			bdTotalQuoteCost = bdTotalQuoteCost.add(ql.getTotalCosts().get(i));
+			bdTotalQuoteCost = bdTotalQuoteCost.add(oll.getTotalCosts().get(i));
 			
 			//s += printQuoteLineDetails(conn, ql.getQuoteLineIDs().get(i), sDBID, sUserID);
-			s += printQuoteLineCostDetails(conn, ql.getQuoteLineIDs().get(i), sDBID, sUserID);
+			s += printOrderLineCostDetails(conn, oll.getOrderLineIDs().get(i), sDBID, sUserID);
 			
 			s += "  </TR>" + "\n";
 		}
 		
 		return s;
 	}
-	/*
-	private String printQuoteLineDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
-		String s = "";
-		//Get the OHDirect connection settings:
-		SMOHDirectQuoteLineDetailList ql = new SMOHDirectQuoteLineDetailList();
-		
-		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINEDETAIL 
-			+ "?$filter=" + SMOHDirectFieldDefinitions.QUOTELINEDETAIL_FIELD_QUOTELINEID + "%20eq%20'" + sQuoteLineID + "'"
-			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.QUOTELINEDETAIL_FIELD_SORTORDER + "%20asc"
-		;
-		
-		try {
-			ql.getQuoteLineDetailList(sRequest, conn, sDBID, sUserID);
-		} catch (Exception e4) {
-			throw new Exception("Error [202004273622] - " + e4.getMessage());
-		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1588019777]");
-		
-		for(int i = 0; i < ql.getQuoteLineDetailIDs().size(); i++) {
-			//Print a row:
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\" >" + "\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
-				+ " style = \" background-color:white;  \" "
-				+ ">"
-				+ "&nbsp;"
-				+ "</TD>" + "\n"
-			;
 
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=2 >"
-					+ "<SPAN style = \" font-weight:bold; \" >"
-					+ ql.getDescriptions().get(i)
-					+ "</SPAN>"
-					+ ": "
-					+ "</TD>" + "\n"
-				;
-			
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" COLSPAN=3 >"
-				//+ "<SPAN style = \" font-weight:bold; \" >"
-				//+ ql.getDescriptions().get(i)
-				//+ "</SPAN>"
-				//+ ": "
-				+ ql.getValues().get(i)
-				+ "</TD>" + "\n"
-			;
-		
-			
-			s += "  </TR>" + "\n";
-		}
-		
-		return s;
-	}
-	*/
-	private String printQuoteLineCostDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
+	private String printOrderLineCostDetails(Connection conn, String sQuoteLineID, String sDBID, String sUserID) throws Exception{
 		String s = "";
 		//Get the OHDirect connection settings:
-		SMOHDirectQuoteLineCostDetailList qlcostdetails = new SMOHDirectQuoteLineCostDetailList();
+		SMOHDirectOrderLineCostDetailList olcostdetails = new SMOHDirectOrderLineCostDetailList();
 		
 		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_QUOTELINECOSTDETAIL 
 			+ "?$filter=" + SMOHDirectFieldDefinitions.QUOTELINECOSTDETAIL_QUOTE_LINE_ID + "%20eq%20'" + sQuoteLineID + "'"
@@ -480,7 +413,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		;
 		
 		try {
-			qlcostdetails.getQuoteLineCostDetailList(sRequest, conn, sDBID, sUserID);
+			olcostdetails.getOrderLineCostDetailList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
 			throw new Exception("Error [1593712673] - " + e4.getMessage());
 		}
@@ -546,14 +479,14 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		//Print the cost details:
-		for(int i = 0; i < qlcostdetails.getQuoteLineDetailIDs().size(); i++) {
+		for(int i = 0; i < olcostdetails.getOrderLineDetailIDs().size(); i++) {
 			//Print a row:
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\" >" + "\n";
 			
 			//Description:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
 					+ "<SPAN style = \" font-weight:normal; \" >"
-					+ qlcostdetails.getDescriptions().get(i)
+					+ olcostdetails.getDescriptions().get(i)
 					+ "</SPAN>"
 					+ "</TD>" + "\n"
 				;
@@ -561,7 +494,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			//Quantity:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
 					+ "<SPAN style = \" font-weight:normal; \" >"
-					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(4, qlcostdetails.getQtys().get(i))
+					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(4, olcostdetails.getQtys().get(i))
 					+ "</SPAN>"
 					+ "</TD>" + "\n"
 				;
@@ -569,7 +502,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			//List price:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
 					+ "<SPAN style = \" font-weight:normal; \" >"
-					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, qlcostdetails.getListPrices().get(i))
+					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, olcostdetails.getListPrices().get(i))
 					+ "</SPAN>"
 					+ "</TD>" + "\n"
 				;
@@ -577,7 +510,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			//Multipliers:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + "\" >"
 					+ "<SPAN style = \" font-weight:normal; \" >"
-					+ qlcostdetails.getDiscountMultipliers().get(i)
+					+ olcostdetails.getDiscountMultipliers().get(i)
 					+ "</SPAN>"
 					+ "</TD>" + "\n"
 				;
@@ -585,7 +518,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			//Base prices:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
 					+ "<SPAN style = \" font-weight:normal; \" >"
-					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, qlcostdetails.getBasePrices().get(i))
+					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, olcostdetails.getBasePrices().get(i))
 					+ "</SPAN>"
 					+ "</TD>" + "\n"
 				;
@@ -593,7 +526,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			//Option prices:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
 					+ "<SPAN style = \" font-weight:normal; \" >"
-					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, qlcostdetails.getOptionPrices().get(i))
+					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(2, olcostdetails.getOptionPrices().get(i))
 					+ "</SPAN>"
 					+ "</TD>" + "\n"
 				;
@@ -614,7 +547,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" "
 				+ " style = \" color:white; font-weight:bold; \""
 				+ ">"
-				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(qlcostdetails.getTotalBasePrice())
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(olcostdetails.getTotalBasePrice())
 				+ "</B>"
 				+ "</TD>" + "\n"
 			;
@@ -622,7 +555,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" "
 				+ " style = \" color:white; font-weight:bold; \""
 				+ ">"
-				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(qlcostdetails.getTotalOptionsPrice())
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(olcostdetails.getTotalOptionsPrice())
 				+ "</B>"
 				+ "</TD>" + "\n"
 			;

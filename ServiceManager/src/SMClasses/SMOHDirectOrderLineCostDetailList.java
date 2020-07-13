@@ -32,7 +32,7 @@ public class SMOHDirectOrderLineCostDetailList {
 		
 	}
 	
-	public void getQuoteLineCostDetailList(String sRequestString, Connection conn, String sDBID, String sUserID) throws Exception{
+	public void getOrderLineCostDetailList(String sRequestString, Connection conn, String sDBID, String sUserID) throws Exception{
 		
 		arrOrderLineCostDetailIDs = new ArrayList<String>(0);
 		arrOrderLineIDs = new ArrayList<String>(0);
@@ -48,7 +48,7 @@ public class SMOHDirectOrderLineCostDetailList {
 		try {
 			sJSONResult = ServletUtilities.clsOEAuthFunctions.requestOHDirectData(conn, sRequestString, sDBID, sUserID);
 		} catch (Exception e) {
-			throw new Exception("Error [1594643195] - " + e.getMessage());
+			throw new Exception("Error [1594646147] - " + e.getMessage());
 		}
 		
 		//Try to parse the list:
@@ -110,7 +110,7 @@ public class SMOHDirectOrderLineCostDetailList {
 				}
 			}
 		}catch(Exception e) {
-			throw new Exception("Error [1594643196] - " + e.getMessage());
+			throw new Exception("Error [1594646148] - " + e.getMessage());
 		}
 		
 		//Get the totals:

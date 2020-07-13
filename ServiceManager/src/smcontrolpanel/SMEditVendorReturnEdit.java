@@ -93,7 +93,7 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 
 
 		try {
-			smedit.createEditPage(getEditHTML(smedit, entry), "");
+			smedit.createEditPage(getEditHTML(smedit, entry, smedit), "");
 		} catch (SQLException e) {
 			String sError = "Could not create edit page - " + e.getMessage();
 			smedit.redirectAction(sError, "", SMVendorReturn.Paramlid + "=" + entry.getslid());
@@ -101,16 +101,15 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 		}
 		if(sWarning.compareToIgnoreCase("")!=0) {
 			smedit.getPWOut().println("  <script type=\"text/javascript\">\n" + 
-					"    BatchEntry();\n" + 
-					"    POEntry();\n" +
+					"    updateSalesLeadLink();\n" + 
 					"  </script>\n" + 
 					"</body>");
 		}
 		return;
 	}
-	private String getEditHTML(SMMasterEditEntry sm, SMVendorReturn entry) throws SQLException{
+	private String getEditHTML(SMMasterEditEntry sm, SMVendorReturn entry, SMMasterEditEntry smedit) throws SQLException{
 		String s =  "";
-		s = Script(s);
+		s = Script(s, smedit);
 		s += "<TABLE BORDER=1>";
 		String sID = "";
 		if (
@@ -274,7 +273,7 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 		
 		//Adjustment Batch Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + SMTablevendorreturns.sadjustedbatchnumberlabel  + ": </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMVendorReturn.Paramladjustedbatchnumber + "\""
+		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"updateSalesLeadLink()\" TYPE=TEXT NAME=\"" + SMVendorReturn.Paramladjustedbatchnumber + "\""
 				+ " VALUE=\"" + sBatchNumber + "\""
 				+ " ID =\"" + SMVendorReturn.Paramladjustedbatchnumber + "\""
 				+ " SIZE=" + "13"
@@ -283,9 +282,9 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 				+ "</TR>"
 				;
 
-		//Adjustment Entry Number
+		//Adjustment Entry Number TODO
 		s += "<TR><TD ALIGN=RIGHT><B>" + SMTablevendorreturns.sadjustedentrynumberlabel  + ": </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMVendorReturn.Paramladjustedentrynumber + "\""
+		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"updateSalesLeadLink()\" TYPE=TEXT NAME=\"" + SMVendorReturn.Paramladjustedentrynumber + "\""
 				+ " VALUE=\"" + sEntryNumber + "\""
 				+ " ID =\"" + SMVendorReturn.Paramladjustedentrynumber + "\""
 				+ " SIZE=" + "13"
@@ -293,7 +292,7 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 		sBatchNumber = clsStringFunctions.checkStringForNull(sBatchNumber);
 		sEntryNumber = clsStringFunctions.checkStringForNull(sEntryNumber);
 		if((sBatchNumber.compareToIgnoreCase("")!=0) && (sEntryNumber.compareToIgnoreCase("")!=0) && (sBatchNumber.compareToIgnoreCase("0")!=0) && (sEntryNumber.compareToIgnoreCase("0")!=0)) {
-			s+= "&nbsp;<A ID=\"BatchEntryLink\"  HREF=\"/sm/smic.ICEditReceiptEntry?BatchNumber=" + sBatchNumber + "&EntryNumber=" + sEntryNumber + "&db=" + sm.getsDBID() +"\">View Adjustment Entry	</A>";
+			s+= "&nbsp;<LABEL ID=\"BatchEntryLink\"><A HREF=\"/sm/smic.ICEditReceiptEntry?BatchNumber=" + sBatchNumber + "&EntryNumber=" + sEntryNumber + "&db=" + sm.getsDBID() +"\">View Adjustment Entry	</A></LABEL>";
 		}
 		s += "</TD>"
 				+ "</TR>";
@@ -370,18 +369,26 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 		return s;
 	}
 
-	public String Script(String s) {
+	public String Script(String s, SMMasterEditEntry smedit) {
 		s+= "<script>\n";
-		s +=( "function BatchEntry(){\n"
-				+ "\tdocument.getElementById(\"BatchEntryLink\").style.visibility = \"hidden\";\n"
-				+ "}\n");
-
-		s +=( "function POEntry(){\n"
-				+ "\tdocument.getElementById(\"POLink\").style.visibility = \"hidden\";\n"
-				+ "}\n");
-
+	
+		//Update the sales lead link if the user changes it:
+		s += "function updateSalesLeadLink(){ \n"
+			+ "    var batchnumber = document.getElementById(\"" + SMVendorReturn.Paramladjustedbatchnumber + "\").value; \n"  
+			+ "    var entrynumber = document.getElementById(\"" + SMVendorReturn.Paramladjustedentrynumber + "\").value; \n"  
+			+ "    var batchentrylink = '<A HREF=\""+ SMUtilities.getURLLinkBase(getServletContext()) +"smic.ICEditReceiptEntry'\n"
+			+ "        + '?BatchNumber=' + batchnumber\n"
+			+ "        + '&EntryNumber=' + entrynumber\n"
+			+ "        + '&CallingClass=" + SMUtilities.getFullClassName(this.toString()) + "'\n"
+			+ "        + '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() +"\">'\n"
+			+ "        + 'View Adjustment Entry</A>';\n"
+			+ "    var batchleadlabel = document.getElementById(\"" + SMVendorReturn.Paramladjustedbatchnumber + "\"); \n"
+			+ "    var entryleadlabel = document.getElementById(\"" + SMVendorReturn.Paramladjustedentrynumber + "\"); \n"
+			+ "    document.getElementById(\"BatchEntryLink\").innerHTML = batchentrylink; \n"
+			+ "    flagDirty(); \n"
+			+ "} \n"
+		;
 		s+="</script>";
-
 		return s;
 	}
 

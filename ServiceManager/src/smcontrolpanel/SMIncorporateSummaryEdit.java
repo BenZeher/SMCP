@@ -35,20 +35,20 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 	public static String LOCATION_LIST_OPTION_NOT_CHOSEN_VALUE = "";
 	public static String TAX_LIST_OPTION_NOT_CHOSEN_VALUE = "";
 	public static String ITEMCATEGORY_LIST_OPTION_NOT_CHOSEN_VALUE = "";
-	public static String CALCULATE_BUTTON_NAME = "CALCULATE";
-	public static String CALCULATE_BUTTON_LABEL = "Calculate billing values";
 	public static String BUILDITEMS_BUTTON_NAME = "BUILDITEMS";
 	public static String BUILDITEMS_BUTTON_LABEL = "Build inventory items";
 	public static String ADDITEMSTOORDER_BUTTON_NAME = "ADDITEMS";
-	public static String ADDITEMSTOORDER_BUTTON_LABEL = "Create items and add to order";
-	//public static String ADDBLANKLINE_BUTTON_NAME = "ADDBLANKLINE";
-	//public static String ADDBLANKLINE_BUTTON_LABEL = "Add a blank line";
+	public static String ADDITEMSTOORDER_BUTTON_LABEL = "<B><FONT COLOR=RED>C</FONT></B>reate items and add to order";
+	public static String ADD_TO_ORDER_COMMAND = "ADDITEMSTOORDER";
 	public static String FIRST_ENTRY_INTO_CLASS = "FIRSTENTRYINTOCLASS";
 	public static String CHOOSE_CATEGORY_METHOD_PARAM = "CHOOSECATEGORYMETHOD";
-	public static String CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL = "Choose categories for each line";
-	public static String CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL = "Choose single category for all lines";
+	public static String CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL = "Ch<B><FONT COLOR=RED>o</FONT></B>ose categories for each line";
+	public static String CHOOSE_CATEGORY_BY_LINE_COMMAND = "CHOOSECATEGORYBYLINE";
+	public static String CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL = "C<B><FONT COLOR=RED>h</FONT></B>oose single category for all lines";
+	public static String CHOOSE_CATEGORY_BY_HEADER_COMMAND = "CHOOSESINGLECATEGORYBYHEADER";
 	public static String CHOOSE_CATEGORY_BY_HEADER_BUTTON_NAME = "CHOOSECATEGORYBYHEADERBUTTON";
 	public static String CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME = "CHOOSECATEGORYBYLINEBUTTON";
+	public static final String COMMAND_FLAG = "COMMANDFLAG";
 	
 	private boolean bDebugMode = false;
 
@@ -100,6 +100,9 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 			System.out.println("[1579269724] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
 		}
 	    smedit.printHeaderTable();
+	    
+	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
+	    smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 	    
 	    /*
 		boolean bDirectEntryAllowed = SMSystemFunctions.isFunctionPermitted(
@@ -168,70 +171,31 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 	private String createControlButtons(String sNonStockMaterialItem, boolean bChooseCategoryByLine){
 		String s = "";
 		
-		s += "<BR>";
-		
-		//s += "<INPUT TYPE=SUBMIT NAME='" 
-		//	+ ADDBLANKLINE_BUTTON_NAME
-		//	+ "'" 
-		//	+ "' VALUE='"
-		//	+ ADDBLANKLINE_BUTTON_LABEL
-		//	+ "'" + " STYLE='height: 0.24in'>"
-		//	+ "&nbsp;"
-		//;
-		
-		//s += "<INPUT TYPE=SUBMIT NAME='" 
-		//	+ CALCULATE_BUTTON_NAME
-		//	+ "'" 
-		//	+ "' VALUE='"
-		//	+ CALCULATE_BUTTON_LABEL
-		//	+ "'" + " STYLE='height: 0.24in'>"
-		//	+ "&nbsp;"
-		//	;
-		
-		//s += "<INPUT TYPE=SUBMIT NAME='" 
-		//	+ BUILDITEMS_BUTTON_NAME
-		//	+ "'" 
-		//	+ "' VALUE='"
-		//	+ BUILDITEMS_BUTTON_LABEL
-		//	+ "'" + " STYLE='height: 0.24in'>";
-		
 		s += "<BR>" + "\n";
 		
-		s += "<INPUT TYPE=SUBMIT NAME='" 
-			+ ADDITEMSTOORDER_BUTTON_NAME
-			+ "'" 
-			+ "' VALUE='"
+		s += "<button type=\"button\""
+			+ " value=\"" + ADDITEMSTOORDER_BUTTON_NAME + "\""
+			+ " name=\"" + ADDITEMSTOORDER_BUTTON_NAME + "\""
+			+ " onClick=\"addtoorder();\">"
 			+ ADDITEMSTOORDER_BUTTON_LABEL
-			+ "'" + " STYLE='height: 0.24in'>"
-			+ "&nbsp;" + "\n"
-			;
+			+ "</button>\n";
 		
 		if (bChooseCategoryByLine){
-			s += "<INPUT TYPE=SUBMIT NAME='" 
-				+ CHOOSE_CATEGORY_BY_HEADER_BUTTON_NAME
-				+ "'" 
-				+ "' VALUE='"
+			s += "<button type=\"button\""
+				+ " value=\"" + CHOOSE_CATEGORY_BY_HEADER_BUTTON_NAME + "\""
+				+ " name=\"" + CHOOSE_CATEGORY_BY_HEADER_BUTTON_NAME + "\""
+				+ " onClick=\"choosesinglecategorybyheader();\">"
 				+ CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL
-				+ "'" + " STYLE='height: 0.24in'>"
-				+ "&nbsp;" + "\n"
-			;
+				+ "</button>\n";
+
 		}else{
-			s += "<INPUT TYPE=SUBMIT NAME='" 
-				+ CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME
-				+ "'" 
-				+ "' VALUE='"
+			s += "<button type=\"button\""
+				+ " value=\"" + CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME + "\""
+				+ " name=\"" + CHOOSE_CATEGORY_BY_LINE_BUTTON_NAME + "\""
+				+ " onClick=\"addtoorder();\">"
 				+ CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL
-				+ "'" + " STYLE='height: 0.24in'>"
-				+ "&nbsp;" + "\n"
-				;
+				+ "</button>\n";
 		}
-		
-		//s += "<BR><FONT SIZE=2>"
-		//	+ "<B>NOTE:&nbsp;</B>To add the <I><B>material</B></I> items using a NON-STOCK item,"
-		//	+ " enter that item number here (otherwise new dedicated items will be created):</B></FONT>"
-		//	+ "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsnonstockmaterialitem + "\""
-		//	+ " VALUE=\"" + sNonStockMaterialItem + "\" SIZE=13 MAXLENGTH=" + Integer.toString(SMTableicitems.sItemNumberLength) + ">"
-		//;
 		
 		return s;
 	}
@@ -302,7 +266,11 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		entry.loadSummaryValues(summary.getslid(), conn);
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080913]");		
+		
 		String s = "";
+		
+		s += sCommandScripts(sm);
+		
 		//Store the entry variables that we know at this point:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMIncorporateSummary.Paramsordernumber + "\" VALUE=\"" 
 				+ entry.getM_ordernumber() + "\"" + "\">";
@@ -310,6 +278,10 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ entry.getstaxjurisdiction() + "\"" + "\">";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + CHOOSE_CATEGORY_METHOD_PARAM + "\" VALUE=\"" 
 				+ clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()) + "\"" + "\">";
+		
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\""
+				+ " VALUE=\"" + "" + "\""+ " "
+				+ " ID=\"" + COMMAND_FLAG + "\""+ "\">" + "\n";
 		
 		//Order number
 		s += "<B>Order #:</B>&nbsp;" + entry.getM_ordernumber()
@@ -412,7 +384,7 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
     	
 		s += "<BR><FONT SIZE=2>"
 				+ "<B>NOTE:&nbsp;</B>To add the <I><B>material</B></I> items using a NON-STOCK item,"
-				+ " enter that item number here (otherwise new dedicated items will be created):</B></FONT>"
+				+ " enter that item number here (otherwise new dedicated items will be created): </B></FONT>"
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsnonstockmaterialitem + "\""
 				+ " VALUE=\"" + entry.getM_snonstockmaterialitem() + "\" SIZE=13 MAXLENGTH=" + Integer.toString(SMTableicitems.sItemNumberLength) + ">"
 			;
@@ -713,10 +685,6 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		s += "<BR><a name=\"estimatedextendedlaborunits\"><SUP>3</SUP> <B>'Estimated extended labor units'</B> is the amount of labor,"
 			+ " in your customary unit, like hours or truck days, which you assume it will take to install all the items on that one line.";
 		
-		s += "<BR><a name=\"extendedcalculatedprice\"><SUP>4</SUP> <B>'Calculated prices'</B> are the EXTENDED prices for each line"
-			+ " in the grid for the labor and material.  These are ZERO until the '" + CALCULATE_BUTTON_LABEL + "'"
-			+ " is clicked.  This function's price calculation is detailed here:<BR>";
-		
 		s += "<BR>";
 		s += "1) It first checks to make sure that the contract amount, gross profit, and labor unit cost are not zero.<BR>";
 		s += "2) It next calculates the TOTAL ESTIMATED MATERIAL COST for the order by adding up the extended estimated material"
@@ -818,7 +786,79 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		
 		return true;
 	}
+	private String sCommandScripts(SMMasterEditEntry smedit) {
+		String s = "";
+		
+		s += "<NOSCRIPT>\n"
+			+ "    <font color=red>\n"
+			+ "    <H3>This page requires that JavaScript be enabled to function properly</H3>\n"
+			+ "    </font>\n"
+			+ "</NOSCRIPT>\n"
+			;
+ 
+			s += "<script type='text/javascript'>\n";
+				
+		//Prompt to save:
+		//s += "window.onbeforeunload = promptToSave;\n";
+		
+		s += "window.onload = triggerinitiation;\n";
 
+		s += "function triggerinitiation(){\n"		
+			+ "    initShortcuts();\n"
+			+ "\n"
+			+ "}\n\n"
+		;
+		
+		s += "function addtoorder(){\n"		
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + ADD_TO_ORDER_COMMAND + "\";\n"
+				+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
+			+ "}\n\n"
+		;
+		
+		s += "function choosesinglecategorybyheader(){\n"		
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + CHOOSE_CATEGORY_BY_HEADER_COMMAND + "\";\n"
+				+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
+			+ "}\n\n"
+		;
+		
+		s += "function choosesinglecategorybyline(){\n"		
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + CHOOSE_CATEGORY_BY_LINE_COMMAND + "\";\n"
+				+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
+			+ "}\n\n"
+		;
+			
+		s += "function initShortcuts() {\n";
+		
+		s += "    shortcut.add(\"Alt+c\",function() {\n";
+		s += "        addtoorder();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+h\",function() {\n";
+		s += "        choosesinglecategorybyheader();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+			
+		s += "    shortcut.add(\"Alt+o\",function() {\n";
+		s += "        choosesinglecategorybyline();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "}\n";
+		
+		s += "</script>\n";
+		
+		return s;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

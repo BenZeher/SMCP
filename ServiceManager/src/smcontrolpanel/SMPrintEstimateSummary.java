@@ -263,23 +263,22 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		}
 
 		s+= "</TABLE>";
-		
-		//TODO Calculated Totals
+
 		BigDecimal bdMaterialCost = new BigDecimal(0);
 		if(summary.getbdtotalmaterialcostonestimates()!=null) {
 			bdMaterialCost = summary.getbdtotalmaterialcostonestimates();
 		}
-		
+
 		BigDecimal bdFreightCost = new BigDecimal(0);
 		if(summary.getbdtotalfreightonestimates()!=null) {
 			bdFreightCost = summary.getbdtotalfreightonestimates();
 		}
-		
+
 		BigDecimal bdLaborUnits = new BigDecimal(0);
 		if(summary.getbdtotalfreightonestimates()!=null) {
 			bdLaborUnits = summary.getbdtotallaborunitsonestimates();
 		}
-		
+
 		BigDecimal bdLaborCost = new BigDecimal(0);
 		if(summary.getbdtotallaborcostonestimates()!=null) {
 			bdLaborCost = summary.getbdtotallaborcostonestimates();
@@ -289,12 +288,12 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		if(summary.getbdtotalmarkuponestimates()!=null) {
 			bdMarkUp = summary.getbdtotalmarkuponestimates();
 		}
-		
+
 		BigDecimal bdTaxPercentage = new BigDecimal(0);
 		if(summary.getsbdtaxrate()!=null) {
 			bdTaxPercentage = BigDecimal.valueOf(Double.valueOf(summary.getsbdtaxrate()));
 		}
-		
+
 		BigDecimal bdTotalTax = new BigDecimal(0);
 		if(bdTaxPercentage.compareTo(BigDecimal.ZERO)!=0) {
 			bdTotalTax = bdMaterialCost.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100)));
@@ -304,15 +303,15 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		if(summary.getsicalculatetaxoncustomerinvoice().compareToIgnoreCase("0")==0) {
 			bdTotalTaxOnMaterial = bdTotalTax;
 		}
-		
+
 		BigDecimal bdCostNotEligibleForUseTax = new BigDecimal(0);
 		if(summary.getbdtotaladdlcostnoteligibleforusetax()!=null) {
 			bdCostNotEligibleForUseTax = summary.getbdtotaladdlcostnoteligibleforusetax();
 		}
-		
+
 		BigDecimal bdCalculatedTotalPrice = new BigDecimal(0);
 		bdCalculatedTotalPrice = bdMaterialCost.add(bdFreightCost).add(bdLaborCost).add(bdMarkUp).add(bdTotalTaxOnMaterial).add(bdCostNotEligibleForUseTax);
-		
+
 		BigDecimal bdRetailSalesTax = new BigDecimal(0);
 		if(summary.getsicalculatetaxoncustomerinvoice().compareToIgnoreCase("1")==0) {
 			bdRetailSalesTax = bdCalculatedTotalPrice.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100))).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -504,7 +503,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			+ "</TD>" + "\n"
 			;
 		s += "  </TR>" + "\n";
-		
+
 
 		//RETAIL SALES TAX
 		s += "  <TR>" + "\n";
@@ -541,62 +540,61 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  <TR>" + "\n";
 		s += "  </TR>" + "\n";
 
-		//ADJUSTED VALUES: TODO
 		BigDecimal bdTotalMaterialCost = new BigDecimal(0);
 		if(summary.getbdtotalmaterialcostonestimates()!=null) {
 			bdTotalMaterialCost = summary.getbdtotalmaterialcostonestimates();
 		}
-		
+
 		BigDecimal bdAdjustedFreight = new BigDecimal(0);
 		bdAdjustedFreight = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedfreight()));
-		
+
 		BigDecimal bdAdjustedLaborUnitQty = new BigDecimal(0);
 		bdAdjustedLaborUnitQty = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborunitqty()));
-		
+
 		BigDecimal bdAdjustedLaborCostPerUnit = new BigDecimal(0);
 		bdAdjustedLaborCostPerUnit = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborcostperunit()));
-		
+
 		BigDecimal bdAdjustLaborUnitQty = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedlaborunitqty()));
-		
+
 		BigDecimal bdTotalLaborCost = new BigDecimal(0);
 		bdTotalLaborCost = bdAdjustedLaborUnitQty.multiply(bdAdjustedLaborCostPerUnit);
-		
+
 		BigDecimal bdAdjustedMarkUpAmt = new BigDecimal(0);
 		bdAdjustedMarkUpAmt = BigDecimal.valueOf(Double.valueOf(summary.getsbdadjustedmarkupamt()));
-		
+
 		BigDecimal bdTaxOnMaterial = new BigDecimal(0);
 		if(summary.getsicalculatetaxoncustomerinvoice().compareToIgnoreCase("0")==0) {
 			bdTaxOnMaterial = bdMaterialCost.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100))).setScale(2,BigDecimal.ROUND_HALF_UP);
 		}
-		
+
 		BigDecimal bdAdjustedTotalSummary = new BigDecimal(0);
 		bdAdjustedTotalSummary = bdTotalMaterialCost.add(bdAdjustedFreight).add(bdTotalLaborCost).add(bdAdjustedMarkUpAmt).add(bdTaxOnMaterial);
-		
+
 		BigDecimal bdTemp = BigDecimal.ZERO;
 		if(bdAdjustedMarkUpAmt.compareTo(BigDecimal.ZERO)==0 || bdAdjustLaborUnitQty.compareTo(BigDecimal.ZERO)==0) {
 			bdTemp= BigDecimal.ZERO;
 		}else {
 			bdTemp=bdAdjustedMarkUpAmt.divide(bdAdjustLaborUnitQty, BigDecimal.ROUND_HALF_UP).setScale(2,BigDecimal.ROUND_HALF_UP);
 		}
-		
+
 		BigDecimal bdMUPctgeDivisor = new BigDecimal(0);
 		bdMUPctgeDivisor = bdMaterialCost.add(bdTotalLaborCost).add(bdAdjustedFreight);
-		
+
 		BigDecimal bdMUPctge = new BigDecimal(0);
 		if(bdMUPctgeDivisor.compareTo(BigDecimal.ZERO)!=0) {
 			bdMUPctge=BigDecimal.valueOf(bdAdjustedMarkUpAmt.doubleValue()/bdMUPctgeDivisor.doubleValue());
 		}
-		
+
 		BigDecimal bdGPPercentage = BigDecimal.ZERO;
 		if(bdAdjustedTotalSummary.compareTo(BigDecimal.ZERO)!=0) {
 			bdGPPercentage =  bdAdjustedMarkUpAmt.divide(bdAdjustedTotalSummary,BigDecimal.ROUND_HALF_UP,1).multiply(BigDecimal.valueOf(100));
 		}
-		
+
 		BigDecimal bdAdjustedRetailSalesTax = new BigDecimal(0);
 		if(bdTaxPercentage.compareTo(BigDecimal.valueOf(0))!=0 || summary.getsicalculatetaxoncustomerinvoice().compareToIgnoreCase("1")==0) {
 			bdAdjustedRetailSalesTax = bdAdjustedTotalSummary.multiply(bdTaxPercentage.divide(BigDecimal.valueOf(100)));
 		}
-		
+
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns) + ">"
@@ -695,7 +693,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  </TR>" + "\n";
 
 		//Total tax on material
-		
+
 		//MU per labor unit
 		s += "  <TR>" + "\n";
 		s += "    <TD style=\"text-align:right\">"
@@ -998,7 +996,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s+=line.getsunitofmeasure();
 			s+="</TD>";
 			s+="<TD>";
-			if(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", "")).compareTo(0.0)!=0) {
+			if(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", "")).compareTo(0.0)!=0 && line.getsbdquantity().compareTo("0.00")!=0 && line.getsbdextendedcost().compareTo("0.00")!=0) {
 				s+=BigDecimal.valueOf(Double.valueOf((line.getsbdunitsellprice()))/(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", "" )))).setScale(2);
 			}else {
 				s+="0.00";
@@ -1045,7 +1043,36 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "<TABLE  style = \""
 				+ " width:100%; "
 				+ " \" >" + "\n";
-		BigDecimal TotalMaterialCost = BigDecimal.valueOf(Double.valueOf(estimate.getsbdextendedcost().replaceAll(",", ""))).add(SumofMaterialExtendedCost);
+		//TODO
+		BigDecimal bdTotalMaterialCost = BigDecimal.valueOf(Double.valueOf(estimate.getsbdextendedcost().replaceAll(",", ""))).add(SumofMaterialExtendedCost);
+
+		BigDecimal bdTotalFreight = BigDecimal.valueOf(Double.valueOf(estimate.getsbdfreight()));
+
+		BigDecimal bdLaborQuantity = BigDecimal.valueOf(Double.valueOf(estimate.getsbdlaborquantity()));
+
+		BigDecimal bdLaborCostPerUnit= BigDecimal.valueOf(Double.valueOf(estimate.getsbdlaborcostperunit()));
+
+		BigDecimal bdTotalLaborCost = bdLaborCostPerUnit.multiply(bdLaborQuantity);
+
+		BigDecimal bdAdditionalPreTaxCost = BigDecimal.valueOf(Double.valueOf(estimate.getsbdadditionalpretaxcostamount()));
+
+		//costsubtotal = materialcosttotal + freight + laborcosttotal + additionalpretaxcost
+		BigDecimal bdCostSubTotal = bdTotalMaterialCost.add(bdTotalFreight).add(bdTotalLaborCost).add(bdAdditionalPreTaxCost);
+
+		BigDecimal bdMarkupAmount = BigDecimal.valueOf(Double.valueOf(estimate.getsbdmarkupamount()));
+
+		//markuppercentage = (markupamount / costsubtotal) * 100
+		BigDecimal bdMarkupPercentage = bdMarkupAmount.divide(bdCostSubTotal).multiply(BigDecimal.valueOf(100));
+
+		//markupperlaborunit = markupamount / laborunits
+		BigDecimal bdMarkupLaborUnit = bdMarkupAmount.divide(bdLaborQuantity);
+		
+		//totalsellprice = totalcostandmarkup + additionalposttaxcost
+		
+		
+		//gppercentage = markupamount / totalsellprice
+		BigDecimal bdGPPercentage = bdMarkupAmount;
+
 		//total material cost:
 		s += "  <TR>" + "\n";
 		s += "    <TD "
@@ -1053,7 +1080,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(TotalMaterialCost)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalMaterialCost)
 				+ "</TD>" + "\n"
 				;
 
@@ -1067,7 +1094,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 
 			+ "    <TD>"
-			+ estimate.getsbdfreight()
+			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalFreight)
 			+ "</TD>" + "\n"
 			;
 		s += "  </TR>" + "\n";
@@ -1075,17 +1102,15 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "  <TR>" + "\n";
 
 		//Labor units
-		BigDecimal bdLaborQuantity = BigDecimal.valueOf(Double.valueOf(estimate.getsbdlaborquantity()));
-		BigDecimal bdLaborCostPerUnit= BigDecimal.valueOf(Double.valueOf(estimate.getsbdlaborcostperunit()));
 		s += "    <TD "
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 2) + " ALIGN=RIGHT>"
 				+ SMEditSMEstimateEdit.FIELD_LABOR_UNITS_CAPTION
 				+ "&nbsp;"
-				+ bdLaborQuantity
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborQuantity)
 				+ "&nbsp;"
 				+ SMEditSMEstimateEdit.FIELD_COST_PER_LABOR_UNIT_CAPTION
 				+ "&nbsp;"
-				+ bdLaborCostPerUnit
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborCostPerUnit)
 
 
 				+ "</TD>" + "\n"
@@ -1097,7 +1122,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 
 			+ "    <TD>"
-			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborCostPerUnit.multiply(bdLaborQuantity))		
+			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalLaborCost)		
 			+ "</TD>" + "\n"
 			;
 		s += "  </TR>" + "\n";
@@ -1111,41 +1136,37 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 
 			+ "    <TD>"
-			+ estimate.getsbdadditionalpretaxcostamount()
+			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdditionalPreTaxCost)
 			+ "</TD>" + "\n"
 			;
 		s += "  </TR>" + "\n";
 
-		//Cost subtotal: TODO
+		//Cost subtotal:
 		s += "  <TR>" + "\n";
 		s += "    <TD"
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " ALIGN=RIGHT>"
 				+ SMEditSMEstimateEdit.LABEL_COST_SUBTOTAL_CAPTION
 				+ "</TD>" + "\n"
-
-			+ "    <TD>"
-			+ "0.00"
-
-			+ "</TD>" + "\n"
-			;
+				+ "    <TD>"
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostSubTotal)
+				+ "</TD>" + "\n"
+				;
 		s += "  </TR>" + "\n";
 
-		//MU per labor unit TODO
+		//MU per labor unit 
 		s += "  <TR>" + "\n";
 		s += "    <TD ALIGN=RIGHT>"
 				+ SMEditSMEstimateEdit.FIELD_MU_PER_LABOR_UNIT_CAPTION
 				+ "&nbsp;"
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupLaborUnit)
 
-				+ "0.00"
-
-
-				//MU Pctge TODO
+				//MU Pctge 
 				+ "&nbsp;"
 				+ SMEditSMEstimateEdit.FIELD_MU_PERCENTAGE_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
 				+ "&nbsp;"
-				+ "0.00"
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupPercentage)
 				+ "</TD>" + "\n"
 				;
 
@@ -1167,7 +1188,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 
 				+ "    <TD>"
-				+ estimate.getsbdmarkupamount() 
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupAmount)
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";

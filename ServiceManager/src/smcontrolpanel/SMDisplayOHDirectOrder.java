@@ -127,6 +127,12 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL 
+				+ "\" style = \" color:white; font-weight:bold; \" >"
+			+ "Name"
+			+ "</TD>" + "\n"
+		;
+		
 		s += "  </TR>" + "\n";
 		
 		return s;
@@ -171,7 +177,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_ORDER + "?%24filter="
 				+ SMOHDirectFieldDefinitions.ORDER_FIELD_ORDERNUMBER + "%20eq%20'" + sOrderNumber + "'"
 			;
-		
+		System.out.println("[15937126661852] - Order request: " + sRequest);
 		try {
 			ol.getOrderList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
@@ -209,6 +215,10 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 					+ "</TD>" + "\n"
 				;
 			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >"
+					+ "<B>" + ol.getOrderNames().get(i) + "</B"
+					+ "</TD>" + "\n"
+				;
 			s += "  </TR>" + "\n";
 		}
 		
@@ -220,6 +230,8 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		s += printOrderLineHeader();
 		
 		try {
+			//TODO No order ID coming back.
+			System.out.println("[1594664284] - Order ID = '" +  ol.getOrderIDs().get(0) + "'");
 			s += printOrderLines(conn, sDBID, sUserID, ol.getOrderIDs().get(0), sRequestedOrderLine, sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593712668]");
@@ -264,6 +276,11 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			+ "</TD>" + "\n"
 		;
 		
+		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL 
+				+ "\" style = \" color:white; font-weight:bold; \" >"
+			+ "Unit List"
+			+ "</TD>" + "\n"
+		;
 		
 		s += "    <TD class = \"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL 
 				+ "\" style = \" color:white; font-weight:bold; \" >"
@@ -305,7 +322,7 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			+ SMOHDirectFieldDefinitions.ORDERLINE_FIELD_ORDER + "%20eq%20'" + sOrderID + "'"
 			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.ORDERLINE_FIELD_LINENUMBER + "%20asc"
 		;
-		
+		System.out.println("[1593712666185] - Order lines request: " + sRequest);
 		try {
 			oll.getOrderLineList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
@@ -371,17 +388,22 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
+					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(oll.getUnitSellingPrices().get(i)) + "</B"
+					+ "</TD>" + "\n"
+				;
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
 					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(oll.getUnitCosts().get(i)) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\" >"
-					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(oll.getTotalCosts().get(i)) + "</B"
+					+ "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(oll.getExtendedCosts().get(i)) + "</B"
 					+ "</TD>" + "\n"
 				;
 			
 			
-			bdTotalOrderCost = bdTotalOrderCost.add(oll.getTotalCosts().get(i));
+			bdTotalOrderCost = bdTotalOrderCost.add(oll.getExtendedCosts().get(i));
 			
 			s += printOrderLineCostDetails(conn, oll.getOrderLineIDs().get(i), sDBID, sUserID);
 			

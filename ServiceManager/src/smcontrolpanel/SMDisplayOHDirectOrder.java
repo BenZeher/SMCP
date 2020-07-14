@@ -177,7 +177,6 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		String sRequest = SMOHDirectFieldDefinitions.ENDPOINT_ORDER + "?%24filter="
 				+ SMOHDirectFieldDefinitions.ORDER_FIELD_ORDERNUMBER + "%20eq%20'" + sOrderNumber + "'"
 			;
-		System.out.println("[15937126661852] - Order request: " + sRequest);
 		try {
 			ol.getOrderList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {
@@ -230,8 +229,6 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 		s += printOrderLineHeader();
 		
 		try {
-			//TODO No order ID coming back.
-			System.out.println("[1594664284] - Order ID = '" +  ol.getOrderIDs().get(0) + "'");
 			s += printOrderLines(conn, sDBID, sUserID, ol.getOrderIDs().get(0), sRequestedOrderLine, sLicenseModuleLevel);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1593712668]");
@@ -322,7 +319,6 @@ public class SMDisplayOHDirectOrder extends HttpServlet {
 			+ SMOHDirectFieldDefinitions.ORDERLINE_FIELD_ORDER + "%20eq%20'" + sOrderID + "'"
 			+ "&%24orderby%20eq%20" + SMOHDirectFieldDefinitions.ORDERLINE_FIELD_LINENUMBER + "%20asc"
 		;
-		System.out.println("[1593712666185] - Order lines request: " + sRequest);
 		try {
 			oll.getOrderLineList(sRequest, conn, sDBID, sUserID);
 		} catch (Exception e4) {

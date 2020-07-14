@@ -103,7 +103,7 @@ public class SMOHDirectFieldDefinitions {
 
 	//ORDER:
 	public static final String ORDER_FIELD_ID = "Id";
-	public static final String ORDER_FIELD_QUOTEID = "C_QuoteID";
+	//public static final String ORDER_FIELD_QUOTEID = "C_QuoteID";
 	public static final String ORDER_FIELD_ORDERNUMBER = "C_OrderNumberString";
 	public static final String ORDER_FIELD_CREATEDBY = "C_CreatedBy";
 	public static final String ORDER_FIELD_CREATEDDATE = "C_CreatedDate"; // "2020-02-26T16:36:09.848058Z"
@@ -113,6 +113,7 @@ public class SMOHDirectFieldDefinitions {
 	public static final String ORDER_FIELD_BILLTONAME = "C_BillToName";
 	public static final String ORDER_FIELD_SHIPTONAME = "C_ShipToName";
 	public static final String ORDER_FIELD_DEALERERPID = "C_DealerErpId";
+	public static final String ORDER_FIELD_NAME = "C_Name";
 	public static final String ORDER_FIELD_STATUS = "C_Status";
 	public static final String ORDER_FIELD_BILLTOEXTERNALID = "C_BillToExternalID";
 	public static final String ORDER_FIELD_SOLDFROM = "C_SoldFrom";
@@ -127,8 +128,10 @@ public class SMOHDirectFieldDefinitions {
 	public static final String ORDERLINE_FIELD_LASTCONFIGURATIONDESCRIPTION = "C_LastConfigurationDescription"; // "521, 14'2\" x 14'1\""
 	public static final String ORDERLINE_FIELD_QUANTITY = "C_Quantity"; // Long integer
 	public static final String ORDERLINE_FIELD_UNITCOST = "C_UnitCost"; // Decimal
-	public static final String ORDERLINE_FIELD_TOTALCOST = "C_TotalCost"; // Decimal
-	public static final String ORDERLINE_FIELD_LABEL = "C_Label"; // ""
+	public static final String ORDERLINE_FIELD_EXTENDEDCOST = "C_CPACExtendedCost"; // Decimal
+	public static final String ORDERLINE_FIELD_SELLINGPRICE = "C_SellingPrice"; // Decimal
+	public static final String ORDERLINE_FIELD_TOTALSELLINGPRICE = "C_TotalSellingPrice"; // Decimal
+	public static final String ORDERLINE_FIELD_LABEL = "C_Label"; // String
 	
 	//ORDER LINE DETAILS:
 	public static final String ORDERLINEDETAIL_ARRAY_NAME = "items";

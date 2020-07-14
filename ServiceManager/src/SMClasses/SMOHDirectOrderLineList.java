@@ -12,7 +12,7 @@ import SMDataDefinition.SMOHDirectFieldDefinitions;
 
 /*
  Sample full request URL to obtain the Order Lines on order ID: ' '
-https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerOrderLine?$filter=C_Order%20eq%20'00bac513-b658-ea11-82fa-d2da283a32ca'
+https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerOrderLine?$filter=C_Order%20eq%20'be44565a-a758-ea11-82fa-81f82665d436'
  */
 
 public class SMOHDirectOrderLineList {
@@ -23,8 +23,10 @@ public class SMOHDirectOrderLineList {
 	ArrayList<String> arrDescriptions;
 	ArrayList<String> arrLastConfigurationDescriptions;
 	ArrayList<BigDecimal> arrQuantities;
+	ArrayList<BigDecimal> arrUnitSellingPrices;
+	ArrayList<BigDecimal> arrTotalSellingPrices;
 	ArrayList<BigDecimal> arrUnitCosts;
-	ArrayList<BigDecimal> arrTotalCosts;
+	ArrayList<BigDecimal> arrExtendedCosts;
 	ArrayList<String> arrLabels;
 	
 	public SMOHDirectOrderLineList() {
@@ -32,14 +34,17 @@ public class SMOHDirectOrderLineList {
 	}
 	
 	public void getOrderLineList(String sRequestString, Connection conn, String sDBID, String sUserID) throws Exception{
-		arrOrderNumbers = new ArrayList<String>(0);
+		
 		arrOrderLineIDs = new ArrayList<String>(0);
+		arrOrderNumbers = new ArrayList<String>(0);
 		arrLineNumbers = new ArrayList<BigDecimal>(0);
 		arrDescriptions = new ArrayList<String>(0);
 		arrLastConfigurationDescriptions = new ArrayList<String>(0);
 		arrQuantities = new ArrayList<BigDecimal>(0);
+		arrUnitSellingPrices = new ArrayList<BigDecimal>(0);
+		arrTotalSellingPrices = new ArrayList<BigDecimal>(0);
 		arrUnitCosts = new ArrayList<BigDecimal>(0);
-		arrTotalCosts = new ArrayList<BigDecimal>(0);
+		arrExtendedCosts = new ArrayList<BigDecimal>(0);
 		arrLabels = new ArrayList<String>(0);
 		
 		//Try to read the list:
@@ -94,16 +99,27 @@ public class SMOHDirectOrderLineList {
 				}else {
 					arrOrderNumbers.add((String)objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_ORDER));
 				}
-				if (objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_TOTALCOST) == null) {
-					arrTotalCosts.add(new BigDecimal("0.00"));
+				if (objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_EXTENDEDCOST) == null) {
+					arrExtendedCosts.add(new BigDecimal("0.00"));
 				}else {
-					arrTotalCosts.add(BigDecimal.valueOf((Double)objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_TOTALCOST)));
+					arrExtendedCosts.add(BigDecimal.valueOf((Double)objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_EXTENDEDCOST)));
 				}
 				if (objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_UNITCOST) == null) {
 					arrUnitCosts.add(new BigDecimal("0.00"));
 				}else {
 					arrUnitCosts.add(BigDecimal.valueOf((Double)objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_UNITCOST)));
 				}
+				if (objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_SELLINGPRICE) == null) {
+					arrUnitSellingPrices.add(new BigDecimal("0.00"));
+				}else {
+					arrUnitSellingPrices.add(BigDecimal.valueOf((Double)objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_SELLINGPRICE)));
+				}
+				if (objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_TOTALSELLINGPRICE) == null) {
+					arrTotalSellingPrices.add(new BigDecimal("0.00"));
+				}else {
+					arrTotalSellingPrices.add(BigDecimal.valueOf((Double)objOrderLine.get(SMOHDirectFieldDefinitions.ORDERLINE_FIELD_TOTALSELLINGPRICE)));
+				}
+	
 			}
 		}catch(Exception e) {
 			throw new Exception("Error [1594641628] - " + e.getMessage());
@@ -129,11 +145,17 @@ public class SMOHDirectOrderLineList {
 	public ArrayList<BigDecimal> getQuantities(){
 		return arrQuantities;
 	}
+	public ArrayList<BigDecimal> getUnitSellingPrices(){
+		return arrUnitSellingPrices;
+	}
+	public ArrayList<BigDecimal> getTotalSellingPrices(){
+		return arrTotalSellingPrices;
+	}
 	public ArrayList<BigDecimal> getUnitCosts(){
 		return arrUnitCosts;
 	}
-	public ArrayList<BigDecimal> getTotalCosts(){
-		return arrTotalCosts;
+	public ArrayList<BigDecimal> getExtendedCosts(){
+		return arrExtendedCosts;
 	}
 	public ArrayList<String> getLabels(){
 		return arrLabels;

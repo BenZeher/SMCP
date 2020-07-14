@@ -11,8 +11,8 @@ import SMDataDefinition.SMOHDirectFieldDefinitions;
 import ServletUtilities.clsOEAuthFunctions;
 
 /*
-Sample full request URL to obtain a single Order for Order Number: 'SQAL000008-1'
-https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerOrder?$filter=C_QuoteNumberString%20eq%20'SQAL000008-1'
+Sample full request URL to obtain a single Order for Order Number: 'SOAL000001'
+https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerOrder?$filter=C_QuoteNumberString%20eq%20'SOAL000001'
 
 Sample full request URL to obtain a list of orders modified after a selected date:
 https://mingle-ionapi.inforcloudsuite.com/OHDIRECT_TRN/CPQEQ/RuntimeApi/EnterpriseQuoting/Entities/C_DealerOrder?$filter=C_LastModifiedDate%20gt%20'2020-01-09'
@@ -30,6 +30,7 @@ public class SMOHDirectOrderList {
 	ArrayList<String> arrSalespersons;
 	ArrayList<String> arrBillToNames;
 	ArrayList<String> arrShipToNames;
+	ArrayList<String> arrOrderNames;
 	ArrayList<String> arrStatuses;
 	
 	public SMOHDirectOrderList() {
@@ -46,6 +47,7 @@ public class SMOHDirectOrderList {
 		arrSalespersons = new ArrayList<String>(0);
 		arrBillToNames = new ArrayList<String>(0);
 		arrShipToNames = new ArrayList<String>(0);
+		arrOrderNames = new ArrayList<String>(0);
 		arrStatuses = new ArrayList<String>(0);
 		//Try to read the list:
 		String sJSONResult = "";
@@ -120,7 +122,11 @@ public class SMOHDirectOrderList {
 				}else {
 					arrStatuses.add((String)orderitem.get(SMOHDirectFieldDefinitions.ORDER_FIELD_STATUS));
 				}
-				
+				if (orderitem.get(SMOHDirectFieldDefinitions.ORDER_FIELD_NAME) == null) {
+					arrOrderNames.add("");
+				}else {
+					arrOrderNames.add((String)orderitem.get(SMOHDirectFieldDefinitions.ORDER_FIELD_NAME));
+				}		
 			}
 		}catch(Exception e) {
 			throw new Exception("Error [1593713965] - " + e.getMessage());
@@ -155,6 +161,9 @@ public class SMOHDirectOrderList {
 	}
 	public ArrayList<String> getShipToNames(){
 		return arrShipToNames;
+	}
+	public ArrayList<String> getOrderNames(){
+		return arrOrderNames;
 	}
 	public ArrayList<String> getStatuses(){
 		return arrStatuses;

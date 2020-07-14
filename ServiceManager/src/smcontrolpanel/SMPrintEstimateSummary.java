@@ -405,7 +405,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s += "    <TD"
 					+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
 					+ summary.getstaxdescription() + " "
-					+ summary.getsbdtaxrate() + "% "
+					+ bdTaxPercentage.setScale(4, BigDecimal.ROUND_HALF_UP)  + "% "
 					+ SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION
 					+ "</TD>" + "\n"
 					+ "    <TD>"
@@ -452,7 +452,6 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				;
 		s += "  </TR>" + "\n";
 
-
 		//RETAIL SALES TAX
 		s += "  <TR>" + "\n";
 		try {
@@ -460,7 +459,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 					//+ " style = \" font-size: large; \""
 					+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " style=\"text-align:right\">"
 					+ summary.getstaxdescription() + " "
-					+ summary.getsbdtaxrate() + "% "
+					+ bdTaxPercentage.setScale(4, BigDecimal.ROUND_HALF_UP) + "% "
 					+ SMEditSMSummaryEdit.LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION
 					+ "</TD>" + "\n"
 					+ "    <TD>"

@@ -1760,7 +1760,6 @@ public class ICEditPOEdit  extends HttpServlet {
 
 		//New Row:
 		s += "<TR>";
-		//TODO PHONE
 		//Bill to Phone:
 		if(entry.getsbillphone().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
 		s += "<TD style=\" text-align:right; font-weight:bold; \">Phone:</TD>";

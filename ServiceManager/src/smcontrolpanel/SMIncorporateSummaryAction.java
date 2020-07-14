@@ -35,7 +35,7 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 
 		String sCommandValue = clsManageRequestParameters.get_Request_Parameter(
     			SMIncorporateSummaryEdit.COMMAND_FLAG, request);
-		System.out.println("[202007135804] - command value = '" + sCommandValue + "'.");
+		//System.out.println("[202007135804] - command value = '" + sCommandValue + "'.");
 		
 		if (bDebugMode){
 			//PrintWriter debugout = new PrintWriter(System.out);
@@ -139,7 +139,7 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 			*/
     	}
     	
-       	//If it's a request to change the category selection method:
+       	//If it's a request to change the category selection method to LINE:
     	if (sCommandValue.compareToIgnoreCase(SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_LINE_COMMAND) == 0){
     		//Save the entry in a session object:
     		smaction.getCurrentSession().setAttribute(SMIncorporateSummary.ParamObjectName, entry);
@@ -152,15 +152,13 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
 				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_LINE_COMMAND
 			;
-			System.out.println("[202007135409] - sRedirectString = '" + sRedirectString + "'.");
+			//System.out.println("[202007135409] - sRedirectString = '" + sRedirectString + "'.");
 			redirectProcess(sRedirectString, response);
 			return;
     	}
     	
-       	//If it's a request to change the category selection method:
-    	if (clsManageRequestParameters.get_Request_Parameter(
-    			SMIncorporateSummaryEdit.COMMAND_FLAG, request).compareToIgnoreCase(
-    					SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_COMMAND) == 0){
+       	//If it's a request to change the category selection method to HEADER:
+    	if (sCommandValue.compareToIgnoreCase(SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_COMMAND) == 0){
     		//Save the entry in a session object:
     		smaction.getCurrentSession().setAttribute(SMIncorporateSummary.ParamObjectName, entry);
     		//Now return to the edit screen:
@@ -170,8 +168,9 @@ public class SMIncorporateSummaryAction extends HttpServlet{
 				+ "&" + SMTablesmestimatesummaries.lid + "=" + entry.getM_ssummaryid()
 				+ "&" + SMTablesmestimatesummaries.strimmedordernumber + "=" + entry.getM_strimmedordernumber()
 				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_BUTTON_LABEL
+				+ "&" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_METHOD_PARAM + "=" + SMIncorporateSummaryEdit.CHOOSE_CATEGORY_BY_HEADER_COMMAND
 			;
+			//System.out.println("[202007135409] - sRedirectString = '" + sRedirectString + "'.");
 			redirectProcess(sRedirectString, response);
 			return;
     	}

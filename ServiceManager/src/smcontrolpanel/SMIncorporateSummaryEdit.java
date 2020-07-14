@@ -343,9 +343,10 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMIncorporateSummary.Paramsnonstockmaterialitem + "\""
 				+ " VALUE=\"" + entry.getM_snonstockmaterialitem() + "\" SIZE=13 MAXLENGTH=" + Integer.toString(SMTableicitems.sItemNumberLength) + ">"
 			;
-    	
+    	//System.out.println("[202007142515] - clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM = '" 
+		//	+ clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()) + "'.");
     	s += createControlButtons(entry.getM_snonstockmaterialitem(), 
-    		clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()).compareToIgnoreCase(CHOOSE_CATEGORY_BY_LINE_BUTTON_LABEL) == 0);
+    		clsManageRequestParameters.get_Request_Parameter(CHOOSE_CATEGORY_METHOD_PARAM, sm.getRequest()).compareToIgnoreCase(CHOOSE_CATEGORY_BY_LINE_COMMAND) == 0);
     	
     	s += listItemLines(
 				getServletContext(), 
@@ -754,7 +755,6 @@ public class SMIncorporateSummaryEdit  extends HttpServlet {
 		;
 		
 		s += "function choosesinglecategorybyline(){\n"	
-				+ "    alert('choose category by line'); \n"
 				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + CHOOSE_CATEGORY_BY_LINE_COMMAND + "\";\n"
 				+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
 			+ "}\n\n"

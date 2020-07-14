@@ -348,7 +348,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMaterialCost)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMaterialCost.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -360,7 +360,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_FREIGHT_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdFreightCost)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdFreightCost.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -372,7 +372,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_LABOR_UNITS_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborUnits)
+				+ bdLaborUnits.setScale(4, BigDecimal.ROUND_HALF_UP)
 				+ "</TD>" + "\n"
 				;
 
@@ -394,7 +394,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMSummaryEdit.LABEL_CALCULATED_TOTAL_MARKUP_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkUp)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkUp.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -427,7 +427,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\""
 				+ ">"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostNotEligibleForUseTax)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostNotEligibleForUseTax.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -464,7 +464,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 					+ SMEditSMSummaryEdit.LABEL_CALCULATED_RETAIL_SALES_TAX_CAPTION
 					+ "</TD>" + "\n"
 					+ "    <TD>"
-					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdRetailSalesTax)
+					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdRetailSalesTax.setScale(2, BigDecimal.ROUND_HALF_UP))
 					+ "</TD>" + "\n"
 					;
 		} catch (Exception e) {
@@ -507,9 +507,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		bdAdjustedTotalSummary = bdTotalMaterialCost.add(bdAdjustedFreight).add(bdTotalLaborCost).add(bdAdjustedMarkUpAmt).add(bdTaxOnMaterial);
 
 		BigDecimal bdTemp = BigDecimal.ZERO;
-		if(bdAdjustedMarkUpAmt.compareTo(BigDecimal.ZERO)==0 || bdAdjustLaborUnitQty.compareTo(BigDecimal.ZERO)==0) {
-			bdTemp= BigDecimal.ZERO;
-		}else {
+		if(bdAdjustedMarkUpAmt.compareTo(BigDecimal.ZERO)!=0 && bdAdjustLaborUnitQty.compareTo(BigDecimal.ZERO)!=0) {
 			bdTemp=bdAdjustedMarkUpAmt.divide(bdAdjustLaborUnitQty, BigDecimal.ROUND_HALF_UP).setScale(2,BigDecimal.ROUND_HALF_UP);
 		}
 
@@ -523,7 +521,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 
 		BigDecimal bdGPPercentage = BigDecimal.ZERO;
 		if(bdAdjustedTotalSummary.compareTo(BigDecimal.ZERO)!=0) {
-			bdGPPercentage =  bdAdjustedMarkUpAmt.divide(bdAdjustedTotalSummary,BigDecimal.ROUND_HALF_UP,1).multiply(BigDecimal.valueOf(100));
+			bdGPPercentage =  bdAdjustedMarkUpAmt.divide(bdAdjustedTotalSummary,BigDecimal.ROUND_HALF_UP,1).multiply(BigDecimal.valueOf(100)).setScale(2,BigDecimal.ROUND_HALF_UP);
 		}
 
 		BigDecimal bdAdjustedRetailSalesTax = new BigDecimal(0);
@@ -568,7 +566,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_LABOR_UNITS_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+  clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdjustedLaborUnitQty.setScale(4, BigDecimal.ROUND_HALF_UP))
+				+  bdAdjustedLaborUnitQty.setScale(4, BigDecimal.ROUND_HALF_UP)
 				+ "</TD>" + "\n"
 				;
 
@@ -586,7 +584,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_LABOR_COST_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalLaborCost)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalLaborCost.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -598,7 +596,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "    <TD style=\"text-align:right\">"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PER_LABOR_UNIT_CAPTION
 				+ "&nbsp;"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTemp.setScale(2));
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTemp.setScale(2, BigDecimal.ROUND_HALF_UP));
 		//MU Pctge
 		s+= "&nbsp;"
 				+ SMEditSMSummaryEdit.FIELD_ADJUSTED_MU_PERCENTAGE_CAPTION
@@ -650,7 +648,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMSummaryEdit.LABEL_ADJUSTED_TOTAL_FOR_SUMMARY_CAPTION + " " + sSummaryID + ":"
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdjustedTotalSummary)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdjustedTotalSummary.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -836,7 +834,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s+="</TD>";
 			s+="<TD>";
 			if(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", "")).compareTo(0.0)!=0 && line.getsbdquantity().compareTo("0.00")!=0 && line.getsbdextendedcost().compareTo("0.00")!=0) {
-				s+=BigDecimal.valueOf(Double.valueOf((line.getsbdunitsellprice()))/(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", "" )))).setScale(2);
+				s+=BigDecimal.valueOf(Double.valueOf((line.getsbdunitsellprice()))/(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", "" )))).setScale(2,BigDecimal.ROUND_HALF_UP);
 			}else {
 				s+="0.00";
 			}
@@ -849,7 +847,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s+=line.getsbdextendedsellprice();
 			s+="</TD>";
 			s+="<TD>";
-			s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", ""))).setScale(2));
+			s+= clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(BigDecimal.valueOf(Double.valueOf(line.getsbdextendedcost().replaceAll(",", "" ))/Double.valueOf(line.getsbdquantity().replaceAll(",", ""))).setScale(2,BigDecimal.ROUND_HALF_UP));
 			s+="</TD>";
 			s+="<TD>";
 			s+=line.getsbdextendedcost();
@@ -983,7 +981,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_CALCULATED_TOTAL_MATERIAL_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalMaterialCost)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalMaterialCost.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 
@@ -996,7 +994,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.FIELD_FREIGHT_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalFreight)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalFreight.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1008,11 +1006,11 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 2) + " ALIGN=RIGHT>"
 				+ SMEditSMEstimateEdit.FIELD_LABOR_UNITS_CAPTION
 				+ "&nbsp;"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborQuantity)
+				+ bdLaborQuantity.setScale(4, BigDecimal.ROUND_HALF_UP)
 				+ "&nbsp;"
 				+ SMEditSMEstimateEdit.FIELD_COST_PER_LABOR_UNIT_CAPTION
 				+ "&nbsp;"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborCostPerUnit)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborCostPerUnit.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 
@@ -1021,7 +1019,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_TOTAL_LABOR_COST_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalLaborCost)		
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalLaborCost.setScale(2, BigDecimal.ROUND_HALF_UP))		
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1034,7 +1032,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ estimate.getsadditionalpretaxcostlabel()
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdditionalPreTaxCost)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdditionalPreTaxCost.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1046,7 +1044,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_COST_SUBTOTAL_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostSubTotal)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostSubTotal.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1056,14 +1054,14 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 		s += "    <TD ALIGN=RIGHT>"
 				+ SMEditSMEstimateEdit.FIELD_MU_PER_LABOR_UNIT_CAPTION
 				+ "&nbsp;"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupLaborUnit)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupLaborUnit.setScale(2, BigDecimal.ROUND_HALF_UP))
 				//MU Pctge 
 				+ "&nbsp;"
 				+ SMEditSMEstimateEdit.FIELD_MU_PERCENTAGE_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
 				+ "&nbsp;"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupPercentage)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupPercentage.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 
@@ -1072,7 +1070,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.FIELD_GP_PERCENTAGE_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdGPPercentage)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdGPPercentage.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 
@@ -1081,7 +1079,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_TOTAL_MARKUP_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupAmount)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkupAmount.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1092,12 +1090,12 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 			s += "    <TD"
 					+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " ALIGN=RIGHT>"
 					+ summary.getstaxdescription() + " "
-					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTaxRate) + "% "
+					+ bdTaxRate.setScale(4, BigDecimal.ROUND_HALF_UP) + "% "
 					+  SMEditSMEstimateEdit.LABEL_CALCULATED_TOTAL_TAX_ON_MATERIAL_CAPTION
 					+ "</TD>" + "\n"
 
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTaxOnMaterial)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTaxOnMaterial.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		} catch (Exception e) {
@@ -1111,7 +1109,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_TOTAL_COST_AND_MARKUP_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalCostAndMarkup)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalCostAndMarkup.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1125,7 +1123,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ "</TD>" + "\n"
 
 			+ "    <TD>"
-			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdditionalPostTaxCost)
+			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdditionalPostTaxCost.setScale(2, BigDecimal.ROUND_HALF_UP))
 			+ "</TD>" + "\n"
 			;
 		s += "  </TR>" + "\n";
@@ -1137,11 +1135,11 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ " COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + " ALIGN=RIGHT>"
 				+ SMEditSMEstimateEdit.FIELD_LABOR_SELL_PRICE_PER_UNIT_CAPTION
 				+ " <I><FONT COLOR=RED>(MU/Labor unit from Labor Type = " 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborTypemuperlaborunit) 
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborTypemuperlaborunit.setScale(2, BigDecimal.ROUND_HALF_UP)) 
 				+ ")</FONT></I>:"
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborSellPricePerUnit)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborSellPricePerUnit.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1153,7 +1151,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_LABOR_SELL_PRICE_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborSellPrice)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdLaborSellPrice.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1165,7 +1163,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_MATERIAL_SELL_PRICE_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMaterialSellPrice)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMaterialSellPrice.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1177,7 +1175,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_TOTAL_SELL_PRICE_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalSellPrice)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalSellPrice.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1189,7 +1187,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+ SMEditSMEstimateEdit.LABEL_RETAIL_SALES_TAX_CAPTION
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdRetailSalesTaxAmount)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdRetailSalesTaxAmount.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
@@ -1202,7 +1200,7 @@ public class SMPrintEstimateSummary extends java.lang.Object {
 				+estimate.getsadditionalpostsalestaxcostlabel() 
 				+ "</TD>" + "\n"
 				+ "    <TD>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdditionalPostSalesTaxCost)
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAdditionalPostSalesTaxCost.setScale(2, BigDecimal.ROUND_HALF_UP))
 				+ "</TD>" + "\n"
 				;
 		s += "  </TR>" + "\n";
